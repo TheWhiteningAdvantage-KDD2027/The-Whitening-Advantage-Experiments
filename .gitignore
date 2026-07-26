@@ -1,0 +1,20 @@
+# Environnements et Caches (Fuite de chemins système)
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# IDEs (Fuite d'identité)
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Verrouillage Licence FirstRate (Interdiction de redistribution)
+data/raw/firstrate_etf/*.csv
+!data/raw/firstrate_etf/.gitkeep
