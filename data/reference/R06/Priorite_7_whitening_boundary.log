@@ -1,0 +1,36 @@
+2026-07-27 06:43:59 | INFO | ======================================================================
+2026-07-27 06:43:59 | INFO |   Priorité 7 : Cartographie de la frontière du théorème de Whitening
+2026-07-27 06:43:59 | INFO | ======================================================================
+2026-07-27 06:43:59 | INFO | Dependency locked: numpy==1.26.4
+2026-07-27 06:43:59 | INFO | Dependency locked: pandas==2.3.2
+2026-07-27 06:43:59 | INFO | Dependency locked: scipy==1.16.2
+2026-07-27 06:43:59 | INFO | Dependency locked: statsmodels==0.14.5
+2026-07-27 06:43:59 | INFO | Dependency locked: matplotlib==3.10.6
+2026-07-27 06:43:59 | INFO | Dependency locked: tqdm==4.67.1
+2026-07-27 06:43:59 | INFO | Dependency locked: joblib==1.4.2
+2026-07-27 06:43:59 | INFO | Dependency locked: river==0.23.0
+2026-07-27 06:43:59 | INFO | Boundaries: alpha=0.08 | 4th Moment diverges at beta=0.9071
+2026-07-27 06:43:59 | INFO | Boundaries: Equivalent nominal Gamma: 41.58
+2026-07-27 06:43:59 | INFO | Running Gamma Grid (1300 streams)...
+2026-07-27 06:44:15 | INFO | Running Task Configurations (500 streams)...
+2026-07-27 06:44:19 | INFO | Seed evaluation: 1800 tasks requested.
+2026-07-27 06:44:19 | INFO | Inter-group seed collision (Common Random Numbers) detected. Unique seeds: 100/1800.
+2026-07-27 06:44:19 | INFO | Grid A 95% Wilson CIs for nominal rates:
+2026-07-27 06:44:19 | INFO |   Gamma=   1.0: rate=0.03, CI=[0.0103, 0.0845] (Contains 0.05: True)
+2026-07-27 06:44:19 | INFO |   Gamma=   2.0: rate=0.07, CI=[0.0343, 0.1375] (Contains 0.05: True)
+2026-07-27 06:44:19 | INFO |   Gamma=   5.0: rate=0.02, CI=[0.0055, 0.0700] (Contains 0.05: True)
+2026-07-27 06:44:19 | INFO |   Gamma=  8.16: rate=0.06, CI=[0.0278, 0.1248] (Contains 0.05: True)
+2026-07-27 06:44:19 | INFO |   Gamma= 11.58: rate=0.05, CI=[0.0215, 0.1118] (Contains 0.05: True)
+2026-07-27 06:44:19 | INFO |   Gamma=  20.0: rate=0.02, CI=[0.0055, 0.0700] (Contains 0.05: True)
+2026-07-27 06:44:19 | INFO |   Gamma= 30.85: rate=0.05, CI=[0.0215, 0.1118] (Contains 0.05: True)
+2026-07-27 06:44:19 | INFO |   Gamma=  41.0: rate=0.05, CI=[0.0215, 0.1118] (Contains 0.05: True)
+2026-07-27 06:44:19 | INFO |   Gamma=  60.0: rate=0.03, CI=[0.0103, 0.0845] (Contains 0.05: True)
+2026-07-27 06:44:19 | INFO |   Gamma=  90.0: rate=0.06, CI=[0.0278, 0.1248] (Contains 0.05: True)
+2026-07-27 06:44:19 | INFO |   Gamma= 120.0: rate=0.03, CI=[0.0103, 0.0845] (Contains 0.05: True)
+2026-07-27 06:44:19 | INFO |   Gamma= 160.0: rate=0.07, CI=[0.0343, 0.1375] (Contains 0.05: True)
+2026-07-27 06:44:19 | INFO |   Gamma= 200.0: rate=0.08, CI=[0.0411, 0.1500] (Contains 0.05: True)
+2026-07-27 06:44:19 | INFO | All programmatic statistical certifications passed successfully.
+2026-07-27 06:44:20 | INFO | Figure saved: /home/m53/The-Whitening-Advantage-Experiments-CHECK/figures/Fig11_Whitening_Boundary.png
+2026-07-27 06:44:20 | INFO | SHA-256 Grid A (CSV): b1b94011b8b94dd8fdfdbd60731da054e25ea774f6c2887e037714f709bbc744
+2026-07-27 06:44:20 | INFO | SHA-256 Part B (CSV): 9a95701f7131e8a686a30d9293b2d439dd1bf3367ecdc536dacd20a078c1f93e
+2026-07-27 06:44:20 | INFO | Execution Complete. Total elapsed time: 20.52 seconds.
