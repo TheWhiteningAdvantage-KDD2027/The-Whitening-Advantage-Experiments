@@ -15,12 +15,7 @@ env/
 # Jupyter
 .ipynb_checkpoints/
 
-# Fichiers temporaires de la campagne de reproductibilité (Ne pas pusher)
-logs/
-AUDIT_R*.md
-docs/sections/R*.md
-requirements/R*.txt
-build_readme.sh
+# Fichiers de configuration locale et dump d'arborescence (Ne pas pusher)
 ARBORESCENCE_REPO_LOCAL*.txt
 
 # Traces d'assistants IA (Fuite d'identité)

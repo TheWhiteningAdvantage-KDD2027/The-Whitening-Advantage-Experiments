@@ -1,0 +1,188 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.9, pytest-9.0.3, pluggy-1.6.0 -- /home/m53/miniforge3/envs/Trading/bin/python3.12
+cachedir: .pytest_cache
+rootdir: /home/m53/The-Whitening-Advantage-Experiments
+plugins: anyio-4.8.0
+collecting ... collected 120 items
+
+tests/test_R01_claims.py::test_r01_models PASSED                         [  0%]
+tests/test_R01_claims.py::test_r01_trajectories PASSED                   [  1%]
+tests/test_R01_claims.py::test_r01_injection_summary PASSED              [  2%]
+tests/test_R01_claims.py::test_r01_placebo PASSED                        [  3%]
+tests/test_R01_claims.py::test_r01_magnitude_and_symmetry PASSED         [  4%]
+tests/test_R02_claims.py::test_stream_counts PASSED                      [  5%]
+tests/test_R02_claims.py::test_classifier_integrity PASSED               [  5%]
+tests/test_R02_claims.py::test_data_rejection_rates PASSED               [  6%]
+tests/test_R02_claims.py::test_distinct_p_concept PASSED                 [  7%]
+tests/test_R02_claims.py::test_independence_diagnostics PASSED           [  8%]
+tests/test_R02_claims.py::test_iid_arm_rejection_is_reported_not_asserted PASSED [  9%]
+tests/test_R02_claims.py::test_concept_level_covered_by_wilson PASSED    [ 10%]
+tests/test_R02_claims.py::test_max_clustered_pvalue_below_manuscript_bound PASSED [ 10%]
+tests/test_R02b_claims.py::test_negative_control_integrity PASSED        [ 11%]
+tests/test_R02b_claims.py::test_nu_seven_is_indistinguishable_from_nominal PASSED [ 12%]
+tests/test_R02b_claims.py::test_heavy_tail_arms_exclude_nominal PASSED   [ 13%]
+tests/test_R02b_claims.py::test_rate_ordering_heavy_versus_light PASSED  [ 14%]
+tests/test_R02b_claims.py::test_negative_control_matches_squared_at_light_tails PASSED [ 15%]
+tests/test_R02c_claims.py::test_R02c_seed_uniqueness PASSED              [ 15%]
+tests/test_R02c_claims.py::test_R02c_negative_control_calibration PASSED [ 16%]
+tests/test_R02c_claims.py::test_R02c_eighth_moment_account_is_refuted PASSED [ 17%]
+tests/test_R02c_claims.py::test_R02c_slope_test_power_is_declared PASSED [ 18%]
+tests/test_R02c_claims.py::test_R02c_control_arm_integrity PASSED        [ 19%]
+tests/test_R02c_claims.py::test_R02c_continuity PASSED                   [ 20%]
+tests/test_R02c_claims.py::test_R02c_mechanism_slope_logic PASSED        [ 20%]
+tests/test_R03_claims.py::test_R03_grid_cardinality PASSED               [ 21%]
+tests/test_R03_claims.py::test_R03_grid_is_unchanged PASSED              [ 22%]
+tests/test_R03_claims.py::test_R03_threshold_ordering_is_structural PASSED [ 23%]
+tests/test_R03_claims.py::test_R03_monotonicity_beyond_gamma_six PASSED  [ 24%]
+tests/test_R03_claims.py::test_R03_aggregate_certification_gates PASSED  [ 25%]
+tests/test_R03_claims.py::test_R03_gamma_rule_holds_the_nominal_level PASSED [ 25%]
+tests/test_R03_claims.py::test_R03_iid_calibration_arm_is_well_formed PASSED [ 26%]
+tests/test_R03_claims.py::test_R03_deviation_classification_against_witness PASSED [ 27%]
+tests/test_R03_claims.py::test_R03_macros_are_emitted PASSED             [ 28%]
+tests/test_R04_claims.py::test_R04_cardinalities PASSED                  [ 29%]
+tests/test_R04_claims.py::test_R04_grids_match_v87 PASSED                [ 30%]
+tests/test_R04_claims.py::test_R04_horizon_and_sample_size PASSED        [ 30%]
+tests/test_R04_claims.py::test_R04_reference_drifts_are_coherent PASSED  [ 31%]
+tests/test_R04_claims.py::test_R04_all_arms_are_iso_fpr PASSED           [ 32%]
+tests/test_R04_claims.py::test_R04_concept_threshold_is_flat_in_gamma PASSED [ 33%]
+tests/test_R04_claims.py::test_R04_concept_level_is_homogeneous_in_gamma PASSED [ 34%]
+tests/test_R04_claims.py::test_R04_recalib_blind_zone_persists_at_lowest_gamma PASSED [ 35%]
+tests/test_R04_claims.py::test_R04_recalib_is_slower_than_both_first_order_arms PASSED [ 35%]
+tests/test_R04_claims.py::test_R04_add_decreases_with_drift_magnitude PASSED [ 36%]
+tests/test_R04_claims.py::test_R04_conditional_mean_is_labelled_and_accompanied PASSED [ 37%]
+tests/test_R04_claims.py::test_R04_efficiency_ratio_is_monotone_in_nu PASSED [ 38%]
+tests/test_R04_claims.py::test_R04_ratio_respects_the_gaussian_ceiling PASSED [ 39%]
+tests/test_R04_claims.py::test_R04_predicted_ratio_is_the_pitman_constant PASSED [ 40%]
+tests/test_R04_claims.py::test_R04_oracle_is_never_slower_than_the_fitted_arm PASSED [ 40%]
+tests/test_R04_claims.py::test_R04_analytic_crossing_matches_v87 PASSED  [ 41%]
+tests/test_R04_claims.py::test_R04_blind_zone_onset_matches_v87 PASSED   [ 42%]
+tests/test_R04_claims.py::test_R04_macros_are_emitted_and_computed PASSED [ 43%]
+tests/test_R04_claims.py::test_R04_crossings_agree_with_the_interpolation_rule PASSED [ 44%]
+tests/test_R04_claims.py::test_R04_emitted_crossing_brackets_contain_the_crossing PASSED [ 45%]
+tests/test_R04_claims.py::test_R04_table3_printing_rule_reproduces_v87 PASSED [ 45%]
+tests/test_R04_claims.py::test_R04_table3_is_generated_from_the_csv PASSED [ 46%]
+tests/test_R04_claims.py::test_R04_table3_shows_detrate_exactly_when_below_one PASSED [ 47%]
+tests/test_R04_claims.py::test_R04_intervals_are_clamped_and_ordered PASSED [ 48%]
+tests/test_R04_claims.py::test_R04_no_nan_in_reported_delays PASSED      [ 49%]
+tests/test_R04_claims.py::test_R04_m0_universality_arm_matches_the_garch_arm PASSED [ 50%]
+tests/test_R04_claims.py::test_R04_report_deviation_degrees 
+  R04 deviation classification against the submitted campaign
+  quantity                     |    published |  regenerated | degree
+  Table 3 Recalib     c=0.25  |  2293.457219 |  2746.329897 | D2
+  Table 3 Recalib     c=0.5   |  1336.727426 |  2622.018789 | D2
+  Table 3 Recalib     c=1.0   |   202.627814 |  1986.673764 | D2
+  Table 3 Recalib     c=2.0   |    55.909000 |  1311.240964 | D2
+  Table 3 Eco_L1      c=0.25  |   389.309500 |   409.219500 | D2
+  Table 3 Eco_L1      c=0.5   |    72.002000 |    77.128500 | D2
+  Table 3 Eco_L1      c=1.0   |    26.393500 |    30.886500 | D2
+  Table 3 Eco_L1      c=2.0   |    12.579000 |    16.096000 | D2
+  Table 3 Concept     c=0.25  |   460.290000 |   381.935500 | D2
+  Table 3 Concept     c=0.5   |   100.639000 |    96.859500 | D2
+  Table 3 Concept     c=1.0   |    43.831500 |    42.628500 | D2
+  Table 3 Concept     c=2.0   |    28.881500 |    28.572000 | D2
+  ratio at nu=3.0                  |     0.407263 |     0.331177 | D2
+  ratio at nu=4.0                  |     0.778229 |     0.622199 | D2
+  ratio at nu=4.5                  |     0.921953 |     0.694563 | D2
+  ratio at nu=5.0                  |     1.022764 |     0.788887 | D2
+  ratio at nu=7.0                  |     1.236853 |     0.985825 | D2
+  ratio at nu=30.0                 |     1.489896 |     1.200608 | D2
+  The witness is a record of the submitted campaign, not a target; see docs/sections/R04.md for why its Gamma grid does not span.
+PASSED       [ 50%]
+tests/test_R04b_claims.py::test_R04b_cardinality_and_grid PASSED         [ 51%]
+tests/test_R04b_claims.py::test_R04b_protocol_constants_match_v87 PASSED [ 52%]
+tests/test_R04b_claims.py::test_R04b_gamma_target_is_attainable_and_realised PASSED [ 53%]
+tests/test_R04b_claims.py::test_R04b_analytic_prediction_is_the_pitman_constant PASSED [ 54%]
+tests/test_R04b_claims.py::test_R04b_in_sample_bisection_converged PASSED [ 55%]
+tests/test_R04b_claims.py::test_R04b_pooled_holdout_level_meets_the_promised_band PASSED [ 55%]
+tests/test_R04b_claims.py::test_R04b_conditional_calibration_pvalues_are_uniform PASSED [ 56%]
+tests/test_R04b_claims.py::test_R04b_rates_are_consistent_and_clamped PASSED [ 57%]
+tests/test_R04b_claims.py::test_R04b_continuity_anchors_are_read_from_R04 PASSED [ 58%]
+tests/test_R04b_claims.py::test_R04b_is_compatible_with_R04_at_the_common_points PASSED [ 59%]
+tests/test_R04b_claims.py::test_R04b_grid_bracket_straddles_unity_and_the_interpolation_lies_inside_it PASSED [ 60%]
+tests/test_R04b_claims.py::test_R04b_inferential_bracket_is_recomputable_from_the_csv PASSED [ 60%]
+tests/test_R04b_claims.py::test_R04b_bootstrap_error_exceeds_the_conditional_one PASSED [ 61%]
+tests/test_R04b_claims.py::test_R04b_shape_fit_is_reported_with_its_goodness PASSED [ 62%]
+tests/test_R04b_claims.py::test_R04b_analytic_crossing_matches_v87 PASSED [ 63%]
+tests/test_R04b_claims.py::test_R04b_estimation_cost_interval_arithmetic PASSED [ 64%]
+tests/test_R04b_claims.py::test_R04b_ratio_respects_the_gaussian_ceiling PASSED [ 65%]
+tests/test_R04b_claims.py::test_R04b_oracle_ratio_does_not_cross_again_above_seven PASSED [ 65%]
+tests/test_R04b_claims.py::test_R04b_macros_are_emitted_and_computed PASSED [ 66%]
+tests/test_R04b_claims.py::test_R04b_no_nan_in_reported_quantities PASSED [ 67%]
+tests/test_R04b_claims.py::test_R04b_report_against_v87 PASSED           [ 68%]
+tests/test_R05_claims.py::test_abrupt_cardinality PASSED                 [ 69%]
+tests/test_R05_claims.py::test_ramp_cardinalities PASSED                 [ 70%]
+tests/test_R05_claims.py::test_protocol_constants PASSED                 [ 70%]
+tests/test_R05_claims.py::test_horizons_are_the_two_published_budgets PASSED [ 71%]
+tests/test_R05_claims.py::test_common_horizon_is_constant_across_gamma PASSED [ 72%]
+tests/test_R05_claims.py::test_null_levels_are_homogeneous_across_gamma PASSED [ 73%]
+tests/test_R05_claims.py::test_concept_branch_is_gamma_invariant_by_construction PASSED [ 74%]
+tests/test_R05_claims.py::test_concept_is_blind_to_the_scale_pathology PASSED [ 75%]
+tests/test_R05_claims.py::test_positive_control_shows_the_monitor_responsive PASSED [ 75%]
+tests/test_R05_claims.py::test_both_crossovers_are_emitted_and_are_distinct PASSED [ 76%]
+tests/test_R05_claims.py::test_scaling_law_branches_meet_at_the_crossover PASSED [ 77%]
+tests/test_R05_claims.py::test_ladder_visits_the_three_published_horizons PASSED [ 78%]
+tests/test_R05_claims.py::test_ladder_is_monotone_in_the_horizon PASSED  [ 79%]
+tests/test_R05_claims.py::test_ladder_agrees_with_the_campaigns_it_overlaps PASSED [ 80%]
+tests/test_R05_claims.py::test_sixth_moment_boundary_matches_the_published_gamma PASSED [ 80%]
+tests/test_R05_claims.py::test_moment_margin_macro_matches_the_published_bound PASSED [ 81%]
+tests/test_R05_claims.py::test_macro_file_is_well_formed PASSED          [ 82%]
+tests/test_R05_claims.py::test_required_macros_are_present PASSED        [ 83%]
+tests/test_R05_claims.py::test_figure_exists PASSED                      [ 84%]
+tests/test_R05_claims.py::test_text_artefacts_end_with_a_newline PASSED  [ 85%]
+tests/test_R05_claims.py::test_superseded_witness_is_documented_not_regenerated PASSED [ 85%]
+tests/test_R05_claims.py::test_report_deviation_classification 
+--- R05 deviation classification against v87 ---
+                   quantity  published  regenerated  printed_decimals degree                                                 source_cell
+               abrupt_slope      23.70    26.001631                 1     D2       R05_abrupt_add_vs_gamma.csv, OLS of ADD_Data on Gamma
+           abrupt_intercept      38.00    32.198021                 0     D2       R05_abrupt_add_vs_gamma.csv, OLS of ADD_Data on Gamma
+          sqrt_rule_fpr_pct      31.00    24.500000                 0     D2        R05_abrupt_add_vs_gamma.csv, FPR_rule_xSqrtGamma max
+   scaling_median_error_pct       5.40     5.346536                 1     D2            R05_ramp_multigamma_2e5.csv, ADD_Data vs Eq. (5)
+ recalib_margin_min_pct_2e5       7.00    -1.420701                 0     D2         R05_ramp_multigamma_2e5.csv, lambda_star_Data/Gamma
+ recalib_margin_max_pct_2e5      29.00    39.288641                 0     D2         R05_ramp_multigamma_2e5.csv, lambda_star_Data/Gamma
+             lambda_iid_2e5     129.50   128.631853                 1     D2                   R05_ramp_multigamma_2e5.csv, lambda_iid_H
+       grid_reach_wstar_2e5      22.50    22.500988                 1     D1     R05_ramp_multigamma_2e5.csv, w_over_wstar_predicted max
+      censoring_max_pct_2e5       1.30     0.250000                 1     D2              R05_ramp_multigamma_2e5.csv, censored_Data max
+      detection_min_pct_2e5      98.70    99.750000                 1     D2               R05_ramp_multigamma_2e5.csv, DetRate_Data min
+  lambda_over_gamma_min_2e5     138.00   126.804379                 0     D2         R05_ramp_multigamma_2e5.csv, lambda_star_Data/Gamma
+  lambda_over_gamma_max_2e5     167.00   179.169559                 0     D2         R05_ramp_multigamma_2e5.csv, lambda_star_Data/Gamma
+        sd_over_add_max_2e5       3.20     0.940909                 1     D2      R05_ramp_multigamma_2e5.csv, SEM_Data and DetRate_Data
+       med_over_add_min_2e5       0.68     0.758602                 2     D2              R05_ramp_multigamma_2e5.csv, MED_Data/ADD_Data
+        rho_w_share_pct_2e5      58.00    57.259679                 0     D2                       R05_ramp_multigamma_2e5.csv, widest w
+           exponent_min_2e5       0.65     0.679887                 2     D2    R05_ramp_multigamma_2e5.csv, ramp fit on w_delta_applied
+           exponent_max_2e5       0.71     0.697822                 2     D2    R05_ramp_multigamma_2e5.csv, ramp fit on w_delta_applied
+     model_exponent_min_2e5       0.71     0.708701                 2     D1 R05_ramp_multigamma_2e5.csv, Eq. (5) fit on w_delta_applied
+     model_exponent_max_2e5       0.73     0.719008                 2     D2 R05_ramp_multigamma_2e5.csv, Eq. (5) fit on w_delta_applied
+             lambda_iid_3e6     303.00   282.536302                 1     D2                   R05_ramp_multigamma_3e6.csv, lambda_iid_H
+       grid_reach_wstar_3e6     225.00   224.999974                 1     D1     R05_ramp_multigamma_3e6.csv, w_over_wstar_predicted max
+low_gamma_max_error_pct_3e6       5.70     5.797607                 1     D2          R05_ramp_multigamma_3e6.csv, Gamma <= 4 vs Eq. (5)
+        rho_w_share_pct_3e6      78.00    78.106010                 0     D1                       R05_ramp_multigamma_3e6.csv, widest w
+ recalib_margin_max_pct_3e6      96.00    96.435906                 0     D1         R05_ramp_multigamma_3e6.csv, lambda_star_Data/Gamma
+         sixth_moment_gamma       7.10     7.079317                 1     D1                                 closed form, no Monte Carlo
+ moment_margin_at_gamma_max       0.80     0.793127                 1     D1                                 closed form, no Monte Carlo
+      lambda_iid_ladder_77k     102.80   111.025130                 1     D2                       R05_lambda_iid_horizon.csv, H = 77000
+
+--- Concept threshold, witness against regenerated ---
+ abrupt: witness lambda_star_Concept = 10.8000, FPR = 0.0950
+    2e5: witness lambda_star_Concept = 15.8100, FPR = 0.0525
+    3e6: witness lambda_star_Concept = 19.0200, FPR = 0.0550
+
+The v87 numeral lambda_C = 10 matches none of the three. See docs/sections/R05.md.
+PASSED    [ 86%]
+tests/test_R06_claims.py::test_R06_cardinalities_and_grid PASSED         [ 87%]
+tests/test_R06_claims.py::test_R06_gamma_grid_is_realised_in_closed_form PASSED [ 88%]
+tests/test_R06_claims.py::test_R06_fourth_moment_boundary_is_computed_not_hard_coded PASSED [ 89%]
+tests/test_R06_claims.py::test_R06_boundary_is_not_confused_with_the_nearest_grid_point PASSED [ 90%]
+tests/test_R06_claims.py::test_R06_panel_A_design_is_paired_and_declared PASSED [ 90%]
+tests/test_R06_claims.py::test_R06_pooled_binary_level_covers_nominal_at_cluster_precision PASSED [ 91%]
+tests/test_R06_claims.py::test_R06_counterfactual_arm_removes_the_pairing PASSED [ 92%]
+tests/test_R06_claims.py::test_R06_no_per_gamma_gate_is_possible PASSED  [ 93%]
+tests/test_R06_claims.py::test_R06_squared_stream_rejects_massively PASSED [ 94%]
+tests/test_R06_claims.py::test_R06_task_boundaries_saturate PASSED       [ 95%]
+tests/test_R06_claims.py::test_R06_intermediate_threshold_is_reported_and_labelled PASSED [ 95%]
+tests/test_R06_claims.py::test_R06_median_task_control_covers_nominal_and_is_weakly_resolved PASSED [ 96%]
+tests/test_R06_claims.py::test_R06_no_silent_fallback_survived_into_the_artefacts PASSED [ 97%]
+tests/test_R06_claims.py::test_R06_reproduces_the_witness_byte_for_byte PASSED [ 98%]
+tests/test_R06_claims.py::test_R06_macros_are_emitted_and_computed PASSED [ 99%]
+tests/test_R06_claims.py::test_R06_report_against_the_witness PASSED     [100%]
+
+============================= 120 passed in 1.08s ==============================

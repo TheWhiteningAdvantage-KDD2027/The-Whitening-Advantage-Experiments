@@ -1,0 +1,15 @@
+2026-08-01 04:40:04 | INFO | Python: 3.12.9
+2026-08-01 04:40:04 | INFO |   numpy: 1.26.4
+2026-08-01 04:40:04 | INFO |   pandas: 2.3.2
+2026-08-01 04:40:04 | INFO |   scipy: 1.16.2
+2026-08-01 04:40:04 | INFO |   matplotlib: 3.10.6
+2026-08-01 04:40:04 | INFO |   joblib: 1.4.2
+2026-08-01 04:40:04 | INFO | Executing 1000 streams per cell. Grids: 3 nu x 4 horizons. 4 cores.
+2026-08-01 04:40:52 | INFO | nu=5.0: Slope = -2.367e-03 95% CI[-7.736e-03, 3.003e-03]. Indistinguishable from zero -> H1 refuted, H2 not refuted.
+2026-08-01 04:40:52 | INFO | nu=6.0: Slope = -3.562e-03 95% CI[-8.756e-03, 1.632e-03]. Indistinguishable from zero -> H1 refuted, H2 not refuted.
+2026-08-01 04:40:52 | INFO | nu=7.0: Slope = -1.835e-03 95% CI[-6.276e-03, 2.606e-03]. Indistinguishable from zero -> H1 refuted, H2 not refuted.
+2026-08-01 04:40:52 | INFO | Negative control (raw): m=12 tests. P(at least one rejection | H0) = 0.460
+2026-08-01 04:40:52 | INFO | S4bis Substituted KS test (raw): KS_stat=0.2380, p-value=0.4374
+2026-08-01 04:40:52 | INFO | Witness control (nu=7): m=4 tests. P(at least one rejection | H0) = 0.185
+2026-08-01 04:40:52 | INFO | S4bis Substituted KS test (nu=7): KS_stat=0.3666, p-value=0.5480
+2026-08-01 04:40:52 | INFO | Completed execution in 0.8 minutes.

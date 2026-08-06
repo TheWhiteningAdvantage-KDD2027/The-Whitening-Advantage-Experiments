@@ -1,8 +1,17 @@
----
-status: PARKED — do not apply
-trigger: acceptance notification
-target: articleB_whitening_v87.tex and figures/fig11_validity_map.png
----
+# Camera-ready candidate — Figure 6 Caption and Boundary, Section "Empirical Boundaries"
+
+| Field               | Value                                                                   |
+| ------------------- | ----------------------------------------------------------------------- |
+| **Status**          | **PARKED — do not apply**                                               |
+| Target file         | `articleB_whitening_v87.tex` and `figures/fig11_validity_map.png`       |
+| Trigger             | Acceptance notification only                                            |
+| Evidence            | R06 (paired design effect measurement, computed fourth-moment boundary) |
+| Register entry      | `docs/DEVIATIONS.md`, entry `R06-fourth-moment-boundary`                |
+| Blocking dependency | none                                                                    |
+
+**Why this is not applied now.** The manuscript is under review and cannot be edited.
+
+**What is being corrected.** The caption claims "100 streams per configuration" without mentioning they are paired across $\Gamma$, making the effective sample size 405, not 1300. Additionally, the fourth-moment boundary is exactly computed as $41.58$, not $41.6$, and the plot update visually detaches this analytic boundary from the nearest grid point ($41$).
 
 <<< RECHERCHER
 ~~~~~~~~~latex
