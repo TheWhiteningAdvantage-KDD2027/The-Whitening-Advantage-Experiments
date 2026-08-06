@@ -1,0 +1,15 @@
+\begin{table}[h]
+    \caption{Iso-FPR race under a location drift ($\Gamma \approx 11.6$, standardized Student-$t_{30}$ innovations, all arms calibrated to 5\% FPR, 2,000 streams). ADD in steps; DetRate in parentheses when below 1.}
+    \label{tab:isofpr_race}
+    \small
+    \begin{tabular}{lrrr}
+        \toprule
+        $c$    & \textsc{Recalib} ($(\varepsilon/\hat\sigma)^2$) & \textsc{Eco-L1} ($\varepsilon/\hat\sigma$) & \textsc{Concept} (sign) \\
+        \midrule
+        $0.25$ & $2293$ \; $(0.19)$                              & $389$                                      & $460$                   \\
+        $0.50$ & $1337$ \; $(0.89)$                              & $72.0$                                     & $101$                   \\
+        $1.00$ & $203$                                           & $26.4$                                     & $43.8$                  \\
+        $2.00$ & $55.9$                                          & $12.6$                                     & $28.9$                  \\
+        \bottomrule
+    \end{tabular}
+\end{table}

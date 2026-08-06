@@ -1,0 +1,9 @@
+2026-07-26 23:55:55,882 - INFO - Starting evaluation of detection floors (sign stream vs unconditional budget).
+2026-07-26 23:55:55,889 - INFO - SANITY CHECK (a) PASSED: consistency with original detectable_flag validated.
+2026-07-26 23:55:55,889 - INFO - COVID anchor: T=23, q_phase=0.260870, kl=0.162042, floor_g20=18.49, floor_g252=34.12
+2026-07-26 23:55:55,889 - INFO - SANITY CHECK (b) PASSED: COVID anchor cell verified.
+2026-07-26 23:55:55,890 - INFO - SANITY CHECK (c) PASSED: 53/66 phases out of budget (80.30%); internally consistent.
+2026-07-26 23:55:55,890 - INFO - SANITY CHECK (d) PASSED: No NaN values in kl_sign_nats_day.
+2026-07-26 23:55:55,893 - INFO - File generated: /home/m53/The-Whitening-Advantage-Experiments-CHECK/figures/protocol_20a_sign_floor.csv (67 lines)
+2026-07-26 23:55:55,894 - INFO - File generated: /home/m53/The-Whitening-Advantage-Experiments-CHECK/figures/protocol_20b_census_feasibility_vs_gamma.csv (7 lines)
+2026-07-26 23:55:55,894 - INFO - Processing completed successfully.

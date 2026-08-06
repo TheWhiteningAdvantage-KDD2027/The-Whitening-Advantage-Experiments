@@ -1,0 +1,2384 @@
+# The Whitening Advantage: Exact Calibration of Concept-Drift Detectors on Heteroscedastic Streams
+
+This repository contains the official, strictly reproducible experimental pipeline for the KDD 2027 Research Track submission *The Whitening Advantage*.
+
+**CRITICAL NOTICE:** Please read [`docs/DEVIATIONS.md`](docs/DEVIATIONS.md) first. It contains the consolidated register of all deviations, corrections, and clarifications between the submitted manuscript and this reproducible repository.
+
+## 1. Overview
+This repository provides the code to independently reproduce the 17 experiments supporting the paper's claims. The central thesis is that on a sign-prediction task, the binary error stream of a non-anticipative classifier is exactly i.i.d. Bernoulli(1/2) regardless of underlying GARCH volatility dynamics, enabling exact concept-drift detector calibration without variance estimation.
+
+## 2. Repository Structure
+* `data/`: Contains derived daily ETF series (`derived_firstrate/`) and read-only historical campaign witnesses (`reference/`). Raw proprietary intraday ETF data is omitted.
+* `docs/`: Contains the deviation register (`DEVIATIONS.md`), per-experiment markdown reports (`sections/`), and the frozen LaTeX corrections parked for the final version (`camera_ready_candidates/`).
+* `experiments/`: Contains the FAIR execution harness (`common/`) and the standalone execution scripts per stream (`R[XX]_<slug>/`).
+* `results/`: Destination for all generated artifacts (CSV data, figures, LaTeX macros).
+* `tests/`: Pytest regression suites certifying the mathematical and numerical integrity of each stream.
+
+## 3. Certified Environment
+The campaign is locked to the following environment to guarantee IEEE 754 float precision determinism.
+* **Python:** 3.12.9
+* **Determinism:** MKL and OpenBLAS are strictly pinned to single-threading (`OMP_NUM_THREADS=1`, `MKL_CBWR=COMPATIBLE`) before NumPy imports. `PYTHONHASHSEED` is strictly enforced to `42`.
+
+## 4. Reproduction Commands
+The pipeline is designed for push-button reproduction. The master orchestrator automatically discovers and executes all canonical experiment scripts in sequence, followed by the test suite.
+
+```bash
+# Execute the entire pipeline and the test suite
+bash run_all.sh
+```
+
+To run a specific stream individually:
+```bash
+bash run_experiment_R01.sh
+```
+
+To execute only the test suite:
+```bash
+bash run_tests.sh
+```
+
+## 5. Data Availability
+Experiments relying on real-world equity data (R01, R16) consume pre-aggregated daily derived series located in `data/derived_firstrate/`, ensuring full reproducibility without requiring the proprietary 1-minute FirstRate data. An alternative open-source path (`--data-source yfinance`) is additionally provided in R01.
+
+---
+## EXPERIMENT REPORTS
+
+# R01 — Real World Backtest (In-The-Wild)
+
+This experiment evaluates the structural latency (Lethargy Tax) of traditional variance-normalized drift detectors against a strictly calibrated concept-drift monitor over heteroscedastic ETF series.
+
+## Data Availability & Epistemological Justification
+The primary results published in the manuscript depend on proprietary intraday data provided by **FirstRate Data**. These raw files (`*_full_1min_adjsplitdiv.txt`) are strictly non-redistributable and are intentionally absent from this repository. 
+
+**Why intraday data for a daily backtest?**
+The published pipeline consumes 1-minute intraday quotes downsampled to daily resolution
+rather than a daily API endpoint. Two reasons are documented in the source pipeline; a third
+is a working assumption of this repository and is labelled as such.
+
+1. **Validity domain of the theorem (documented).** The whitening proposition assumes a
+   martingale difference sequence. At 1-minute resolution that assumption fails: bid-ask
+   bounce induces negative sign autocorrelation and intraday seasonality is pronounced. Daily
+   resolution is the resolution at which the theorem applies, and the downsampling step exists
+   to reach it — not to improve on daily APIs.
+2. **Session filter (documented, implemented).** The ingestion step restricts each day to the
+   09:30-16:00 window and discards days carrying fewer than fifty active 1-minute bars, then
+   takes the last bar close of the retained window. Half-days and heavily halted sessions are
+   therefore excluded by an explicit, auditable rule rather than by the vendor's own
+   convention.
+3. **Stability of the historical record (assumption, not measured here).** Adjusted-close
+   series are recomputed by data providers when corporate actions occur, so a series
+   downloaded today need not match one downloaded a year ago. A frozen vendor extract avoids
+   that mutation. This repository does not quantify how large the resulting difference is;
+   the sensitivity analysis below measures the combined effect of source and window, not of
+   retroactive adjustment alone.
+
+To guarantee strict reproducibility for academic reviewers, the repository integrates the pre-aggregated daily derivatives (`data/derived_firstrate/R01_daily_<TICKER>.csv`) synthesized under these rules. The default pipeline (`--data-source firstrate --stage analyse`) consumes these derived series to recreate the entire downstream analysis precisely without requiring the raw data.
+
+## Public-data execution path and sensitivity analysis
+Because the raw FirstRate data is strictly proprietary and cannot be shared, a second, fully independent execution path (`--data-source yfinance`) lets anyone rerun the
+whole chain from public prices via the `yfinance` API. It never overwrites a FirstRate artefact: every output carries
+a `_yfinance` suffix and a `data_source` column, and execution traces are explicitly preserved in `logs/R01_real_world_backtest/` (e.g., `exp_R01_real_world_backtest_yfinance.log`). 
+Selecting it is always explicit; the pipeline never falls back to it silently.
+
+**Measured differences (D2).** The fitted GARCH penalty moves on three of four assets:
+
+| Ticker | `gamma_hat` FirstRate | `gamma_hat` yfinance | `n_days` FirstRate | `n_days` yfinance |
+| ------ | --------------------- | -------------------- | ------------------ | ----------------- |
+| SPY    | 14.998                | 15.776               | 6414               | 6414              |
+| PFF    | 2.579                 | 2.582                | 4403               | 4595              |
+| VNQ    | 4.212                 | 4.320                | 5014               | 5224              |
+| BWX    | 5.813                 | 5.675                | 4451               | 4460              |
+
+**Confounding, stated explicitly.** The two paths do not span identical samples: the public
+histories start earlier for PFF, VNQ and BWX. The observed change in `gamma_hat` is therefore
+**associated** with the change of source, but source and estimation window vary together and
+this experiment cannot separate them. Attributing the difference to price-adjustment
+methodology alone would require rerunning both paths on a common date range, which is not
+done here. SPY is the one asset where the windows coincide (6414 days in both paths), and it
+carries the largest shift, 14.998 to 15.776 — an observation consistent with a source effect
+but resting on a single asset.
+
+**What the downstream results show.** Under the directional injection protocol, the `Data`
+arm detection rates move from 0.0 / 30.6 / 16.7 / 19.4% to 0.0 / 27.8 / 16.7 / 22.2%, and the
+`Concept` arm holds 100% detection on all four assets with average detection delays differing
+by at most 0.81 day. The qualitative separation reported in the manuscript — a squared sensor
+that is weak and placebo-confounded against a sign filter that detects at every onset — is
+reproduced under both sources. This is a robustness observation over one alternative data
+source; it is not a test of the proposition, which is a statement about conditional symmetry
+and cannot be settled by comparing two price vendors.
+
+## Execution
+
+```bash
+bash run_experiment_R01.sh            # default: FirstRate, stage=analyse
+bash run_experiment_R01.sh all        # re-ingest raw FirstRate tapes (requires the vendor files)
+python experiments/R01_real_world_backtest/exp_R01_real_world_backtest.py \
+    --data-source yfinance --stage all
+```
+
+## Expected artefacts
+
+- `results/R01_real_world_backtest/data/R01_garch_models.csv` — Table 2 caption range
+  (`gamma_hat` in [2.6, 15.0]) and the pre-2020 Ljung-Box p-values
+- `R01_covid_trajectories.csv`, `R01_covid_alarms.csv` — Figure 2(A); `n_alarms = 0` records
+  that neither monitor fires
+- `R01_injection_summary.csv`, `R01_placebo_control.csv`, `R01_magnitude_sweep.csv`,
+  `R01_symmetry_2020.csv` — Figure 2(B) and the Section 4 detection rates
+- `results/R01_real_world_backtest/figures/fig02_spy_in_the_wild.png` — **Figure 2**
+- `results/R01_real_world_backtest/tables/R01_claims.tex` — 24 macros, one per published value
+
+## Numerical agreement with the submitted campaign
+
+This repository enforces single-threaded linear algebra and `MKL_CBWR=COMPATIBLE`, without
+which no run is reproducible across machines. Two quantities of the GARCH fit differ from the
+submitted campaign by an amount described below; the compliant run is the reference this
+repository certifies, and the difference is documented rather than explained away.
+
+**Bit-identical to the submitted campaign.** Every cell of `R01_injection_summary.csv`,
+`R01_placebo_control.csv`, `R01_magnitude_sweep.csv` and `R01_symmetry_2020.csv`; and within
+`R01_garch_models.csv`, the columns `alpha`, `beta`, `gamma_hat`, `q_hat`,
+`lb_pvalue_warmup`, `n_days`, `data_start`, `data_end`. Every macro in `R01_claims.tex` is
+unchanged, so **no published number moves**.
+
+**D0 — variance target, cause not identified.** `omega` and `sigma_unc` drift by at most
+`2.7e-14` in relative terms (44 to 205 units in the last place across the four tickers, worst
+case PFF `omega`). `sigma_unc = sqrt(omega / (1 - alpha - beta))` inherits half the relative
+drift of `omega`, the arithmetic signature of a single upstream perturbation rather than of an
+unstable optimiser. `gamma_hat` is unaffected: it depends only on `alpha` and `beta`, which the
+QMLE truncates to six decimals.
+
+**An earlier revision of this document attributed the drift to BLAS thread pinning. That
+attribution has been tested and refuted.** Running with `--legacy-blas`, which lifts the
+thread pins and `MKL_CBWR`, reproduces the compliant output bit for bit and does not recover
+the submitted values. The attribution was implausible on inspection as well: the variance
+target is `np.var` over a one-dimensional `ndarray`, a reduction that does not dispatch to
+BLAS at all.
+
+The cause of the drift is therefore **unidentified**. It is bounded, it touches no published
+number, and every macro in `R01_claims.tex` is unchanged; but this repository does not claim
+to know where it comes from, and does not offer a command that recovers the submitted
+serialisation.
+
+**D0 — COVID trajectory, `Data` arm.** 220 of 253 daily values move, with a maximum absolute
+change of `4.4e-16` and a peak eight units in the last place from the submitted value. The
+peak remains `0.37` at published precision, and the monitor stays far below its alarm
+threshold of 1.0, so the reported outcome — no alarm — is untouched.
+
+**Bit-identical — COVID trajectory, `Concept` arm.** All 253 values, including the peak, are
+unchanged to the last bit. This follows from pipeline structure rather than from any
+numerical property: the sign stream is built from the raw returns and the warm-up estimate
+`q_hat`, and consumes neither the variance target nor the conditional volatility, so no
+perturbation of the GARCH fit can reach it. It is a consequence of the design, not evidence
+for the whitening proposition, which concerns conditional symmetry and cannot be tested by
+varying BLAS threading.
+
+**Reproducibility as certified.** Two consecutive runs of the compliant pipeline produce
+byte-identical CSV, figure and macro files, with SHA-256 digests recorded in the run log.
+That is the reproducibility guarantee this repository makes.
+
+## Cosmetic deviations
+Panel labels `(A)` and `(B)` are rendered in bold, left-aligned, matching the panel letters
+already used in the v87 caption for this figure. No plotting randomness is involved in this
+figure, so the rendering is deterministic without further intervention.
+
+**Certified environment:** CPython 3.12.9, `numpy 1.26.4`, `pandas 2.3.2`, `scipy 1.16.2`, `statsmodels 0.14.5`, `matplotlib 3.10.6`, `yfinance 1.2.0`, under `PYTHONHASHSEED=42` and single-threaded BLAS.# R02b — Resolution of the i.i.d.-arm claim
+
+R02 left one manuscript claim unresolved. On the i.i.d. arm of the whitening experiment —
+the arm with no volatility clustering — v87 reports that the squared innovations "already
+over-reject" at 9.2%. At the 120 streams R02 devotes to that arm, the Wilson interval is too
+wide to separate 9.2% from the nominal 5%, so the claim was neither supported nor refuted.
+
+This experiment resizes the arm to 1000 streams per grid point and, rather than measuring a
+single number, sweeps the Student-t degrees of freedom to test whether the effect behaves as
+a tail phenomenon at all.
+
+## Design
+
+1000 i.i.d. streams per grid point, `nu` in {5, 6, 7, 8.5, 12, 30}, `n_steps = 8000`,
+Ljung-Box at lag 20 — the horizon, lag and test implementation are copied verbatim from R02
+so the two experiments remain comparable. No GARCH dynamics (`alpha = beta = 0`) and no
+classifier: this measures the `Data` stream alone.
+
+**Negative control.** Every stream is tested twice, on the squared innovations and on the raw
+innovations, using the same realisation. The raw stream is i.i.d. with finite variance for
+every `nu` on the grid, so its rejection rate must hold the nominal level throughout. If it
+did not, the effect would lie in the test implementation rather than in the squaring step.
+
+## Execution
+
+```bash
+bash run_experiment_R02b.sh
+```
+
+## Results
+
+| `nu` | rejection on `eps^2` | 95% Wilson   | contains 5% | rejection on `eps` | contains 5% |
+| ---- | -------------------- | ------------ | ----------- | ------------------ | ----------- |
+| 5.0  | 8.8%                 | [7.2, 10.7]% | **no**      | 5.7%               | yes         |
+| 6.0  | 7.9%                 | [6.4, 9.7]%  | **no**      | 4.3%               | yes         |
+| 7.0  | 5.8%                 | [4.5, 7.4]%  | yes         | 5.7%               | yes         |
+| 8.5  | 6.1%                 | [4.8, 7.8]%  | yes         | 4.2%               | yes         |
+| 12.0 | 4.8%                 | [3.6, 6.3]%  | yes         | 4.2%               | yes         |
+| 30.0 | 6.0%                 | [4.7, 7.6]%  | yes         | 4.6%               | yes         |
+
+The negative control holds the nominal level at all six grid points, so the distortion is
+specific to the squared stream.
+
+## Resolution of the manuscript claim
+
+**The claim as printed is not reproduced; the phenomenon it describes is.**
+
+At `nu = 7` — the value used throughout the paper — the squared stream rejects at 5.8% with a
+Wilson interval that contains 5%. The 9.2% printed in v87 is not recovered at ten times the
+sample size, and the original figure rested on 11 rejections out of 120, whose interval
+excluded 5% by a single rejection.
+
+At heavier tails the effect is unambiguous: 7.9% at `nu = 6` and 8.8% at `nu = 5`, both
+excluding the nominal level. The transition sits between `nu = 6` and `nu = 7`.
+
+**The stated mechanism is misstated.** v87 attributes the distortion to `t_7` depriving
+`eps^2` of a fourth moment. For an i.i.d. series the Ljung-Box asymptotics require a finite
+variance of the tested series, i.e. `E[eps^4] < inf`, i.e. `nu > 4`. That condition holds at
+every grid point here, including `nu = 5`. The quantity that is missing below `nu = 8` is the
+fourth moment of `eps^2` itself, `E[eps^8]`, which governs the tail quantile rather than the
+validity of the limit.
+
+**The mechanism behind the measured transition is not identified.** A convergence-rate
+explanation — the third absolute moment of the autocovariance summand is finite only for
+`nu > 6`, so the central limit approximation converges slowly below that — predicts the
+observed transition point, but fails its own counterfactual: a rate effect must shrink as the
+horizon grows, and at `nu = 5` the rejection rate is flat at 9-10% across horizons from
+2,000 to 128,000 steps. The competing explanation, an infinite `E[eps^8]` making the 95%
+quantile converge arbitrarily slowly, is consistent with that persistence but does not
+explain why `nu = 7` is already at nominal while `E[eps^8]` is still infinite there. Neither
+account covers the data, and this repository does not assert one.
+
+## Impact on the manuscript
+
+The sentence in Section "Empirical Boundaries" needs amending: the parenthetical figure of
+9.2% at `t_7` is not supported, while the qualitative statement holds once the claim is moved
+to the heavy-tail region. A proposed replacement accompanies this section in the repository
+issue tracker. **No figure, table or conclusion of the paper depends on this number**: the
+whitening result rests on the binary-error arm, which is unaffected.
+
+## Expected artefacts
+
+- `results/R02b_iid_arm_resolution/data/R02b_rejection_vs_nu.csv`
+- `results/R02b_iid_arm_resolution/data/R02b_streams.csv` — 6000 rows, one per stream
+- `results/R02b_iid_arm_resolution/figures/figA01_iid_overrejection_vs_nu.png`
+- `results/R02b_iid_arm_resolution/tables/R02b_claims.tex`
+- `logs/R02b_iid_arm_resolution/exp_R02b_iid_arm_resolution.log`
+
+## Environment
+
+CPython 3.12.9, `numpy 1.26.4`, `pandas 2.3.2`, `scipy 1.16.2`, `matplotlib 3.10.6`,
+`joblib 1.4.2`, under `PYTHONHASHSEED=42` and single-threaded BLAS. Two consecutive runs
+produce byte-identical outputs; SHA-256 digests are recorded in the log.# R02b — Resolution of the i.i.d.-arm claim
+
+R02 left one manuscript claim unresolved. On the i.i.d. arm of the whitening experiment —
+the arm with no volatility clustering — v87 reports that the squared innovations "already
+over-reject" at 9.2%. At the 120 streams R02 devotes to that arm, the Wilson interval is too
+wide to separate 9.2% from the nominal 5%, so the claim was neither supported nor refuted.
+
+This experiment resizes the arm to 1000 streams per grid point and, rather than measuring a
+single number, sweeps the Student-t degrees of freedom to test whether the effect behaves as
+a tail phenomenon at all.
+
+## Design
+
+1000 i.i.d. streams per grid point, `nu` in {5, 6, 7, 8.5, 12, 30}, `n_steps = 8000`,
+Ljung-Box at lag 20 — the horizon, lag and test implementation are copied verbatim from R02
+so the two experiments remain comparable. No GARCH dynamics (`alpha = beta = 0`) and no
+classifier: this measures the `Data` stream alone.
+
+**Negative control.** Every stream is tested twice, on the squared innovations and on the raw
+innovations, using the same realisation. The raw stream is i.i.d. with finite variance for
+every `nu` on the grid, so its rejection rate must hold the nominal level throughout. If it
+did not, the effect would lie in the test implementation rather than in the squaring step.
+
+## Execution
+
+```bash
+bash run_experiment_R02b.sh
+```
+
+## Results
+
+| `nu` | rejection on `eps^2` | 95% Wilson   | contains 5% | rejection on `eps` | contains 5% |
+| ---- | -------------------- | ------------ | ----------- | ------------------ | ----------- |
+| 5.0  | 8.8%                 | [7.2, 10.7]% | **no**      | 5.7%               | yes         |
+| 6.0  | 7.9%                 | [6.4, 9.7]%  | **no**      | 4.3%               | yes         |
+| 7.0  | 5.8%                 | [4.5, 7.4]%  | yes         | 5.7%               | yes         |
+| 8.5  | 6.1%                 | [4.8, 7.8]%  | yes         | 4.2%               | yes         |
+| 12.0 | 4.8%                 | [3.6, 6.3]%  | yes         | 4.2%               | yes         |
+| 30.0 | 6.0%                 | [4.7, 7.6]%  | yes         | 4.6%               | yes         |
+
+The negative control holds the nominal level at all six grid points, so the distortion is
+specific to the squared stream.
+
+## Resolution of the manuscript claim
+
+**The claim as printed is not reproduced; the phenomenon it describes is.**
+
+At `nu = 7` — the value used throughout the paper — the squared stream rejects at 5.8% with a
+Wilson interval that contains 5%. The 9.2% printed in v87 is not recovered at ten times the
+sample size, and the original figure rested on 11 rejections out of 120, whose interval
+excluded 5% by a single rejection.
+
+At heavier tails the effect is unambiguous: 7.9% at `nu = 6` and 8.8% at `nu = 5`, both
+excluding the nominal level. The transition sits between `nu = 6` and `nu = 7`.
+
+**The stated mechanism is misstated.** v87 attributes the distortion to `t_7` depriving
+`eps^2` of a fourth moment. For an i.i.d. series the Ljung-Box asymptotics require a finite
+variance of the tested series, i.e. `E[eps^4] < inf`, i.e. `nu > 4`. That condition holds at
+every grid point here, including `nu = 5`. The quantity that is missing below `nu = 8` is the
+fourth moment of `eps^2` itself, `E[eps^8]`, which governs the tail quantile rather than the
+validity of the limit.
+
+**The mechanism behind the measured transition is not identified.** A convergence-rate
+explanation — the third absolute moment of the autocovariance summand is finite only for
+`nu > 6`, so the central limit approximation converges slowly below that — predicts the
+observed transition point, but fails its own counterfactual: a rate effect must shrink as the
+horizon grows, and at `nu = 5` the rejection rate is flat at 9-10% across horizons from
+2,000 to 128,000 steps. The competing explanation, an infinite `E[eps^8]` making the 95%
+quantile converge arbitrarily slowly, is consistent with that persistence but does not
+explain why `nu = 7` is already at nominal while `E[eps^8]` is still infinite there. Neither
+account covers the data, and this repository does not assert one.
+
+## Impact on the manuscript
+
+The sentence in Section "Empirical Boundaries" needs amending: the parenthetical figure of
+9.2% at `t_7` is not supported, while the qualitative statement holds once the claim is moved
+to the heavy-tail region. A proposed replacement accompanies this section in the repository
+issue tracker. **No figure, table or conclusion of the paper depends on this number**: the
+whitening result rests on the binary-error arm, which is unaffected.
+
+## Expected artefacts
+
+- `results/R02b_iid_arm_resolution/data/R02b_rejection_vs_nu.csv`
+- `results/R02b_iid_arm_resolution/data/R02b_streams.csv` — 6000 rows, one per stream
+- `results/R02b_iid_arm_resolution/figures/figA01_iid_overrejection_vs_nu.png`
+- `results/R02b_iid_arm_resolution/tables/R02b_claims.tex`
+- `logs/R02b_iid_arm_resolution/exp_R02b_iid_arm_resolution.log`
+
+## Environment
+
+CPython 3.12.9, `numpy 1.26.4`, `pandas 2.3.2`, `scipy 1.16.2`, `matplotlib 3.10.6`,
+`joblib 1.4.2`, under `PYTHONHASHSEED=42` and single-threaded BLAS. Two consecutive runs
+produce byte-identical outputs; SHA-256 digests are recorded in the log.## Results and mechanism test
+
+The design compares two accounts of the heavy-tail over-rejection found in R02b:
+**H1**, a convergence-rate effect (the third absolute moment of the autocovariance summand
+is finite only for `nu > 6`); **H2**, a quantile that never converges because `E[eps^8]` is
+infinite for `nu <= 8`.
+
+**The horizon slope does not separate them.** Over the sweep, `log(128000/2000) = 4.16`. The
+slope a full decay to nominal would produce is -0.0072 at `nu = 5`, against a measured
+interval of [-0.0077, +0.0030]: the decay slope lies **inside** the interval. The same holds
+at `nu = 6` and `nu = 7`. The test therefore cannot reject H1, and the flat slope must not be
+read as evidence against it. This is a limitation of the design, not a finding. A rate effect
+whose summand lacks a third absolute moment carries no `n^{-1/2}` guarantee and may be flat
+over a 64-fold horizon increase.
+
+**The witness arm does separate them.** `E[eps^8]` is infinite at `nu = 7` exactly as it is at
+`nu = 5` and `nu = 6`, so H2 predicts over-rejection in all three arms. Pooled over the four
+horizons (n = 4000 per arm):
+
+| `nu` | pooled rejection on `eps^2` | 95% Wilson    | excludes nominal |
+| ---- | --------------------------- | ------------- | ---------------- |
+| 5    | 7.75%                       | [6.96, 8.62]% | yes              |
+| 6    | 7.72%                       | [6.94, 8.59]% | yes              |
+| 7    | 5.60%                       | [4.93, 6.36]% | no               |
+
+H2 does not survive its own witness arm. H1's location prediction, by contrast, is met: the
+summand `Z_t = (Y_t - mu)(Y_{t+k} - mu)` with `Y = eps^2` satisfies `E|Z|^3 = (E[eps^6])^2`,
+finite exactly when `nu > 6`, and the measured transition sits between `nu = 6` and `nu = 7`.
+
+**What this experiment establishes.** The over-rejection is located at the loss of the sixth
+moment; it is still present at the largest horizon tested (7.7% at `nu = 5`, `n = 128000`,
+Wilson [6.2, 9.5]%); it is absent from the raw innovations at every cell. **What it does not
+establish** is the mechanism: the coincidence of the transition with the Berry-Esseen boundary
+is suggestive, and this repository does not assert it as a cause.
+
+The negative control is assessed by pooled coverage rather than per-cell gates. One cell
+(`nu = 6`, `n = 32000`) falls below nominal at 3.2%; with twelve cells, at least one miss has
+probability 46% under true coverage, so a per-cell gate would be a coin flip.
+
+## Impact on the manuscript
+
+None beyond the clause already registered in `docs/DEVIATIONS.md`, entry 3. R02c neither adds
+nor removes a manuscript claim: it constrains the explanation that a camera-ready revision may
+offer. Specifically, it rules out attributing the effect to a missing eighth moment, which is
+the account nearest to the wording currently in v87.# R03 — False positive rate explosion without recalibration (Figure 3)
+
+This experiment measures the cost of ignoring the heteroscedastic penalty `Gamma` that a
+GARCH stream inflicts on any drift monitor calibrated under an i.i.d. assumption. Two
+detectors are deployed under `H_0` on stationary GARCH(1,1) streams, 300 streams of 5000 steps
+per grid point, over a 20-point grid in `Gamma` running from 1.17 to 200 with `alpha = 0.08`
+and `beta` solved for each target.
+
+The scientific point is that the remedy is detector-specific.
+
+- **StrictCUSUM** (`lambda_iid = 65`, `delta_P = 0.5`). False alarms under `H_0` follow a
+  Siegmund-type bound `exp(-2 delta_P lambda / sigma_LR^2)` with long-run variance
+  `sigma_LR^2 = Gamma`, so the threshold must absorb the full inflation, `lambda x Gamma`.
+- **ADWIN-like window-mean detector.** Its cut statistic is a difference of window means, a
+  quantity on the scale of a standard deviation, so the correct correction is
+  `epsilon_cut x sqrt(Gamma)`.
+
+A third arm, described below, measures the i.i.d. level of both detectors at `Gamma = 1`
+exactly.
+
+## Execution
+
+```bash
+bash run_experiment_R03.sh
+```
+
+Measured cost: **39.4 s** on 48 worker processes (Python 3.12.9), 38.7 s to 39.4 s over four
+consecutive runs. Outputs do not depend on the
+worker count: every task derives its own 128-bit seed, and `executor.map` reduces in
+submission order. The `--fast` flag selects a degraded smoke path whose artefacts are all
+stamped `_fast` and which never certifies a manuscript number.
+
+## Expected artefacts
+
+- `results/R03_fpr_explosion/data/R03_fpr_cusum.csv` — **Figure 3(A)**
+- `results/R03_fpr_explosion/data/R03_fpr_adwin.csv` — **Figure 3(B)**
+- `results/R03_fpr_explosion/data/R03_iid_calibration_check.csv` — i.i.d. calibration arm
+- `results/R03_fpr_explosion/data/R03_add_vs_gamma.csv` — *not cited in v87*
+- `results/R03_fpr_explosion/data/R03_add_vs_width.csv` — *not cited in v87*
+- `results/R03_fpr_explosion/data/R03_sensitivity.csv` — *not cited in v87*
+- `results/R03_fpr_explosion/figures/fig03_fpr_explosion.png`
+- `results/R03_fpr_explosion/tables/R03_claims.tex`
+- `logs/R03_fpr_explosion/exp_R03_fpr_explosion.log`
+
+The three files marked *not cited in v87* are retained in full. They record the extent of the
+campaigns actually run and support no claim of the manuscript; the plotting code that turned
+them into figures has been removed, since no version of v87 cites those figures. They are
+neither a result nor waste.
+
+## Correspondence with v87
+
+| Quantity in v87                            | Macro                                | Regenerated |
+| ------------------------------------------ | ------------------------------------ | ----------- |
+| streams per grid point                     | `\RThreeStreamsPerPoint`             | 300         |
+| stream length                              | `\RThreeStreamLength`                | 5000        |
+| CUSUM threshold, `lambda_iid`              | `\RThreeLambdaIid`                   | 65.0        |
+| CUSUM reference drift, `delta_P`           | `\RThreeDeltaP`                      | 0.5         |
+| GARCH `alpha`                              | `\RThreeAlphaGarch`                  | 0.08        |
+| uncorrected CUSUM, maximum                 | `\RThreeCusumFprRawMax`              | 83.3%       |
+| uncorrected CUSUM, minimum on `Gamma > 20` | `\RThreeCusumFprRawMinAboveTwenty`   | 74.3%       |
+| uncorrected CUSUM, mean on `Gamma > 20`    | `\RThreeCusumFprRawMeanAboveTwenty`  | 80.7%       |
+| `lambda x sqrt(Gamma)` plateau             | `\RThreeCusumSqrtPlateau`            | 29.8%       |
+| `lambda x Gamma` rule, maximum             | `\RThreeCusumGammaRuleMax`           | 4.0%        |
+| uncorrected ADWIN, maximum                 | `\RThreeAdwinFprRawMax`              | 87.0%       |
+| recalibrated ADWIN, maximum                | `\RThreeAdwinFprRecalibMax`          | 11.0%       |
+| recalibrated ADWIN, mean over the grid     | `\RThreeAdwinFprRecalibMean`         | 9.6%        |
+
+The `Gamma` grid is bit-identical to the submitted campaign, which is asserted by the test
+suite. No measured difference can therefore be attributed to a moved grid point.
+
+## Control design
+
+The certification of this experiment does not gate on an extremum of the grid, and the
+substitution is deliberate.
+
+**What was replaced.** The original specification gated on `min FPR_raw >= 0.76` over
+`Gamma > 20`, on `FPR_sqrt` staying inside `[0.25, 0.35]`, and on `max FPR_recalib <= 0.13`.
+An extremum over a grid has no stable sampling distribution: its expectation drifts with the
+number of grid points, so the rate at which such a gate fires under its own null is a property
+of the grid rather than of the phenomenon. On the submitted campaign these three criteria sit
+0.00, 0.74 and 0.17 standard errors from their thresholds — the first is a coin flip.
+
+**What replaced it.** The same thresholds, applied to aggregates over the grid region:
+
+| Gate                                    | n     | Threshold      | Regenerated | Margin              |
+| --------------------------------------- | ----- | -------------- | ----------- | ------------------- |
+| mean `FPR_raw` over `Gamma > 20`        | 4 800 | `>= 0.76`      | 0.807083    | 8.3 pooled / 2.1 CRN SE |
+| mean `FPR_sqrt` over `Gamma > 20`       | 4 800 | `[0.25, 0.35]` | 0.297917    | 7.3 pooled / 1.8 CRN SE |
+| mean `FPR_recalib` over the whole grid  | 6 000 | `<= 0.13`      | 0.095500    | 9.1 pooled / 2.0 CRN SE |
+
+Two standard errors are reported for each gate. The pooled error treats the streams as
+independent; the common-random-number error treats the grid estimates as perfectly correlated,
+which they nearly are, since the seed of protocol 1A does not depend on `Gamma` and the base
+innovations are shared across grid points. The truth lies between the two and the conservative
+figure is the second.
+
+**Where the thresholds come from.** Only `0.13` is a literal numeral of v87. The other two
+operationalise prose, by rules fixed before the regenerated campaign was read and echoed
+verbatim into the run log:
+
+- "fires at close to 80% or above once `Gamma > 20`" → within 5% in relative terms of 0.80,
+  hence `>= 0.76`;
+- "leaves a residual plateau near 30%" → within 5 percentage points of 0.30, hence
+  `[0.25, 0.35]`.
+
+That `0.76` coincides with the minimum of the submitted campaign is a coincidence and not a
+derivation.
+
+**The substitution was not precautionary.** On the regenerated campaign the literal extremal
+criterion does fire: the minimum `FPR_raw` over `Gamma > 20` is 74.3% at `Gamma = 22.78`,
+below the 0.76 floor, with a firing probability under `H_0` of 0.255 at the observed aggregate
+rate. Every aggregate gate holds with a margin of several standard errors and no qualitative
+claim of v87 is contradicted. The literal criteria are reported as non-blocking warnings in
+the run log, with their firing probabilities.
+
+**What remains a hard gate.** Three relations hold for any realisation and are blocking:
+`FPR_gamma <= FPR_sqrt <= FPR_raw` row by row, and `FPR_recalib <= FPR_raw` row by row.
+Raising a detection threshold cannot create an alarm, and within a row the columns are one
+realisation read at several thresholds with `Gamma >= 1` by construction, so these are
+deterministic identities, not hypothesis tests. They have no probability of firing under their
+own null and fall outside the multiple-testing rule of the preamble. **That exemption rests on
+a premise the script verifies rather than assumes**: each worker reports whether its own
+indicators nest, and the run log records zero violations over 6000 CUSUM streams and 6000
+ADWIN streams. Were the columns to come from separate realisations, the ordering would become
+stochastic and the exemption would lapse.
+
+The monotonicity of `FPR_raw` in `Gamma` beyond `Gamma = 6` *is* a hypothesis test, so its
+tolerance is derived from the sampling mechanism — the standard error of a difference of two
+binomial proportions at 300 streams, Bonferroni corrected one-sided over the 18 consecutive
+differences at a family-wise level of 1%, giving a bound of -0.10997. The most negative
+observed difference is +0.000000 and Spearman's rho is 0.9974.
+
+## The i.i.d. calibration arm
+
+v87 describes the StrictCUSUM as "calibrated to a 5% nominal level under i.i.d. noise". No
+output of the submitted campaign supports that description: the lowest grid point sits at
+`Gamma = 1.174`, not at 1, and carries `alpha = 0.08` with `beta = 0`, so it is an ARCH(1)
+stream and not an i.i.d. one.
+
+This repository adds a dedicated arm at `Gamma = 1` exactly (`alpha = beta = 0`), 300 streams
+of 5000 steps, same innovations, same standardisation chain, same detectors and same
+thresholds as the grid. The script asserts `compute_gamma_exact(0, 0) == 1.0` before running
+it: at `alpha = beta = 0` the squared innovations are i.i.d., their long-run variance equals
+their variance, and any other value would invalidate the whole grid rather than this arm alone.
+
+| Detector    | FPR at `Gamma = 1` | Wilson 95%     | contains 5% |
+| ----------- | ------------------ | -------------- | ----------- |
+| StrictCUSUM | 2.0% (6/300)       | [0.9%, 4.3%]   | **no**      |
+| ADWIN       | 5.0% (15/300)      | [3.1%, 8.1%]   | yes         |
+
+ADWIN holds its nominal level. The StrictCUSUM fires at 2.0%, and its interval excludes 5%.
+
+This is not a defect of the detector. `lambda_iid = 65` is a conservative threshold, which is a
+legitimate design choice, and a conservative i.i.d. level makes the explosion documented above
+start from a lower base rather than a higher one. What is inexact is the description of that
+threshold as calibrated to 5%.
+
+## Known deviations from the submitted manuscript
+
+**Nominal level of the StrictCUSUM (D2).** v87 attributes a 5% nominal i.i.d. level to the
+StrictCUSUM. The dedicated arm measures 2.0% with a 95% Wilson interval of [0.9%, 4.3%], which
+excludes 5%; at the lowest grid point the same detector measures 4.0% against 5.3% in the
+submitted campaign, while ADWIN measures 9.3% there against 5.3%. The qualitative claim — the
+false alarm rate explodes with `Gamma` — holds and is strengthened, the explosion starting from
+2.0% rather than from 5%. A camera-ready candidate correcting the descriptor is parked in
+`docs/camera_ready_candidates/v87_cusum_nominal_level.md`; nothing is applied to the frozen
+manuscript.
+
+**Regenerated campaign values (D2).** Complying with the hardware-agnosticism rule of the
+specifications replaced the randomly salted built-in `hash()` of the submitted script by a
+128-bit MD5 derivation, and replaced its 32-bit integer seeds by 128-bit seed tuples. This
+draws a different, equally valid set of trajectories, so the printed values move at the
+printing precision of the manuscript. Every qualitative claim of `sec:fpr_explosion` holds.
+The full classification, quantity by quantity with its source cell, is in the run log and in
+`AUDIT_R03.md`.
+
+| Quantity                          | Published | Regenerated | Degree |
+| --------------------------------- | --------- | ----------- | ------ |
+| CUSUM `FPR_raw` max               | 0.830000  | 0.833333    | D2     |
+| CUSUM `FPR_raw` min on `Gamma>20` | 0.760000  | 0.743333    | D2     |
+| CUSUM `FPR_raw` mean on `Gamma>20`| 0.811042  | 0.807083    | D2     |
+| CUSUM `FPR_sqrt` max              | 0.330000  | 0.310000    | D2     |
+| CUSUM `FPR_sqrt` mean on `Gamma>20`| 0.319583 | 0.297917    | D2     |
+| CUSUM `FPR_gamma` max             | 0.016667  | 0.040000    | D2     |
+| CUSUM `FPR_raw` at lowest `Gamma` | 0.026667  | 0.040000    | D2     |
+| ADWIN `FPR_raw` max               | 0.876667  | 0.870000    | D2     |
+| ADWIN `FPR_recalib` max           | 0.126667  | 0.110000    | D2     |
+| ADWIN `FPR_recalib` mean          | 0.101833  | 0.095500    | D2     |
+| ADWIN `FPR_raw` at lowest `Gamma` | 0.053333  | 0.093333    | D2     |
+
+**Figure caption desynchronisation (presentation only).** v87 renders Figure 3 as a LaTeX
+float carrying two subfigures with distinct sub-captions. This repository emits a single
+two-panel image, which makes those "Left:"/"Right:" sub-captions inoperative. No `.tex` file of
+the manuscript is touched; a caption fix is to be produced separately. No numerical content
+changes.
+
+**Figure reference lines.** Both panels carry two horizontal lines: the measured FPR at the
+lowest grid point, which is the line the submitted figures drew, and the 5% nominal level
+declared in v87, which they did not. The first is labelled by its `Gamma` rather than as an
+"i.i.d. baseline", since `Gamma = 1.174` is not an i.i.d. point.
+
+## Reproducibility
+
+Two consecutive runs produce byte-identical outputs; the SHA-256 digests of all eight artefacts
+are recorded in the log. Removing the plotting code of the three uncited figures moves no
+value: an instrumented copy with `Fig8`, `Fig9` and `Fig12` re-injected produces the six CSV
+files byte for byte identically. The submitted script did contain a hidden coupling — its
+`Fig9` routine re-read `protocol_2a_add_vs_gamma.csv` from disk to recover an overshoot
+intercept, a CSV round-trip used as a memory bridge — but that coupling ran from plot to plot
+and never touched a data path.
+
+## Environment
+
+CPython 3.12.9, `numpy 1.26.4`, `pandas 2.3.2`, `scipy 1.16.2`, `matplotlib 3.10.6`, under
+`PYTHONHASHSEED=42`, single-threaded BLAS and `MKL_CBWR=COMPATIBLE`.
+# R04 — Iso-FPR race and relative efficiency (Figure 4, Table 3)
+
+This experiment races four monitoring pipelines under a location drift, every arm calibrated by
+bisection to the same 5% false-alarm rate so that a comparison of their delays is licit. Four
+arms, 2,000 null streams of 5,000 steps per cell, a 500-step warm-up, GARCH(1,1) with
+`alpha = 0.05` and `beta` solved for each target `Gamma`, standardized Student-`t_30`
+innovations:
+
+- **Recalib** — `(eps_t / sigma_hat_t)^2 - 1`, a scale sensor applied to a location pathology;
+- **Eco-L1** — `eps_t / sigma_hat_t`, GARCH fitted by QMLE on the warm-up, the parametric
+  location monitor;
+- **Oracle_Eco** — the same statistic standardized by the **true** GARCH parameters, the ideal
+  bound that isolates the estimation cost;
+- **Concept** — `1{eps_t > 0} - 1/2`, the sign-error stream, which estimates no variance at all.
+
+Two results are targeted. Under a location drift the squared sensor is structurally slow,
+because the shift enters the squared stream only at second order. And the delay ratio between
+the sign filter and the parametric route is governed by the Pitman efficiency of the sign test,
+which inverts in the heavy-tailed regime.
+
+## Execution
+
+```bash
+bash run_experiment_R04.sh              # full campaign
+bash run_experiment_R04.sh --fast       # degraded smoke path, artefacts stamped _fast
+```
+
+Measured cost: **225.9 s** on 48 worker processes, 289.4 s on 20 (CPython 3.12.9). v87 reports about 25 min
+for this race on 24 cores; the campaign is not smaller, it is reduced differently. The
+bisection of the submitted script re-ran the detector over all 2,000 streams at each of its 15
+iterations. A stream alarms at threshold `lambda` if and only if `sup_t S_t > lambda`, so one
+pass storing that supremum answers the question at every `lambda` at once. The bisection itself
+is unchanged — same domain, same update rule, same 15 iterations, same tolerance, same
+`lambda*` — only its inner false-alarm count is memoised. The script asserts the equivalence
+against `strict_cusum` at four probe thresholds before any calibration is used.
+
+Outputs do not depend on the worker count: every task derives its own 128-bit seed and
+`executor.map` reduces in submission order. Two runs at 48 and at 16 workers produce
+byte-identical artefacts.
+
+## Expected artefacts
+
+- `results/R04_isofpr_race/data/R04_bernoulli_constant.csv` — constant-threshold control
+- `results/R04_isofpr_race/data/R04_isofpr_calibration.csv` — 16 rows, the calibrated thresholds
+- `results/R04_isofpr_race/data/R04_isofpr_race.csv` — 64 rows, **Figure 4(A) and Table 3**
+- `results/R04_isofpr_race/data/R04_relative_efficiency.csv` — 6 rows, **Figure 4(B)**
+- `results/R04_isofpr_race/data/R04_cusum_vs_adwin.csv` — 8 rows, family control
+- `results/R04_isofpr_race/figures/fig04_isofpr_race.png` — **Figure 4**
+- `results/R04_isofpr_race/tables/tab03_isofpr_race.tex` — **Table 3**, generated from the CSV
+- `results/R04_isofpr_race/tables/R04_claims.tex` — macros
+- `logs/R04_isofpr_race/exp_R04_isofpr_race.log`
+
+## Correspondence with v87
+
+| Quantity in v87 | Macro | Published | Regenerated |
+| --- | --- | --- | --- |
+| null streams per cell | `\RFourNullStreams` | 2,000 | 2000 |
+| bisection iterations / tolerance | `\RFourBisectionIters`, `\RFourBisectionTol` | 15 / 0.003 | 15 / 0.003 |
+| target false-alarm rate | `\RFourTargetFpr` | 5% | 5% |
+| Recalib slowdown, lower and upper | `\RFourRecalibSlowdownMin/Max` | 2 to 19x | **7 to 81x** |
+| dead band `delta_R` | `\RFourDeadBand` | 0.125 | 0.125 |
+| blind-zone onset `c*` | `\RFourBlindZoneCStar` | 0.43 | 0.43 |
+| parametric gain at `c = 1` | `\RFourParametricGainAtCOne` | 1.66x | **1.38x** |
+| measured crossing `nu*` | `\RFourNuStarMeasured` | 4.9 | **8.5** |
+| `nu*` bracket | `\RFourNuStarLower/Upper` | — | 7.0, 30.0 |
+| oracle crossing | `\RFourNuStarOracle` | 4.6 | **4.5** |
+| analytic crossing | `\RFourNuStarAnalytic` | 4.7 | 4.7 |
+| estimation cost, computed | `\RFourEstimationCostDof` | 0.3 | **4.1** |
+| Concept threshold range | `\RFourConceptLambdaMin/Max` | [10.6, 10.7] | [10.5, 10.7] |
+| Gaussian ceiling on the ratio | `\RFourGaussianCeiling`, `\RFourRatioMax` | `pi/2` | 1.20 ≤ 1.57 |
+
+`\RFourEstimationCostDof` is the difference of the two emitted crossings, computed and never
+copied; the test suite recomputes it from the two macros.
+
+## The interpolation rule for the crossings
+
+`nu*` is no cell of any CSV. The rule was fixed before any regenerated value was read, is
+echoed into the run log, and is applied identically to both arms: **linear interpolation of the
+delay ratio between the two `nu` values of the sampled grid that bracket the crossing of unity**,
+rounded to one decimal for macro emission. Each crossing is emitted with its two bracketing
+values so a reader can redo the arithmetic by hand.
+
+On the submitted campaign the rule reproduces the manuscript: `Eco_L1` brackets 0.921953 at
+`nu = 4.5` and 1.022764 at `nu = 5.0`, giving 4.89; `Oracle_Eco` brackets 0.976002 and 1.078879,
+giving 4.62. Those are the 4.9 and 4.6 of v87.
+
+**The `nu` grid does not localise the `Eco_L1` crossing on the regenerated campaign.** The grid
+`{3, 4, 4.5, 5, 7, 30}` has no point between 7 and 30, and the regenerated ratio crosses unity
+inside that gap. `\RFourNuStarMeasured` is therefore an interpolation across a 23-unit interval
+and is reported with its bracket for that reason. It locates the crossing above 7; it does not
+locate it precisely. Refining the grid there would change the number without changing any
+qualitative conclusion, and no such refinement was run.
+
+## Known deviations from the submitted manuscript
+
+### The `Gamma` grid of the submitted campaign does not span (D3)
+
+`StreamGenerator.__init__` in `Priorite_15_isofpr_dichotomy.py` calls
+
+```python
+self.beta = solve_beta_for_gamma(gamma, alpha)
+```
+
+while the function is defined as `solve_beta_for_gamma(alpha, target_gamma)`. The arguments are
+transposed, so `target_gamma` receives `alpha = 0.05`, the guard `if target_gamma <= 1.0:
+return 0.0` fires on the first line, and **`beta` comes back 0 at every grid point**. The
+realised process is then ARCH(1) with `alpha = 0.05`, whose exact penalty is
+`Gamma = 1.1053`, for all four labels `{1, 11.58, 50, 200}`.
+
+Every "flat in `Gamma`" result of the submitted campaign is therefore a grid that was never
+varied, and the near-identical values down the `Gamma` column of `protocol_9b` and
+`protocol_9e` are an identity of the generator rather than a measurement of a detector. This
+repository solves `beta` with the documented argument order and verifies the realised penalty
+against the target before measuring; that check is blocking and would have caught the defect on
+the first run.
+
+The attribution is established by counterfactual rather than asserted. Pinning `beta` back to 0
+on the same seeds restores the published figures:
+
+| Quantity | v87 | Regenerated, grid spans | Counterfactual, `beta = 0` |
+| --- | --- | --- | --- |
+| `nu*` (Eco-L1) | 4.9 | 8.52 | **4.95** |
+| `nu*` (Oracle) | 4.6 | 4.47 | **4.71** |
+| estimation cost | 0.3 | 4.05 | **0.235** |
+| family control, CUSUM level spread over `Gamma` | flat | 0.4905 | **0.010** |
+
+The published numbers are recovered by the degraded generator and not by the specified one, so
+the discrepancy is located in the submitted script and not in this reimplementation.
+
+### Consequences for the printed claims
+
+Four qualitative claims of v87 do not survive a grid that genuinely spans `Gamma`:
+
+| Claim of v87 | Regenerated | Degree |
+| --- | --- | --- |
+| Recalib runs 2 to 19x behind the first-order arms | 7 to 81x | **D3** |
+| the ratio crosses unity at `nu* ~ 4.9` | 8.52, outside the moment-singularity window | **D3** |
+| a finite warm-up costs 0.3 degrees of freedom | 4.05 | **D3** |
+| family control: both levels flat in `Gamma` | CUSUM spreads 0.49, ADWIN 0.24 | **D3** |
+| the oracle crosses at 4.6, on the analytic prediction | 4.47 against an analytic 4.68 | D2 |
+| the parametric route is 1.66x faster at `c = 1` | 1.38x, still a bounded constant above 1 | D2 |
+| `lambda_C*` in [10.6, 10.7] across `Gamma` | [10.50, 10.74], homogeneity `p = 0.26` | D2 |
+| the blind zone persists at the lowest `Gamma` | DetRate 0.179 at `Gamma = 1.105` | confirmed |
+| the ratio never exceeds the Gaussian ceiling `pi/2` | max 1.2006 | confirmed |
+| the ratio is monotone increasing in `nu` | Spearman `rho = 1.0` | confirmed |
+| blind-zone onset `c* ~ 0.43` | 0.4321 | confirmed |
+
+The direction is consistent and has one mechanism. At `Gamma = 1.105` a 500-step warm-up
+identifies a nearly i.i.d. process almost exactly, so `Eco_L1` performs like the oracle and the
+estimation cost is small. At the `Gamma = 11.58` the same section claims to be running at, the
+warm-up must identify a persistent GARCH from 500 observations, `Eco_L1` degrades, its delay
+rises, the ratio `ADD_Concept / ADD_Eco_L1` falls at every `nu`, and the crossing moves up.
+**The estimation cost of the parametric route grows with the persistence of the volatility
+process**; v87 reports the value it takes where there is almost no persistence to estimate.
+
+The whitening-side claims are unaffected, and two of them are on firmer ground here than in the
+submitted campaign, because they are now measured on a grid that varies: the Concept threshold
+is flat in `Gamma`, and the Concept false-alarm rate is homogeneous across the grid at a common
+threshold (`chi-square = 4.01`, `p = 0.26`).
+
+### The grid point labelled `Gamma = 1` is `Gamma = 1.1053`
+
+With `alpha` fixed at 0.05, `beta >= 0` puts a floor under the penalty: the pair
+`(0.05, 0)` is an ARCH(1) process, not an i.i.d. one, and carries `Gamma = 1.1053`. The lowest
+point of the grid is that floor. The claim it supports — that the Recalib blind zone persists
+at the bottom of the grid and is therefore an order-of-response effect rather than a GARCH
+effect — is unaffected, and holds (DetRate 0.179 at `c = 0.25`). R03 documents the same
+mislabel at its own floor of 1.174.
+
+### The ADWIN arm of the family control was never calibrated
+
+`calibrate_nominal()` searches `delta = 10^-x` over `x` in `[0.1, 10]`, that is
+`delta <= 0.794`. At that loosest reachable value the detector's i.i.d. false-alarm rate over
+5,000 steps is 0.5%; reaching 5% would need `delta ~ 2.5`, outside the admissible `(0, 1)` of a
+confidence parameter. The search therefore saturates at its boundary, never meets its
+tolerance, exhausts its 12 iterations and returns the last midpoint tried — and the submitted
+script assigned `best_delta` on every iteration *before* testing the tolerance, so the failure
+was silent. This repository runs the same search, so the threshold stays comparable, but logs
+the attained ceiling, emits it as `\RFourAdwinAttainableFpr` (0.7%, against the 5% target), and
+marks the arm `iso_fpr_calibrated = False` in the CSV. The ADWIN column
+of `R04_cusum_vs_adwin.csv` is not iso-FPR with the CUSUM column and must not be read as if it
+were.
+
+### The QMLE guard of the submitted script discards its best fits
+
+`_generate_one` reverts to `(alpha, beta) = (0.05, 0.90)` whenever the fitted pair satisfies
+`a + b >= 0.999`. That predicate does not test stationarity — `0.999 < 1` — it re-tests the
+optimiser's own feasibility constraint, which is `a + b <= 0.999`, with a strict inequality. It
+therefore rejects exactly the boundary SLSQP is entitled to return, and it fires most often
+where the true persistence is highest: **1.07% of warm-ups overall**, and 5.3% at
+`Gamma = 200`. On those streams the submitted campaign monitored a materially different
+volatility model, silently and uncounted.
+
+This repository tests stationarity (`a + b < 1`), keeps the boundary fits, corrects a genuine
+constraint violation by projecting the pair back onto the feasible boundary along its own ray
+rather than substituting a default, and retries from a fixed three-point ladder when SLSQP
+fails. Under that treatment **0 of 64,000 warm-ups fall back to a default model**, so no
+Eco-L1 or Oracle number in this campaign rests on a substituted one. The counts are logged
+either way.
+
+### The reported delay is a conditional mean wherever the arm censors
+
+`ADD_conditional` averages the streams that alarmed inside the 5,000-step horizon. Where the
+detection rate is below 1 the quantity is `E[T | T <= H]`, bounded above by the horizon and
+biased towards the fast streams; it is not comparable with an arm that detects everything unless
+the detection rate is read alongside. Each row therefore carries `DetRate`, `n_detected`,
+`n_censored` and `horizon`, and Table 3 prints the rate in parentheses exactly as v87 does. The
+effect is visible and not hypothetical: at `Gamma = 200` the Recalib conditional mean *rises*
+from 2804.6 at `c = 0.25` to 2842.6 at `c = 0.5`, because the larger drift admits streams that
+were previously censored and those are the slow ones. The submitted CSV names this column `ADD`.
+
+### The oracle arm was audited and left unchanged
+
+The oracle filters its variance path from the pre-shift series while `Eco_L1` filters from the
+observed one, which looks like an advantage granted to the oracle. It is not: the GARCH
+recursion is driven by the innovations, not by the returns, so a location shift added to the
+returns leaves the latent variance path untouched and the pre-shift filtration *is* the true
+`sigma_t`. The counterfactual — would the phenomenon persist without the presumed cause — settles
+it, and the implementation is kept verbatim.
+
+## Limitations
+
+**The bisection tolerance admits a band of thresholds, not a point.** A tolerance of 0.003 at
+2,000 streams accepts any threshold whose false-alarm rate lies in [4.7%, 5.3%], and the search
+stops at the first iterate inside that band. The arms of this campaign land between 4.8% and
+5.3%, so "iso-FPR" holds to within the specified tolerance and not exactly. The Recalib arm is
+the coarsest case: at `Gamma = 11.58` and `Gamma = 50` it terminates on its **first** iterate,
+at `lambda* = 500.0005` and `1000.0005`, which are the first midpoints of the search interval.
+Its threshold is therefore located only to within the tolerance band, and the slowdown range
+inherits that imprecision. This is a property of the calibration v87 specifies, not of this
+implementation, and it is not large enough to account for the gap between 2–19x and 7–81x — the
+`beta = 0` counterfactual is.
+
+**Cosmetic divergence.** Figure 4 differs deliberately from the submitted `Fig22`: bold
+left-aligned panel titles prefixed `(A)` and `(B)`, a logarithmic delay axis on panel A, and a
+unity reference line on panel B. No numerical value moves as a result.
+
+## Environment
+
+CPython 3.12.9, `numpy 1.26.4`, `pandas 2.3.2`, `scipy 1.16.2`, `matplotlib 3.10.6`, under
+`PYTHONHASHSEED=42`, single-threaded BLAS and `MKL_CBWR=COMPATIBLE`. Two consecutive runs at
+different worker counts produce byte-identical outputs; the SHA-256 digests of all eight
+artefacts are recorded in the log.
+# R04b — Resolution of the efficiency crossing point (Appendix Figure A3)
+
+R04 measured the delay ratio `ADD_Concept / ADD_Eco-L1` against Student-`t` degrees of freedom on
+the grid `{3, 4, 4.5, 5, 7, 30}` and found it crossing unity somewhere inside `(7, 30)` — an
+interval that grid does not sample at all. R04b re-measures the same three arms, at the same
+`Gamma = 11.58`, the same `c = 0.5` and the same 2,000 streams, on twelve degrees of freedom, and
+locates the crossing.
+
+The experiment shares no output file with R04, and asserts at start-up that the sixteen primitives
+it copies from `exp_R04_isofpr_race.py` are still byte-identical to it.
+
+## Execution
+
+```bash
+./run_experiment_R04b.sh                 # about 95 s on 48 cores
+./run_experiment_R04b.sh --n-jobs 12     # outputs are invariant to the worker count
+./run_experiment_R04b.sh --fast          # degraded smoke path, gates off, artefacts stamped _fast
+pytest tests/test_R04b_claims.py -v
+```
+
+`run_all.sh` discovers `run_experiment_R04b.sh` by sorted enumeration and runs it after
+`run_experiment_R04.sh`. Neither `run_all.sh` nor `run_tests.sh` is edited by this experiment.
+
+## Expected artefacts
+
+| path                                                               | content                                                                                                                                                                                                                                                                       |
+| ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `results/R04b_nu_refinement/data/R04b_ratio_vs_nu.csv`             | 36 rows, one per (`nu`, arm): threshold, in-sample and held-out level, detection rate, conditional delay and its error, the two ratios, the analytic prediction, the bootstrap and conditional standard errors of the crossing curve, and the per-arm calibration diagnostics |
+| `results/R04b_nu_refinement/data/R04b_continuity_with_R04.csv`     | 10 rows: this campaign against R04 at the five common `nu`, with the standardized difference                                                                                                                                                                                  |
+| `results/R04b_nu_refinement/figures/figA03_nu_star_refinement.png` | single panel, both ratio curves against `nu` on a log abscissa, unity line, analytic curve, R04's six points hollow against R04b's twelve filled, bootstrap interval of the crossing shaded                                                                                   |
+| `results/R04b_nu_refinement/tables/R04b_claims.tex`                | 54 `\newcommand` macros, ordinal `FourB`, every value computed from memory                                                                                                                                                                                                    |
+| `logs/R04b_nu_refinement/exp_R04b_nu_refinement.log`               | full run log with SHA-256 of every artefact                                                                                                                                                                                                                                   |
+
+## Resolution of the crossing point
+
+**Case (A) is observed: the crossing is enclosed, and v87's `4.9` is outside the enclosure.** R04's
+falsification stands and now carries a localization.
+
+| quantity          | v87 | R04b                                                                     |
+| ----------------- | --- | ------------------------------------------------------------------------ |
+| `nu*` (Eco-L1)    | 4.9 | enclosed by **`[7, 9]`**; 8.10 `[7.78, 8.37]`                            |
+| `nu*` (Oracle)    | 4.6 | enclosed by `[4, 5]`; 4.47 `[4.31, 4.57]` — not falsified, at the edge   |
+| estimation cost   | 0.3 | **3.62 `[3.31, 3.92]`**; 3.22 `[2.52, 3.82]` assuming no functional form |
+| analytic crossing | 4.7 | 4.678793                                                                 |
+
+Two brackets are reported for each arm and they are different statements. The **grid bracket** names
+the two adjacent measured points that straddle unity — `[7, 8]` for `Eco-L1` — and says nothing
+about whether either point is distinguishable from unity. The **inferential bracket** names the last
+point whose 95% interval lies entirely below unity and the first whose interval lies entirely above
+it. **The inferential bracket is the formulation that governs any manuscript text**; a point
+estimate is never to be quoted without its interval.
+
+The oracle crossing is the claim of this family that survives: `4.6` lies inside `[4, 5]`, and the
+arm sits on the analytic prediction, which is what Proposition `prop:are` asserts about an exactly
+standardized monitor.
+
+> **The two estimators disagree at the margin on the oracle arm.** The model-free enclosure
+> `[4, 5]` contains v87's 4.6, so the published value is not falsified by the statement this
+> repository treats as primary. The shape-fit interval `[4.31, 4.57]` narrowly excludes it. The
+> disagreement is 0.03 units of `nu` on an experiment whose resolution limit is of order 1 unit,
+> and it is reported rather than resolved: a model-based interval is narrower than a model-free
+> one by construction, and its extra precision is borrowed from the assumed shape. Nothing here
+> licenses reporting 4.6 as refuted. The `Eco-L1` crossing is displaced upward by the estimation cost, and that
+cost is an order of magnitude above the published figure.
+
+**Refining a grid does not by itself resolve a crossing.** Near it the ratio moves by 0.0448 per
+unit of `nu` while its standard error is 0.0206, so one standard error spans 0.46 units of `nu`.
+Extra grid points do not shrink the error at any one point; using the whole curve does, which is why
+the primary estimate fits the measured ratio against the analytic shape `1/(4 f_z(0)^2)` across all
+twelve points (weighted `R^2 = 0.990`, goodness-of-fit `p = 0.59`) rather than interpolating between
+two of them.
+
+## Correspondence with v87
+
+- **Figure `fig:isofpr` panel B** — R04b refines the same curve. The repository figure is separate
+  (`figA03`), single-panel, on a log abscissa, with error bars and both campaigns' points; R04's
+  `fig04` is unchanged.
+- **`sec:discussion`, the abstract and `sec:contributions`** — carry `nu^star ~ 4.9` and the `0.3`
+  degrees of freedom. Both are falsified; see the deviations below.
+- **Proposition `prop:are`** — the analytic crossing `4.7` is reproduced at `4.678793`, and the
+  oracle arm sits on it.
+
+## Known deviations from the submitted manuscript
+
+### The crossing is at `nu` in `[7, 9]`, not at 4.9 (D3, inherited from R04 and now localized)
+
+R04 established the falsification; R04b supplies the location. The published `4.9` is outside the
+inferential bracket `[7, 9]` by a wide margin. The mechanism is the one R04 identified: at the
+`Gamma = 11.58` v87 claims to run at, `Eco-L1` must identify a persistent GARCH from 500
+observations, its delay rises, and the crossing moves up. v87's figure was produced at
+`Gamma = 1.105`, where there is almost no persistence to estimate.
+
+The sentence in the abstract — "overtakes it below a measured `nu^star ~ 4.9`, precisely where
+parametric estimation is most fragile" — needs both its value and its gloss revisited: 8.1 lies
+outside the moment singularity `nu < 8` that the reading appeals to.
+
+### The estimation cost is 3.6 degrees of freedom, not 0.3 (D3)
+
+`nu*(Eco-L1) - nu*(Oracle) = 3.62`, interval `[3.31, 3.92]`, and `3.22 [2.52, 3.82]` by a route that
+assumes no functional form. The model-free outer bound from the two inferential brackets is `[2, 5]`.
+All three exclude `0.3`. The mechanism v87 gives is right — a finite warm-up costs the parametric
+route degrees of freedom — and the magnitude is wrong by an order of magnitude.
+
+### `8.52` from `AUDIT_R04.md` must not be quoted
+
+That figure was a two-point interpolation across the empty `(7, 30)` interval. The same rule applied
+to the refined grid gives `7.75`, and the fit gives `8.10`. `AUDIT_R04.md` marked it as not
+publishable when it was produced; R04b supersedes it.
+
+### The oracle ratio exceeds `pi/2` at `nu = 20` (reported, cause not established)
+
+The oracle ratio exceeds its own analytic prediction at **all twelve grid points**, by a mean
+of about 5% (sign test p ~ 5e-4). This is a systematic offset, not an isolated point: `nu = 20`
+is simply its largest realisation, which is why that point alone crosses the Gaussian ceiling
+`pi/2 = 1.5708`, reaching 1.5810.
+
+The offset accounts quantitatively for the oracle crossing sitting below the analytic root: a
+multiplicative excess of 5% moves the crossing to where the analytic ratio equals `1/1.05 =
+0.952`, i.e. `nu ~ 4.37`, against a measured 4.47. No cause is asserted for the offset itself;
+`c = 0.5` is not the small-drift limit the Pitman efficiency argument assumes, and this
+experiment does not test that attribution.
+
+**Consequence for the manuscript.** v87 states the oracle arm crosses unity at 4.6 "on the
+analytic prediction". The oracle curve does not track the prediction — it lies above it
+throughout — and the crossing falls near the analytic root through compensation between the
+offset and the slope. The crossing value is reproduced; the "on the analytic prediction"
+characterisation is not. Recorded as a separate deviation.
+
+The original single-point observation read: the oracle ratio reaches 1.5810 at nu = 20
+
+### Two controls were re-specified before the result was read (methodological)
+
+A threshold calibrated on a finite sample carries that sample's error into everything read at it.
+Two controls of this experiment initially ignored that, and both fired for that reason rather than
+because of any defect in the campaign:
+
+- the held-out calibration control tested each arm against *exactly* 5%, a null the bisection never
+  promises. The held-out count has twice the binomial variance — verified distribution-free at
+  1.4133 against `sqrt(2) = 1.4142` over 20,000 replicates — so that test omits half the variance of
+  its own statistic. It was replaced by a conditional two-sample test per arm (`KS p = 0.641`) plus
+  a pooled control carrying the factor 2 in its interval (`5.07%`, `[4.84%, 5.29%]`).
+- the delay-ratio standard error was a delta method conditional on the threshold, which understated
+  it by a factor of 2.1 to 2.6. The bootstrap now resamples the calibration sample as well, re-runs
+  the bisection inside each replicate, and reads delays off a ladder of thresholds. Every interval
+  in this experiment uses the corrected error.
+
+Neither correction touched a seed, a tolerance, a parameter or a draw. `AUDIT_R04b.md` §3 documents
+both in full, including the observation that an understated error had also made a correct model fail
+its own goodness-of-fit test.
+
+## Cosmetic divergence
+
+`figA03` has no counterpart in the submitted PDF; it is an appendix figure of this repository, with
+a bold left-aligned title and no panel letter as a single-panel figure. It continues the `figA01`
+and `figA02` sequence of R02b and R02c. No numerical value moves as a result.
+
+## Limitations
+
+**Five common points is a coarse continuity control.** With independent seeds, agreement with R04 is
+tested to within the sampling error of the difference, which is a few percent per point. The control
+detects a gross divergence between the two scripts, not a small one; the byte-identity check on the
+copied primitives is what covers the small ones.
+
+**The estimation cost inherits the fit.** The primary interval `[3.31, 3.92]` assumes the ratio is
+affine in `1/(4 f_z(0)^2)`, which its goodness-of-fit test admits here (`p = 0.59` and `p = 0.30`).
+The model-free route is wider and makes no such assumption; if a future campaign refuses the affine
+model, that route is the one to quote.
+
+**The bisection tolerance admits a band of thresholds, not a point.** As in R04, a tolerance of
+0.003 at 2,000 streams accepts any threshold whose false-alarm rate lies in `[4.7%, 5.3%]`, and the
+search stops at the first iterate inside it. This is a property of the calibration v87 specifies,
+and it is the reason the pooled held-out control is judged against that band rather than against 5%
+exactly.
+
+## Environment
+
+CPython 3.12.9, `numpy 1.26.4`, `pandas 2.3.2`, `scipy 1.16.2`, `matplotlib 3.10.6`, under
+`PYTHONHASHSEED=42`, single-threaded BLAS and `MKL_CBWR=COMPATIBLE`. Three runs at 48, 20 and 12
+workers produce byte-identical outputs; the SHA-256 digests of all four artefacts are recorded in
+the log and in `AUDIT_R04b.md` §5. Measured cost 94.2 s on 48 workers for 72,000 monitored streams,
+2,000 bootstrap replicates and a 20,000-replicate variance probe.
+# R05 — Scale law and location/scale orthogonality (Figure 5, Appendix B)
+
+Two controlled experiments on the Data statistic `e_t = (eps_t^2 - mu_hat)/sig_hat`, testing
+the delay predictions of Proposition `prop:add_garch` and Theorem `thm:scaling`, and the
+blindness prediction of Proposition `prop:orthogonality`.
+
+**Abrupt scale shift.** Thirteen penalties `Gamma in [1, 30]`, 400 seeds each, the innovation
+variance multiplied by `s^2` with `s` solved per `Gamma` so the standardized shift is
+`Delta_mu_max = 2`. Each Data arm is calibrated to 5% false alarms by its own null quantile on
+a calibration half and validated on a disjoint hold-out half.
+
+**Gradual ramps.** Five penalties `Gamma in {2, 4, 8, 11.58, 20}`, a width grid held fixed in
+units of `w*(Gamma)`, all penalties monitored over **one common horizon** so the null crossing
+probability is identical across `Gamma` and the thresholds are comparable in level. Two
+budgets: `H = 2x10^5` (Figure 5B and the main text) and `H = 3x10^6` (Appendix B's boundary
+test). Both are kept: v87's clause that the recalibration margin "degrades with the monitoring
+horizon" rests precisely on their comparison.
+
+**Positive control.** One arm at `Gamma = 11.58` carrying a pure **location** shift instead of
+a scale pathology, on a seed block disjoint from every other. Its purpose is explained under
+"Why the blindness result needs a positive control" below.
+
+## Execution
+
+```bash
+./run_experiment_R05.sh              # full chain, both budgets
+./run_experiment_R05.sh --fast       # degraded smoke path, outputs stamped '_fast'
+```
+
+The three steps run inside **one interpreter**, driven by step c. Steps a and b are libraries
+as well as entry points: step c calls them and receives their frames in memory. Running them
+as three processes would force step c to reload the CSVs the earlier steps had just written,
+which SPECS §1.6 forbids — a CSV is a final medium of diffusion, never a bridge between two
+stages of one computation. Each step still writes its own CSV deliverable and its own log;
+nothing reads them back. `exp_R05_scale_law_c.py --from-csv` reloads them instead, for a
+reviewer rebuilding the figure without re-running the campaigns; it announces itself in the
+log, stamps its outputs `_fromcsv`, and the orchestrator never uses it.
+
+Measured cost on an AMD EPYC 8224P (48 workers, single-threaded BLAS): **3,678 s** end to end
+— step a 3.8 s, the 2e5 budget 172.5 s, the 3e6 budget 3,500.5 s. v87 `app:repro` budgets
+"≈45 min" for the higher-resolution scaling campaign; the measured 58 min is within a factor
+of 1.3, so no factor-of-two departure is flagged.
+
+## Expected artefacts
+
+| Path                                                              | Content                                  |
+| ----------------------------------------------------------------- | ---------------------------------------- |
+| `results/R05_scale_law/data/R05_abrupt_add_vs_gamma.csv`          | 13 rows — Figure 5A                      |
+| `results/R05_scale_law/data/R05_ramp_multigamma_2e5.csv`          | 60 rows — Figure 5B, main-text numbers   |
+| `results/R05_scale_law/data/R05_ramp_multigamma_3e6.csv`          | 85 rows — Appendix B boundary test       |
+| `results/R05_scale_law/data/R05_lambda_iid_horizon.csv`           | 3 rows — the `lambda_iid` horizon ladder |
+| `results/R05_scale_law/data/R05_concept_positive_control.csv`     | 1 row — instrument responsiveness        |
+| `results/R05_scale_law/data/R05_deviation_classification.csv`     | 27 rows — the D0/D1/D2 table below       |
+| `results/R05_scale_law/figures/fig05_scale_law_orthogonality.png` | Figure 5, panels (A) and (B)             |
+| `results/R05_scale_law/tables/R05_claims.tex`                     | 41 macros, all computed                  |
+| `logs/R05_scale_law/exp_R05_scale_law_{a,b_2e5,b_3e6,c}.log`      | full controls, versions, timings         |
+
+Reference witnesses, read-only, never regenerated:
+`data/reference/R05/protocol_17a_scale_add_vs_gamma.csv` and the two
+`protocol_18b_..._{2e5,3e6}.csv`.
+
+`data/reference/R05/superseded/protocol_18a_scale_add_vs_width.csv` — **superseded before
+submission, not regenerable, supports no v87 claim.** It carries a single penalty
+(`Gamma = 11.58` on all ten rows, with every threshold and Concept column constant row to
+row), so it cannot support v87's five-penalty ramp claim; its design was retired by
+`Priorite_18c` line 60 ("censure par horizon statique et grille absolue"); and its generator is
+not in the repository. No R05 script emits a counterpart, and the test suite asserts that none
+appears. Grounds in `data/reference/R05/superseded/README.md`.
+
+## Correspondence with v87
+
+| v87 location                     | Quantity                                  | Artefact                              |
+| -------------------------------- | ----------------------------------------- | ------------------------------------- |
+| Figure `fig:scale_law` (A)       | `ADD` vs `Gamma`, abrupt                  | `R05_abrupt_add_vs_gamma.csv`         |
+| Figure `fig:scale_law` (B)       | `ADD` vs `w`, five penalties              | `R05_ramp_multigamma_2e5.csv`         |
+| `sec:scaling_validation`         | `ADD ~ 23.7 Gamma + 38`, 31%, 5.4%, 7–29% | steps a and b at 2e5                  |
+| `app:scaling`, measured validity | the whole 2e5 paragraph block             | `R05_ramp_multigamma_2e5.csv`         |
+| `app:scaling`, boundary          | `H = 3e6`, margins, exponents             | `R05_ramp_multigamma_3e6.csv`         |
+| `app:scaling`, threshold growth  | `102.8 -> 129.5 -> 303.0`                 | `R05_lambda_iid_horizon.csv`          |
+| `app:scaling`, moment boundary   | `Gamma ~ 7.1`, `delta <= 0.8`             | closed form in step c, no Monte Carlo |
+
+Panel `(B)` is the gradual-ramp panel, as `sec:scaling_validation` requires when it cites
+`Figure~\ref{fig:scale_law}B`; step c asserts this rather than leaving it to the reading order
+of the plotting code.
+
+## Why the blindness result needs a positive control
+
+Proposition `prop:orthogonality` predicts that a pure scale pathology leaves the Concept
+monitor at its own false-alarm rate, and the measurement agrees: **22/400 detections under the
+pathology against 22/400 alarms under `H_0`**, a difference of zero streams, Fisher exact
+`p = 1.0000`.
+
+That agreement is **structurally incapable of failing**. The monitored sign stream is
+`1{eps_t > 0} = 1{z_t > 0}`, a function of the innovation alone: it does not see `beta`, and
+multiplying the variance by `s^2 > 0` cannot change the sign of anything. A monitor that had
+silently stopped working would produce the identical table. Two consequences are carried
+explicitly rather than left implicit:
+
+- **Constancy across `Gamma` carries no degrees of freedom.** The thirteen rows of the abrupt
+  grid replay ONE Concept measurement, which is why `lambda_star_Concept`, `FPR_Concept_val`,
+  `DetRate_Concept` and `ADD_Concept` each take exactly one distinct value across the grid.
+  This is an identity of the design, not thirteen independent confirmations. What does carry
+  information is the comparison above, whose two rates come from disjoint seed blocks.
+- **The instrument is shown responsive.** A pure location shift of `c = 1.0` at
+  `Gamma = 11.58`, on a fourth disjoint seed block with the identical generator, threshold and
+  dead band, gives **400/400 detections against 22/400 under `H_0`** (Fisher
+  `p = 3.1x10^-203`), at a conditional delay of **42.9 steps** — within 0.7% of the 42.6 steps
+  R04 measures for the same arm at the same penalty and horizon on independent machinery.
+
+The equality is tested **unpaired**, by Fisher's exact test, because the two rates are measured
+on disjoint seed blocks and there is nothing to pair. Pairing would require one common block,
+under which every pair is concordant by construction and the paired statistic is identically
+zero whatever the monitor does — a test that cannot fail. That invariance is instead asserted
+directly, on every replicate, inside both drift workers: the sign vector built from the
+drifted series must equal the one built from the undrifted series.
+
+**A vacuity guard precedes the equality.** `DetRate == FPR` is also trivially true when both
+equal 0 or 1, so the control refuses to report a pass unless the reference arm's hold-out level
+lies in `[0.01, 0.20]`. This is not hypothetical: the diagnostic arm at the literal
+`lambda_C = 10` saturates at `FPR = 1.0000` and `DetRate = 1.0000` at `H = 3x10^6`. Without the
+guard, that saturation would have read as orthogonality confirmed.
+
+## Known deviations from the submitted manuscript
+
+Twenty-seven published quantities were regenerated and classified. **Seven are D1** (the value
+moves below the manuscript's printing precision) and **twenty are D2** (a printed value
+changes, the qualitative claim it supports still holds). None is D3, with one borderline case
+set out in full below. The full table is `R05_deviation_classification.csv`; the load-bearing
+rows:
+
+| Quantity                          | v87          | R05                    | Degree     |
+| --------------------------------- | ------------ | ---------------------- | ---------- |
+| abrupt slope                      | 23.7         | 26.00                  | D2         |
+| abrupt intercept                  | 38           | 32.20                  | D2         |
+| FPR under `x sqrt(Gamma)`         | 31%          | 24.5%                  | D2         |
+| scaling-law median error          | 5.4%         | 5.35%                  | D2         |
+| recalibration margin, 2e5         | 7–29%        | −1.4 to +39.3%         | D2         |
+| `lambda_iid` at `H = 2e5`         | 129.5        | 128.63                 | D2         |
+| `lambda_iid` at `H = 3e6`         | 303.0        | 282.54                 | D2         |
+| grid reach, 2e5 / 3e6             | 22.5 / 225.0 | 22.5010 / 225.0000     | **D1**     |
+| ramp exponents, 2e5               | 0.65–0.71    | 0.680–0.698            | D2         |
+| model exponents, 2e5              | 0.71–0.73    | 0.709–0.719            | D1 / D2    |
+| `rho w` share at widest `w`, 3e6  | 78%          | 78.1%                  | **D1**     |
+| recalibration margin max, 3e6     | 96%          | 96.4%                  | **D1**     |
+| `Gamma <= 4` fit error, 3e6       | 5.7%         | 5.80%                  | D2         |
+| sixth-moment boundary             | 7.1          | 7.0793                 | **D1**     |
+| moment margin at `Gamma = 20`     | 0.8          | 0.7931                 | **D1**     |
+| `lambda_iid` at `H = 7.7e4`       | 102.8        | 111.03                 | D2         |
+
+### The cause of the D2s: 128-bit reseeding, and it is mechanical
+
+The submitted scripts derive seeds by integer offset (`SEED_NULL + i`, `SEED_IID + i`,
+`SEED_DRIFT + i`), which SPECS §1.2 forbids. R05 derives a 128-bit digest keyed on the **role
+and replicate index only** — never on `Gamma`, `beta`, `w` or the budget — which repairs the
+entropy defect while preserving the common-random-numbers design of SPECS §1.4 that makes a
+difference between two penalties an algorithmic response rather than a difference of draw.
+
+The campaign is therefore redrawn, and the movement is traceable to a single quantity.
+`lambda_star_Data` is a 95th percentile of 400 heavy-tailed CUSUM maxima; on the abrupt grid it
+moves between **−7.9% and +19.4%** per cell. `ADD_Data` moves between **−12.2% and +14.4%**,
+in lockstep, which is what Proposition `prop:add_garch` requires: at fixed drift
+`ADD ~ lambda*/d + kappa`, so a threshold that moves by `x%` moves the delay by `x%`. The
+abrupt slope rises from 23.7 to 26.00 for that reason and no other. `R^2` is 0.9913, so the
+linearity the slope describes is unaffected.
+
+Sampling noise on a high quantile of 400 draws is the whole of the explanation, and it is not
+an appeal to noise in general: the per-cell threshold movement and the per-cell delay movement
+are the same numbers to within the overshoot term.
+
+### Borderline: "the residual on the conservative side" is not reproduced at one cell
+
+`app:scaling` states that the empirical null quantile matches `lambda_iid x Gamma`
+"to within 7–29% over a tenfold range of `Gamma`, **with the residual on the conservative
+side**". The regenerated 2e5 margins by penalty are:
+
+| `Gamma`                              | 2     | 4         | 8     | 11.58  | 20     |
+| ------------------------------------ | ----- | --------- | ----- | ------ | ------ |
+| `lambda*(Gamma)/Gamma`               | 132.1 | 126.8     | 135.0 | 150.7  | 179.2  |
+| departure from `lambda_iid = 128.63` | +2.7% | **−1.4%** | +5.0% | +17.2% | +39.3% |
+
+Four of the five penalties keep the sign the manuscript asserts. **At `Gamma = 4` the residual
+is −1.4%**, the opposite sign. On a strict reading of a one-sided statement that is a D3.
+
+This repository does not treat it as one, and states the reasoning rather than burying it. The
+sign statement is about a quantity whose own redraw noise is an order of magnitude larger than
+the violation: the same estimator moved −7.9% to +19.4% per cell on the abrupt grid under
+nothing but reseeding. A residual of −1.4% is therefore not distinguishable from zero at this
+sample size, and the correct reading is that the sign of the residual at `Gamma = 4` is
+**undetermined**, not that it has been shown negative. No parameter, tolerance, seed or bound
+was changed to obtain this; the 400-seed design is v87's own.
+
+What a camera-ready revision could say without any new experiment: the rule holds to within a
+margin that grows with `Gamma`, and the residual is on the conservative side **where it is
+resolved**. Recorded in `docs/DEVIATIONS.md` entry 11; not parked as a candidate, because the
+honest fix needs a larger `N` rather than a rewording.
+
+### The `lambda_C = 10` numeral matches no campaign
+
+v87 `sec:scaling_validation` states the Concept CUSUM was "fixed once and for all,
+`lambda_C = 10`, `delta_C = 0.1`". The witnesses say the threshold was calibrated per horizon:
+**10.8** at `H = 5,000`, **15.81** at `H = 2x10^5`, **19.02** at `H = 3x10^6` (and 13.6 in the
+retired `protocol_18a`). R05 regenerates **11.40**, **16.00** and **18.80**.
+
+What is exact in that sentence, and what carries Proposition `prop:orthogonality`, is that the
+Concept threshold is fixed **with respect to `Gamma`**: it is rigorously constant within each
+campaign while `lambda_star_Data` runs from 52.4 to 943.3 on the same rows, a factor of 18.
+Only the numeral is wrong. Control (a) was amended accordingly: it asserts the `Gamma`-constancy
+and `delta_C = 0.1`, and emits the calibrated value per campaign as a macro, rather than
+asserting a numeral that all four witnesses contradict.
+
+**The correction moves the threshold onto a value v87 computes elsewhere.** The regenerated
+abrupt threshold, 11.4, is exactly what "What ``exact'' means here" derives: *"the levels
+bracketing 5% are 5.03% at `lambda = 11.2` and 4.29% at `lambda = 11.4`; we take the nearest
+attainable level at or below nominal, `lambda_star = 11.4`."* The submitted campaign's 10.8 was
+inconsistent with the manuscript's own attainable-level analysis and realised 9.5% against a 5%
+target; the corrected campaign realises 5.5%. Parked as
+`docs/camera_ready_candidates/v87_lambda_c_numeral.md`.
+
+**Declared assumption, not fixed.** The submitted design targets roughly 10% for the Concept
+arm in the abrupt campaign and roughly 5% in the ramp campaigns, while every Data arm targets
+5%. v87 states no Concept target. The witness's targets are kept and the discrepancy is logged;
+unification is recommended in `AUDIT_R05.md` and deliberately not applied, since it would move
+Figure 5A's annotation for a reason no manuscript sentence requires. At `H = 3x10^6` the
+realised Concept level is 8.5% against detection of 5.25% — 34 against 21 streams of 400,
+which a proportion test does not resolve (`p ~ 0.07`) and which reflects the attainable-level
+lattice the manuscript itself describes: with a dead band `delta_C` the two-sided increments
+live on multiples of `2 delta_C`, so realised levels are granular.
+
+### Two crossover widths, and the one v87 prints
+
+The submitted pipeline carries two crossover definitions and uses each in a different place:
+`w_delta = 2 lambda*_Data / [Delta_mu_max (1-rho)^2]`, at the threshold actually applied
+(`Priorite_18c` line 117, `Priorite_18d` line 37), and
+`w_star = 2 lambda_iid_H Gamma / [Delta_mu_max (1-rho)^2]`, the crossover the recalibration
+rule predicts, which `Priorite_18b` line 281 writes into the CSV's `regime` column. They differ
+by the recalibration margin, and the ramp exponents differ with them — on the witness, 0.65–0.71
+under the applied rule against 0.63–0.69 under the predicted one.
+
+**Appendix B prints the applied-threshold figures, so the CSV's own `regime` column contradicts
+the appendix of the paper it supports.** R05 emits both, as `w_delta_applied` /
+`regime_applied` and `w_star_predicted` / `regime_predicted`, fits on the applied rule, and
+logs the alternative beside every exponent. The test suite reimplements both independently and
+checks they are distinct quantities rather than aliases.
+
+### The sixth-moment boundary: numerals exact, attribution unsupported
+
+`app:scaling` attributes the degradation of the recalibration rule to "the loss of
+`E[eps^6]`", at `Gamma ~ 7.1` with margin `delta <= 0.8` at `Gamma = 20`.
+
+**Both numerals are exact and no draw can move them.** `E[eps^6] < infinity` for a stationary
+GARCH(1,1) iff `E[(alpha z^2 + beta)^3] < 1`; expanding by the binomial theorem over the even
+moments of a unit-variance Student-t and solving gives `Gamma = 7.0793` and `delta = 0.7931`.
+Closed form, no Monte Carlo. The test suite reimplements the cubic independently and asserts
+the boundary rather than classifying it.
+
+**The attribution is not established by this experiment, and R05 asserts no mechanism.** Every
+campaign runs `t_7`; there is no `nu` sweep. Nothing in R05's output separates "the rule
+degrades because a moment is lost" from "the rule degrades with `Gamma` and with the horizon,
+and a moment boundary happens to lie in the same range". The counterfactual of preamble §S4.5
+has no arm to run here. Establishing the mechanism needs an arm varying `nu` at fixed `Gamma`,
+which is a different experiment. The two budgets also place the transition differently — at
+2e5 the margin is +5.0% at `Gamma = 8` and +17.2% at `Gamma = 11.58`; at 3e6 it is already
++34.1% at `Gamma = 8` — so the transition is horizon-dependent in a way the analytic boundary
+is not.
+
+**One gloss is wrong independently of any measurement.** `app:scaling` describes `E[eps^6]` as
+"the second moment of the *monitored* statistic `eps^2`". `E[eps^6]` is the **third** moment of
+`eps^2`; the second is `E[eps^4]`, whose boundary the same closed form puts at
+`Gamma = 41.6`, far outside the grid. The numeral 7.1 is reproduced; the description attached
+to it is not.
+
+### The `lambda_iid` horizon ladder, and a number no shipped script produced
+
+`app:scaling` states the i.i.d. threshold grows `102.8 -> 129.5 -> 303.0` over
+`H = 7.7x10^4, 2x10^5, 3x10^6`, as `H^0.24`–`H^0.31`. The last two fall out of the campaigns.
+**The 102.8 at `H = 77,000` is produced by no script of the submitted study**: it survives only
+as a comment at `Priorite_18b` line 209, an intermediate iterate of an earlier fixed-point
+loop. The shipped fixed point iterates `20,000 -> 198,768 -> 200,000` and never visits 77,000.
+
+R05 adds `R05_lambda_iid_horizon.csv`, reading **one** set of 400 i.i.d. trajectories at three
+prefixes rather than drawing three independent sets. Nesting is then an identity of the
+recursion, and the ladder's value at each campaign's horizon is **bit-identical** to that
+campaign's own `lambda_iid_H` — asserted as equality, not compared with a tolerance.
+
+| `H`       | v87   | R05    |
+| --------- | ----- | ------ |
+| 77,000    | 102.8 | 111.03 |
+| 200,000   | 129.5 | 128.63 |
+| 3,000,000 | 303.0 | 282.54 |
+
+The regenerated log-log slope is **0.2628**, inside the `0.24`–`0.31` band v87 states, so the
+claim that the growth is polynomial in `H` rather than logarithmic is reproduced. The value at
+`H = 77,000` is a **new measurement, not a recovery** of the published 102.8: R05's seeding
+differs, and no submitted artefact exists to compare against. Because the three points are
+three prefixes of one trajectory set they are perfectly dependent, so the slope is emitted as
+descriptive with **no** standard error, and none is computed.
+
+## Control design
+
+**No per-cell gates.** The ramp grid reaches 85 rows and the abrupt grid 13. At a 5% level,
+five simultaneous cells reject with probability `1 - 0.95^5 = 22.6%` under correct
+calibration, and thirteen with probability 48.7%, so preamble §S4bis forbids a binary per-cell
+door. The family-wise probability is computed and logged *before* the result is read, and
+calibration is tested as a distribution: per-cell two-sided binomial p-values, then
+Kolmogorov–Smirnov against `Uniform(0,1)`, retained as descriptive and never as acceptance.
+
+**Control (b) has a consequence half.** v87 justifies the common horizon by saying the null
+crossing probability is "identical across `Gamma`" — a claim about realised levels, not about
+a configuration value. A chi-square homogeneity test on the five realised alarm counts is run
+in addition to the assertion that `mon_len` is constant. At 2e5: `chi2 = 1.11` on 4 dof,
+`p = 0.893`, pooled level 0.0525, Wilson `[0.0436, 0.0632]`, which contains the 5% target.
+
+**The horizon fixed point is clamped, and says so.** Both budgets terminate at their cap, so
+the `SAFETY = 8` design target is not reached — the realised margin is 4.42x at 3e6. The
+submitted script printed a margin computed from a stale prediction, which read as `SAFETY`
+achieved. R05 recomputes the margin at the threshold the campaign actually uses, reports the
+cap as binding, and states that per-cell censoring — 0.25% maximum at 2e5, detection 99.75%
+minimum — is what decides admissibility.
+
+**`ADD` is a conditional mean** over detected streams, as in the submitted campaign. Censoring
+is carried in its own column at every cell.
+
+## Limitations
+
+- No `nu` sweep, so the sixth-moment attribution is outside this experiment's reach (above).
+- The Concept arm's `Gamma`-invariance is an identity of the design, not a measurement (above).
+- The `H = 77,000` threshold is a new measurement, not a recovery of the published 102.8.
+- `protocol_18a` is not regenerated and its generator is not in the repository.
+- The two budgets differ in `w`-grid resolution (12 and 17 points), so their exponents are
+  fitted over different numbers of points; the comparison between budgets is of margins, which
+  are per-penalty scalars, not of exponents.
+
+## Reproducibility
+
+Two consecutive runs of `run_experiment_R05.sh`, SHA-256 compared over all six CSVs, the PNG
+and the macro file: **identical on all eight artefacts**.
+
+```
+9e4a09c4a28b6647...  R05_abrupt_add_vs_gamma.csv
+c29bdc53638287a3...  R05_concept_positive_control.csv
+f6d28d282c2290a9...  R05_deviation_classification.csv
+91812bd9de76bebf...  R05_lambda_iid_horizon.csv
+02d13472afe6e724...  R05_ramp_multigamma_2e5.csv
+15d770b8d43b5e33...  R05_ramp_multigamma_3e6.csv
+03c3d1bafd783a62...  fig05_scale_law_orthogonality.png
+7e0871097907d12d...  R05_claims.tex
+```
+
+Determinism rests on the environment block being posted before NumPy loads and **verified**,
+not re-posted, by the two modules step c imports after NumPy is already resident; on seeds
+carried per task, so the worker count cannot change an output; on reduction by `executor.map`
+in submission order, never `as_completed`; and on `float_format='%.17g'` at every write.
+
+## Presentation deviation
+
+Panel titles are bold and left-aligned, prefixed `(A)` and `(B)`, which the submitted figure
+did not do. Class C of `docs/DEVIATIONS.md`; no numerical content is affected.
+
+## Environment
+
+Python 3.12.9; `numpy==1.26.4`, `pandas==2.3.2`, `scipy==1.16.2`, `matplotlib==3.10.6`.
+Versions are read at run time by `importlib.metadata.version()` and logged; `requirements/R05.txt`
+is transcribed from those readings.
+# R06 — Empirical validity map of the whitening property (Figure 6)
+
+Proposition `prop:whitening` states that the binary error stream of a non-anticipative classifier
+predicting the **sign** of a return is exactly i.i.d. Bernoulli(1/2) whatever the GARCH dynamics.
+R06 maps the two boundaries of that result.
+
+- **Panel (A), no moment requirement.** The `t_7` grid loses `E[eps_t^4]` beyond a penalty computed
+  in closed form from `(alpha, nu)`, and the binary stream stays white to `Gamma = 200` regardless.
+- **Panel (B), sharp task boundaries.** A non-median threshold (`c > 0`) or a continuous MSE loss
+  re-inherits autocorrelation, as the scope remark requires.
+
+**This experiment is a port, not a re-derivation.** The generator and both task evaluators are copied
+from `Priorite_7_whitening_boundary.py` and asserted byte-identical to the vendored witness at
+start-up, so `R06_gamma_grid.csv` and `R06_task_boundary.csv` reproduce the submitted campaign byte
+for byte, digests included. What was replaced is the control layer; `AUDIT_R06.md` §2 gives the three
+provisions of the common preamble that required it.
+
+## Execution
+
+```bash
+./run_experiment_R06.sh                 # about 34 s on 48 cores
+./run_experiment_R06.sh --n-jobs 12     # outputs are invariant to the worker count
+./run_experiment_R06.sh --fast          # degraded smoke path, gates off, artefacts stamped _fast
+pytest tests/test_R06_claims.py -v
+```
+
+`run_all.sh` discovers `run_experiment_R06.sh` by sorted enumeration. Neither `run_all.sh` nor
+`run_tests.sh` is edited by this experiment.
+
+## Expected artefacts
+
+| path                                                                 | content                                                                                                                                                       |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `results/R06_validity_map/data/R06_gamma_grid.csv`                   | 1,300 rows, one per (`Gamma`, seed): Ljung-Box p-value on the squared stream and on the binary error stream. Byte-identical to `whitening_boundary_gridA.csv` |
+| `results/R06_validity_map/data/R06_task_boundary.csv`                | 500 rows, one per (task type, `c`, seed). Byte-identical to `whitening_boundary_partB.csv`                                                                    |
+| `results/R06_validity_map/data/R06_gamma_grid_independent_seeds.csv` | 1,300 rows, the counterfactual arm keyed per (`Gamma`, stream); no witness                                                                                    |
+| `results/R06_validity_map/figures/fig06_validity_map.png`            | two panels, same data and scales as `Fig11_Whitening_Boundary.png`                                                                                            |
+| `results/R06_validity_map/tables/R06_claims.tex`                     | 22 `\newcommand` macros, ordinal `Six`                                                                                                                        |
+| `logs/R06_validity_map/exp_R06_validity_map.log`                     | full run log with SHA-256 of every artefact                                                                                                                   |
+
+Witnesses are vendored under `data/reference/R06/` with their original names, including the submitted
+script itself, which the verbatim check reads at run time.
+
+## Correspondence with v87
+
+| v87                                                                | R06                                                                                 |
+| ------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| "the binary error stream stays strictly white up to `Gamma = 200`" | pooled rejection **4.77%**, cluster-robust 95% `[2.92%, 6.92%]`, nominal 5% covered |
+| "our `t_7` grid violates `E[eps_t^4]` beyond `Gamma ~ 41.6`"       | computed from `(alpha, nu)`: `beta = 0.9071`, **`Gamma = 41.58`**                   |
+| "rejection 100% for `c >= 0.5` and for MSE"                        | `binary c = 0.5`: **100%**, `c = 1.0`: **100%**, `continuous`: **100%**             |
+| "100 streams per configuration" (caption)                          | 100 per configuration; see the note on pairing below                                |
+| Figure 6 panels **(A)** and **(B)**                                | `fig06_validity_map.png`, same panel lettering as the v87 caption                   |
+
+## The design of panel A is paired, and this repository declares it
+
+`generate_garch` draws the innovations before the variance recursion, so `sign(eps_t) = sign(z_t)`
+whatever `(alpha, beta)`, and the submitted campaign keys its streams on the seed alone. One seed
+therefore carries the **same label stream to all 13 `Gamma`**. The **error** stream is not shared —
+the classifier reads amplitudes, hence `sigma_t` — so the 1,300 readings are 1,300 distinct p-values
+and no seed is constant across the grid.
+
+That is a paired design, not a degenerate one. It is a good design for comparing *across* `Gamma`,
+which is what panel A is about, and it costs precision in any statement pooled *over* `Gamma`:
+
+| quantity                                                        | value                                                |
+| --------------------------------------------------------------- | ---------------------------------------------------- |
+| mean correlation of the rejection indicator between two `Gamma` | 0.175 (max 0.656)                                    |
+| Kish design effect                                              | **3.21**                                             |
+| effective sample size                                           | **405** of 1,300                                     |
+| pooled interval, cluster bootstrap resampling seeds             | `[2.92%, 6.92%]`                                     |
+| pooled interval assuming 1,300 independent streams              | `[3.74%, 6.07%]` — too narrow by `sqrt(3.21) = 1.79` |
+
+The blocking control uses the first. A counterfactual arm keyed per (`Gamma`, stream) measures the
+same design effect by a second route — **1.01** against **3.21** — and confirms that the binary stream
+holds the nominal level under independent label streams too (4.92%, `[3.85%, 6.16%]`), where the
+pairing can mask nothing.
+
+**An undeclared paired design is a defect of analysis, not of experiment.** Nothing about the
+campaign changes; what changes is that the repository now states the design and prices it.
+
+## Known deviations from the submitted manuscript
+
+### The fourth-moment boundary is computed, not held as a literal (D1)
+
+The submitted script carried the kurtosis as a default argument, `kurtosis=5.0`, with a comment naming
+`nu = 7`. The value is right — `3(nu-2)/(nu-4) = 5` — but a literal cannot follow `nu`. Computed from
+`(alpha, nu)` the boundary is `Gamma = 41.5843`, which v87 prints as `41.6`. The value moves below the
+manuscript's printing precision; nothing published changes.
+
+### The submitted figure conflated the boundary with the grid point beside it (presentation)
+
+`Fig11_Whitening_Boundary.png` sets an axis tick at the analytic boundary and plots the `Gamma = 41`
+measurement on top of it, so a reader takes a measurement to have been made *at* `41.6`. It was not:
+the grid contains `41`, which brackets the boundary from below by `0.58`, and nothing was run at the
+boundary. In `fig06_validity_map.png` the ticks carry the grid alone and the boundary is a separate
+labelled rule, `Fourth-moment boundary (Γ = 41.58)`.
+
+The claim itself is unaffected and supported: the binary stream is white at `41`, below the boundary,
+and at `60, 90, 120, 160, 200`, all above it. The guarantee crosses the moment singularity.
+
+### The median-task control is weakly resolved (reported, not a deviation)
+
+`binary, c = 0` rejects `7/100`, Wilson `[3.4%, 13.8%]`, which contains 5%. But the half-width is 5.2
+percentage points — the size of the level being tested — so a true rate of 13.7% is equally
+compatible with what was observed. **This control is consistent with the median task being white; it
+does not confirm it**, and it must not be presented as a confirmation. The stronger evidence is the
+pooled level of panel A over 1,300 streams.
+
+### `binary, c = 0.25` is measured and not cited in v87
+
+The cell rejects at 44%, strictly between the white regime (7%) and the saturated one (100%). v87
+cites neither the value nor the cell. It is kept because it is the only measurement of that transition
+anywhere in this repository.
+
+## Limitations
+
+**The reading's power against a weak autocorrelation induced by `Gamma` is unquantified.** Panel B establishes the power of the Ljung-Box test against a *threshold displacement* (rejecting at 100% for `c >= 0.5` and 44% for `c = 0.25`), proving the test is not powerless. However, its power against a weak autocorrelation of the error stream induced directly by the volatility clustering `Gamma` under a strict median threshold remains unquantified. `WRAPUP_Stream_B1.md` raises a similar point.
+
+**The `Gamma = 1` point runs `alpha = beta = 0`**, a genuinely i.i.d. stream, so it is a true unit
+penalty. This is unlike R03 and R04, where the point labelled `Gamma = 1` was an ARCH(1) process at
+the attainable floor of 1.105. No mislabel here.
+
+**Panel B rests on one calibration.** All five task cells run at `alpha = 0.1058, beta = 0.8742`
+(`Gamma = 30.85`). The scope boundary is mapped in `c` and in loss type, not in `Gamma`.
+
+## Cosmetic divergence
+
+`fig06_validity_map.png` differs deliberately from the submitted `Fig11`: panel titles are bold,
+left-aligned and prefixed `(A)` and `(B)` per the repository convention, which is also what the v87
+caption uses; the global title and the footer line are dropped, since a repository figure carries its
+description in this section; the `Cal. A` and `Cal. B` annotations are dropped, since they name
+calibrations of a different study; and the boundary is labelled with its computed value. No numerical
+value moves as a result.
+
+## Environment
+
+CPython 3.12.9, `numpy 1.26.4`, `pandas 2.3.2`, `scipy 1.16.2`, `statsmodels 0.14.5`,
+`matplotlib 3.10.6`, `joblib 1.4.2`, `river 0.23.0`, under `PYTHONHASHSEED=42`, single-threaded BLAS
+and `MKL_CBWR=COMPATIBLE`. Two runs at different worker counts produce byte-identical outputs; the
+SHA-256 digests of all five artefacts are recorded in the log and in `AUDIT_R06.md` §6. Measured cost
+33.6 s over 3,100 monitored streams, of which 1,300 are the counterfactual arm.
+# R11 — Multi-detector generalization (Figures 11 and 15)
+
+Section `sec:universality` of v87 argues that the FPR explosion and the detector-dependent cure are
+properties of the **family** of sequential detectors rather than of the CUSUM topology, and that the
+whitened `Concept` stream voids the schedule of penalties. R11 regenerates the two figures that
+carry that argument: Figure 11 (`fig:data_vs_concept`, the Lethargy Tax against GARCH immunity) and
+Figure 15 (`fig:multi_detector`, the PHT explosion and the universality panel).
+
+Five detectors, four campaigns, a 20-point `Gamma` grid spanning the attainable floor to 200:
+
+- **A** — `Data` pipeline, PHT under `H0`, three thresholds (raw, `× sqrt(Gamma)`, `× Gamma`).
+- **B** — `Concept` pipeline, five detectors, under `H0` and under a location shift `c = 1.5`.
+  This is Figure 15B and Figure 11B.
+- **C** — ADWIN magnitude grid at a fixed `Gamma = 11.58`, local ADWIN on `Data` against river's
+  ADWIN on `Concept`.
+- **D** — `Data` pipeline tax, three detectors, `c = 2.0`, 14,000-step streams. This is Figure 11A.
+
+**The submitted campaign used a mixed onset convention, and this section names the convention at
+every number it reports.** `worker_exp_b_h1` gives the CUSUM the post-onset stream with its
+statistic at zero, and gives PHT, ADWIN, DDM and EDDM the whole stream with `onset = 2000`. R11
+therefore runs three labelled arms: `reset` and `warmstart` put every detector on one convention,
+and `as_submitted` reproduces the per-detector mixture. **Every v87-facing quantity is read on
+`as_submitted`, because it is the only arm that reproduces the configuration each published numeral
+was produced under.**
+
+## Execution
+
+```bash
+./run_experiment_R11.sh                 # about 15 min on 48 cores
+./run_experiment_R11.sh --n-jobs 12     # outputs are invariant to the worker count
+./run_experiment_R11.sh --fast          # degraded smoke path, gates off, artefacts stamped _fast
+pytest tests/test_R11_claims.py -v
+```
+
+`run_all.sh` discovers `run_experiment_R11.sh` by sorted enumeration. Neither `run_all.sh` nor
+`run_tests.sh` is edited by this experiment, and nothing is added to `experiments/common/`.
+
+## Expected artefacts
+
+| path                                                                        | content                                                                                            |
+| --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `results/R11_multi_detector/data/R11_pht_fpr_vs_gamma.csv`                  | 20 rows. PHT `Data` FPR at three thresholds, Wilson bounds carrying C5's `sqrt(2)` inflation        |
+| `results/R11_multi_detector/data/R11_concept_fpr_vs_gamma.csv`              | 60 rows (20 × 3 arms). `H0` `Concept` FPR, five detectors, with `n_preonset_leak` per detector      |
+| `results/R11_multi_detector/data/R11_concept_fpr_vs_gamma_independent_seeds.csv` | 20 rows. The **measurement** arm for every published `H0` `Concept` rate                        |
+| `results/R11_multi_detector/data/R11_concept_add_vs_gamma.csv`              | 60 rows. `Concept` ADD at `c = 1.5`, five detectors, three arms                                     |
+| `results/R11_multi_detector/data/R11_adwin_magnitude.csv`                   | 7 rows. Local ADWIN on `Data` against river ADWIN on `Concept`, `adwin_impl_*` columns              |
+| `results/R11_multi_detector/data/R11_data_add_vs_gamma.csv`                 | 60 rows. `Data` ADD and FPR at `c = 2.0`, three detectors, three arms                               |
+| `results/R11_multi_detector/data/R11_slope_fits.csv`                        | 36 rows. Every slope with `se_bootstrap`, `se_ols`, their ratio, domain and `n_points`              |
+| `results/R11_multi_detector/data/R11_onset_convention_delta.csv`            | 160 rows, per (experiment, detector, grid point). Paired and censored `delta_ADD`                   |
+| `results/R11_multi_detector/figures/fig11_data_vs_concept.png`              | v87 Figure 11, log-log on panel A, censored points marked and excluded from the fit                 |
+| `results/R11_multi_detector/figures/fig15_multi_detector.png`               | v87 Figure 15                                                                                       |
+| `results/R11_multi_detector/figures/figA04_adwin_blind_zone.png`            | Experiment C. `figA01`–`figA03` are taken by R02b/R02c/R04b                                         |
+| `results/R11_multi_detector/tables/R11_claims.tex`                          | 50 `\newcommand` macros, ordinal `Eleven`                                                            |
+| `logs/R11_multi_detector/exp_R11_multi_detector.log`                        | full run log with SHA-256 of every artefact                                                          |
+
+Witnesses are vendored under `data/reference/R11/` with their original names: the submitted script
+itself, which control C8 reads at run time, and its console log, which supplies the anchors for the
+threshold and linear-slope comparisons below.
+
+**`R11_adwin_magnitude.csv` certifies no number, figure or table of v87.** A `grep` over the frozen
+`.tex` for `blind`, `speedup`, `magnitude` and the Experiment-C quantities returns nothing that
+refers to it: the blind-zone material at v87 L274 belongs to the `Recalib` sensor and Table 3, which
+R04 owns. The file is produced and kept because it is the only measurement of the ADWIN magnitude
+response in this repository, exactly as `R03_sensitivity.csv` is kept, and it is declared here
+rather than left for a reader to discover.
+
+## Correspondence with v87
+
+Each numeral is read on the arm that produced it. `as_submitted` means the CUSUM at `reset` and
+PHT/ADWIN/DDM/EDDM at `warmstart`, which is what `Priorite_12_multi_detector.py` runs.
+
+| v87                                                | R11                                                          | arm             | degree |
+| -------------------------------------------------- | ------------------------------------------------------------ | --------------- | ------ |
+| Fig. 15B caption, CUSUM `≈ 28.3`                   | **28.4078**                                                  | `reset`         | D2     |
+| Fig. 15B caption, PHT `≈ 27.1`                     | **27.0517**                                                  | `warmstart`     | D1     |
+| Fig. 15B caption, ADWIN `≈ 61`                     | **61.2123**                                                  | `warmstart`     | D1     |
+| Fig. 15B caption, DDM `≈ 250`                      | **249.6010**                                                 | `warmstart`     | D1     |
+| the published order, PHT below CUSUM               | holds: `27.05 < 28.41`                                       | `as_submitted`  | D0     |
+| L298 log-log slope CUSUM `0.86`                    | **0.8777** ± 0.0061, 20 of 20 points                         | `as_submitted`  | D2     |
+| L298 log-log slope PHT `1.09`                      | **1.0977** ± 0.0094, 12 of 20 points                         | `as_submitted`  | D2     |
+| L298 log-log slope ADWIN `0.47`                    | **0.4845** ± 0.0096, 20 of 20 points                         | `as_submitted`  | D2     |
+| L298 syncope "beyond `Γ ≈ 75`"                     | first point below 50% detection at **`Γ = 91.11`**           | `as_submitted`  | D2     |
+| L171 `sqrt(Γ)` plateau "near `30%`"                | **28.18%** grid mean                                         | `reset`         | D2     |
+| L296 EDDM "permanently triggered (`>90%` FPR)"     | **92.10%**, lowest Wilson bound **90.63%**                   | independent seeds | D2   |
+| L296 peak-to-peak, cumulative detectors `< 3.2%`   | CUSUM **1.13%**, PHT **0.82%**                               | `as_submitted`  | D2     |
+| L296 peak-to-peak, window-mean ADWIN `13%`         | **13.16%**, interval `[11.77%, 14.55%]`                      | `as_submitted`  | D2     |
+| L296 "a `×170` range of `Γ`"                       | **170.37** realised                                          | —               | D1     |
+| submitted log, linear slopes `26.602 / 37.228 / 4.747` | **26.2411 / 37.2746 / 4.8731**                            | `as_submitted`  | D2     |
+| submitted log, PHT thresholds `39.01 / 10.34`      | **41.4515 / 10.3180**                                        | —               | D2     |
+
+**No D3.** Every qualitative claim of `sec:universality` is reproduced. The classification is run at
+the printing precision of each source, reading both sides with `float_precision='round_trip'`.
+
+**Which detectors are "cumulative" is v87's own definition, not an interpretation of ours.** Line 84
+names "cumulative statistics (CUSUM, PHT; Siegmund regime)" and contrasts them with "the window-mean
+ADWIN". DDM is in neither category — it monitors a running error rate against `p_min + k·s_min` — so
+L296's two peak-to-peak descriptors do not cover it. Its spread is **4.22%**, interval
+`[3.13%, 5.19%]`, and it is reported here rather than classified against a bound that was not
+written for it.
+
+## The submitted convention is mixed, and the four caption numerals are not mutually comparable
+
+This is the substantive finding of R11.
+
+| detector | `reset`      | `warmstart`  | `as_submitted` | its submitted convention |
+| -------- | ------------ | ------------ | -------------- | ------------------------ |
+| CUSUM    | **28.4078**  | 25.4347      | 28.4078        | `reset`                  |
+| PHT      | — (DetRate 0.017) | **27.0517** | 27.0517   | `warmstart`              |
+| ADWIN    | 2023.75      | **61.2123**  | 61.2123        | `warmstart`              |
+| DDM      | 1873.61      | **249.6010** | 249.6010       | `warmstart`              |
+| EDDM     | 352.89       | **133.8235** | 133.8235       | `warmstart`              |
+
+Put the CUSUM and the PHT on **one** convention and their published order reverses: on `warmstart`
+the CUSUM falls to 25.4347 while the PHT stays at 27.0517, a paired seed-clustered difference of
+`+1.6170 ± 0.0318` — **50.9 standard errors**. That falsifies nothing v87 says: the caption asserts
+flat delays, and the delays are flat; neither the caption nor the body asserts an ordering in words.
+What it establishes is that a reader comparing the four numerals is comparing across two
+conventions, and nothing in the caption says so. The candidate
+`docs/camera_ready_candidates/R11_v87_detector_comparability.md` carries the proposed wording.
+
+**The pre-onset leak is what the `warmstart` convention costs.** `strict_pht` tests
+`if m - M > threshold and t >= onset`, so a crossing during warm-up is not returned **and does not
+reset the statistic**; the warm-up loop of `run_river_detector` calls `update()` without ever reading
+`drift_detected`. Counted per detector over 100,000 streams: **EDDM 91,560**, DDM 9,780, CUSUM 3,180,
+PHT 2,400, ADWIN 40. It is measured, persisted and logged even at zero, and it is deliberately **not**
+a gate: over 2,000 warm-up steps a leak is near-certain across thousands of streams, so gating on it
+would be a control that rings on nothing.
+
+**What the `reset` arm removes is detector-specific.** The CUSUM is defined against the fixed
+reference `0.5` of a fair coin and loses nothing by being built at the onset. The PHT subtracts a
+running mean of the stream it is watching, so at `reset` its reference tracks the shifted level and
+its statistic drifts at `-delta` per step: it is the one detector whose `H1` detection rate (1.7%)
+falls **below** its own `H0` false-alarm rate (5.2%). ADWIN and DDM still detect, because the
+post-onset stream is **not i.i.d.**: with `e_t = 1{eps_t + Delta > 0}` and `eps_t = sigma_t z_t`, the
+per-step error probability is `q_t = 1 - F_z(-Delta/sigma_t)`, which equals `1/2` for every `sigma_t`
+when `Delta = 0` — the whitening property — and is a non-constant function of `sigma_t` otherwise.
+Since `sigma_t` is serially dependent under GARCH, the `H1` stream inherits the volatility
+clustering. This is v87's own conditional-mean boundary argument (line 305) read at the drift rather
+than at the centring.
+
+## The `H0` `Concept` arm under common random numbers is degenerate, and this is asserted
+
+`simulate_garch11` draws the whole innovation vector **before** the variance recursion, so
+`eps[t] = sqrt(sigma2[t]) · z[t]` with `sigma2[t] > 0` and therefore `sign(eps_t) = sign(z_t)`
+exactly, for every `(omega, alpha, beta)`. Under prompt §2.1's key on role and index alone, the
+binary stream `(eps[2000:] > 0)` is **bit-identical at all twenty `Gamma`** — verified on 200 seeds,
+200 of 200, and `sys.exit(1)` otherwise.
+
+`R11_concept_fpr_vs_gamma.csv` therefore carries one number repeated twenty times. Its design effect
+is **20 by construction**, so its 100,000 streams hold the information of 5,000. **It supports no
+claim**: it is an identity witness, kept so a reviewer can open it. Every published `H0` `Concept`
+rate, interval and macro comes from `R11_concept_fpr_vs_gamma_independent_seeds.csv`, whose key
+`("R11", "expB_H0_indep", gamma, s)` breaks the pairing:
+
+| detector | CRN arm (identity witness) | independent-seed arm (the measurement) |
+| -------- | -------------------------- | -------------------------------------- |
+| CUSUM    | 7.66%, zero grid spread    | **7.99%**                              |
+| PHT      | 5.18%, zero grid spread    | **5.85%**                              |
+| ADWIN    | 0.02%, zero grid spread    | **0.05%**                              |
+| DDM      | 10.34%, zero grid spread   | **10.44%**                             |
+| EDDM     | 93.16%, zero grid spread   | **92.10%**                             |
+
+The `H1` arm is **not** degenerate: `Delta = c · sigma_unc` is constant across `Gamma` by variance
+targeting, but the crossing `z_t > -Delta/sqrt(sigma2_t)` retains the penalty, so the pairing there
+is the intended common-random-numbers design and its effect is measured rather than assumed.
+
+## Control design
+
+**C4 — flatness is gated by a slope test, never by a peak-to-peak threshold.** A `max - min` over 20
+noisy estimators has no stable sampling distribution: the submitted PHT sat at 3.190% against a
+published ceiling of 3.2%, a margin of 0.010 point where the sampling error on a range is of order a
+point. The spread is therefore computed, persisted and published as **descriptive**, with a paired
+seed-cluster interval. The gate is an OLS of `ADD` on `log(Gamma)` per detector. Five detectors
+tested simultaneously at 5% give `1 - 0.95^5 = 22.62%` probability that at least one rejects under its
+own null — above preamble §S4bis's 5%, computed and logged **before** the result is read — so "no
+detector rejects" is not used as a binary door. The substitute is a Kolmogorov–Smirnov calibration of
+the five p-values against `Uniform(0,1)`: on `as_submitted`, `D = 0.4000`, `p = 0.3088`.
+
+| detector | Concept slope on `log(Γ)` | `se_bootstrap` | p-value | `se_boot / se_ols` |
+| -------- | ------------------------- | -------------- | ------- | ------------------ |
+| CUSUM    | −0.0629                   | 0.0502         | 0.2100  | 3.714              |
+| PHT      | −0.0270                   | 0.0524         | 0.6068  | 5.043              |
+| ADWIN    | −1.5343                   | 0.0936         | 0.0000  | 2.151              |
+| DDM      | −2.3128                   | 0.3010         | 0.0000  | 1.475              |
+| EDDM     | −0.2025                   | 0.2462         | 0.4109  | 3.129              |
+
+**The last column is the design effect the common-random-numbers pairing imposes.** Under CRN the
+twenty grid estimates share their draws, so the OLS analytic standard error does not hold; every
+p-value here comes from a seed-cluster bootstrap that resamples **seeds and never grid points**, over
+2,000 replicates. Pricing these slopes with the analytic error would understate it by factors of 1.5
+to 5.0. ADWIN and DDM reject flatness on this evidence, at slopes of −1.53 and −2.31 steps per
+e-fold of `Gamma` against mean delays of 61 and 250 — a decline, not the rise a lethargy tax would
+produce, and one that the peak-to-peak numerals of v87 already record as the largest of the five.
+
+**C7 — the positive control, admitted by power and not by a numeral.** A flatness claim passes
+through any monitor that does not observe the relevant quantity, including a dead one: R05 measured a
+diagnostic arm saturating at `FPR = DetRate = 1.0000` that read as an orthogonality result. A
+detector enters the monotonicity gate only if, at the largest amplitude of the C7 sweep, its `H1`
+alarm-time distribution is separated from its **own** `H0` alarm-time distribution on the same seeds,
+tested as `ADD_H1 < ADD_H0 − 2 · SE_paired` with non-alarms right-censored at the monitoring horizon.
+The criterion is written into the script as a constant before any measurement and evaluated for all
+five detectors. **v87 L296's `>90%` EDDM descriptor is logged beside it as corroboration and is never
+the gate**: a threshold read off the manuscript's own report of the behaviour it excludes would be a
+tolerance set on an observed value (§S4.6).
+
+**C2 — the grid's lowest target is not attainable, and the control says so rather than being
+re-cut.** The penalty at fixed `alpha` is minimised at `beta = 0`, where
+`Gamma_floor = 1 + 2·alpha/(1 - alpha) = 1.1739130435` at `alpha = 0.08`. The submitted target grid
+is `concat(linspace(1, 50, 10), linspace(60, 200, 10))`, whose first point `Gamma = 1.0` lies below
+that floor: it has **no root in `beta`**, the bisection collapses to `beta = 0`, and the process runs
+at the floor. C2 therefore carries two assertions decided by a closed form before any solving — the
+realised penalty within `1e-6` of an attainable target, and `beta == 0.0` exactly for an unattainable
+one — and the gap at the first point is reported, not tested. **The R11 prompt lists the grid as the
+literals `1.17, 6.44, 11.89, …`; those are the submitted campaign's realised penalties rounded to two
+decimals, and the script verifies at run time that rounding each realised penalty reproduces the
+printed literal at all twenty points.** `Gamma_target`, `Gamma_realised` and `attainable` are three
+distinct persisted columns.
+
+**C5 — every PHT interval carries the `sqrt(2)` inflation.** The threshold is estimated on 2,000
+i.i.d. streams and read on 5,000 fresh ones, so the held-out level carries the binomial variance
+twice over (`docs/DEVIATIONS.md` entry 16, measured at 1.4133 against `sqrt(2) = 1.4142`). Inverting
+the score test at a doubled variance is the Wilson interval at `z · sqrt(2)`, which is how it is
+applied — to `z`, not to the half-width of an already-inverted interval.
+
+**Counters logged even at zero.** The undocumented variance clamp
+`sigma2[t] = min(sigma2[t], 1e4 · sigma2_unc)`, which appears in no specification of v87, bound
+**6 times over 465,000 monitored streams**. The floors `max(sig_f, 1e-8)` and
+`max(np.std(z_sq), 1e-8)` never activated.
+
+## Known deviations from the submitted manuscript
+
+### The whole campaign is redrawn (Class A, D2, pre-classified)
+
+Prompt §2.1 requires migrating off `np.random.RandomState` keyed on the process parameter to a
+128-bit `SeedSequence` keyed on role and index alone. Every Monte-Carlo value therefore moves. This
+is acknowledged in advance and needs no per-value justification; what it buys is a common-random-
+numbers design in which a difference between two `Gamma` is an algorithmic response rather than a
+difference of draw, and the price is the design effect priced in the table above.
+
+### The `Gamma` grid is solved for its targets, not for its printed literals (Class A)
+
+Solving for `concat(linspace(1, 50, 10), linspace(60, 200, 10))` rather than for the rounded literals
+moves `beta` at sixteen of the twenty points, by at most `2.89e-5`, and `omega` by at most `5.86e-4`
+relative. Because no seed key carries `gamma`, the innovation vector is unchanged and the `H0`
+`Concept` arms — where `sign(eps_t) = sign(z_t)` — do not move at all; every arm that reads an
+amplitude does.
+
+### The `λ × Γ` rule does not hold a level for the PHT (Class A, D2)
+
+v87 says the PHT "needs the same `λ × Γ` inflation" as the CUSUM, whose cure "holds the nominal
+level". Measured, the PHT's rate at that threshold falls monotonically from **14.46%**
+`[13.14%, 15.89%]` at the attainable floor to **1.62%** `[1.19%, 2.19%]` at `Γ = 200`. The extreme
+intervals do not overlap, so the drift is not sampling noise. False alarms are contained throughout —
+the raw threshold runs above 80% on the same rows — so the cure works; what is inexact is calling it
+the same cure. `docs/DEVIATIONS.md` entry 7 recorded the identical situation for the StrictCUSUM and
+classified it D2, and this follows that precedent. Candidate:
+`docs/camera_ready_candidates/R11_v87_pht_gamma_rule.md`.
+
+### The three log-log slopes have no traceable origin, and one has an unstated domain (Class A, D2)
+
+`plot_figure_20` computes a **linear** regression and the submitted log prints only
+`CUSUM: 26.602 / PHT: 37.228 / ADWIN: 4.747`. The published log-log slopes `0.86 / 1.09 / 0.47`
+appear in no CSV, no log and no script of the submitted campaign. R11 emits them as macros computed
+in memory with a seed-cluster standard error and an explicit domain, and reproduces the linear fit
+beside them so the two cannot be confused. The PHT slope is fitted on the **12 of 20** points that
+survive the `DetRate ≥ 0.5` censor, where the delays are conditional on detection and biased downward
+by selection on survival; the CUSUM and ADWIN are censored nowhere. Candidate:
+`docs/camera_ready_candidates/R11_v87_loglog_slopes.md`.
+
+### The Figure 11 caption states one panel's parameters for both (Class A, D2)
+
+The caption reads "abrupt drift `c=2`, `1,000` streams per point" for a figure whose panel B is
+produced at `c = 1.5` with 5,000 streams. v87 corroborates the correction twice in its own text —
+L296 and the Figure 15 caption both say `c = 1.5`. The claim the caption supports, "flat delays for
+all detectors", is a statement about panel B and is unaffected. Candidate:
+`docs/camera_ready_candidates/R11_v87_figure11_caption.md`.
+
+### One macro is emitted as `nan`
+
+`\RElevenConceptAddPhtReset` has no value: on the matched `reset` arm the PHT's detection rate is
+1.7%, far below the 0.5 censor, so it has no delay to report. The macro is emitted **as measured**
+rather than suppressed or silently taken from the other arm, which would be the undeclared fallback
+§S4.3 proscribes. Any LaTeX use of it must be guarded.
+
+## Limitations
+
+**The `reset` arm is not a like-for-like alternative for the reference-adaptive detectors.** It
+removes the pre-change sample three of the five are defined against, which is a real property of
+those detectors and not a defect of the arm — but it means the `reset` column is a measurement of a
+different question, not a better answer to the same one. The comparability finding rests on the
+contrast between the arms, not on either taken alone.
+
+**The two ADWIN implementations are different detectors under one name.** Experiment B runs river's
+ADWIN (`delta = 0.002`) on the `Concept` stream; experiments C and D run a local prefix-sum window
+detector (`delta = 5e-4`, `min_window = 30`) on the `Data` statistic. The two panels of Figure 11
+therefore compare two detectors under one legend entry. They are kept apart — §S4.2 forbids merging
+them, since that would move published values — and declared by the `adwin_impl` columns.
+
+**The peak-to-peak numerals are descriptive and should not be read as bounds.** Their paired
+bootstrap intervals are wide: ADWIN's `[11.77%, 14.55%]` spans nearly three points around a published
+13%. Any future comparison against them needs the interval, not the point.
+
+**C7's monotonicity gate admits only the detectors with measured power**, so a detector excluded by
+it has no monotonicity statement attached — neither a pass nor a failure. Its curve is measured,
+persisted and plotted regardless.
+
+## Cosmetic divergence
+
+`fig11_data_vs_concept.png`, `fig15_multi_detector.png` and `figA04_adwin_blind_zone.png` differ
+deliberately from the submitted `Fig20_Data_vs_Concept_ADD.png` and `Fig18_Multi_Detector.png`: panel
+titles are bold, left-aligned and prefixed `(A)`/`(B)` per the repository convention, which is what
+the v87 captions already use; **panel A of Figure 11 is drawn on log axes in both dimensions**, since
+the published quantity is a log-log slope and the submitted figure drew linear axes under a log-log
+claim; censored points (`DetRate < 0.5`) are marked distinctly and excluded from the fit; EDDM
+carries a dashed, faded style that signals its inoperance rather than reading as a working detector;
+and panel parameters are stated per panel rather than for the figure. No numerical value moves as a
+result.
+
+## Environment
+
+CPython 3.12.9, `numpy 1.26.4`, `pandas 2.3.2`, `scipy 1.16.2`, `matplotlib 3.10.6`, `joblib 1.4.2`,
+`river 0.23.0`, under `PYTHONHASHSEED=42`, single-threaded BLAS and `MKL_CBWR=COMPATIBLE`. Two runs
+at different worker counts produce byte-identical outputs; the SHA-256 digests of all twelve
+artefacts are recorded in the log and in `AUDIT_R11.md` §6. **Measured cost 886 s of campaign over
+465,000 monitored streams, 936 s including the analysis and the 2,000-replicate bootstraps**, on 48
+cores. The submitted campaign ran 355,000 streams in 382 s on 24 cores (v87 Appendix A, AMD EPYC
+8224P); the extra cost is the second onset arm, the independent-seed measurement arm and the positive
+control.
+# R16 — Regime census and sign floor
+
+R16 carries the most-cited empirical claim of the submitted manuscript: **80% of dated
+directional episodes fall out of budget**. It appears four times in
+`articleB_whitening_v87.tex` — in the abstract (L57), in the contributions (L87), in the body
+(L329) and in the conclusion (L374).
+
+The manuscript establishes a bound, the *Sharpe ceiling*
+`ADD_min >= 504 * ln(1/alpha_0) / SR^2` (Corollary `cor:sharpe_ceiling`), and then asks what
+unforced directional drift the market actually offers. R16 answers it: it dates the bull and
+bear phases of four ETFs over 2000–2025, computes for every phase the minimum attainable
+detection delay under two budgets, and reports what fraction of the census the ceiling excludes.
+
+**Every published value of the census reproduces exactly.** Read with
+`float_precision='round_trip'` on both sides, the regenerated
+`R16_regime_census.csv` is identical to the submitted campaign's
+`protocol_10b_regime_census_refined.csv` on all 19 shared columns and all 66 rows, worst numeric
+difference `0`, and the same holds for the sign floor, the feasibility grid, the MESO split
+report and the boundary-convention delta. **What does not reproduce is the manuscript's account
+of how the census was dated.** That is registered as a D3 and is the subject of §"Known
+deviations" below.
+
+## Execution
+
+```bash
+./run_experiment_R16.sh                                                   # measured 1.4 s total
+python3 experiments/R16_regime_census/exp_R16_regime_census_a.py --dating strict_ps
+python3 experiments/R16_regime_census/exp_R16_regime_census_a.py --dating symmetric
+pytest tests/test_R16_claims.py -v
+```
+
+`./run_experiment_R16.sh` calls `_a` then `_b`, both with no flags, which is the canonical
+configuration; in that mode `_a` also writes the two stamped counterfactual censuses. A
+single-arm invocation writes that arm's CSV only, byte-identical to what the default run wrote —
+which is the second reproducibility axis of control C9, since R16 has no parallelism and no
+stochastic component and the worker-count axis is therefore vacuous.
+
+`run_all.sh` discovers `run_experiment_R16.sh` by sorted enumeration; neither `run_all.sh` nor
+`run_tests.sh` is edited by this experiment.
+
+## Expected artefacts
+
+| path                                                                       | content                                                                                                       |
+| -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `results/R16_regime_census/data/R16_regime_census.csv`                     | **66 rows**, the canonical census; 20 columns, the submitted schema plus `dating_algorithm`                   |
+| `results/R16_regime_census/data/R16_meso_split_report.csv`                 | 18 rows, every MACRO phase longer than 400 trading days and the sub-phases the MESO scale gave it             |
+| `results/R16_regime_census/data/R16_boundary_convention_delta.csv`         | 66 rows, both boundary conventions on every phase, with `flipped`                                             |
+| `results/R16_regime_census/data/R16_sign_floor.csv`                        | 66 rows, both floors at `gamma in {20, 252, 1260}`; the submitted schema plus `arm_disagreement`              |
+| `results/R16_regime_census/data/R16_feasibility_vs_gamma.csv`              | 6 rows, the `(gamma, budget)` grid: `n_detectable` 13 / 14 / 2 / 2 / 0 / 1                                    |
+| `results/R16_regime_census/data/R16_regime_census_strict_ps.csv`           | **48 rows**, counterfactual: Pagan–Sossounov on all four streams, no substitution                            |
+| `results/R16_regime_census/data/R16_regime_census_symmetric.csv`           | **102 rows**, counterfactual: the substitution applied to every ticker whose `check_sanity` fails             |
+| `results/R16_regime_census/tables/R16_claims.tex`                          | 32 `\newcommand` macros, cardinal ordinal `Sixteen`                                                          |
+| `logs/R16_regime_census/exp_R16_regime_census_{a,b}.log`                   | full run logs with the SHA-256 of every artefact                                                              |
+
+**No figure.** v87's census paragraphs L329 and L331 carry no `\includegraphics` and reference
+only `\ref{fig:oracle_frontier}`, which belongs to R01's look-ahead oracle backtest. The verdict
+is logged at start-up rather than assumed.
+
+## The measurement
+
+**The dating.** Two Pagan–Sossounov scales on the cumulated log price of each stream — MACRO
+(`window=168, min_phase=84, min_cycle=336, min_edge=126, jump_thresh=0.182321`) and MESO
+(`window=63, min_phase=42`, same edge and jump) — merged hierarchically: a MACRO phase longer
+than 400 trading days is offered the MESO turning points inside it, and every candidate
+sub-phase shorter than 42 days or of amplitude below 0.15 in cumulated log price is pruned,
+smallest amplitude first, with the MACRO endpoints protected. A phase is `MACRO` when both its
+endpoints are MACRO turning points and `MESO_SPLIT` otherwise; 14 of the 66 are `MESO_SPLIT`.
+
+**The boundary convention is imperative** (v87 L392): the return dated at a turning point closes
+the regime it ends, so consecutive phases partition the return series and no pre-change
+observation enters a phase's Sharpe. Both conventions are computed on every phase and their
+difference is persisted, which is what makes the sensitivity readable.
+
+**The two floors.**
+
+    ADD_min_unc(gamma)  = 504 * ln(gamma) / SR^2                  the unconditional return stream
+    ADD_min_sign(gamma) = ln(gamma) / kl(q_phase || q_ref)        the sign stream, exactly priced
+
+A phase is *out of budget* when its floor is not strictly below its own duration.
+
+**The counts, on the canonical arm:**
+
+| budget                     | out of budget | fraction   | v87 L329 |
+| -------------------------- | ------------- | ---------- | -------- |
+| `gamma = 20`, unconditional | **53 / 66**   | **80.3 %** | 53, 80 % |
+| `gamma = 20`, sign          | 52 / 66       | 78.8 %     | 52       |
+| `gamma = 252`, unconditional| 64 / 66       | 97.0 %     | 64, 97 % |
+
+**The two numerals of L260** are closed forms with no Monte Carlo in them:
+`504 ln 20 = 1509.85` ("≈1,510") and `504 ln 252 = 2786.83` ("≈2,790").
+
+**The two phases the manuscript names** reproduce to their printed precision. The longest phase
+of the detectable set is SPY 2011-10-03 → 2018-09-20, 1753 trading days, `q_ref` 0.541 →
+`q_phase` 0.554, floor 960.55 days = 54.8 % of the phase. The COVID crash is SPY 2020-02-19 →
+2020-03-23: `delta_q` −0.2803, annualized Sharpe −5.9904, 23 trading days, `kl` 0.162042
+nats/day, sign floor 34.12 days at `gamma = 252` and 18.49 at `gamma = 20`, which is 80.4 % of
+the phase — v87's "four fifths".
+
+## The three dating arms
+
+`check_sanity` requires the MACRO dating of a stream to contain a COVID bear phase, a 2008 bear
+phase, a 2017 melt-up and a calm advance. **It fails on all four tickers.** The delivered script
+tests it inside an `if ticker == 'SPY'` guard and initialises `sanity_ok = True`, so PFF, VNQ
+and BWX are never tested by it; this repository evaluates it on all four on every run and logs
+the four verdicts.
+
+| arm         | rule                                                                | phases  | out of budget, `gamma = 20` unc |
+| ----------- | ------------------------------------------------------------------- | ------- | ------------------------------- |
+| `canonical` | Pagan–Sossounov, Lunde–Timmermann substituted on SPY                 | **66**  | **53 (80.3 %)**                 |
+| `strict_ps` | Pagan–Sossounov on all four, no substitution                         | 48      | 38 (79.2 %)                     |
+| `symmetric` | Lunde–Timmermann on every ticker whose `check_sanity` fails          | 102     | 75 (73.5 %)                     |
+
+The canonical arm is the published configuration and the repository's baseline; the default run
+produces it and writes it to `R16_regime_census.csv`. The other two are counterfactuals: they
+are measured, persisted and reported, and they gate nothing.
+
+**The substitution is not silent in the delivered script.** Line 3 of the vendored
+`data/reference/R16/Priorite_16_regime_census.log` reads
+`WARNING | [SPY] Sanity check P-S failed. Fallback to Lunde-Timmermann for MACRO.` What preamble
+§S4.3 requires of a fallback that is kept rather than removed is more than a warning — it must
+be selected by an explicit argument and stamped in the output filename — and that is what the
+three arms restructure. The substitution is additionally carried into a `dating_algorithm`
+column on every census row.
+
+## Controls
+
+| control | statement                                                                                        | margin                          | trigger probability |
+| ------- | ------------------------------------------------------------------------------------------------ | ------------------------------- | ------------------- |
+| **C1**  | per ticker, phases contiguous and `sum(T_days) == idx(last end) − idx(first start)`, none dropped | exact, margin 0 on all four     | 0, deterministic    |
+| **C2**  | the three published counts, read from the vendored witness rather than typed                     | 53 / 52 / 64, displacement 0    | 0, deterministic    |
+| **C3**  | `sum(detectable_sign_g20) − sum(detectable_unc_g20) == 1`                                        | 14 − 13 = 1                     | 0, deterministic    |
+| **C4**  | convention sensitivity with its direction; **not a gate**                                        | 3 flips, all one way; [53, 56]  | not a gate          |
+| **C5**  | degeneracies counted even at zero, on all three arms                                             | all zero on the canonical arm   | 0, deterministic    |
+| **C6**  | turning-point concordance of the two datings; **not a gate**, descriptive per §S4bis             | Wilson intervals, three rungs   | not a gate          |
+| **C7**  | the PFF 2020-03-18 return v87 cites, and the phases it closes and opens                          | prints `-18.6%`; memberships    | 0, deterministic    |
+| **C8**  | `ast` source-segment identity on seven carried primitives                                        | 5 696 characters, 0 differences | 0 unless drifted    |
+| **C9**  | two runs bit-identical; each arm alone bit-identical to what the default run wrote               | 8 artefacts, 0 differences      | 0, deterministic    |
+
+**C1 is asserted, not observed.** `sum(T_days)` is 6356 / 3930 / 4483 / 4009 on SPY / PFF / VNQ /
+BWX and matches the covered span exactly on all four. The returns outside the covered span
+(SPY 56 head and 1 tail, PFF 294/178, VNQ 382/148, BWX 243/198) are the `min_edge = 126`
+censoring of the dating filter and are logged as such, not as a hole.
+
+**C3's set is larger than its step.** The step of one holds — 14 against 13 — but the two arms
+disagree on **19 of the 66 phases**: 10 are detectable on the sign arm only and 9 on the
+unconditional arm only. There is no single flipping phase to name; the step is a net. All 19 are
+persisted in the `arm_disagreement` column.
+
+**C4's flips all run one way.** Three of 66 phases change detectability with the boundary
+convention — PFF 2011-08-08 → 2013-05-08, PFF 2020-03-18 → 2021-12-31 and BWX 2020-03-18 →
+2021-01-05 — and all three *gain* detectability under the post-onset convention. The envelope of
+the published count is therefore **[53, 56] = [80.3 %, 84.8 %]**, and the published figure is the
+conservative end of its own sensitivity interval.
+
+**C6 carries an identity on one ticker and information on three.** Under the canonical arm SPY's
+census *is* the Lunde–Timmermann dating, so its concordance with the census is 100 % by
+construction and must be read as an identity rather than as corroboration. PFF, VNQ and BWX are
+where Pagan–Sossounov survives into the canonical census and where the control says something
+about the dating the census actually uses.
+
+**C5 found one non-zero count, on a counterfactual arm.** Seven phases of the `symmetric` arm
+have `q_phase` exactly 0 or 1 — all of them 2-to-6-day phases in the 2008 crisis, which
+Lunde–Timmermann admits because it applies no duration censoring. Their defined treatment is the
+clip to `[1e-6, 1 − 1e-6]` inside `compute_kl_sign`, so the divergence stays finite and the
+detectability flag is decided by measurement rather than by default. The canonical and
+`strict_ps` arms carry zero degeneracies of every kind.
+
+## No stochastic surface
+
+Both delivered scripts call `set_seed(42)` and **neither draws a random number**. The dating
+filters, the Sharpe ratios, the Bernoulli divergences and the detectability flags are
+deterministic functions of the four price series. There is therefore no seed-derivation surface
+to migrate to a 128-bit `SeedSequence`, and no unused helper is added to suggest otherwise. The
+absence is logged and recorded rather than papered over — it is the honest outcome of the
+prompt's conformance requirement, and it is why C9's second axis is arm isolation and not a
+worker count.
+
+## Cosmetic divergence
+
+None. R16 renders no figure, so the repository's figure conventions (bold left-aligned panel
+titles, uppercase panel letters, merged panels) do not apply to this stream. No numerical value
+moves on this account.
+
+## Known deviations from the submitted manuscript
+
+Five entries are registered in `docs/DEVIATIONS.md`. One is a D3, one is a D2, three carry no
+severity.
+
+**`R16-dating-misdescription` — L329, Class A, D3.** v87 L329 describes "a retrospective
+multi-scale Pagan--Sossounov bull/bear dating … of the four streams (2000--2025; $66$ phases
+after duration censoring)". A Pagan–Sossounov dating of all four streams yields **48** phases,
+not 66. The 66 require substituting Lunde–Timmermann on SPY, and Lunde–Timmermann applies **no
+duration censoring** — the shortest phase of the 48-phase arm is 21 trading days, against 6 on
+the canonical arm and 2 on the fully substituted one. L329's account of the method is therefore unreachable as written. The proof
+artefact is `results/R16_regime_census/data/R16_regime_census_strict_ps.csv`.
+
+The **values** are not falsified: 53 of 66 at `gamma = 20`, 52 on the sign arm, 64 at
+`gamma = 252` all reproduce exactly, and so does every numeral of L260 and L331. What is
+falsified is the description of how the 66 were obtained. Whether the description was written
+from the design as intended rather than as executed is not established by any measurement, and
+preamble §S4.5 forbids deciding it: this repository states the discrepancy and stops there.
+
+**L329 already flags the exception, without naming the algorithm.** The same sentence reads "the
+COVID-19 crash---too brief for the filter---dated at the *raw scale*". "Raw scale" is the
+uncensored Lunde–Timmermann dating. The manuscript therefore names the exception and does not
+name the algorithm; whether that phrasing was meant to carry the substitution is not established
+by any measurement here.
+
+**`R16-covid-phase-conditional` — L331, Class A, no severity.** The COVID phase and its four
+numerals (`delta_q` −0.28, SR −6.0, `kl` 0.162, floors 18.5 / 34.1) reproduce exactly and are
+not falsified. That the phase exists *only* under the substitution — strict Pagan–Sossounov
+censors it at `min_phase = 84` — is the same measured fact as `R16-dating-misdescription`, and
+entering it twice at D3 would double the manuscript's apparent exposure on one finding.
+
+**`R16-floor-frac-envelope` — L329, Class A, D2.** "even there the floor consumes $55$--$92\%$
+of the phase" measures **[50.1 %, 92.1 %]** over the 13 phases the ceiling does not exclude at
+`gamma = 20`. Two lie below 55 %: PFF 2009-03-06 → 2011-05-19 at 50.11 % and BWX 2021-01-05 →
+2022-10-20 at 50.47 %. The upper end reproduces. Four definitional variants were tried and
+logged — bull phases only, `T_days >= 250`, both together, the sign arm at `gamma = 20`, and the
+superseded `protocol_10a` census — and **none yields 55–92**. SPY 2011–2018 is itself at 54.8 %,
+which rounds to 55 and *suggests* the published lower bound was read off that single phase
+rather than off the minimum of the set; no measurement establishes it, so **the cause is not
+identified**.
+
+**`R16-boundary-sensitivity` — L392, Class A, no severity.** Three of 66 phases flip with the
+boundary convention, all in the same direction, so the published count is `[53, 56]` =
+`[80.3 %, 84.8 %]` and the published figure is the conservative end. v87 declares the convention
+at L392 and names its mechanism correctly, but never reports the count. Camera-ready candidate:
+`docs/camera_ready_candidates/R16_v87_boundary_sensitivity.md`.
+
+**`R16-sign-arm-disagreement` — L329, Class A, no severity.** "moves that count by one phase" is
+a net of 10 and 9; the two arms disagree on 19 of 66.
+
+**`R16-substitution-scope` — Class A, no severity.** The published fraction is conditional on
+the substitution being applied to one ticker of four. Applied to every ticker whose
+`check_sanity` fails — the same rule, consistently — the headline moves from 80.3 % to
+**73.5 %** (75 of 102), which is 6.8 points, four times the displacement strict Pagan–Sossounov
+produces and more than twice the boundary-convention envelope. The arm moves the headline
+**against** the manuscript's thesis, so preamble §S3's asymmetry rule assigns it the lighter
+examination; it is recorded because measured and unspoken is the one outcome not available.
+
+## Limitations
+
+- **The dating is an input, not a result.** Every count in this stream is conditional on the
+  turning points, and the three arms show how much they move: 80.3 %, 79.2 %, 73.5 % on the same
+  four price series and the same ceiling. What the census establishes is that the ceiling
+  excludes most of what any of these three datings finds; it does not establish that 80 % is the
+  value a different reasonable dating would give.
+- **`check_sanity` is not a statistical test.** It asks whether four named historical episodes
+  appear in a dating, and it fails on all four tickers. Nothing here measures how often it would
+  fail on a dating that is in fact adequate, so its verdicts license the arms and nothing more.
+- **The Sharpe ceiling is a first-order asymptotic bound** (`gamma -> infinity`), stated by the
+  manuscript under a homoscedastic Gaussian location alternative. R16 evaluates it; it does not
+  test its regime of validity, and the phases at `T = 6` trading days are far from the asymptotic
+  regime that derives it.
+- **`q_ref` is computed over each ticker's whole history**, including the phase being tested, so
+  the divergence is measured against a reference the phase itself contributes to. On a 23-day
+  phase within a 6 414-day history the contribution is negligible; on the `symmetric` arm's
+  102-phase partition the same statement is weaker and is not quantified here.
+- **The concordance control C6 compares two dating algorithms, not a dating against truth.**
+  There is no ground-truth turning point in this data, and none is asserted.
+
+## Environment
+
+Python 3.12.9, `numpy==1.26.4`, `pandas==2.3.2`, `scipy==1.16.2`, `pytest==9.0.3` — recorded by
+`importlib.metadata.version()` at run time and copied into `requirements/R16.txt`. Single-thread
+BLAS and `MKL_CBWR=COMPATIBLE` are pinned by `experiments/common/fair_env.py` before NumPy
+loads; `PYTHONHASHSEED=42` is exported by `run_experiment_R16.sh` and verified at start-up by
+both scripts. Total measured execution: 1.4 s.
+# R18 — Power of the Ljung–Box test on a binary stream
+
+R18 reproduces no figure, no table and no number of the submitted manuscript. It measures the
+**sensitivity of the instrument** on which four of the manuscript's statements rest.
+
+The whitening property is established in v87 by an accumulation of Ljung–Box **non-rejections**
+on binary streams: the stream shows no detectable autocorrelation, and is then treated as
+i.i.d. A non-rejection carries information only in proportion to what the test could have
+rejected. An exhaustive grep of `articleB_whitening_v87.tex` for `power`, `Type II`,
+`sensitivit*`, `false negative` and `fail to reject` returns no power analysis, and the
+manuscript has no Limitations paragraph. Two independent readings of the repository flag the
+same gap:
+
+- `AUDIT_R06.md` §8 item 3 — "*The power of the Ljung-Box reading is not quantified anywhere.
+  … A rate at nominal is consistent with a test that has no power at all. Nothing in this
+  repository measures that.*"
+- `WRAPUP_Stream_B1.md` §6 item 3 — "*Ne pas survendre le résultat : il certifie une absence de
+  faux positifs endogènes, mais ne garantit pas la sensibilité face aux vrais positifs.*" That
+  recommendation was not carried into v87.
+
+**R18's output is a bound, never a confirmation.** It converts "we did not reject" into "we
+would have rejected a lag-1 autocorrelation above `rho_80` with probability 0.8", and it states
+what falls below that bound as explicitly as what falls above it.
+
+## Execution
+
+```bash
+./run_experiment_R18.sh                 # measured 293 s on 48 cores
+./run_experiment_R18.sh --n-jobs 12     # 448 s; outputs are invariant to the worker count
+pytest tests/test_R18_claims.py -v
+```
+
+There is no `--fast` flag: R18 has one code path, so no degraded path exists to stamp
+(preamble §S4.3). `run_all.sh` discovers `run_experiment_R18.sh` by sorted enumeration; neither
+`run_all.sh` nor `run_tests.sh` is edited by this experiment.
+
+## Expected artefacts
+
+| path                                                                | content                                                                                                                       |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `results/R18_ljungbox_power/data/R18_power_vs_theta.csv`            | 36 rows, the `n = 8000` slice: rejection rate, Wilson interval, non-centrality, analytic power, signed deviation              |
+| `results/R18_ljungbox_power/data/R18_power_vs_horizon.csv`          | 144 rows, the same schema over the four R02c horizons, so C2's monotonicity in `n` reads from one frame                       |
+| `results/R18_ljungbox_power/data/R18_detectable_amplitude.csv`      | 4 rows: `theta_80` by grid interpolation **and** by `brentq` on the analytic expression, with the cluster-bootstrap interval  |
+| `results/R18_ljungbox_power/data/R18_applied_to_sign_streams.csv`   | 33 rows: both application arms keyed by `Gamma`, with `power_at_measured_rho`                                                 |
+| `results/R18_ljungbox_power/data/R18_size_at_null.csv`              | 4 rows: the C1 diagnostic — rate, Wilson interval, KS statistic and p-value per horizon                                       |
+| `results/R18_ljungbox_power/figures/figA05_ljungbox_power.png`      | three panels **(A)**, **(B)**, **(C)**                                                                                       |
+| `results/R18_ljungbox_power/tables/R18_claims.tex`                  | 23 `\newcommand` macros, cardinal ordinal `Eighteen`                                                                         |
+| `logs/R18_ljungbox_power/exp_R18_ljungbox_power.log`                | full run log with the SHA-256 of every artefact                                                                              |
+
+The appendix figure is `figA05` and not `figA04`: R11 already emits
+`results/R11_multi_detector/figures/figA04_adwin_blind_zone.png`. See `AUDIT_R18.md` §7.
+
+## The measurement
+
+**The alternative.** A symmetric two-state Markov chain on `{0,1}` with stay probability
+`p_stay = 0.5 + theta`. Its transition matrix has eigenvalues `1` and `2*theta` and uniform
+stationary law, so `rho(k) = (2*theta)^k` **exactly** and the marginal law is **exactly**
+Bernoulli(1/2) for every `theta`. The dependence is therefore isolated from the marginal
+calibration: an alternative that also moved the marginal rate would confound two mechanisms and
+the reading would not be attributable.
+
+**The instrument.** `lb_pvalue` is carried character for character from
+`experiments/R02_whitening_ljungbox/exp_R02_whitening_ljungbox.py`, which is the implementation
+behind the 360-stream reading of L278 and of the Figure 6 caption, and byte identity is asserted
+against that file at start-up. It is cross-checked against
+`statsmodels.stats.diagnostic.acorr_ljungbox` on 150 streams; the worst disagreement is
+`1e-4` of the float64 reassociation budget.
+
+### The detectable amplitude
+
+| `n`       | `rho_80` measured | `rho_80` analytic | 95% cluster bootstrap  | interpolation bias |
+| --------- | ----------------- | ----------------- | ---------------------- | ------------------ |
+| `2,000`   | **0.1023**        | 0.1018            | `[0.0992, 0.1050]`     | `+0.01%`           |
+| `8,000`   | **0.0506**        | 0.0511            | `[0.0494, 0.0518]`     | `+0.35%`           |
+| `32,000`  | **0.0265**        | 0.0256            | `[0.0259, 0.0270]`     | `+0.51%`           |
+| `128,000` | **0.0127**        | 0.0128            | `[0.0124, 0.0129]`     | `+0.47%`           |
+
+`rho_80 = 2 * theta_80` is the interpretable quantity: the lag-1 autocorrelation the lag-20
+Ljung–Box test detects with probability 0.8 at the nominal 5% level. The non-centrality at 80%
+power is `20.9608` at every horizon — a constant of the test, not of the sample — which is why
+`theta_80` follows an `n^{-1/2}` law; the measured ratios between consecutive horizons are
+`0.5020`, `0.5005`, `0.5001` against the first-order `0.5`.
+
+The last column is the bias of the interpolator itself, obtained by running it on the analytic
+curve over the same grid: it is at most `0.51%`, an order of magnitude below the bootstrap
+half-width, which is what the 16-point-per-decade resolution was chosen for. **At `n = 32,000`
+the bootstrap interval does not cover the analytic root.** Four intervals at 95% miss at least
+once with probability 18.5% under their own null, so the event is unremarkable in itself; it is
+recorded because the point estimate and the analytic root are then two statements about one
+quantity, and both are persisted rather than one being offered in place of the other.
+
+At the anchor `theta = 0.05`, which is on the grid so the value is measured and not
+interpolated, the test rejects `78.2%` of the time at `n = 2000` (analytic `0.7805`) and
+`100.0%` at `n = 8000` (analytic `0.999999`).
+
+## What this establishes, and what it does not
+
+**What it establishes.** At the configuration behind Figure 6 and L278 — `n = 8000`, lag 20,
+nominal 5% — the Ljung–Box test on a binary stream is correctly sized (`4.5%`, KS `p = 0.21`
+against `Uniform(0,1)`) and reaches 80% power against a lag-1 autocorrelation of `0.051`. A
+non-rejection at that configuration therefore **excludes a lag-1 autocorrelation above
+`0.051`** with probability 0.8, under the geometric-decay alternative used here.
+
+**What it does not establish.** It says nothing about autocorrelation **below** that amplitude,
+and it says nothing at all about the whitening property itself. R18 measures an instrument, not
+a claim. Two specific limits follow:
+
+- The bound is stated for one family of alternatives, `rho(k) = rho_1^k`. A departure from
+  whiteness concentrated at a single high lag, or one that leaves the linear autocorrelations at
+  zero, is a different alternative with a different power curve and R18 does not measure it. The
+  Ljung–Box statistic reads only the first 20 linear autocorrelations, and no experiment in this
+  repository reads anything else.
+- The four sites of v87 do not all run at `n = 8000`. L318's four ETF tests are single tests on
+  pre-2020 daily warm-up windows, which lie between the two shortest horizons of the sweep, so
+  `rho_80` there lies between `0.051` and `0.102` — roughly twice as blunt as at Figure 6's
+  horizon, and read once per asset rather than over 1,000 streams.
+
+## The application arms
+
+Both arms apply the same instrument, at the same configuration, to the sign streams the GARCH
+processes of R02/R06 and R11 actually produce. Neither arm concludes anything about the
+whitening property: they locate the measured autocorrelation relative to `rho_80`.
+
+| arm                                     | grid                   | streams | max &#124;`rho_1`&#124; | as a fraction of `rho_80` | power there |
+| --------------------------------------- | ---------------------- | ------- | ----------------------- | ------------------------- | ----------- |
+| (a) binary classifier error `e_t^bin`   | R06's 13 `Gamma`       | 13,000  | `0.000818` at `Γ=30.85` | `0.016`                   | **0.0501**  |
+| (b) raw sign stream `1{eps_t > 0}`      | R11's 20 `Gamma`       | 20,000  | `0.000728` at `Γ=33.67` | `0.014`                   | **0.0501**  |
+
+Arm (a) is the stream the Figure 6 and L278 non-rejections were computed on: the GARCH recursion,
+the realised-volatility feature and the HoeffdingTree loop are carried statement by statement
+from R02's `simulate_task`. Arm (b) is R11's Concept pipeline, on R11's generator.
+
+`power_at_measured_rho` is the column the stream exists to produce. **At the autocorrelation
+actually measured, the instrument's power is `0.050`** — its own level. The measured
+autocorrelations are between 60 and 70 times smaller than the amplitude the test resolves, so a
+non-rejection at those sites is not evidence of a small autocorrelation: it is the outcome the
+test returns whenever the autocorrelation is anywhere below `rho_80`, whether it is `0.0008` or
+`0.04`.
+
+The Ljung–Box rejection rate over the 33 penalties covers the nominal level at 31 of them (a
+`5.3%` mean on arm (a), `5.0%` on arm (b), 1,000 streams each). Thirty-three simultaneous 95%
+intervals miss at least once with probability `1 - 0.95^33 = 82%`, so the count is descriptive
+and no per-penalty gate is applied (preamble §S4bis).
+
+**Arm (b) inherits R11's grid defect.** Its first target, `Gamma = 1.0`, lies below the
+attainable floor `1 + 2*alpha/(1-alpha) = 1.1739130435` at `alpha = 0.08`, so the solver
+collapses to `beta = 0` and the point runs at the floor. `Gamma_target`, `Gamma_realised` and
+`attainable` are three distinct columns. The finding itself belongs to `docs/DEVIATIONS.md`
+`R11-gamma-grid-floor` and is cited rather than restated. Arm (a) uses R06's grid, whose
+`Gamma = 1` point is `alpha = beta = 0` — a genuinely i.i.d. stream — and the difference between
+the two conventions is visible in the columns.
+
+## Controls
+
+| id     | statement                                    | margin                                                                                                                                     |
+| ------ | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **C1** | size at `theta = 0`, four horizons           | rates `5.1 / 4.5 / 5.2 / 4.7%`, all covering 5%; KS `p = 0.69 / 0.21 / 0.38 / 0.77`; max-KS bootstrap `p = 0.57`                            |
+| **C2** | monotonicity in `theta` and in `n`           | 5 local inversions over 248 adjacent comparisons, largest `1.50` paired SE, **none** above the margin of 2                                  |
+| **C3** | empirical against analytic                   | worst `0.0421` on `power_analytic < 0.95`, against `3 * 0.5/sqrt(1000) = 0.0474`; no tolerance applied above that domain                    |
+| **C4** | common random numbers                        | Kish design effect **1.96**, effective sample size 18,351 of 36,000; declared before any pooled statement, and none is published            |
+| **C5** | generator                                    | pooled lag-1 `0.19996861` against the exact `0.20`, `7.0%` of the `4/sqrt(1e4*8e3) = 4.472e-4` budget; marginal `0.49992` covering `0.5`    |
+
+C1 is not a binary gate. Four simultaneous 95% statements reject at least once with probability
+`1 - 0.95^4 = 18.5%`, above the threshold of §S4bis, so the gate is replaced by a
+Kolmogorov–Smirnov calibration test of the 1,000 p-values against `Uniform(0,1)` at each horizon.
+The four horizons are nested prefixes of the same streams, so a pooled KS over 4,000 p-values
+would be invalid; the null of the `max`-KS across horizons comes from a bootstrap resampling
+**whole stream indices**, which carries the dependence.
+
+**C3 has a sign pattern, and it is reported rather than absorbed.** The empirical rate exceeds
+the analytic prediction at 48 of the 67 amplitudes inside the domain (sign test `p = 5.2e-4`
+under independence, which the pairing violates, so the p-value understates). The non-central
+chi-square limit is a local approximation and is not exact on a binary stream at these horizons.
+No term is added to the prediction to absorb the difference; the largest deviation stays inside
+the tolerance derived from the sampling error of a proportion, and the direction is stated.
+
+**C4 is structural, not declared.** The seed key is `("R18", "power", index)` with no `theta` and
+no `n_steps`, so one uniform vector generates the chain at every amplitude by re-thresholding and
+its first `n` entries generate every horizon. The price is a design effect of 1.96 on any
+statement pooled over the grid; **no such statement is published**, and the per-point Wilson
+intervals stay valid, each resting on 1,000 independent streams. The application arms carry
+`gamma` in their key, which departs from C4 and is declared: R11's generator draws the whole
+innovation vector before the variance recursion, so `sign(eps_t) = sign(z_t)` and the sign
+stream would be bit-identical at all twenty penalties under a `Gamma`-free key.
+
+## Cosmetic divergence
+
+`figA05_ljungbox_power.png` follows the repository convention rather than the submitted figures:
+bold, left-aligned panel titles prefixed `(A)`, `(B)`, `(C)`. It corresponds to no figure of v87
+and adds one to the appendix series. No numerical value moves as a result.
+
+## Known deviations from the submitted manuscript
+
+None in the D0–D3 sense: R18 regenerates no published value, so there is nothing to classify at
+the manuscript's printing precision. What it does record is a divergence of a different kind,
+registered as `R18-ljungbox-power` in `docs/DEVIATIONS.md` (**Class A, no published value
+affected**): the manuscript states four Ljung–Box non-rejections without qualification, and the
+repository can now bound their evidential weight. A camera-ready candidate is parked at
+`docs/camera_ready_candidates/R18_v87_whitening_evidence_strength.md`; it is not applied, and
+the manuscript is not edited.
+
+## Limitations
+
+**R18 validates nothing.** It measures the resolution of one instrument against one family of
+alternatives. The whitening property may hold exactly, as v87's Proposition asserts; R18 neither
+supports nor contradicts it. What it removes is the reading under which a non-rejection at
+`n = 8000` bounds the autocorrelation of a binary stream by anything smaller than `0.051`.
+
+**The bound rests on the local chi-square limit for its analytic arm** and on 1,000 streams per
+point for its empirical arm. The two agree to `0.042` at worst, which is the resolution of the
+comparison and not of either curve.
+
+**The application arms measure autocorrelation, not independence.** A lag-1 autocorrelation of
+`0.0008` is compatible with any number of non-linear dependencies, and neither the Ljung–Box
+test nor this experiment reads them.
+
+**`theta_80` is reported at four horizons and interpolated nowhere else.** The four ETF sites of
+L318 run at lengths that are bracketed by, but not equal to, two of them.
+
+## Environment
+
+CPython 3.12.9, `numpy 1.26.4`, `pandas 2.3.2`, `scipy 1.16.2`, `statsmodels 0.14.5`,
+`matplotlib 3.10.6`, `joblib 1.4.2`, `river 0.23.0`, under `PYTHONHASHSEED=42`, single-threaded
+BLAS and `MKL_CBWR=COMPATIBLE`. Four runs — three at the default worker count and one at
+`--n-jobs 12` — produce byte-identical outputs; the SHA-256 digests of all seven artefacts are
+recorded in the log and in `AUDIT_R18.md` §5.
+
+**Measured cost: 293 s on 48 cores** (`290`–`293 s` over three runs, `448 s` at `--n-jobs 12`), over
+45,000 generated streams — 1,000 common-random-number streams read at 36 amplitudes × 4 horizons
+(`131.1 s` for the `n = 128,000` slice alone, `2.8 s` for the other three), 10,000 for C5, 13,000
+classifier streams (`132.2 s`) and 20,000 sign streams (`21.5 s`). The `n = 128,000` slice was
+measured and reported on its own before the rest of the grid was launched, per the cost risk
+raised in the plan; it accounts for about 45% of the run and the design was not trimmed for it.

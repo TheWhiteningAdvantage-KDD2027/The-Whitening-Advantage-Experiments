@@ -15,6 +15,17 @@ env/
 # Jupyter
 .ipynb_checkpoints/
 
+# Fichiers temporaires de la campagne de reproductibilité (Ne pas pusher)
+logs/
+AUDIT_R*.md
+docs/sections/R*.md
+requirements/R*.txt
+build_readme.sh
+ARBORESCENCE_REPO_LOCAL*.txt
+
+# Traces d'assistants IA (Fuite d'identité)
+.claude/
+
 # Verrouillage Licence FirstRate (Interdiction de redistribution)
-data/raw/firstrate_etf/*.csv
-!data/raw/firstrate_etf/.gitkeep
+data/firstrate_etf/*.txt
+!data/firstrate_etf/.gitkeep

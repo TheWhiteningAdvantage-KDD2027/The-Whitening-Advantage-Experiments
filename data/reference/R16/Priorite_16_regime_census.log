@@ -1,0 +1,52 @@
+2026-07-26 23:54:40 | INFO | --- START STREAM R0: REGIME CENSUS (POST-ONSET STRICT) ---
+2026-07-26 23:54:44 | INFO | [SPY] Ingestion OK | 6414 jours | 2000-01-04 à 2025-07-07
+2026-07-26 23:54:44 | WARNING | [SPY] Sanity check P-S failed. Fallback to Lunde-Timmermann for MACRO.
+2026-07-26 23:54:44 | INFO | [SPY] Raffinement : 30 phases MACRO -> 30 phases après fusion MESO.
+2026-07-26 23:54:44 | INFO | [TOPOLOGY CHECK] N_phases SPY initial: 30. N_phases post-onset (T>=2): 30. Topologie conservée.
+2026-07-26 23:54:46 | INFO | [PFF] Ingestion OK | 4403 jours | 2007-12-27 à 2025-07-07
+2026-07-26 23:54:46 | INFO | [PFF] Raffinement : 5 phases MACRO -> 7 phases après fusion MESO.
+2026-07-26 23:54:46 | INFO | [TOPOLOGY CHECK] N_phases PFF initial: 7. N_phases post-onset (T>=2): 7. Topologie conservée.
+2026-07-26 23:54:48 | INFO | [VNQ] Ingestion OK | 5014 jours | 2005-01-04 à 2025-07-07
+2026-07-26 23:54:48 | INFO | [VNQ] Raffinement : 10 phases MACRO -> 18 phases après fusion MESO.
+2026-07-26 23:54:48 | INFO | [TOPOLOGY CHECK] N_phases VNQ initial: 18. N_phases post-onset (T>=2): 18. Topologie conservée.
+2026-07-26 23:54:49 | INFO | [BWX] Ingestion OK | 4451 jours | 2007-10-09 à 2025-07-07
+2026-07-26 23:54:49 | INFO | [BWX] Raffinement : 11 phases MACRO -> 11 phases après fusion MESO.
+2026-07-26 23:54:49 | INFO | [TOPOLOGY CHECK] N_phases BWX initial: 11. N_phases post-onset (T>=2): 11. Topologie conservée.
+2026-07-26 23:54:53 | INFO | [SANITY (a) PASSED] SPY: Partition stricte vérifiée (Sum T_days = 6356 = Exact index diff).
+2026-07-26 23:54:55 | INFO | [SANITY (a) PASSED] PFF: Partition stricte vérifiée (Sum T_days = 3930 = Exact index diff).
+2026-07-26 23:54:57 | INFO | [SANITY (a) PASSED] VNQ: Partition stricte vérifiée (Sum T_days = 4483 = Exact index diff).
+2026-07-26 23:54:57 | INFO | [SANITY (a) PASSED] BWX: Partition stricte vérifiée (Sum T_days = 4009 = Exact index diff).
+2026-07-26 23:54:57 | INFO | [SANITY (b) PASSED] Raccourcissement strictement égal à 1 sur toutes les phases (66/66).
+2026-07-26 23:54:57 | INFO | 
+            --- CONTRÔLE (e) : ANCRAGE COVID-19 ---
+            AVANT CORRECTION:
+            T_days = 24
+            sharpe = -5.7654
+            q_phase = 7/24 (0.2917)
+            kl_sign = 0.1273
+            ADD_min_sign_g20 = 23.54
+            ADD_min_sign_g252 = 43.44
+            detectable_sign_g20 = True
+            
+            APRÈS CORRECTION (Post-Onset Stricte):
+            T_days = 23
+            sharpe = -5.9904
+            q_phase = 6/23 (0.2609)
+            kl_sign = 0.1620
+            ADD_min_sign_g20 = 18.49
+            ADD_min_sign_g252 = 34.12
+            detectable_sign_g20 = True
+            ---------------------------------------
+            
+2026-07-26 23:54:57 | INFO | 
+        --- CONTRÔLE (f) : DÉCOMPTES PUBLIÉS HORS BUDGET (n_phases - n_detectable) ---
+        (γ=20, unc)  : AVANT = 56/66 (84.8%) | APRÈS = 53/66 (80.3%)
+        (γ=20, sign) : AVANT = 53/66 (80.3%) | APRÈS = 52/66 (78.8%)
+        (γ=252, unc) : AVANT = 64/66 (97.0%) | APRÈS = 64/66 (97.0%)
+        ------------------------------------------------------------------------------
+        
+2026-07-26 23:54:57 | INFO | --- PHASES AYANT BASCULÉ (Flipped Detectability) ---
+[PFF Phase 2] 2011-08-08 to 2013-05-08 (Detect: False -> True)
+[PFF Phase 4] 2020-03-18 to 2021-12-31 (Detect: False -> True)
+[BWX Phase 8] 2020-03-18 to 2021-01-05 (Detect: False -> True)
+
