@@ -1,0 +1,8 @@
+2026-07-30 14:32:29 | INFO | =================================================================
+2026-07-30 14:32:29 | INFO |   R02 : Fig1 - Ljung-Box Multi-ETF
+2026-07-30 14:32:29 | INFO |   River version: 0.23.0
+2026-07-30 14:32:29 | INFO | =================================================================
+2026-07-30 14:32:29 | INFO | Executing 360 independent stream simulations on 4 cores...
+2026-07-30 14:32:54 | INFO | Total degenerate Ljung-Box calculations: 0
+2026-07-30 14:32:55 | INFO | Running empirical certification (SPECS 2.5)...
+2026-07-30 14:32:55 | INFO | Empirical certification passed successfully.

@@ -1,0 +1,14 @@
+2026-07-31 19:45:24 | INFO | Python: 3.12.9
+2026-07-31 19:45:24 | INFO |   numpy: 1.26.4
+2026-07-31 19:45:24 | INFO |   pandas: 2.3.2
+2026-07-31 19:45:24 | INFO |   scipy: 1.16.2
+2026-07-31 19:45:24 | INFO |   matplotlib: 3.10.6
+2026-07-31 19:45:24 | INFO |   joblib: 1.4.2
+2026-07-31 19:45:24 | INFO | Executing 1000 streams per nu grid point (6 values) on 4 cores.
+2026-07-31 19:45:27 | INFO | nu=5.0 | kurtosis median: 6.92 | reject_sq: 0.088 | reject_raw: 0.057
+2026-07-31 19:45:27 | INFO | nu=6.0 | kurtosis median: 5.50 | reject_sq: 0.079 | reject_raw: 0.043
+2026-07-31 19:45:27 | INFO | nu=7.0 | kurtosis median: 4.77 | reject_sq: 0.058 | reject_raw: 0.057
+2026-07-31 19:45:27 | INFO | nu=8.5 | kurtosis median: 4.25 | reject_sq: 0.061 | reject_raw: 0.042
+2026-07-31 19:45:27 | INFO | nu=12.0 | kurtosis median: 3.73 | reject_sq: 0.048 | reject_raw: 0.042
+2026-07-31 19:45:27 | INFO | nu=30.0 | kurtosis median: 3.23 | reject_sq: 0.060 | reject_raw: 0.046
+2026-07-31 19:45:27 | INFO | Empirical verification of the I.I.D. mechanism completed successfully.

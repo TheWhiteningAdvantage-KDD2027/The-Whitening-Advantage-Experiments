@@ -1,0 +1,71 @@
+2026-08-04 00:32:55 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-08-04 00:32:55 | INFO | Python: 3.12.9
+2026-08-04 00:32:55 | INFO |   numpy: 1.26.4
+2026-08-04 00:32:55 | INFO |   pandas: 2.3.2
+2026-08-04 00:32:55 | INFO |   scipy: 1.16.2
+2026-08-04 00:32:55 | INFO |   pytest: 9.0.3
+2026-08-04 00:32:55 | INFO | R16 (b) prices two detection floors on every dated phase and reports the counts v87 L329 publishes. R16 renders no figure; the verdict is established in _a.
+2026-08-04 00:32:55 | INFO | Stochastic surface: NONE, as in _a. No seed is drawn and no seed-derivation surface exists.
+2026-08-04 00:32:55 | INFO | C8 source identity: 1 primitive byte-identical to Priorite_16_regime_census.py (241 characters compared). Deterministic; trigger probability 0 unless the copy has drifted.
+2026-08-04 00:32:55 | INFO | Census [canonical]: 66 phases, dating algorithms BWX pagan_sossounov, PFF pagan_sossounov, SPY lunde_timmermann, VNQ pagan_sossounov
+2026-08-04 00:32:55 | INFO | Census [strict_ps]: 48 phases, dating algorithms BWX pagan_sossounov, PFF pagan_sossounov, SPY pagan_sossounov, VNQ pagan_sossounov
+2026-08-04 00:32:55 | INFO | Census [symmetric]: 102 phases, dating algorithms BWX lunde_timmermann, PFF lunde_timmermann, SPY lunde_timmermann, VNQ lunde_timmermann
+2026-08-04 00:32:55 | INFO | Divergence cross-check: the vectorised kl(q_phase || q_ref) is EXACTLY equal to the carried scalar `compute_kl_sign` on all 66 canonical phases (worst |difference| = 0).
+2026-08-04 00:32:55 | INFO | C5 [canonical] floor-table degeneracies, counted even at zero: kl_sign_non_finite = 0, kl_sign_zero_to_infinite_floor = 0, sharpe_below_1e-12_to_infinite_floor = 0, q_phase_degenerate = 0, T_days_zero = 0. Deterministic; trigger probability 0.
+2026-08-04 00:32:55 | INFO | C5 [strict_ps] floor-table degeneracies, counted even at zero: kl_sign_non_finite = 0, kl_sign_zero_to_infinite_floor = 0, sharpe_below_1e-12_to_infinite_floor = 0, q_phase_degenerate = 0, T_days_zero = 0. Deterministic; trigger probability 0.
+2026-08-04 00:32:55 | INFO | C5 [symmetric] floor-table degeneracies, counted even at zero: kl_sign_non_finite = 0, kl_sign_zero_to_infinite_floor = 0, sharpe_below_1e-12_to_infinite_floor = 0, q_phase_degenerate = 7, T_days_zero = 0. Deterministic; trigger probability 0.
+2026-08-04 00:32:55 | WARNING | C5 [symmetric]: 7 phases have q_phase in {0, 1}. Their defined treatment is the clip to [1e-6, 1 - 1e-6] inside compute_kl_sign, so the divergence stays finite and the detectability flag is decided by measurement. Counted and logged, not silenced.
+2026-08-04 00:32:55 | INFO | C2 reconstruction of the published counts on the canonical arm. Portage checks, not targets: a displaced count is a deviation to classify, never a parameter to adjust. Deterministic; trigger probability 0 under a correct port.
+2026-08-04 00:32:55 | INFO | C2 (gamma = 20, unc): 53/66 out of budget (80.3%) against the witness's 53/66; displacement +0 phases. Reproduces exactly.
+2026-08-04 00:32:55 | INFO | C2 (gamma = 20, sign): 52/66 out of budget (78.8%) against the witness's 52/66; displacement +0 phases. Reproduces exactly.
+2026-08-04 00:32:55 | INFO | C2 (gamma = 252, unc): 64/66 out of budget (97.0%) against the witness's 64/66; displacement +0 phases. Reproduces exactly.
+2026-08-04 00:32:55 | INFO | C3 the step of one. sum(detectable_sign_g20) - sum(detectable_unc_g20) = 14 - 13 = 1, which is what v87 L329 describes as 'moves that count by one phase'. Deterministic; trigger probability 0.
+2026-08-04 00:32:55 | INFO | C3 THE SET BEHIND THE STEP. The two arms disagree on 19 of 66 phases -- 10 detectable on the SIGN arm only and 9 on the UNCONDITIONAL arm only. There is no single flipping phase to name: the step of one is a NET of 10 and 9. v87's sentence is true of the count and false of the set. All 19 are persisted in the `arm_disagreement` column of R16_sign_floor.csv.
+2026-08-04 00:32:55 | INFO | C3 [sign_only] SPY phase 0 2000-03-24 -> 2001-04-04, T = 259, SR = -1.4107, kl = 0.013380, floor_unc = 758.72, floor_sign = 223.89
+2026-08-04 00:32:55 | INFO | C3 [sign_only] SPY phase 4 2001-12-05 -> 2002-07-23, T = 157, SR = -2.9827, kl = 0.029270, floor_unc = 169.72, floor_sign = 102.35
+2026-08-04 00:32:55 | INFO | C3 [sign_only] SPY phase 8 2002-11-27 -> 2003-03-11, T = 69, SR = -2.8419, kl = 0.054393, floor_unc = 186.95, floor_sign = 55.08
+2026-08-04 00:32:55 | INFO | C3 [sign_only] SPY phase 22 2020-02-19 -> 2020-03-23, T = 23, SR = -5.9904, kl = 0.162042, floor_unc = 42.08, floor_sign = 18.49
+2026-08-04 00:32:55 | INFO | C3 [sign_only] SPY phase 26 2022-08-16 -> 2022-10-12, T = 40, SR = -4.7357, kl = 0.094843, floor_unc = 67.32, floor_sign = 31.59
+2026-08-04 00:32:55 | INFO | C3 [sign_only] PFF phase 5 2021-12-31 -> 2022-10-21, T = 203, SR = -2.1888, kl = 0.031503, floor_unc = 315.16, floor_sign = 95.09
+2026-08-04 00:32:55 | INFO | C3 [sign_only] VNQ phase 0 2007-02-07 -> 2008-01-18, T = 239, SR = -1.5846, kl = 0.014204, floor_unc = 601.29, floor_sign = 210.90
+2026-08-04 00:32:55 | INFO | C3 [sign_only] VNQ phase 6 2013-05-21 -> 2013-08-19, T = 62, SR = -3.8053, kl = 0.049541, floor_unc = 104.27, floor_sign = 60.47
+2026-08-04 00:32:55 | INFO | C3 [sign_only] VNQ phase 14 2021-12-31 -> 2022-10-14, T = 198, SR = -2.1176, kl = 0.021472, floor_unc = 336.72, floor_sign = 139.52
+2026-08-04 00:32:55 | INFO | C3 [sign_only] VNQ phase 16 2023-02-02 -> 2023-10-25, T = 183, SR = -1.8402, kl = 0.020652, floor_unc = 445.85, floor_sign = 145.06
+2026-08-04 00:32:55 | INFO | C3 [unc_only] SPY phase 2 2001-05-21 -> 2001-09-21, T = 82, SR = -5.0262, kl = 0.032133, floor_unc = 59.77, floor_sign = 93.23
+2026-08-04 00:32:55 | INFO | C3 [unc_only] SPY phase 9 2003-03-11 -> 2007-10-09, T = 1154, SR = 1.3300, kl = 0.000318, floor_unc = 853.56, floor_sign = 9407.22
+2026-08-04 00:32:55 | INFO | C3 [unc_only] SPY phase 19 2011-10-03 -> 2018-09-20, T = 1753, SR = 1.2537, kl = 0.000328, floor_unc = 960.55, floor_sign = 9141.16
+2026-08-04 00:32:55 | INFO | C3 [unc_only] SPY phase 21 2018-12-24 -> 2020-02-19, T = 289, SR = 2.6018, kl = 0.004493, floor_unc = 223.04, floor_sign = 666.81
+2026-08-04 00:32:55 | INFO | C3 [unc_only] SPY phase 23 2020-03-23 -> 2022-01-03, T = 450, SR = 2.3037, kl = 0.005061, floor_unc = 284.50, floor_sign = 591.94
+2026-08-04 00:32:55 | INFO | C3 [unc_only] SPY phase 27 2022-10-12 -> 2025-02-19, T = 589, SR = 1.7516, kl = 0.001735, floor_unc = 492.09, floor_sign = 1726.50
+2026-08-04 00:32:55 | INFO | C3 [unc_only] PFF phase 4 2020-03-18 -> 2021-12-31, T = 452, SR = 1.9046, kl = 0.000003, floor_unc = 416.22, floor_sign = 1047138.90
+2026-08-04 00:32:55 | INFO | C3 [unc_only] VNQ phase 7 2013-08-19 -> 2015-01-26, T = 361, SR = 2.2538, kl = 0.002410, floor_unc = 297.25, floor_sign = 1242.80
+2026-08-04 00:32:55 | INFO | C3 [unc_only] BWX phase 8 2020-03-18 -> 2021-01-05, T = 201, SR = 3.1323, kl = 0.011679, floor_unc = 153.89, floor_sign = 256.52
+2026-08-04 00:32:55 | INFO | C4 convention sensitivity. 3 of 66 phases change detectability with the boundary convention, 3 GAINING detectability under the post-onset convention v87 L392 imposes and 0 losing it. Not a gate: three flips in sixty-six is a measurement, not a failure.
+2026-08-04 00:32:55 | INFO | C4 [flip] PFF phase 2 2011-08-08 -> 2013-05-08: detectable False -> True, boundary return -0.098942, Sharpe 1.0254 -> 1.9800, floor 1435.8 -> 385.1
+2026-08-04 00:32:55 | INFO | C4 [flip] PFF phase 4 2020-03-18 -> 2021-12-31: detectable False -> True, boundary return -0.185834, Sharpe 0.9132 -> 1.9046, floor 1810.7 -> 416.2
+2026-08-04 00:32:55 | INFO | C4 [flip] BWX phase 8 2020-03-18 -> 2021-01-05: detectable False -> True, boundary return -0.054576, Sharpe 1.8179 -> 3.1323, floor 456.9 -> 153.9
+2026-08-04 00:32:55 | INFO | C4 envelope of the published count: [53, 56] out of 66, i.e. [80.3%, 84.8%]. The post-onset convention gives 53 and the inclusive convention 56. The published figure is therefore the CONSERVATIVE end of its own sensitivity interval, and the convention correction LOWERED the headline rather than raising it: the outlier at a trough depresses the mean and inflates the variance of the phase that follows, which biases its floor upward, which is the mechanism v87 L392 states.
+2026-08-04 00:32:55 | INFO | Arm [canonical]: 66 phases, 53 out of budget at gamma = 20 unconditional (80.3%), 52 on the sign arm, 64 at gamma = 252.
+2026-08-04 00:32:55 | INFO | Arm [strict_ps]: 48 phases, 38 out of budget at gamma = 20 unconditional (79.2%), 38 on the sign arm, 46 at gamma = 252.
+2026-08-04 00:32:55 | INFO | Arm [symmetric]: 102 phases, 75 out of budget at gamma = 20 unconditional (73.5%), 84 on the sign arm, 94 at gamma = 252.
+2026-08-04 00:32:55 | INFO | The three arms move the headline from 80.3% (canonical, published) to 79.2% (strict Pagan-Sossounov) and 73.5% (the substitution applied to every ticker whose check_sanity fails). The symmetric arm moves the headline AGAINST the manuscript's thesis by 6.8 points, so preamble S3's asymmetry rule assigns it the lighter examination, not the heavier. Its CSV ships and it is registered as `R16-substitution-scope`.
+2026-08-04 00:32:55 | INFO | The longest phase of the detectable set: SPY 2011-10-03 -> 2018-09-20, 1753 trading days, q_ref 0.541160 -> q_phase 0.553908, floor 960.55 days = 54.8% of the phase. v87 L329 prints 'SPY 2011--2018: 0.541 -> 0.554 over 1,753 days'.
+2026-08-04 00:32:55 | INFO | The COVID anchor v87 L331 names: SPY 2020-02-19 -> 2020-03-23, T = 23 trading days, delta_q = -0.2803, annualized Sharpe = -5.9904, kl = 0.162042 nats/day, sign floor 34.12 days at gamma = 252 and 18.49 at gamma = 20, i.e. 80.4% of the phase. v87 prints Delta q ~ -0.28, SR ~ -6.0, 23 days, kl = 0.162, ~34 and 18.5 days, 'four fifths of the phase'. This phase exists ONLY under the substitution: strict Pagan-Sossounov censors it at min_phase = 84.
+2026-08-04 00:32:55 | INFO | v87 L329 reads 'even there the floor consumes 55--92% of the phase'. Measured over the 13 phases the ceiling does not exclude at gamma = 20 unconditional: [50.1%, 92.1%]. The upper end reproduces; the lower end does not.
+2026-08-04 00:32:55 | INFO | Below 55%: SPY 2011-10-03 -> 2018-09-20, T = 1753, floor fraction 54.79%
+2026-08-04 00:32:55 | INFO | Below 55%: PFF 2009-03-06 -> 2011-05-19, T = 556, floor fraction 50.11%
+2026-08-04 00:32:55 | INFO | Below 55%: BWX 2021-01-05 -> 2022-10-20, T = 452, floor fraction 50.47%
+2026-08-04 00:32:55 | INFO | Variant 'bull phases only': [50.1%, 92.1%] over 11 phases.
+2026-08-04 00:32:55 | INFO | Variant 'T_days >= 250': [50.1%, 92.1%] over 11 phases.
+2026-08-04 00:32:55 | INFO | Variant 'bull and T_days >= 250': [50.1%, 92.1%] over 10 phases.
+2026-08-04 00:32:55 | INFO | Variant 'sign arm at gamma = 20': [41.0%, 97.5%] over 14 phases.
+2026-08-04 00:32:55 | INFO | Variant 'the superseded protocol_10a census' (52 phases, 9 detectable): [45.7%, 95.9%].
+2026-08-04 00:32:55 | INFO | None of the variants yields 55--92%. The single phase at 54.8% rounds to 55%, which SUGGESTS the published lower bound was read off that one phase rather than off the minimum of the set, but no measurement here establishes it. Per preamble S4.5 the cause is NOT identified. Classified D2 as `R16-floor-frac-envelope`.
+2026-08-04 00:32:55 | INFO | R16_feasibility_vs_gamma.csv: gamma 20 unc n_detectable 13 (out of budget 53); gamma 20 sign n_detectable 14 (out of budget 52); gamma 252 unc n_detectable 2 (out of budget 64); gamma 252 sign n_detectable 2 (out of budget 64); gamma 1260 unc n_detectable 0 (out of budget 66); gamma 1260 sign n_detectable 1 (out of budget 65)
+2026-08-04 00:32:55 | INFO | Cardinality check: R16_sign_floor = 66, R16_feasibility_vs_gamma = 6
+2026-08-04 00:32:55 | INFO | Emitted 32 macros to R16_claims.tex, prefix \RSixteen per preamble S6's ordinal-in-English rule; \RSixteenth appears nowhere. Every value is computed from an object in memory. No macro names the analytic bound 504 ln(1/alpha_0)/SR^2 itself, only its two numerical evaluations at SR = 1, which is what v87 L260 prints.
+2026-08-04 00:32:55 | INFO | For stream R13, which consumes this census: the columns R13 reads as `ADD_min_census` and `detectable_flag_census` are `ADD_min_days` and `detectable_flag` of results/R16_regime_census/data/R16_regime_census.csv, which keep the witness names so that the reference comparison stays cell-for-cell. `ADD_min_days` is 504*ln(1/alpha)/SR^2 at alpha = 0.05 (gamma = 20) in trading days and `detectable_flag` is `ADD_min_days < T_days`; the same two quantities appear at every gamma in R16_sign_floor.csv as `ADD_min_unc_g{20,252,1260}` and `detectable_unc_g{20,252,1260}`. The file R13 reads is the DEFAULT-RUN CANONICAL ARM.
+2026-08-04 00:32:55 | INFO | SHA-256 R16_sign_floor.csv                       : dcbedf979a67558c09f2d412a814528b4119a8578b97cdca114a81144ff1a7cf
+2026-08-04 00:32:55 | INFO | SHA-256 R16_feasibility_vs_gamma.csv             : 2c05ae6fe1a59b239899b5efc87c39903a065082cadefcdc2bd8d59f7ac1f2cc
+2026-08-04 00:32:55 | INFO | SHA-256 R16_claims.tex                           : bf0a43cfa1bb5542f6734aec16a036ea48ec1d685be46f799ed801c554fb22a2
+2026-08-04 00:32:55 | INFO | Execution completed in 0.0s.

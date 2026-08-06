@@ -1,0 +1,49 @@
+2026-08-02 03:17:18 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-08-02 03:17:18 | INFO | Python: 3.12.9
+2026-08-02 03:17:18 | INFO |   numpy: 1.26.4
+2026-08-02 03:17:18 | INFO |   pandas: 2.3.2
+2026-08-02 03:17:18 | INFO |   scipy: 1.16.2
+2026-08-02 03:17:18 | INFO |   statsmodels: 0.14.5
+2026-08-02 03:17:18 | INFO |   matplotlib: 3.10.6
+2026-08-02 03:17:18 | INFO |   joblib: 1.4.2
+2026-08-02 03:17:18 | INFO |   river: 0.23.0
+2026-08-02 03:17:18 | INFO | Verbatim-copy check: all 6 primitives are byte-identical to Priorite_7_whitening_boundary.py (3350 characters compared). lb_pvalue and boundary_4th_moment_beta are deliberately NOT in this set and are adapted, each for a reason stated at its definition.
+2026-08-02 03:17:18 | INFO | Specification check (a): Gamma grid = (1, 2, 5, 8.16, 11.58, 20, 30.85, 41, 60, 90, 120, 160, 200), 100 streams per configuration, nu = 7.0, c grid = (0.0, 0.25, 0.5, 1.0), task types = ('binary', 'continuous'), n = 8000 steps, Ljung-Box at lag 20, nominal level 0.05.
+2026-08-02 03:17:18 | INFO | Fourth-moment boundary: kurtosis of a standardized t_7 is 3*(nu-2)/(nu-4) = 5.000000; E[eps^4] diverges at beta = 0.907117 for alpha = 0.08, which the closed form maps to Gamma = 41.584288. v87 prints 41.6.
+2026-08-02 03:17:18 | WARNING | Fourth-moment boundary: the nearest MEASURED grid point is Gamma = 41, which is 0.584288 below the analytic boundary 41.584288. The two are distinct and must not be conflated: the grid does not sample the boundary. The submitted figure placed an axis tick at the boundary value and a marker at 41 on top of it, so a reader reads a measurement at a Gamma that was never run. In fig06 the boundary is drawn as a labelled vertical rule and the ticks carry the grid alone.
+2026-08-02 03:17:18 | INFO | Argument-order check: solve_beta_for_gamma(alpha, target_gamma) is called as solve_beta_for_gamma(0.08, gamma), which matches the signature.
+2026-08-02 03:17:18 | INFO | Realised penalty against target at each grid point: 1 -> beta = 0.000000 -> 1.000000, 2 -> beta = 0.732861 -> 2.000000, 5 -> beta = 0.858226 -> 5.000000, 8.16 -> beta = 0.879374 -> 8.160000, 11.58 -> beta = 0.888952 -> 11.580000, 20 -> beta = 0.898968 -> 20.000000, 30.85 -> beta = 0.904309 -> 30.850000, 41 -> beta = 0.906997 -> 41.000000, 60 -> beta = 0.909861 -> 60.000000, 90 -> beta = 0.912214 -> 90.000000, 120 -> beta = 0.913552 -> 120.000000, 160 -> beta = 0.914670 -> 160.000000, 200 -> beta = 0.915411 -> 200.000000
+2026-08-02 03:17:18 | INFO | Realised-penalty check (a): all 13 targets are attained to within 1e-6, so the grid genuinely spans Gamma from 1 to 200. The point labelled Gamma = 1 runs alpha = beta = 0, an i.i.d. stream rather than an ARCH(1) one, so it is a true unit penalty and not a floor.
+2026-08-02 03:17:18 | INFO | Running the Gamma grid (1300 streams) on the submitted seeding...
+2026-08-02 03:17:51 | INFO | Running the task configurations (500 streams) at Cal. B, alpha = 0.1058, beta = 0.8742, Gamma = 30.8452...
+2026-08-02 03:18:00 | INFO | Seed uniqueness check: 1300 distinct 32-bit seeds over 1300 counterfactual tasks, zero collisions. The primary campaign reuses 100 seeds across 13 Gamma by construction, which is the pairing under study.
+2026-08-02 03:18:00 | INFO | Running the counterfactual Gamma grid (1300 streams) on independent per-cell seeds...
+2026-08-02 03:18:32 | INFO | Fallback counters. Degenerate streams mapped to p = 1.0 by the submitted script: 0 of 3100 (budget 0). Ljung-Box estimator failures mapped to NaN by its bare `except Exception`: 0 of 3100 (budget 0). Null predictions substituted by class 0 through `predict_one(...) or 0`: 1 per sign-task stream, at step(s) [0], 3000 in this campaign -- the tree cannot predict before it has seen an example, so this one is structural and is reported rather than budgeted.
+2026-08-02 03:18:32 | INFO | Paired design, declared and measured. One seed carries the same LABEL stream to every Gamma, because the innovations are drawn before the variance recursion and sign(sigma_t z_t) = sign(z_t). The ERROR stream is not shared: the classifier reads amplitudes, so the 1300 readings take 1300 distinct p-values and no seed is constant across the grid. Mean correlation of the rejection indicator between two Gamma = 0.1747 (max 0.6564), over the 13 of 13 readings that carry any variation; Kish design effect = 3.2088; effective sample size 405.1 of 1300. The pairing is a legitimate design that sharpens comparisons ACROSS Gamma; what it requires is declaration and the variance treatment below, and an undeclared paired design is a defect of analysis rather than of experiment.
+2026-08-02 03:18:32 | INFO | Calibration check (b): pooled binary rejection 0.047692 (62/1300). Cluster bootstrap over 2000 replicates, resampling SEEDS and never streams: [0.029231, 0.069231], half-width 0.020000. Contains 0.05: True (GATING). The Wilson interval that assumes 1300 independent streams would read [0.037381, 0.060669], half-width 0.011644, understating it by sqrt(design effect) = 1.7913. No per-Gamma gate exists: 13 simultaneous 95% intervals fire at least once with probability 1 - 0.95^13 = 0.4867 under their own null, which preamble S4bis forbids as a door. The 13 rates are emitted as description.
+2026-08-02 03:18:32 | INFO | Counterfactual arm (S4.5), independent per-cell seeds: pooled binary rejection 0.049231, interval [0.038462, 0.061558], design effect 1.0133 against 3.2088 on the paired campaign. Two routes to the same quantity: the design effect estimated from the paired campaign alone, and the one measured by removing the pairing. The nominal level is covered under independent label streams as well, where pairing can mask nothing.
+2026-08-02 03:18:32 | INFO | Squared-stream check (c): pooled rejection 0.927692 (1206/1300); witness 0.9277. Per Gamma: 1.0: 0.06, 2.0: 1.00, 5.0: 1.00, 8.16: 1.00, 11.58: 1.00, 20.0: 1.00, 30.85: 1.00, 41.0: 1.00, 60.0: 1.00, 90.0: 1.00, 120.0: 1.00, 160.0: 1.00, 200.0: 1.00. Reported, with no assertion on any extremum.
+2026-08-02 03:18:32 | INFO | Binary stream per Gamma, descriptive and NOT a criterion: 1.0: 0.03, 2.0: 0.07, 5.0: 0.02, 8.16: 0.06, 11.58: 0.05, 20.0: 0.02, 30.85: 0.05, 41.0: 0.05, 60.0: 0.03, 90.0: 0.06, 120.0: 0.03, 160.0: 0.07, 200.0: 0.08
+2026-08-02 03:18:32 | INFO | Task-boundary check (d): binary c=0.0: 0.07, binary c=0.25: 0.44, binary c=0.5: 1.00, binary c=1.0: 1.00, continuous c=0.0: 1.00
+2026-08-02 03:18:32 | INFO | Task-boundary check (d): the three saturated cells [('binary', 0.5), ('binary', 1.0), ('continuous', 0.0)] all reach 1.0, which is the literal claim of v87. The intermediate cell binary c = 0.25 rejects at 0.44 -- NOT CITED IN v87, and kept: it is the only measurement of the transition between the white regime and the saturated one anywhere in this repository.
+2026-08-02 03:18:32 | INFO | Median-task control (e): binary c = 0 rejects 7/100 = 0.0700, Wilson 95% [0.034319, 0.137495], contains 0.05: True.
+2026-08-02 03:18:32 | WARNING | Median-task control (e) RESOLUTION: at N = 100 the half-width of that interval is 5.2 percentage points, 1.0 times the nominal level it is testing. Every true rate from 3.4% to 13.7% is compatible with what was observed, so this control excludes very little: it is CONSISTENT WITH the median task being white and does not confirm it. It must not be presented as a confirmation.
+2026-08-02 03:18:32 | INFO | Cardinality check (a): R06_gamma_grid = 1300, R06_task_boundary = 500, R06_gamma_grid_independent_seeds = 1300
+2026-08-02 03:18:32 | INFO | Deviation classification against the submitted campaign, at the printing precision of v87 (read with float_precision='round_trip' on both sides):
+2026-08-02 03:18:32 | INFO | quantity                                       |  published | regenerated | degree
+2026-08-02 03:18:32 | INFO | Pooled binary rejection over the Gamma grid    |     0.0477 |      0.0477 | D0
+2026-08-02 03:18:32 | INFO | Pooled squared-stream rejection over the grid  |     0.9277 |      0.9277 | D0
+2026-08-02 03:18:32 | INFO | Task boundary binary c = 0.0                   |     0.0700 |      0.0700 | D0
+2026-08-02 03:18:32 | INFO | Task boundary binary c = 0.25                  |     0.4400 |      0.4400 | D0
+2026-08-02 03:18:32 | INFO | Task boundary binary c = 0.5                   |     1.0000 |      1.0000 | D0
+2026-08-02 03:18:32 | INFO | Task boundary binary c = 1.0                   |     1.0000 |      1.0000 | D0
+2026-08-02 03:18:32 | INFO | Task boundary continuous MSE                   |     1.0000 |      1.0000 | D0
+2026-08-02 03:18:32 | INFO | Fourth-moment boundary Gamma                   |    41.6000 |     41.5843 | D1
+2026-08-02 03:18:32 | INFO | Witness identity: R06_gamma_grid.csv against whitening_boundary_gridA.csv: byte-identical (reported, not gating).
+2026-08-02 03:18:32 | INFO | Witness identity: R06_task_boundary.csv against whitening_boundary_partB.csv: byte-identical (reported, not gating).
+2026-08-02 03:18:33 | INFO | SHA-256 R06_gamma_grid.csv : b1b94011b8b94dd8fdfdbd60731da054e25ea774f6c2887e037714f709bbc744
+2026-08-02 03:18:33 | INFO | SHA-256 R06_task_boundary.csv : 9a95701f7131e8a686a30d9293b2d439dd1bf3367ecdc536dacd20a078c1f93e
+2026-08-02 03:18:33 | INFO | SHA-256 R06_gamma_grid_independent_seeds.csv : c4fdeebc1ffebb01e54ee9717bf31ad1f0c362a890b0548826d7329e7e12a863
+2026-08-02 03:18:33 | INFO | SHA-256 fig06_validity_map.png : 8909ad650d4969c0a47c2aebdcaa0abe3936b8d4988ae422798c6e82fa77d8fb
+2026-08-02 03:18:33 | INFO | SHA-256 R06_claims.tex : 7572a736f24d9f27e7dcb9bedb043dd046adbf3ffccbe8c744f63615d31d7d7e
+2026-08-02 03:18:33 | INFO | Execution completed in 73.9s over 3100 monitored streams, of which 1300 are the counterfactual arm.
