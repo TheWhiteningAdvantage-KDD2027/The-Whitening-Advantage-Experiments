@@ -99,7 +99,7 @@ enforce_strict_determinism()
 
 import numpy as np
 import pandas as pd
-from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, compute_sha256, save_fair_csv
+from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, compute_sha256, save_fair_csv, log_artifact_manifest
 
 disable_pandas_multithreading()
 
@@ -228,8 +228,8 @@ PUBLISHED_PEAK_TO_PEAK_ADWIN = 0.13
 # error rate against p_min + k*s_min -- so L296's two peak-to-peak descriptors
 # do not cover it, and its spread is reported rather than classified against a
 # bound that was not written for it. The R11 prompt's own gloss on C4 confirms
-# where the 3.2% ceiling comes from: "la valeur PHT de la campagne soumise est
-# 3.190% contre un plafond publie de 3.2%".
+# where the 3.2% ceiling comes from: the submitted PHT campaign measured 3.190%
+# against a published ceiling of 3.2%.
 PUBLISHED_CUMULATIVE_DETECTORS = ("CUSUM", "PHT")
 PUBLISHED_WINDOW_MEAN_DETECTOR = "ADWIN"
 PUBLISHED_UNCLASSIFIED_DETECTORS = ("DDM", "EDDM")
@@ -2392,8 +2392,8 @@ def main():
     # A descriptive bound is contradicted only when the campaign's own precision
     # can separate it. C4 fixes this BEFORE any measurement: the peak-to-peak is
     # a max minus a min over 20 noisy estimators, it has no stable sampling
-    # distribution, and it is "calcule, persiste et publie comme quantite
-    # descriptive avec son intervalle bootstrap apparie, jamais comme porte".
+    # distribution, and it is "computed, persisted and published as descriptive
+    # quantity with its paired bootstrap interval, never as a gate".
     # Deciding a threshold crossing on the point estimate would be using it as
     # exactly the door C4 forbids, so the qualitative test is whether the whole
     # paired seed-cluster interval clears the published bound.
@@ -2669,6 +2669,7 @@ def main():
                   (f"figA04_adwin_blind_zone{suffix}.png",
                    FIGURES_DIR / f"figA04_adwin_blind_zone{suffix}.png"),
                   (tex_name, TABLES_DIR / tex_name)]
+    log_artifact_manifest(logger, [p for _, p in artefacts], RESULTS_DIR, BASE_DIR)
     for label, path in artefacts:
         logger.info(f"SHA-256 {label:<50} : {compute_sha256(path)}")
 
