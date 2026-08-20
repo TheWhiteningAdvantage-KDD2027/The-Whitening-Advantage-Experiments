@@ -57,6 +57,11 @@ values are printed and the reason is stated.
 | `R11-gamma-grid-floor`            | R11        | `sec:universality`, L296                   | A     | —        | the lower endpoint of "`Γ ∈ [1, 200]`" is not attainable at `alpha = 0.08`; the grid starts at `1.1739`       |
 | `R11-regenerated`                 | R11        | Figures 11 and 15                          | A     | D2       | 128-bit re-keying redraws the whole campaign; every Monte-Carlo value moves, no claim moves                   |
 | `R14-campaign-redraw`             | R14        | `sec:misspecification` L345                | A     | D2       | 128-bit seeding redraws the `t_30` synthetic control: `0.98`–`1.14`, mean `1.06` → **`0.95`–`1.24`, mean `1.04`** |
+| `R15-scatter-sign`                | R15        | Figure 17 caption, `fig:cross_section`     | A     | D2       | caption's `r >= 0.99` holds under neither sign convention; measured `|r| ≈ 0.99` at both campaigns |
+| `R15-campaign-redraw`             | R15        | Figure 17 caption **(A)**, L376             | A     | D2       | bootstrap FPR envelope `4.8`–`6.4%` → **`4.0`–`5.9%`**; level still held at every K               |
+| `R15-grid-provenance`             | R15        | Figure 17, L376                              | A     | —        | published ten-point K grid recovered from source line in `_UPDATED` witness, not from artefact |
+| `R15-mkl-cbwr-rho`                | R15        | Figure 17, L376                              | B     | D0       | `MKL_CBWR=COMPATIBLE` moves `rho_sign_meas` by at most `3.2e-15`; cause identified and recoverable |
+| `R15-panel-vendor-drift`           | R15        | L389                                        | B     | D0       | network fetch drifts by at most `2.16e-06` against versioned CSV; provider restates history     |
 | `R18-ljungbox-power`              | R18        | L278, L290, Fig. 6 caption L286, L318      | A     | —        | four Ljung--Box non-rejections are stated unqualified; the test resolves `rho_1 = 0.051` at `n = 8000`        |
 | `R16-dating-misdescription`       | R16        | `sec:real_world`, L329                     | A     | **D3**   | a Pagan--Sossounov dating of the four streams yields **48** phases, not the `66` L329 attributes to it        |
 | `R16-covid-phase-conditional`     | R16        | `sec:real_world`, L331                     | A     | —        | L331's four numerals reproduce exactly; the phase exists only under the SPY substitution                      |
@@ -511,6 +516,68 @@ proposition exactly where its own proof puts it.
 
 Full account: `docs/sections/R18.md` and `AUDIT_R18.md`. Candidate:
 `docs/camera_ready_candidates/R18_v87_whitening_evidence_strength.md`.
+
+### `R15-scatter-sign` — R15, the Figure 17 caption's correlation relation holds under neither sign convention (Class A, D2)
+
+v87's Figure 17 caption states "Point-to-point scatter reflects threshold variations across
+panel compositions (`r >= 0.99` with bootstrap threshold)". The relation is false on both the
+submitted campaign (`r = -0.9894`) and the regenerated campaign (`r = -0.9962`). The sign is
+negative by construction: `budget_reduction` is `ADD_single / ADD_K`, so a higher bootstrap
+threshold lengthens `ADD_K` and shrinks the ratio. The qualitative claim the caption carries —
+that the scatter is almost entirely explained by threshold variation — holds at `|r| ≈ 0.99` on
+both campaigns.
+
+Full account: `docs/sections/R15.md` §"What v87 publishes, and what this campaign measures" and
+`docs/audits/AUDIT_R15.md` §4. Candidate: `docs/camera_ready_candidates/R15_v87_scatter_sign.md`.
+
+### `R15-campaign-redraw` — R15, the 128-bit entropy migration redraws the bootstrap FPR envelope (Class A, D2)
+
+Five draw families migrate from 32-bit to 128-bit keys carrying role and integer grid index.
+The bootstrap false-alarm envelope in the Figure 17 caption moves from `4.8`–`6.4%` to
+`4.0`–`5.9%` under the re-keying. Both endpoints are extrema over a ten-point grid; reading
+the wider as a 95% statement over ten cells triggers at `1 - 0.95^10 = 40.1%` under its own
+null. The clause's actual assertion — that the bootstrap holds the nominal level — is unaffected:
+every one of the ten values sits in `[3.95%, 5.85%]` against a 5% target while `FPR_naive`
+reaches 100% by `K = 60`.
+
+Full account: `docs/sections/R15.md` §"What v87 publishes, and what this campaign measures" and
+`docs/audits/AUDIT_R15.md` §4. Candidate: none filed; which campaign a camera-ready prints
+is a decision the register informs rather than pre-empts.
+
+### `R15-grid-provenance` — R15, the published K grid is recovered from a source line (Class A, no severity)
+
+The plan initially stated that the delivered script's full real branch declares
+`K_GRID = [1, 20, 50, K_max]` — four points against the ten Figure 17 publishes — and concluded
+that the published grid must be read off the artefact. That is true of
+`Priorite_25c_real_cross_sectional_escape.py`, but not of
+`Priorite_25c_real_cross_sectional_escape_UPDATED.py`, which declares the ten-point grid at
+the same line number and whose log runs `K = 5` and `K = 10`. The two runs agree exactly at
+every shared `K`, so they are one code path on two grids, with the coarse log timestamped
+`19:25` against the ten-point `14:16` of the same day — a later, coarser re-run, not a
+predecessor. Both scripts and both logs are vendored, and the grid is recovered from the
+source line in the `_UPDATED` witness.
+
+Full account: `docs/audits/AUDIT_R15.md` §7.
+
+### `R15-mkl-cbwr-rho` — R15, one environment variable isolated (Class B, D0, cause identified)
+
+`MKL_CBWR=COMPATIBLE`, set by this repository's canonical determinism bootstrap and not set
+by the submitted campaign, moves `rho_sign_meas` by at most `3.2e-15` on 7 of 9 cells where it
+is defined. Removing that one variable and nothing else recovers the submitted values bit for
+bit on all four RNG-free columns at all ten `K`. The recovery command is
+`./run_experiment_R15.sh --witness-blas`.
+
+Full account: `docs/audits/AUDIT_R15.md` §5.
+
+### `R15-panel-vendor-drift` — R15, the network path drifts against the versioned CSV (Class B, D0)
+
+`--stage ingest` rebuilds the panel from Yahoo Finance. On 2026-08-11, seven months after the
+submitted fetch, it returned the same two abandonments (`MMC`, `K`), the same three coverage
+failures at the same row counts, and the same 97 columns in the same order over the same 5154
+dates. The values differ by at most `2.16e-06` in absolute log-return, which is the provider
+restating history. The nominal path is therefore `--stage analyse` on the frozen artifact.
+
+Full account: `docs/audits/AUDIT_R15.md` §9.
 
 ### `R16-dating-misdescription` — R16, the census is not the output of the dating L329 names (Class A, D3)
 

@@ -6,7 +6,7 @@ Two kinds of statement live in this file and they are kept apart deliberately.
 *Blocking assertions* rest either on a deterministic relation reimplemented here
 independently of the experiment -- the Sharpe ceiling, the Bernoulli divergence,
 the post-onset partition recomputed from the raw return series -- or on a value
-v87 PRINTS, compared at v87's own printing precision, which is what preamble S3
+v87 PRINTS, compared at v87's own printing precision, which is what protocol specification §3
 fixes as the classification rule. NONE rests on a value R16 produced.
 
 *Reporting output* prints the witness comparison, the three dating arms and the
@@ -177,7 +177,7 @@ def macros():
     path = TABLES_DIR / "R16_claims.tex"
     assert path.exists(), f"Missing artefact: {path}"
     text = path.read_text()
-    assert text.endswith("\n"), ("preamble S6 requires every produced text file to end with a "
+    assert text.endswith("\n"), ("protocol specification §6 requires every produced text file to end with a "
                                  "newline: docs/sections/*.md and requirements/*.txt are assembled "
                                  "by concatenation, and a missing newline corrupts the result.")
     lines = text.rstrip("\n").split("\n")
@@ -236,7 +236,7 @@ def post_onset_statistics(series, start, end):
 
 
 def rounds_to(value, printed, decimals):
-    """v87's printing precision is the classification rule of preamble S3."""
+    """v87's printing precision is the classification rule of protocol specification §3."""
     return round(float(value), decimals) == round(float(printed), decimals)
 
 
@@ -703,7 +703,7 @@ def test_R16_every_produced_text_file_ends_in_a_newline():
     for path in (TABLES_DIR / "R16_claims.tex",
                  ROOT / "requirements" / "R16.txt",
                  ROOT / "docs" / "sections" / "R16.md",
-                 ROOT / "AUDIT_R16.md",
+                 ROOT / "docs" / "audits" / "AUDIT_R16.md",
                  ROOT / "data" / "reference" / "R16" / "superseded" / "README.md"):
         assert path.exists(), f"Missing deliverable: {path}"
         assert path.read_text().endswith("\n"), f"{path} does not end in a newline"
@@ -746,7 +746,7 @@ def test_R16_the_produced_sources_carry_no_banned_construct():
 def test_R16_report_the_census_against_its_witness(census, witness_census, sign_floor,
                                                    witness_sign_floor):
     """
-    The D0-D3 classification of preamble S3, computed rather than asserted. The
+    The D0-D3 classification of protocol specification §3, computed rather than asserted. The
     witness is never a gate (`data/reference/README.md`).
     """
     print("\n" + "=" * 78)
