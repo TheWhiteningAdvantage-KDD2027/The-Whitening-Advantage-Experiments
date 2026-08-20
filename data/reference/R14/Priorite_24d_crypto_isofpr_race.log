@@ -1,0 +1,59 @@
+[2026-07-27 09:55:35] INFO: --- REQUIREMENTS & VERSIONS ---
+[2026-07-27 09:55:35] INFO: numpy==1.26.4
+[2026-07-27 09:55:35] INFO: pandas==2.3.2
+[2026-07-27 09:55:35] INFO: scipy==1.16.2
+[2026-07-27 09:55:35] INFO: statsmodels==0.14.5
+[2026-07-27 09:55:35] INFO: matplotlib==3.10.6
+[2026-07-27 09:55:35] INFO: SHA256 btc_usd_daily.csv: a9c84c890cac7284f6330e3ab4d4aed70a9a5e01ec04a8fc0c9ba8999e79c3f4
+[2026-07-27 09:55:35] INFO: SHA256 eth_usd_daily.csv: f44703a75e4510e906ab1cda6e0a50d96e232bc80aba4ef5105ce6ae94c049f1
+[2026-07-27 09:55:35] INFO: --- QMLE AUDIT ---
+[2026-07-27 09:55:35] INFO: Signature of fit_garch_qmle: returns (omega, alpha, beta), conv
+[2026-07-27 09:55:35] INFO: Call sites audited: run_diagnostics, run_qmle_recovery_test, evaluate_arm. All sites correctly unpack the 2-tuple.
+[2026-07-27 09:55:35] INFO: Running Control (b) G2 QMLE Recovery Test...
+[2026-07-27 09:55:36] INFO: Control (b) G2: QMLE median bias = 0.0336, fallback fraction = 0.0000, frozen fraction = 0.0000
+[2026-07-27 09:55:36] INFO: Running Control (b) G1 & G3 Diagnostics...
+[2026-07-27 09:55:36] INFO: Control (b) Diagnostic BTC: nu_hat=2.78, Var(z_hat)=1.048, p_value=0.1544
+[2026-07-27 09:55:36] INFO: Control (b) Diagnostic ETH: nu_hat=3.25, Var(z_hat)=1.027, p_value=0.0188
+[2026-07-27 09:55:36] INFO: QMLE Audit Diagnostics: 0/2 non-converged, 0/2 frozen to init.
+[2026-07-27 09:55:36] INFO: Control (g) Real_BTC: valid onsets (>= H_ref past, no NaNs) = 106
+[2026-07-27 09:55:36] INFO: Control (e) Real_BTC Commensurability: n_onsets_Concept=106, n_onsets_Eco=106, H_det=500, series_identical=True
+[2026-07-27 09:55:36] INFO: Control (a) Non-anticipativity (Real_BTC): perturbation diff sum = 0.000000
+[2026-07-27 09:55:38] INFO: Control (f) Max dev Concept for Real_BTC = 0.5000
+[2026-07-27 09:55:38] INFO: QMLE Audit Real_BTC: Non-converged = 0.0000 (0/106), Frozen to init = 0.0000 (0/106)
+[2026-07-27 09:55:38] INFO: Control (c) Iso-FPR strict Real_BTC: FPR_C=0.0472, FPR_E=0.0472, |Diff|=0.0000
+[2026-07-27 09:55:39] INFO: Control (g) Real_ETH: valid onsets (>= H_ref past, no NaNs) = 72
+[2026-07-27 09:55:39] INFO: Control (e) Real_ETH Commensurability: n_onsets_Concept=72, n_onsets_Eco=72, H_det=500, series_identical=True
+[2026-07-27 09:55:39] INFO: Control (a) Non-anticipativity (Real_ETH): perturbation diff sum = 0.000000
+[2026-07-27 09:55:39] INFO: Control (f) Max dev Concept for Real_ETH = 0.5000
+[2026-07-27 09:55:39] INFO: QMLE Audit Real_ETH: Non-converged = 0.0000 (0/72), Frozen to init = 0.0000 (0/72)
+[2026-07-27 09:55:40] INFO: Control (c) Iso-FPR strict Real_ETH: FPR_C=0.0417, FPR_E=0.0417, |Diff|=0.0000
+[2026-07-27 09:55:41] INFO: Control (g) Synth_BTC: valid onsets (>= H_ref past, no NaNs) = 106
+[2026-07-27 09:55:41] INFO: Control (e) Synth_BTC Commensurability: n_onsets_Concept=106, n_onsets_Eco=106, H_det=500, series_identical=True
+[2026-07-27 09:55:41] INFO: Control (a) Non-anticipativity (Synth_BTC): perturbation diff sum = 0.000000
+[2026-07-27 09:55:42] INFO: Control (f) Max dev Concept for Synth_BTC = 0.5000
+[2026-07-27 09:55:42] INFO: QMLE Audit Synth_BTC: Non-converged = 0.0000 (0/106), Frozen to init = 0.0000 (0/106)
+[2026-07-27 09:55:42] INFO: Control (c) Iso-FPR strict Synth_BTC: FPR_C=0.0472, FPR_E=0.0472, |Diff|=0.0000
+[2026-07-27 09:55:43] INFO: Control (g) Synth_ETH: valid onsets (>= H_ref past, no NaNs) = 72
+[2026-07-27 09:55:43] INFO: Control (e) Synth_ETH Commensurability: n_onsets_Concept=72, n_onsets_Eco=72, H_det=500, series_identical=True
+[2026-07-27 09:55:43] INFO: Control (a) Non-anticipativity (Synth_ETH): perturbation diff sum = 0.000000
+[2026-07-27 09:55:44] INFO: Control (f) Max dev Concept for Synth_ETH = 0.5000
+[2026-07-27 09:55:44] INFO: QMLE Audit Synth_ETH: Non-converged = 0.0000 (0/72), Frozen to init = 0.0000 (0/72)
+[2026-07-27 09:55:45] INFO: Control (c) Iso-FPR strict Synth_ETH: FPR_C=0.0556, FPR_E=0.0556, |Diff|=0.0000
+[2026-07-27 09:55:45] WARNING: Control (d) Note: Synth_ETH excluded from the direction gate as underpowered (72 onsets, edge c=0.25); ETH real signs are non-white (LB p=0.0188), treated as a boundary. Direction gate evaluated on Synth_BTC only.
+[2026-07-27 09:55:45] INFO: Control (d) Direction synthetic Synth_BTC at c=0.35: ADD_C/ADD_E = 1.143
+[2026-07-27 09:55:46] INFO: --- CERTIFICATION EMPIRIQUE EMBARQUEE ---
+[2026-07-27 09:55:46] INFO: Control (a) Seed uniqueness: Passed.
+[2026-07-27 09:55:46] INFO: --- RECAPITULATIF DES CIBLES D'INVARIANCE ---
+[2026-07-27 09:55:46] INFO: BTC nu_hat = 2.779114 | Ecart = 0.00e+00
+[2026-07-27 09:55:46] INFO: BTC Var_z_hat = 1.047546 | Ecart = 0.00e+00
+[2026-07-27 09:55:46] INFO: BTC lb_pvalue = 0.154366 | Ecart = 0.00e+00
+[2026-07-27 09:55:46] INFO: ETH nu_hat = 3.249791 | Ecart = 0.00e+00
+[2026-07-27 09:55:46] INFO: ETH Var_z_hat = 1.027160 | Ecart = 0.00e+00
+[2026-07-27 09:55:46] INFO: ETH lb_pvalue = 0.018786 | Ecart = 0.00e+00
+[2026-07-27 09:55:46] INFO: Control (e) Iso-FPR strict equality on all lines: Passed.
+[2026-07-27 09:55:46] INFO: Real BTC mean ratio = 0.868229 | Ecart = 0.00e+00
+[2026-07-27 09:55:46] INFO: Synth BTC mean ratio = 1.060303 | Ecart = 0.00e+00
+[2026-07-27 09:55:46] INFO: Control (c) Real BTC ratio mean < 1: Passed.
+[2026-07-27 09:55:46] INFO: Control (d) Synth BTC ratio mean > 1: Passed. Reversal is absent on synthetic control.
+[2026-07-27 09:55:46] INFO: All programmatic invariants matched successfully.
+[2026-07-27 09:55:46] INFO: Pipeline completed successfully.

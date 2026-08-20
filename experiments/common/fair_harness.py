@@ -53,6 +53,34 @@ def compute_sha256(filepath: Path) -> str:
             sha256_hash.update(byte_block)
     return sha256_hash.hexdigest()
 
+def log_artifact_manifest(logger: logging.Logger, artifacts: list, exp_dir: Path, base_dir: Path) -> None:
+    """
+    Logs a canonical hierarchical ASCII tree manifest of generated artifacts alongside their SHA-256 checksums.
+    """
+    tree = {}
+    for art in artifacts:
+        rel_to_exp = art.relative_to(exp_dir)
+        tree.setdefault(rel_to_exp.parent, []).append((art.name, compute_sha256(art)))
+    
+    rel_root = exp_dir.relative_to(base_dir)
+    logger.info("======================== ARTIFACT INTEGRITY MANIFEST ========================")
+    logger.info(f"{rel_root}/")
+    sorted_parents = sorted(tree.keys())
+    for d_idx, parent in enumerate(sorted_parents):
+        is_last_dir = (d_idx == len(sorted_parents) - 1)
+        dir_connector = "└── " if is_last_dir else "├── "
+        logger.info(f"{dir_connector}{parent.name}/")
+        
+        items = tree[parent]
+        dir_prefix = "    " if is_last_dir else "│   "
+        for f_idx, (fname, sha) in enumerate(items):
+            is_last_file = (f_idx == len(items) - 1)
+            file_connector = "└── " if is_last_file else "├── "
+            pad = max(36 - len(fname), 2)
+            logger.info(f"{dir_prefix}{file_connector}{fname}{' ' * pad}[{sha}]")
+    logger.info("=============================================================================")
+
+
 def save_fair_csv(df: pd.DataFrame, path: Path):
     """
     Saves a DataFrame to CSV ensuring bit-for-bit reproducible floating point strings.
