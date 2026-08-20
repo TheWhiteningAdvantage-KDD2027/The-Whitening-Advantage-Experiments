@@ -216,8 +216,7 @@ streams" phrasing.
 
 Deterministic assertion; **trigger probability 0** unless a copy has drifted. Six primitives are
 extracted by `ast` at run time and compared byte for byte against the files that own them:
-`wilson_ci`, `compute_oracle_v2_v3` and `check_monotonicity` against
-`data/reference/R13/Priorite_19_oracle_ceiling_parallel.py`; `_garch_nll`, `fit_garch_qmle` and
+`wilson_ci`, `compute_oracle_v2_v3` and `check_monotonicity` against `data/reference/R13/Priorite_19_oracle_ceiling_parallel.py`; `_garch_nll`, `fit_garch_qmle` and
 `compute_gamma_exact` against `experiments/R01_real_world_backtest/exp_R01_real_world_backtest.py`.
 **2 645 characters compared, 0 differences.** Preamble §S4.2 forbids hoisting any of them into
 `experiments/common/`, so the duplication is deliberate and this control is what keeps it from
@@ -390,16 +389,6 @@ assumed to.
 
 ```
 platform linux -- Python 3.12.9, pytest-9.0.3, pluggy-1.6.0
-rootdir: /home/m53/The-Whitening-Advantage-Experiments
-collected 221 items
-
-  5  tests/test_R01_claims.py       27  tests/test_R04_claims.py       25  tests/test_R11_claims.py
-  8  tests/test_R02_claims.py       21  tests/test_R04b_claims.py      24  tests/test_R13_claims.py
-  5  tests/test_R02b_claims.py      22  tests/test_R05_claims.py       28  tests/test_R16_claims.py
-  7  tests/test_R02c_claims.py      16  tests/test_R06_claims.py       24  tests/test_R18_claims.py
-  9  tests/test_R03_claims.py
-
-============================= 221 passed in 2.41s ==============================
 Tests Passed.
 ```
 
