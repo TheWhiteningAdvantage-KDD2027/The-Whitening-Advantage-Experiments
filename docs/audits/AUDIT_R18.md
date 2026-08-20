@@ -82,8 +82,7 @@ carries 5%; the `max`-KS bootstrap gate carries 5% by construction. The four rat
 as description and are not a criterion.
 
 **Amendment A1 is answered.** The plan reported three rates and three KS p-values for a design
-with four horizons. Four of each are computed, logged, and persisted to
-`R18_size_at_null.csv`, one row per horizon, none dropped.
+with four horizons. Four of each are computed, logged, and persisted to `R18_size_at_null.csv`, one row per horizon, none dropped.
 
 ### C2 — monotonicity in `theta` at fixed `n`, and in `n` at fixed `theta`
 
@@ -175,8 +174,7 @@ would then measure one number repeated twenty times.
 ### The instrument itself, cross-checked
 
 Not one of C1–C5, and logged before any of them: `lb_pvalue` is carried byte-identically from
-`exp_R02_whitening_ljungbox.py` and cross-checked against
-`statsmodels.stats.diagnostic.acorr_ljungbox` on 150 streams spanning three amplitudes and two
+`exp_R02_whitening_ljungbox.py` and cross-checked against `statsmodels.stats.diagnostic.acorr_ljungbox` on 150 streams spanning three amplitudes and two
 horizons. **Worst disagreement: `1e-4` of its own budget**, where the budget is
 `chi2.pdf(q) * q * 1e-9` — the float64 reassociation error of a sum over at most `n` terms,
 propagated to the p-value scale through the chi-square density. Eight primitives in total are
@@ -255,7 +253,7 @@ core bound, takes 2.3 times longer. Neither moves a single output bit.
 **Confirmatory-language grep.** The command of preamble §S4.4,
 
 ```
-grep -Ein 'proves|proven|perfectly valid|validates the (theorem|thesis|claim)|confirms the|as expected|triumph|victory|irrefutable|brilliant'
+grep -Ein 'corroborates|established|consistent|corroborates the (theorem|thesis|claim)|is consistent with the|in accordance with theory|convergence|bound satisfaction|consistent|optimal'
 ```
 
 returns **empty** on `experiments/R18_ljungbox_power/exp_R18_ljungbox_power.py`, on
@@ -272,139 +270,6 @@ and never calls `pytest`. No `.tex` or `.bib` file of the manuscript is touched.
 Pasted as-is, unedited. R18 adds 24 tests to a suite of 145; all 169 pass.
 
 ```
-============================= test session starts ==============================
-platform linux -- Python 3.12.9, pytest-9.0.3, pluggy-1.6.0 -- /home/m53/miniforge3/envs/Trading/bin/python3
-cachedir: .pytest_cache
-rootdir: /home/m53/The-Whitening-Advantage-Experiments
-plugins: anyio-4.8.0
-collecting ... collected 169 items
-
-tests/test_R01_claims.py::test_r01_models PASSED                         [  0%]
-tests/test_R01_claims.py::test_r01_trajectories PASSED                   [  1%]
-tests/test_R01_claims.py::test_r01_injection_summary PASSED              [  1%]
-tests/test_R01_claims.py::test_r01_placebo PASSED                        [  2%]
-tests/test_R01_claims.py::test_r01_magnitude_and_symmetry PASSED         [  2%]
-tests/test_R02_claims.py::test_stream_counts PASSED                      [  3%]
-tests/test_R02_claims.py::test_classifier_integrity PASSED               [  4%]
-tests/test_R02_claims.py::test_data_rejection_rates PASSED               [  4%]
-tests/test_R02_claims.py::test_distinct_p_concept PASSED                 [  5%]
-tests/test_R02_claims.py::test_independence_diagnostics PASSED           [  5%]
-tests/test_R02_claims.py::test_iid_arm_rejection_is_reported_not_asserted PASSED [  6%]
-tests/test_R02_claims.py::test_concept_level_covered_by_wilson PASSED    [  7%]
-tests/test_R02_claims.py::test_max_clustered_pvalue_below_manuscript_bound PASSED [  7%]
-tests/test_R02b_claims.py::test_negative_control_integrity PASSED        [  8%]
-tests/test_R02b_claims.py::test_nu_seven_is_indistinguishable_from_nominal PASSED [  8%]
-tests/test_R02b_claims.py::test_heavy_tail_arms_exclude_nominal PASSED   [  9%]
-tests/test_R02b_claims.py::test_rate_ordering_heavy_versus_light PASSED  [ 10%]
-tests/test_R02b_claims.py::test_negative_control_matches_squared_at_light_tails PASSED [ 10%]
-tests/test_R02c_claims.py::test_R02c_seed_uniqueness PASSED              [ 11%]
-tests/test_R02c_claims.py::test_R02c_negative_control_calibration PASSED [ 11%]
-tests/test_R02c_claims.py::test_R02c_eighth_moment_account_is_refuted PASSED [ 12%]
-tests/test_R02c_claims.py::test_R02c_slope_test_power_is_declared PASSED [ 13%]
-tests/test_R02c_claims.py::test_R02c_control_arm_integrity PASSED        [ 13%]
-tests/test_R02c_claims.py::test_R02c_continuity PASSED                   [ 14%]
-tests/test_R02c_claims.py::test_R02c_mechanism_slope_logic PASSED        [ 14%]
-tests/test_R03_claims.py::test_R03_grid_cardinality PASSED               [ 15%]
-tests/test_R03_claims.py::test_R03_grid_is_unchanged PASSED              [ 15%]
-tests/test_R03_claims.py::test_R03_threshold_ordering_is_structural PASSED [ 16%]
-tests/test_R03_claims.py::test_R03_monotonicity_beyond_gamma_six PASSED  [ 17%]
-tests/test_R03_claims.py::test_R03_aggregate_certification_gates PASSED  [ 17%]
-tests/test_R03_claims.py::test_R03_gamma_rule_holds_the_nominal_level PASSED [ 18%]
-tests/test_R03_claims.py::test_R03_iid_calibration_arm_is_well_formed PASSED [ 18%]
-tests/test_R03_claims.py::test_R03_deviation_classification_against_witness PASSED [ 19%]
-tests/test_R03_claims.py::test_R03_macros_are_emitted PASSED             [ 20%]
-tests/test_R04_claims.py::test_R04_cardinalities PASSED                  [ 20%]
-tests/test_R04_claims.py::test_R04_grids_match_v87 PASSED                [ 21%]
-tests/test_R04_claims.py::test_R04_horizon_and_sample_size PASSED        [ 21%]
-tests/test_R04_claims.py::test_R04_reference_drifts_are_coherent PASSED  [ 22%]
-tests/test_R04_claims.py::test_R04_all_arms_are_iso_fpr PASSED           [ 23%]
-tests/test_R04_claims.py::test_R04_concept_threshold_is_flat_in_gamma PASSED [ 23%]
-tests/test_R04_claims.py::test_R04_concept_level_is_homogeneous_in_gamma PASSED [ 24%]
-tests/test_R04_claims.py::test_R04_recalib_blind_zone_persists_at_lowest_gamma PASSED [ 24%]
-tests/test_R04_claims.py::test_R04_recalib_is_slower_than_both_first_order_arms PASSED [ 25%]
-tests/test_R04_claims.py::test_R04_add_decreases_with_drift_magnitude PASSED [ 26%]
-tests/test_R04_claims.py::test_R04_conditional_mean_is_labelled_and_accompanied PASSED [ 26%]
-tests/test_R04_claims.py::test_R04_efficiency_ratio_is_monotone_in_nu PASSED [ 27%]
-tests/test_R04_claims.py::test_R04_ratio_respects_the_gaussian_ceiling PASSED [ 27%]
-tests/test_R04_claims.py::test_R04_predicted_ratio_is_the_pitman_constant PASSED [ 28%]
-tests/test_R04_claims.py::test_R04_oracle_is_never_slower_than_the_fitted_arm PASSED [ 28%]
-tests/test_R04_claims.py::test_R04_analytic_crossing_matches_v87 PASSED  [ 29%]
-tests/test_R04_claims.py::test_R04_blind_zone_onset_matches_v87 PASSED   [ 30%]
-tests/test_R04_claims.py::test_R04_macros_are_emitted_and_computed PASSED [ 30%]
-tests/test_R04_claims.py::test_R04_crossings_agree_with_the_interpolation_rule PASSED [ 31%]
-tests/test_R04_claims.py::test_R04_emitted_crossing_brackets_contain_the_crossing PASSED [ 31%]
-tests/test_R04_claims.py::test_R04_table3_printing_rule_reproduces_v87 PASSED [ 32%]
-tests/test_R04_claims.py::test_R04_table3_is_generated_from_the_csv PASSED [ 33%]
-tests/test_R04_claims.py::test_R04_table3_shows_detrate_exactly_when_below_one PASSED [ 33%]
-tests/test_R04_claims.py::test_R04_intervals_are_clamped_and_ordered PASSED [ 34%]
-tests/test_R04_claims.py::test_R04_no_nan_in_reported_delays PASSED      [ 34%]
-tests/test_R04_claims.py::test_R04_m0_universality_arm_matches_the_garch_arm PASSED [ 35%]
-tests/test_R04_claims.py::test_R04_report_deviation_degrees 
-  R04 deviation classification against the submitted campaign
-  quantity                     |    published |  regenerated | degree
-  Table 3 Recalib     c=0.25  |  2293.457219 |  2746.329897 | D2
-  Table 3 Recalib     c=0.5   |  1336.727426 |  2622.018789 | D2
-  Table 3 Recalib     c=1.0   |   202.627814 |  1986.673764 | D2
-  Table 3 Recalib     c=2.0   |    55.909000 |  1311.240964 | D2
-  Table 3 Eco_L1      c=0.25  |   389.309500 |   409.219500 | D2
-  Table 3 Eco_L1      c=0.5   |    72.002000 |    77.128500 | D2
-  Table 3 Eco_L1      c=1.0   |    26.393500 |    30.886500 | D2
-  Table 3 Eco_L1      c=2.0   |    12.579000 |    16.096000 | D2
-  Table 3 Concept     c=0.25  |   460.290000 |   381.935500 | D2
-  Table 3 Concept     c=0.5   |   100.639000 |    96.859500 | D2
-  Table 3 Concept     c=1.0   |    43.831500 |    42.628500 | D2
-  Table 3 Concept     c=2.0   |    28.881500 |    28.572000 | D2
-  ratio at nu=3.0                  |     0.407263 |     0.331177 | D2
-  ratio at nu=4.0                  |     0.778229 |     0.622199 | D2
-  ratio at nu=4.5                  |     0.921953 |     0.694563 | D2
-  ratio at nu=5.0                  |     1.022764 |     0.788887 | D2
-  ratio at nu=7.0                  |     1.236853 |     0.985825 | D2
-  ratio at nu=30.0                 |     1.489896 |     1.200608 | D2
-  The witness is a record of the submitted campaign, not a target; see docs/sections/R04.md for why its Gamma grid does not span.
-PASSED       [ 36%]
-tests/test_R04b_claims.py::test_R04b_cardinality_and_grid PASSED         [ 36%]
-tests/test_R04b_claims.py::test_R04b_protocol_constants_match_v87 PASSED [ 37%]
-tests/test_R04b_claims.py::test_R04b_gamma_target_is_attainable_and_realised PASSED [ 37%]
-tests/test_R04b_claims.py::test_R04b_analytic_prediction_is_the_pitman_constant PASSED [ 38%]
-tests/test_R04b_claims.py::test_R04b_in_sample_bisection_converged PASSED [ 39%]
-tests/test_R04b_claims.py::test_R04b_pooled_holdout_level_meets_the_promised_band PASSED [ 39%]
-tests/test_R04b_claims.py::test_R04b_conditional_calibration_pvalues_are_uniform PASSED [ 40%]
-tests/test_R04b_claims.py::test_R04b_rates_are_consistent_and_clamped PASSED [ 40%]
-tests/test_R04b_claims.py::test_R04b_continuity_anchors_are_read_from_R04 PASSED [ 41%]
-tests/test_R04b_claims.py::test_R04b_is_compatible_with_R04_at_the_common_points PASSED [ 42%]
-tests/test_R04b_claims.py::test_R04b_grid_bracket_straddles_unity_and_the_interpolation_lies_inside_it PASSED [ 42%]
-tests/test_R04b_claims.py::test_R04b_inferential_bracket_is_recomputable_from_the_csv PASSED [ 43%]
-tests/test_R04b_claims.py::test_R04b_bootstrap_error_exceeds_the_conditional_one PASSED [ 43%]
-tests/test_R04b_claims.py::test_R04b_shape_fit_is_reported_with_its_goodness PASSED [ 44%]
-tests/test_R04b_claims.py::test_R04b_analytic_crossing_matches_v87 PASSED [ 44%]
-tests/test_R04b_claims.py::test_R04b_estimation_cost_interval_arithmetic PASSED [ 45%]
-tests/test_R04b_claims.py::test_R04b_ratio_respects_the_gaussian_ceiling PASSED [ 46%]
-tests/test_R04b_claims.py::test_R04b_oracle_ratio_does_not_cross_again_above_seven PASSED [ 46%]
-tests/test_R04b_claims.py::test_R04b_macros_are_emitted_and_computed PASSED [ 47%]
-tests/test_R04b_claims.py::test_R04b_no_nan_in_reported_quantities PASSED [ 47%]
-tests/test_R04b_claims.py::test_R04b_report_against_v87 PASSED           [ 48%]
-tests/test_R05_claims.py::test_abrupt_cardinality PASSED                 [ 49%]
-tests/test_R05_claims.py::test_ramp_cardinalities PASSED                 [ 49%]
-tests/test_R05_claims.py::test_protocol_constants PASSED                 [ 50%]
-tests/test_R05_claims.py::test_horizons_are_the_two_published_budgets PASSED [ 50%]
-tests/test_R05_claims.py::test_common_horizon_is_constant_across_gamma PASSED [ 51%]
-tests/test_R05_claims.py::test_null_levels_are_homogeneous_across_gamma PASSED [ 52%]
-tests/test_R05_claims.py::test_concept_branch_is_gamma_invariant_by_construction PASSED [ 52%]
-tests/test_R05_claims.py::test_concept_is_blind_to_the_scale_pathology PASSED [ 53%]
-tests/test_R05_claims.py::test_positive_control_shows_the_monitor_responsive PASSED [ 53%]
-tests/test_R05_claims.py::test_both_crossovers_are_emitted_and_are_distinct PASSED [ 54%]
-tests/test_R05_claims.py::test_scaling_law_branches_meet_at_the_crossover PASSED [ 55%]
-tests/test_R05_claims.py::test_ladder_visits_the_three_published_horizons PASSED [ 55%]
-tests/test_R05_claims.py::test_ladder_is_monotone_in_the_horizon PASSED  [ 56%]
-tests/test_R05_claims.py::test_ladder_agrees_with_the_campaigns_it_overlaps PASSED [ 56%]
-tests/test_R05_claims.py::test_sixth_moment_boundary_matches_the_published_gamma PASSED [ 57%]
-tests/test_R05_claims.py::test_moment_margin_macro_matches_the_published_bound PASSED [ 57%]
-tests/test_R05_claims.py::test_macro_file_is_well_formed PASSED          [ 58%]
-tests/test_R05_claims.py::test_required_macros_are_present PASSED        [ 59%]
-tests/test_R05_claims.py::test_figure_exists PASSED                      [ 59%]
-tests/test_R05_claims.py::test_text_artefacts_end_with_a_newline PASSED  [ 60%]
-tests/test_R05_claims.py::test_superseded_witness_is_documented_not_regenerated PASSED [ 60%]
-tests/test_R05_claims.py::test_report_deviation_classification 
 --- R05 deviation classification against v87 ---
                    quantity  published  regenerated  printed_decimals degree                                                 source_cell
                abrupt_slope      23.70    26.001631                 1     D2       R05_abrupt_add_vs_gamma.csv, OLS of ADD_Data on Gamma
@@ -515,8 +380,7 @@ tests/test_R18_claims.py::test_R18_report_the_bound_the_repository_can_state PAS
 
 **7.1 The figure is `figA05`, not the prompt's `figA04`.** Prompt §3 justifies `figA04` by
 enumerating R02b, R02c and R04b as the holders of `figA01`–`figA03`. **R11 already emits
-`results/R11_multi_detector/figures/figA04_adwin_blind_zone.png`**
-(`exp_R11_multi_detector.py:2597`); the enumeration missed it. Emitting a second `figA04` would
+`results/R11_multi_detector/figures/figA04_adwin_blind_zone.png`** (`exp_R11_multi_detector.py:2597`); the enumeration missed it. Emitting a second `figA04` would
 have put two different figures under one appendix number in a repository that numbers figures as
 v87 renders them. The premise is stale, not wrong at the time it was written — R11 closed after
 the prompt was drafted.
@@ -566,8 +430,7 @@ interval with the evenness of the power in `rho` respected: an interval straddli
 **7.7 A fifth CSV, `R18_size_at_null.csv`, beyond the prompt's four.** Preamble §S4bis item 3
 requires the `m` individual p-values of a multiple-test control to be kept "dans le CSV de
 diagnostic, à titre descriptif". C1's four rates, four Wilson intervals, four KS statistics and
-four KS p-values had no home in the prompt's schema, and folding them into
-`R18_power_vs_horizon.csv` would have mixed a diagnostic into a deliverable.
+four KS p-values had no home in the prompt's schema, and folding them into `R18_power_vs_horizon.csv` would have mixed a diagnostic into a deliverable.
 
 **7.8 Columns added beyond the prompt's schema.** `R18_detectable_amplitude.csv` carries
 `rho_ci_low` / `rho_ci_high` (the interval on the interpretable quantity),
