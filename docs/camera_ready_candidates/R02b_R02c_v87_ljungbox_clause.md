@@ -19,13 +19,13 @@ before the deviation inventory is complete guarantees reapplying it later.
 ordinary draw under a true rate of 5.8% (probability 8.9%). What is corrected is the
 subordinate clause asserting a mechanism that is wrong independently of any sample.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 and already over-reject on the i.i.d.\ arm ($9.2\%$), where $t_7$ innovations deprive $\varepsilon_t^2$ of a fourth moment and the $\chi^2$ approximation fails;
 ~~~~~~~~~
 
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 and reject at $9.2\%$ on the i.i.d.\ arm, a rate that $120$ streams cannot separate from nominal; a dedicated sweep ($1{,}000$ streams per point, horizons to $n = 1.28\times10^5$) places $t_7$ at nominal and the over-rejection beyond the sixth-moment boundary ($7.7\%$ at $\nu \le 6$, excluding nominal at every horizon), where the autocovariance summand loses its third absolute moment;
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END OF BLOCK

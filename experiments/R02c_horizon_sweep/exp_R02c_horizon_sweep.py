@@ -1,6 +1,16 @@
 """
 ================================================================================
-R02c - DIMENSIONNEMENT ET PERSISTANCE EN HORIZON DE LA SUR-RÉJECTION
+R02c - HORIZON SCALING AND OVER-REJECTION PERSISTENCE
+================================================================================
+
+Empirical investigation of Ljung-Box test over-rejection rates across increasing
+horizons (n_steps) for Student t innovations with varying degrees of freedom (nu).
+This experiment establishes that the eighth-moment explanation (E[eps^8] = infinity
+for nu <= 8) does not survive its own witness: pooled rejection rates at nu=7
+(control arm) remain calibrated at the nominal level, while nu=5 and nu=6 exhibit
+significant over-rejection.
+
+Reference: The Whitening Advantage, Section 4.3.
 ================================================================================
 """
 import sys
@@ -22,10 +32,14 @@ if os.environ.get("PYTHONHASHSEED") != "42":
 import hashlib
 import logging
 import argparse
-import importlib.metadata
 import random
+
 import numpy as np
 import pandas as pd
+from experiments.common.fair_harness import disable_pandas_multithreading, log_artifact_manifest
+
+disable_pandas_multithreading()
+
 import scipy.stats as stats
 import matplotlib
 matplotlib.use('Agg')
@@ -33,8 +47,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from joblib import Parallel, delayed
 
-pd.options.compute.use_bottleneck = False
-pd.options.compute.use_numexpr = False
+from experiments.common.fair_env import verify_hash_seed, log_environment
 
 PROJECT_ROOT = BASE_DIR
 DATA_DIR = PROJECT_ROOT / "results" / "R02c_horizon_sweep" / "data"
@@ -61,15 +74,6 @@ def setup_logging(log_dir: Path, script_name: str) -> logging.Logger:
     return logger
 
 logger = setup_logging(LOGS_DIR, "exp_R02c_horizon_sweep")
-
-def log_dependencies():
-    packages = ["numpy", "pandas", "scipy", "matplotlib", "joblib"]
-    logger.info(f"Python: {sys.version.split()[0]}")
-    for pkg in packages:
-        try:
-            logger.info(f"  {pkg}: {importlib.metadata.version(pkg)}")
-        except importlib.metadata.PackageNotFoundError:
-            logger.info(f"  {pkg}: NOT INSTALLED")
 
 def get_deterministic_seed(*args) -> tuple:
     def format_arg(arg):
@@ -155,7 +159,8 @@ def main():
     parser.add_argument('--n-jobs', type=int, default=1)
     args = parser.parse_args()
     
-    log_dependencies()
+    verify_hash_seed(logger)
+    log_environment(logger, ["numpy", "pandas", "scipy", "matplotlib", "joblib"])
     
     nus = [5.0, 6.0, 7.0]
     horizons = [2000, 8000, 32000, 128000]
@@ -357,6 +362,15 @@ def main():
             
     elapsed = (time.time() - t0) / 60
     logger.info(f"Completed execution in {elapsed:.1f} minutes.")
+    
+    # Log artifact manifest
+    artifacts = [
+        DATA_DIR / "R02c_streams.csv",
+        DATA_DIR / "R02c_rejection_vs_horizon.csv",
+        FIGS_DIR / "figA02_overrejection_vs_horizon.png",
+        TABS_DIR / "R02c_claims.tex"
+    ]
+    log_artifact_manifest(logger, artifacts, BASE_DIR, BASE_DIR)
 
 if __name__ == '__main__':
     main()
