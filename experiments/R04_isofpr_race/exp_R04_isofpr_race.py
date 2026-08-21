@@ -65,7 +65,7 @@ enforce_strict_determinism()
 
 import numpy as np
 import pandas as pd
-from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, compute_sha256, save_fair_csv
+from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, compute_sha256, save_fair_csv, log_artifact_manifest
 
 disable_pandas_multithreading()
 
@@ -182,7 +182,7 @@ def get_deterministic_seed(*args) -> int:
     Floats are formatted through .hex() rather than str(): the decimal
     repr of a float is platform-dependent at the last digit on some C
     libraries, which would silently re-key a cell across machines. The native
-    hash() is randomly salted and is forbidden outright (SPECS 1.2).
+    hash() is randomly salted and is forbidden outright to ensure cross-platform reproducibility.
     """
     def format_arg(arg):
         if isinstance(arg, (float, np.floating)):
@@ -193,7 +193,7 @@ def get_deterministic_seed(*args) -> int:
     return int(hashlib.md5(s.encode('utf-8')).hexdigest(), 16)
 
 
-# --- PRIMITIVES, DUPLICATED VERBATIM PER PREAMBLE S4.2 ---
+# --- PRIMITIVES, DUPLICATED VERBATIM ---
 # These routines are deliberately NOT hoisted into experiments/common/. The
 # copies carried by the other experiments of this repository differ numerically
 # from one another, and mutualising them would silently move published values.
@@ -281,9 +281,9 @@ def fit_garch_qmle(eps_warmup):
     """
     Fits GARCH(1,1) by QMLE on the warm-up segment only, variance targeting.
 
-    The finite-difference step and tolerances follow SPECS 1.10: gradient noise
-    of an SLSQP run on a recursive likelihood is amplified by the FPU, so the
-    step is widened and the solution truncated deterministically.
+    The finite-difference step and tolerances are set to account for gradient noise
+    of an SLSQP run on a recursive likelihood, which is amplified by the FPU. The
+    step is therefore widened and the solution truncated deterministically.
 
     Returns ((omega, alpha, beta), converged). `converged` is False when SLSQP
     reports failure OR when it returns its own initial point, which on this
@@ -297,8 +297,8 @@ def fit_garch_qmle(eps_warmup):
     # Deterministic multistart. A single start leaves roughly two fits in ten
     # thousand on which SLSQP reports failure, scattered across the grid and
     # independent of tail weight. Restarting from a fixed ladder of interior
-    # points is a correction in the solution space, which SPECS 2.2 requires,
-    # where substituting a default pair would be the masked fallback it forbids.
+    # points is a correction in the solution space, where substituting a default pair
+    # would be the masked fallback it forbids.
     # The ladder is fixed, ordered and short-circuited on the first success, so
     # the result is deterministic and costs nothing on the fits that converge.
     for init_a, init_b in QMLE_STARTS:
@@ -384,7 +384,7 @@ def wilson_interval(k, n, confidence=0.95):
     # centre + half = 1 exactly, but in floating point it lands one ulp below and
     # the persisted interval would then exclude its own estimate. Enforcing
     # containment restores an identity that the arithmetic broke; it is the same
-    # class of correction as the domain clamping above (SPECS 1.8).
+    # class of correction as the domain clamping above.
     return min(low, p_hat), max(high, p_hat)
 
 
@@ -404,7 +404,7 @@ def concept_reference_drift(c, nu):
 
 # --- WORKERS ---
 # No worker logs, no worker writes: concurrent writes to one file are a race
-# condition that breaks the digest of the log (SPECS 1.5). Diagnostics travel
+# condition that breaks the digest of the log. Diagnostics travel
 # back in the return value and are reduced in submission order by the caller.
 
 def _worker_race(args):
@@ -851,7 +851,7 @@ def protocol_m4(n_streams, executor, logger, seed_registry):
         logger.info(f"M4 Gamma={gamma}: CUSUM FPR={alarms_cusum/n_streams:.4f}, "
                     f"ADWIN FPR={alarms_adwin/n_streams:.4f}")
 
-    # Counterfactual arm, required before any causal attribution (preamble S4.5).
+    # Counterfactual arm, required before any causal attribution.
     # The submitted campaign reports this level as flat in Gamma. This repository
     # measures it as rising, and attributes the difference to the swapped
     # arguments that pinned beta at 0. The attribution is only admissible if the
@@ -1098,7 +1098,7 @@ def main():
         df_m0 = protocol_m0(m0_streams, executor, logger, seed_registry)
         df_calib, df_race, concept_suprema, q1, tot1 = protocol_m1_m2(n_streams, executor, logger, seed_registry)
         df_eff, q2, tot2 = protocol_m3(n_streams, executor, logger, seed_registry)
-        # Counterfactual arm (preamble S4.5). This repository measures the
+        # Counterfactual arm. This repository measures the
         # estimation cost of the parametric route an order of magnitude above the
         # 0.3 degrees of freedom v87 reports, and attributes the gap to the
         # transposed arguments that pinned beta at 0 in the submitted generator.
@@ -1177,11 +1177,11 @@ def main():
             sys.exit(1)
     logger.info("Cardinality check (b): " + ", ".join(f"{k} = {v[0]}" for k, v in cardinalities.items()))
 
-    # (c) Effective calibration. This gate is in-sample by construction and that
-    # is exactly why it is admissible under preamble S4bis: the bisection selects
-    # lambda* on this very null set, so the gate has no probability of firing
-    # under a null hypothesis -- it fires if and only if the bisection failed to
-    # converge within its 15 iterations. It is a convergence check, not a test.
+    # (c) Effective calibration. This gate is in-sample by construction:
+    # the bisection selects lambda* on this very null set, so the gate has no
+    # probability of firing under a null hypothesis -- it fires if and only if
+    # the bisection failed to converge within its 15 iterations. It is a convergence
+    # check, not a test.
     off_target = df_calib[(df_calib['FPR_achieved'] - TARGET_FPR).abs() > BISECTION_TOL]
     if not args.fast and len(off_target):
         for row in off_target.itertuples(index=False):
@@ -1207,7 +1207,7 @@ def main():
     # barely two. A gate on band containment therefore tests which cell the
     # empirical 95th percentile of 2000 streams happens to fall into, and fires
     # with substantial probability under its own null -- precisely the binary door
-    # preamble S4bis forbids.
+    # the protocol forbids.
     #
     # What Proposition prop:whitening actually asserts is stronger and lattice-free:
     # the sign stream is i.i.d. Bernoulli(1/2) EXACTLY, for every Gamma, so the
@@ -1351,7 +1351,7 @@ def main():
     nu_star_oracle_cf, _, _ = crossing_point(df_eff_cf['nu'], df_eff_cf['ratio_oracle'])
     cost_cf = nu_star_cf - nu_star_oracle_cf
     logger.info(
-        f"Counterfactual (S4.5) on the efficiency crossing: with beta pinned to 0, as the submitted "
+        f"Counterfactual on the efficiency crossing: with beta pinned to 0, as the submitted "
         f"generator produced it, and the same seeds, nu*(Eco-L1) = {nu_star_cf:.4f}, "
         f"nu*(Oracle) = {nu_star_oracle_cf:.4f}, estimation cost = {cost_cf:.4f}. On the genuinely "
         f"spanned grid the same quantities are {nu_star:.4f}, {nu_star_oracle:.4f} and "
@@ -1550,6 +1550,15 @@ def main():
                       (f"tab03_isofpr_race{suffix}.tex", TABLES_DIR / f"tab03_isofpr_race{suffix}.tex"),
                       (tex_name, TABLES_DIR / tex_name)):
         logger.info(f"SHA-256 {rel} : {compute_sha256(path)}")
+
+    # Artifact manifest
+    artifact_paths = [DATA_DIR / name for name in outputs]
+    artifact_paths.extend([
+        FIGURES_DIR / f"fig04_isofpr_race{suffix}.png",
+        TABLES_DIR / f"tab03_isofpr_race{suffix}.tex",
+        TABLES_DIR / tex_name,
+    ])
+    log_artifact_manifest(logger, artifact_paths, RESULTS_DIR, BASE_DIR)
 
     logger.info(f"Execution completed in {elapsed:.1f}s with {args.n_jobs} workers. v87 reports about "
                 f"25 min for this race on 24 cores; the ratio is {1500.0/max(elapsed, 1e-9):.1f}x.")

@@ -12,7 +12,7 @@ null. None of them is a hypothesis test on a draw.
 witness of the submitted campaign and prints the degree of every deviation. It
 asserts nothing about those degrees. A cell-by-cell equality gate against the
 witness would convert every legitimate correction into a test failure whose only
-exit is a widened tolerance, which the preamble forbids.
+exit is a widened tolerance, which the protocol forbids.
 
 The witness of this experiment is known to have been produced by a generator
 whose Gamma grid collapsed to a single point (see docs/sections/R04.md), so its
@@ -170,7 +170,7 @@ def test_R04_all_arms_are_iso_fpr(df_calib):
     admissible: the threshold is selected on the same null set whose rate is
     reported, so the gate fires if and only if the bisection failed to converge
     within its 15 iterations. It has no probability of firing under a null
-    hypothesis and is therefore not a multiple test under preamble S4bis.
+    hypothesis and is therefore not a multiple test under the protocol.
     """
     off = (df_calib['FPR_achieved'] - TARGET_FPR).abs() > BISECTION_TOL
     assert not off.any(), (

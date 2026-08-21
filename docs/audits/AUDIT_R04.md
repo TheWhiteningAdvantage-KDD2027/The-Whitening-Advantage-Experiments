@@ -4,8 +4,7 @@ Every measured block below is extracted from `logs/R04_isofpr_race/exp_R04_isofp
 from the captured `pytest` run. None is retyped.
 
 **Starting state.** The bundle supplied `Priorite_15_isofpr_dichotomy.py`, its log, five
-reference CSVs, `Fig22_IsoFPR_Race.png`, the body of `tab:isofpr_race`, the normative preamble,
-the FAIR specifications, `articleB_whitening_v87.tex` and `PROMPT_REPO_R04_isofpr_race.md`. No
+reference CSVs, `Fig22_IsoFPR_Race.png`, the body of `tab:isofpr_race`, `articleB_whitening_v87.tex` and the R04 stream prompt. No
 part of R04 existed in the repository. `fair_env.py` and `fair_harness.py` in the bundle are
 byte-identical to `experiments/common/`, so nothing shared moved.
 
@@ -53,13 +52,13 @@ target 1.0 -> beta = 0.000000 -> realised 1.1053, target 11.58 -> beta = 0.93007
 target 50.0 -> beta = 0.942467 -> realised 50.0000, target 200.0 -> beta = 0.946813 -> realised 200.0000
 ```
 
-### The counterfactual (preamble §S4.5)
+### The counterfactual
 
 The attribution is measured, not asserted. Pinning `beta` back to 0 on the same seeds, changing
 nothing else:
 
 ```
-Counterfactual (S4.5) on the efficiency crossing: with beta pinned to 0, as the submitted
+Counterfactual on the efficiency crossing: with beta pinned to 0, as the submitted
 generator produced it, and the same seeds, nu*(Eco-L1) = 4.9482, nu*(Oracle) = 4.7134,
 estimation cost = 0.2348. On the genuinely spanned grid the same quantities are 8.5180, 4.4659
 and 4.0520. v87 prints 4.9, 4.6 and 0.3.
@@ -226,7 +225,7 @@ termination. The column now records the iterations actually consumed, which rang
 
 **Form.** `PYTHONHASHSEED` set to `"0"` from inside the interpreter (inert, and the wrong
 value); `logging.basicConfig` without a stdout handler and without `mode='w'`, so the shipped
-log holds two concatenated runs — SPECS §4.1 proscribes it by name; legacy global seeding;
+log holds two concatenated runs; legacy global seeding;
 `mp.Pool` instead of `ProcessPoolExecutor`; CSVs written into a directory named `figures/`; no
 `float_format`, no SHA-256, no version logging, no specification check; figure titles neither
 bold nor panel-lettered; confirmatory comments ("Flawless dynamic unpacking", "perfectly
@@ -252,7 +251,7 @@ structural ordering.
 **Control (c) is in-sample, and that is why it is admissible.** The bisection selects
 `lambda*` on the very null set whose rate it reports, so the gate fires if and only if the
 bisection failed to converge. It has no probability of firing under a null and falls outside the
-multiple-testing rule of §S4bis. A held-out level would turn it into 16 simultaneous binomial
+multiple-testing rule. A held-out level would turn it into 16 simultaneous binomial
 tests whose family-wise firing probability under `H_0` is 0.56 — a coin flip, and an invitation
 to re-draw.
 
@@ -261,7 +260,7 @@ to re-draw.
 so `lambda*` lives on a lattice of step `0.122` at the depth reached; the published band
 `[10.6, 10.7]` is *narrower than one lattice cell* and the admissible band spans barely two. A
 containment gate therefore tests which cell an empirical quantile fell into and fires with
-substantial probability under its own null, which §S4bis forbids. The regenerated span is
+substantial probability under its own null, which the protocol forbids. The regenerated span is
 `[10.499036, 10.743177]`, three adjacent lattice points, missing the band by `0.00096` — one
 part in ten thousand, less than one lattice step.
 
@@ -315,9 +314,8 @@ enumeration and sorts last. The whole suite passes, 61 tests over R01 to R04.
 ## 7. Impact on the manuscript and next actions
 
 `sec:magnitude`, the caption of `fig:isofpr`, `Table 3` and the estimation-cost sentence of
-`sec:discussion` are all affected. Nothing in the manuscript has been touched: preamble §S4.1
-forbids it, and the numbers a corrected campaign should carry are a decision for the authors,
-not for this repository.
+`sec:discussion` are all affected. Nothing in the manuscript has been touched; the numbers
+a corrected campaign should carry are a decision for the authors, not for this repository.
 
 The whitening result itself is not in question. It rests on the Concept arm, whose threshold and
 level are invariant in `Gamma` — and this campaign supports that more strongly than the
