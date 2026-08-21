@@ -15,12 +15,12 @@ this kind of revision, so budget is not the constraint; timing is.
 
 **What is being corrected.** The original text states that the oracle arm crosses "on the analytic prediction". While it crosses near the analytic root, it does not track the prediction; it exhibits a systematic $+5\%$ offset across all twelve grid points. The text is amended to reflect the actual mechanism of intersection.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 an \emph{oracle} arm standardized by the true GARCH parameters crosses at 4.6, on the analytic prediction, so the extra
 ~~~~~~~~~
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 an \emph{oracle} arm standardized by the true GARCH parameters crosses at 4.6 (not strictly on the analytic prediction, but intersecting near it due to a systematic $+5\%$ offset), so the extra
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END BLOCK

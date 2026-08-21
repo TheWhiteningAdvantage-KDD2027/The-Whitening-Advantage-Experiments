@@ -66,7 +66,7 @@ enforce_strict_determinism()
 
 import numpy as np
 import pandas as pd
-from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, compute_sha256, save_fair_csv
+from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, compute_sha256, save_fair_csv, log_artifact_manifest
 
 disable_pandas_multithreading()
 
@@ -202,7 +202,7 @@ def get_deterministic_seed(*args) -> int:
     Floats are formatted through .hex() rather than str(): the decimal
     repr of a float is platform-dependent at the last digit on some C
     libraries, which would silently re-key a cell across machines. The native
-    hash() is randomly salted and is forbidden outright (SPECS 1.2).
+    hash() is randomly salted and is forbidden outright to ensure cross-platform reproducibility.
     """
     def format_arg(arg):
         if isinstance(arg, (float, np.floating)):
@@ -300,9 +300,9 @@ def fit_garch_qmle(eps_warmup):
     """
     Fits GARCH(1,1) by QMLE on the warm-up segment only, variance targeting.
 
-    The finite-difference step and tolerances follow SPECS 1.10: gradient noise
-    of an SLSQP run on a recursive likelihood is amplified by the FPU, so the
-    step is widened and the solution truncated deterministically.
+    The finite-difference step and tolerances are set to account for gradient noise
+    of an SLSQP run on a recursive likelihood, which is amplified by the FPU. The
+    step is therefore widened and the solution truncated deterministically.
 
     Returns ((omega, alpha, beta), converged). `converged` is False when SLSQP
     reports failure OR when it returns its own initial point, which on this
@@ -316,8 +316,8 @@ def fit_garch_qmle(eps_warmup):
     # Deterministic multistart. A single start leaves roughly two fits in ten
     # thousand on which SLSQP reports failure, scattered across the grid and
     # independent of tail weight. Restarting from a fixed ladder of interior
-    # points is a correction in the solution space, which SPECS 2.2 requires,
-    # where substituting a default pair would be the masked fallback it forbids.
+    # points is a correction in the solution space, where substituting a default pair
+    # would be the masked fallback it forbids.
     # The ladder is fixed, ordered and short-circuited on the first success, so
     # the result is deterministic and costs nothing on the fits that converge.
     for init_a, init_b in QMLE_STARTS:
@@ -375,7 +375,7 @@ def wilson_interval(k, n, confidence=0.95):
     # centre + half = 1 exactly, but in floating point it lands one ulp below and
     # the persisted interval would then exclude its own estimate. Enforcing
     # containment restores an identity that the arithmetic broke; it is the same
-    # class of correction as the domain clamping above (SPECS 1.8).
+    # class of correction as the domain clamping above.
     return min(low, p_hat), max(high, p_hat)
 
 
@@ -843,10 +843,9 @@ def main():
 
     # The primitives are asserted byte-identical to R04's before anything is
     # measured. This is a deterministic identity with no probability of firing
-    # under any null, and it is the check that actually addresses "divergence
-    # d'implementation entre les deux scripts": the statistical continuity check
-    # further down resolves only a few percent per point and cannot see a small
-    # divergence at all.
+    # under any null, and it is the check that actually addresses "implementation divergence
+    # between the two scripts": the statistical continuity check further down resolves
+    # only a few percent per point and cannot see a small divergence at all.
     if not R04_SOURCE.exists():
         logger.error(f"R04 source missing at {R04_SOURCE}. The verbatim-copy check cannot be run and "
                      "no continuity with R04 can be established.")
@@ -1670,6 +1669,15 @@ def main():
     tex_name = f"R04b_claims{suffix}.tex"
     with open(TABLES_DIR / tex_name, "w") as f:
         f.write("\n".join(macros) + "\n")
+
+    # Log artifact manifest
+    artifact_paths = [
+        DATA_DIR / f"R04b_ratio_vs_nu{suffix}.csv",
+        DATA_DIR / f"R04b_continuity_with_R04{suffix}.csv",
+        FIGURES_DIR / f"figA03_nu_star_refinement{suffix}.png",
+        TABLES_DIR / tex_name,
+    ]
+    log_artifact_manifest(logger, artifact_paths, RESULTS_DIR, BASE_DIR)
 
     # --- REGISTER ---
     # The case the data give, decided programmatically. No case is presupposed:

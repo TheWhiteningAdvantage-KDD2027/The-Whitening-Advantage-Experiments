@@ -354,7 +354,7 @@ for an audit of R04, not for this one**, and it is posed here rather than settle
 is in-sample by construction and its audit argues that this is what makes it admissible, which is a
 different situation from the held-out design used here, but the interaction has not been analysed.
 
-Recommended for the common preamble, **not applied here** — editing `PROMPT_REPO_COMMON_PREAMBLE.md`
+Recommended for the common preamble, **not applied here** — editing `repository-wide preamble document`
 is outside the remit of a single experiment:
 
 > The out-of-sample level of a threshold calibrated on a finite sample has twice the binomial
