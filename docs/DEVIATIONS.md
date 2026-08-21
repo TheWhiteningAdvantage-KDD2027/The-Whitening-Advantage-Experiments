@@ -66,6 +66,7 @@ Nothing in this repository is adjusted to match the manuscript. Where the two di
 | `R07-dispersion-cost`             | R07        | `sec:ar_garch` L308                        | A     | D2       | dispersion cost `0.4` points rejected; OLS-LB envelope `[4.6%, 5.6%]` and OLS-FPR `[4.3%, 5.9%]` move   |
 | `R07-figure7-exactness`           | R07        | Figure 7 caption L307                      | A     | D2       | caption calls `4.29 %` an "exact lattice level" while L241 sources it to Monte-Carlo            |
 | `R07-panelB-operating-level`      | R07        | Figure 7 panel B, L308                     | A     | D2       | oracle LB rejection range moves from `[5.1%, 5.6%]` to `[4.9%, 5.6%]`                              |
+| `R10-campaign-redraw`             | R10        | `sec:validity_map` L290, Fig. 10            | A     | D2       | 128-bit entropy migration redraws all 4 000 streams; L290 skewness `-1.44` → **`-1.428`**, FPR envelope `1.0`–`1.8 %` → **`1.0`–`1.5 %`** |
 | `R12-campaign-redraw`             | R12        | Section "Volatility Misspecification", L349, Fig. 12, 13 | A     | D2       | 128-bit seeding redraws both campaigns; every Monte-Carlo value moves, no claim moves |
 | `R12-leverage-invariant-fpr`       | R12        | L349, Fig. 12                               | A     | D2       | Concept FPR envelope `7.6`--`8.4\%` → **`7.4`--`8.5\%`**                              |
 | `R12-leverage-invariant-lb`       | R12        | L349, Fig. 12                               | A     | D2       | Concept Ljung--Box envelope `4.6`--`5.4\%` → **`4.7`--`5.4\%`**                      |
@@ -485,6 +486,14 @@ Four deviations are registered for R07, all Class A (correction of defects in th
 **R07-panelB-operating-level.** Figure 7 panel B caption states that oracle Ljung--Box rejection "stays within $4.6$--$5.6\%$". The regenerated oracle LB rejection range is $[4.9\%, 5.6\%]$, with the lower bound moving. The qualitative claim that oracle control is maintained still holds.
 
 Full account: `docs/camera_ready_candidates/R07_v87_bias_bound.md`, `R07_v87_dispersion_cost.md`, `R07_v87_figure7_exactness.md`, `R07_v87_panelB_operating_level.md`, `docs/sections/R07.md`, and `AUDIT_R07.md`.
+
+---
+
+### R10 — sensitivity to conditional asymmetry (Class A, D2)
+
+One entry is registered for R10, Class A (128-bit entropy migration) with D2 severity.
+
+**`R10-campaign-redraw` — Class A, D2, pre-classified.** The 128-bit entropy migration required by §S6 redraws all 4 000 streams. At L290, realized skewness moves from `-1.44` to **`-1.428`** (+1.95 standard errors of the difference between two campaigns), the marginal rate from `0.58` to **`0.58219`** (D1, rounds to printed precision), and the fixed-`1/2` CUSUM fires at `97 %` → **`96.6 %`** (D1). In Figure 10 caption, the FPR envelope moves from `1.0`–`1.8 %` to **`1.0`–`1.5 %`** (D2 at the upper end). Every qualitative claim of the manuscript survives: conditional whiteness is preserved, the marginal rate shifts toward `q ≈ 0.58`, and a fixed-`1/2` CUSUM triggers false alarms at approximately `97 %` while recentering on a warm-up estimate restores control to the `1.0`–`1.5 %` envelope. Full account: `docs/camera_ready_candidates/R10_v87_L290_skewness_numeral.md`, `R10_v87_caption_fpr_envelope.md`, `R10_v87_panelA_sign_arm_scope.md`, `docs/sections/R10.md`, and `AUDIT_R10.md`.
 
 ---
 
