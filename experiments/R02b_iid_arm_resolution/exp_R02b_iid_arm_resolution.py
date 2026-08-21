@@ -1,6 +1,13 @@
 """
 ================================================================================
-R02b - DIMENSIONNEMENT ET TEST DE MÉCANISME DU BRAS I.I.D.
+R02b - I.I.D. ARM DIMENSIONING AND MECHANISM TESTING
+================================================================================
+
+Empirical verification of the Ljung-Box whiteness test on i.i.d. streams with
+Student's t innovations. Tests the validity condition for the Ljung-Box test on
+squared innovations (finite fourth moment, E[eps^4] < inf) by varying the degrees
+of freedom nu. Measures rejection rates and Wilson confidence intervals to identify
+the transition point where the nominal 5% level is excluded.
 ================================================================================
 """
 import sys
@@ -32,8 +39,19 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from joblib import Parallel, delayed
 
-pd.options.compute.use_bottleneck = False
-pd.options.compute.use_numexpr = False
+from experiments.common.fair_harness import (
+    disable_pandas_multithreading,
+    log_artifact_manifest,
+    setup_logging,
+)
+from experiments.common.fair_env import log_environment
+
+# Disable pandas multithreading immediately after import
+disable_pandas_multithreading()
+
+# Verify hash seed
+from experiments.common.fair_env import verify_hash_seed
+verify_hash_seed()
 
 BASE_DIR = Path(__file__).resolve().parent if '__file__' in locals() else Path.cwd()
 PROJECT_ROOT = BASE_DIR.parent.parent
@@ -45,31 +63,10 @@ LOGS_DIR = PROJECT_ROOT / "logs" / "R02b_iid_arm_resolution"
 for directory in [DATA_DIR, FIGS_DIR, TABS_DIR, LOGS_DIR]:
     directory.mkdir(parents=True, exist_ok=True)
 
-def setup_logging(log_dir: Path, script_name: str) -> logging.Logger:
-    log_formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-    logger = logging.getLogger(script_name)
-    logger.setLevel(logging.INFO)
-    if not logger.handlers:
-        log_path = log_dir / f"{script_name}.log"
-        file_handler = logging.FileHandler(log_path, mode='w')
-        file_handler.setFormatter(log_formatter)
-        logger.addHandler(file_handler)
-        
-        console_handler = logging.StreamHandler(sys.stdout)
-        console_handler.setFormatter(log_formatter)
-        logger.addHandler(console_handler)
-    return logger
+logger = setup_logging(LOGS_DIR / "exp_R02b_iid_arm_resolution.log", "exp_R02b_iid_arm_resolution")
 
-logger = setup_logging(LOGS_DIR, "exp_R02b_iid_arm_resolution")
-
-def log_dependencies():
-    packages = ["numpy", "pandas", "scipy", "matplotlib", "joblib"]
-    logger.info(f"Python: {sys.version.split()[0]}")
-    for pkg in packages:
-        try:
-            logger.info(f"  {pkg}: {importlib.metadata.version(pkg)}")
-        except importlib.metadata.PackageNotFoundError:
-            logger.info(f"  {pkg}: NOT INSTALLED")
+# Log environment
+log_environment(logger, ["numpy", "pandas", "scipy", "matplotlib", "joblib"])
 
 def get_deterministic_seed(*args) -> tuple:
     def format_arg(arg):
@@ -124,7 +121,6 @@ def main():
     parser.add_argument('--n-jobs', type=int, default=1)
     args = parser.parse_args()
     
-    log_dependencies()
     
     nus = [5.0, 6.0, 7.0, 8.5, 12.0, 30.0]
     n_streams = 1000
