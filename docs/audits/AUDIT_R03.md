@@ -290,8 +290,8 @@ section.
 2. **Figure numbering not verified against the manuscript.** The output is named
    `fig03_fpr_explosion.png` on the brief's statement that this is Figure 3; the submitted
    pipeline named the two source images `Fig4` and `Fig5`. Confirm against v87.
-3. **`\RThreeLowestGamma` est conservée, `\RThreeGammaMin` est supprimée.** Deux macros pour une même valeur invitent à en citer une pour l'autre, et la seconde n'étaye aucun énoncé direct.
-4. **Un saut au bas de la grille ADWIN.** ADWIN mesure 5.0% à `Gamma = 1` exactement et 9.3% à `Gamma = 1.174`, contre 5.3% à ce point dans la campagne soumise. Le point le plus bas porte `alpha = 0.08` avec `beta = 0`, c'est donc un flux ARCH(1) et une certaine hausse est attendue, mais cela représente une hausse de 2 SE, dont ni le mécanisme ni l'amplitude ne sont établis. Cela n'affecte aucune quantité certifiée : la région de certification est `Gamma > 20`.
+3. **`\RThreeLowestGamma` is retained, `\RThreeGammaMin` is removed.** Two macros for the same value invite citing one for the other, and the second underpins no direct claim.
+4. **A jump at the bottom of the ADWIN grid.** ADWIN measures 5.0% at `Gamma = 1` exactly and 9.3% at `Gamma = 1.174`, against 5.3% at that point in the submitted campaign. The lowest point carries `alpha = 0.08` with `beta = 0`, so it is an ARCH(1) stream and some increase is expected, but this represents a 2 SE increase, for which neither the mechanism nor the magnitude is established. This affects no certified quantity: the certification region is `Gamma > 20`.
 5. **The three uncited CSV files are retained and unexamined.** `R03_add_vs_gamma.csv`,
    `R03_add_vs_width.csv` and `R03_sensitivity.csv` record the extent of the campaigns and
    support no claim. The 2C seed-key collision described in section 1 affects the last of them;

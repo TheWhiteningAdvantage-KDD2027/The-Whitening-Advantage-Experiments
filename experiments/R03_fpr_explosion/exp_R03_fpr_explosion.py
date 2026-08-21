@@ -50,7 +50,7 @@ enforce_strict_determinism()
 
 import numpy as np
 import pandas as pd
-from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, compute_sha256, save_fair_csv
+from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, compute_sha256, save_fair_csv, log_artifact_manifest
 
 disable_pandas_multithreading()
 
@@ -899,6 +899,13 @@ def main():
     tex_name = f"R03_claims{suffix}.tex"
     with open(TABLES_DIR / tex_name, "w") as f:
         f.write("\n".join(macros) + "\n")
+
+    # Log artifact manifest
+    artifact_files = [DATA_DIR / name for name in outputs] + [
+        FIGURES_DIR / f"fig03_fpr_explosion{suffix}.png",
+        TABLES_DIR / tex_name
+    ]
+    log_artifact_manifest(logger, artifact_files, BASE_DIR, BASE_DIR)
 
     # (g) and (h) Traceability of every artefact.
     for name in outputs:
