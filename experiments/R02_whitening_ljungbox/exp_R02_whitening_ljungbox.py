@@ -1,20 +1,23 @@
-import os
-# Strict pre-import deterministic injection (SPECS 1.1)
-os.environ["OMP_NUM_THREADS"] = "1"
-os.environ["MKL_NUM_THREADS"] = "1"
-os.environ["OPENBLAS_NUM_THREADS"] = "1"
-os.environ["NUMEXPR_NUM_THREADS"] = "1"
-os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
-os.environ["PYTHONHASHSEED"] = "42"
-os.environ["MKL_CBWR"] = "COMPATIBLE"
-
 import sys
-import random
 import logging
+import random
 import hashlib
 import itertools
 import argparse
 from pathlib import Path
+
+try:
+    BASE_DIR = Path(__file__).resolve().parent
+    PROJECT_ROOT = BASE_DIR.parent.parent
+    sys.path.insert(0, str(PROJECT_ROOT))
+except NameError:
+    BASE_DIR = Path.cwd()
+    PROJECT_ROOT = BASE_DIR
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from experiments.common.fair_env import enforce_strict_determinism, verify_hash_seed, log_environment
+
+enforce_strict_determinism()
 
 import numpy as np
 import pandas as pd
@@ -25,50 +28,30 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from joblib import Parallel, delayed
 
-pd.options.compute.use_bottleneck = False
-pd.options.compute.use_numexpr = False
+import river
+from river import tree as river_tree
+
+from experiments.common.fair_harness import disable_pandas_multithreading, log_artifact_manifest, save_fair_csv, setup_logging
+
+disable_pandas_multithreading()
+
+verify_hash_seed()
 
 # ─── FAIR PATH RESOLUTION ──────────────────────────────────────────────
-try:
-    BASE_DIR = Path(__file__).resolve().parent
-    PROJECT_ROOT = BASE_DIR.parent.parent
-except NameError:
-    BASE_DIR = Path.cwd()
-    PROJECT_ROOT = BASE_DIR
-
-DATA_DIR = PROJECT_ROOT / "results" / "R02_whitening_ljungbox" / "data"
-FIGS_DIR = PROJECT_ROOT / "results" / "R02_whitening_ljungbox" / "figures"
-TABS_DIR = PROJECT_ROOT / "results" / "R02_whitening_ljungbox" / "tables"
+RESULTS_DIR = PROJECT_ROOT / "results" / "R02_whitening_ljungbox"
+DATA_DIR = RESULTS_DIR / "data"
+FIGS_DIR = RESULTS_DIR / "figures"
+TABS_DIR = RESULTS_DIR / "tables"
 LOGS_DIR = PROJECT_ROOT / "logs" / "R02_whitening_ljungbox"
 
 for d in [DATA_DIR, FIGS_DIR, TABS_DIR, LOGS_DIR]:
     d.mkdir(parents=True, exist_ok=True)
 
 # ─── LOGGING CONFIGURATION ─────────────────────────────────────────────
-def setup_logging(log_dir: Path, script_name: str) -> logging.Logger:
-    log_formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-    logger = logging.getLogger(script_name)
-    logger.setLevel(logging.INFO)
-    if not logger.handlers:
-        log_path = log_dir / f"{script_name}.log"
-        file_handler = logging.FileHandler(log_path, mode='w')
-        file_handler.setFormatter(log_formatter)
-        logger.addHandler(file_handler)
-        
-        console_handler = logging.StreamHandler(sys.stdout)
-        console_handler.setFormatter(log_formatter)
-        logger.addHandler(console_handler)
-    return logger
+logger = setup_logging(LOGS_DIR / "exp_R02_whitening_ljungbox.log", "exp_R02_whitening_ljungbox")
 
-logger = setup_logging(LOGS_DIR, "exp_R02_whitening_ljungbox")
-
-# ─── HARD DEPENDENCIES ─────────────────────────────────────────────────
-try:
-    import river
-    from river import tree as river_tree
-except ImportError as e:
-    logger.error(f"CRITICAL: 'river' package is missing. Required: river==0.23.0. Details: {e}")
-    sys.exit(1)
+# Log environment
+log_environment(logger, ["numpy", "pandas", "scipy", "river", "matplotlib", "joblib"])
 
 # ─── NOTATIONS AND GLOBAL PARAMETERS ───────────────────────────────────
 """
@@ -323,7 +306,7 @@ def main():
 
     df = pd.DataFrame(results).sort_values(by=['regime', 'etf', 'seed']).reset_index(drop=True)
     csv_out = DATA_DIR / "R02_ljungbox_360streams.csv"
-    df.to_csv(csv_out, index=False, float_format='%.17g', na_rep='NaN')
+    save_fair_csv(df, csv_out)
     
     diag_rows, bonferroni_thresh = [], ALPHA_LB / 6.0
     for rname in ['IID', 'Cal. A', 'Cal. B']:
@@ -344,7 +327,7 @@ def main():
 
     df_diag = pd.DataFrame(diag_rows)
     diag_csv_out = DATA_DIR / "R02_independence_diagnostics.csv"
-    df_diag.to_csv(diag_csv_out, index=False, float_format='%.17g', na_rep='NaN')
+    save_fair_csv(df_diag, diag_csv_out)
 
     tex_out = TABS_DIR / "R02_claims.tex"
     with open(tex_out, "w") as f:
@@ -383,7 +366,7 @@ def main():
 
     plot_figure(df, FIGS_DIR / "fig01_ljungbox_whiteness.png")
 
-    logger.info("Running empirical certification (SPECS 2.5)...")
+    logger.info("Running empirical certification...")
     if reject_a < 100.0 or reject_b < 100.0:
         logger.error(f"Certification failed: Data rejection not 100% (A: {reject_a}%, B: {reject_b}%)")
         sys.exit(1)
@@ -394,6 +377,15 @@ def main():
         logger.error("Certification failed: Cross-correlation bonferroni test rejected independence.")
         sys.exit(1)
     logger.info("Empirical certification passed successfully.")
+    
+    # Log artifact manifest
+    artifacts = [
+        csv_out,
+        diag_csv_out,
+        tex_out,
+        FIGS_DIR / "fig01_ljungbox_whiteness.png"
+    ]
+    log_artifact_manifest(logger, artifacts, RESULTS_DIR, PROJECT_ROOT)
 
 if __name__ == '__main__':
     main()
