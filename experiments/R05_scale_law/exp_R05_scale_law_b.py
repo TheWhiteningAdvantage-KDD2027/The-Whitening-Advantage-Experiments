@@ -84,7 +84,7 @@ else:
 
 import numpy as np
 import pandas as pd
-from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, save_fair_csv
+from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, save_fair_csv, log_artifact_manifest
 
 disable_pandas_multithreading()
 
@@ -594,11 +594,13 @@ def run_stage(executor, logger, budget, ladder=False, fast=False):
     path = data_dir / f"R05_ramp_multigamma_{budget}{suffix}.csv"
     save_fair_csv(frame, path)
     logger.info(f"Wrote {path.relative_to(BASE_DIR)} ({len(frame)} rows)")
+    artifacts = [path]
 
     if ladder_frame is not None:
         ladder_path = data_dir / f"R05_lambda_iid_horizon{suffix}.csv"
         save_fair_csv(ladder_frame, ladder_path)
         logger.info(f"Wrote {ladder_path.relative_to(BASE_DIR)} ({len(ladder_frame)} rows)")
+        artifacts.append(ladder_path)
         campaign_lam = float(frame.lambda_iid_H.iloc[0])
         matching = ladder_frame[ladder_frame.H == int(frame.mon_len.iloc[0])]
         if len(matching) == 1:
@@ -613,6 +615,8 @@ def run_stage(executor, logger, budget, ladder=False, fast=False):
                     f"Ladder and campaign disagree on lambda_iid at H = "
                     f"{int(frame.mon_len.iloc[0])}: {gap:.6g}. They share a seed block and a "
                     f"prefix, so any difference is a defect in one of the two paths.")
+    
+    log_artifact_manifest(logger, artifacts, data_dir, BASE_DIR)
 
     logger.info(f"Step b ({budget}) elapsed: {time.time() - started:.1f} s")
 

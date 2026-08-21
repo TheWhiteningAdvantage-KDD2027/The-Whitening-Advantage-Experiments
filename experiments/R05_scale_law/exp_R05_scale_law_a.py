@@ -103,7 +103,7 @@ else:
 
 import numpy as np
 import pandas as pd
-from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, save_fair_csv
+from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, save_fair_csv, log_artifact_manifest
 
 disable_pandas_multithreading()
 
@@ -780,6 +780,7 @@ def run_stage(executor, logger, fast=False):
     save_fair_csv(positive, control_path)
     logger.info(f"Wrote {grid_path.relative_to(BASE_DIR)} ({len(frame)} rows)")
     logger.info(f"Wrote {control_path.relative_to(BASE_DIR)} ({len(positive)} rows)")
+    log_artifact_manifest(logger, [grid_path, control_path], data_dir, BASE_DIR)
     logger.info(f"Step a elapsed: {time.time() - started:.1f} s")
 
     if failures and not fast:

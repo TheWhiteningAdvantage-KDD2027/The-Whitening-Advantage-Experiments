@@ -42,7 +42,7 @@ enforce_strict_determinism()
 
 import numpy as np
 import pandas as pd
-from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, save_fair_csv
+from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, save_fair_csv, log_artifact_manifest
 
 disable_pandas_multithreading()
 
@@ -676,6 +676,18 @@ def main():
     macros_path = tables_dir / f"R05_claims{out_suffix}.tex"
     emit_macros(macros_path, abrupt, positive, fit, numbers_2e5, numbers_3e6, moments, ladder)
     logger.info(f"Wrote {macros_path.relative_to(BASE_DIR)}")
+    
+    # Log artifact manifest for all generated outputs
+    all_artifacts = [figure_path, macros_path]
+    # Also include data files from steps a and b
+    data_dir = BASE_DIR / "results" / "R05_scale_law" / "data"
+    if data_dir.exists():
+        for pattern in ["R05_abrupt_add_vs_gamma", "R05_concept_positive_control", 
+                        "R05_ramp_multigamma", "R05_lambda_iid_horizon", "R05_deviation_classification"]:
+            for f in data_dir.glob(f"{pattern}{out_suffix}.csv"):
+                all_artifacts.append(f)
+    results_dir = BASE_DIR / "results" / "R05_scale_law"
+    log_artifact_manifest(logger, all_artifacts, results_dir, BASE_DIR)
 
     ladder_shortest = ladder[ladder.H == ladder.H.min()]
     regenerated = {
