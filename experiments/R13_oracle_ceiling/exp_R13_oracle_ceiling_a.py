@@ -133,7 +133,7 @@ if os.environ.get("PYTHONHASHSEED") != "42":
 import numpy as np
 import pandas as pd
 from experiments.common.fair_harness import (setup_logging, disable_pandas_multithreading,
-                                             compute_sha256, save_fair_csv)
+                                             compute_sha256, save_fair_csv, log_artifact_manifest)
 
 disable_pandas_multithreading()
 
@@ -183,7 +183,7 @@ ARL0_TARGET_OP2 = 20
 ARL0_TARGET_OP2B = 252
 ISO_FPR_TARGET = 0.05
 
-# Dynamic topological anchoring on invariant calendar boundaries (SPECS 2.4):
+# Dynamic topological anchoring on invariant calendar boundaries (§2.4):
 # no `phase_id == 22` is ever typed; the identifier is resolved by joining on
 # (ticker, start_date, end_date) against R16's census.
 EPISODES = (
@@ -248,7 +248,7 @@ RECOVERY_SHIFT = 0.5
 RECOVERY_CTRL_DELTA_OPT = 0.25
 
 # --- SOURCE-SEGMENT IDENTITY (control C7) ---
-# Preamble S4.2 forbids hoisting a scientific primitive into
+# S4.2 forbids hoisting a scientific primitive into
 # experiments/common/, so every routine below is duplicated from the file that
 # owns it and asserted byte-identical to that file at run time: the duplication
 # is deliberate and it cannot drift. The oracle and interval primitives are
@@ -352,7 +352,7 @@ def compute_gamma_exact(alpha, beta):
     return max(1.0, 1 + 2 * rho1 / (1 - phi))
 
 
-# --- SEED DERIVATION (prompt section 2.6, SPECS 1.2) ---
+# --- SEED DERIVATION (prompt section 2.6, §1.2) ---
 
 def get_deterministic_seed(*args) -> int:
     """
@@ -363,7 +363,7 @@ def get_deterministic_seed(*args) -> int:
     Floats are formatted through .hex() rather than str(): the decimal repr of a
     float is platform-dependent at the last digit on some C libraries, which
     would silently re-key a cell across machines. The native hash() is randomly
-    salted and is forbidden outright (SPECS 1.2).
+    salted and is forbidden outright (§1.2).
     """
     def format_arg(arg):
         if isinstance(arg, (float, np.floating)):
@@ -440,7 +440,7 @@ def check_source_identity(logger):
                 f"files that own them ({compared} characters compared) -- wilson_ci, "
                 f"compute_oracle_v2_v3 and check_monotonicity against {WITNESS_SOURCE.name}, and "
                 f"_garch_nll, fit_garch_qmle and compute_gamma_exact against {R01_SOURCE.name}. "
-                f"Preamble S4.2 forbids hoisting any of them into experiments/common/, so the "
+                f"S4.2 forbids hoisting any of them into experiments/common/, so the "
                 f"duplication is deliberate. Deterministic; trigger probability 0 unless a copy "
                 f"has drifted.")
 
@@ -501,7 +501,7 @@ def load_census(logger):
 def resolve_episodes(census, logger):
     """
     `phase_id` resolved by joining on the invariant calendar boundaries, never
-    typed (SPECS 2.4). A missing episode stops the run: a silently dropped
+    typed (§2.4). A missing episode stops the run: a silently dropped
     episode would remove a published verdict from the campaign.
     """
     resolved = []
@@ -574,7 +574,7 @@ def run_qmle_recovery(logger):
 
     The 11 replicate streams are keyed on the replicate index ALONE, so the same
     innovation sequence serves all eight parameter cells. That is the common
-    random numbers design of SPECS 1.4 and the key R05 established: a difference
+    random numbers design of §1.4 and the key R05 established: a difference
     between two parameter cells is then an algorithmic response and not a
     difference of draw.
     """
@@ -632,7 +632,7 @@ def run_qmle_recovery(logger):
                          f"in that case and the recovery statistic would be read off a value no "
                          f"optimiser produced.")
         logger.error(f"{len(unconverged)} of {len(frame)} QMLE recovery cells are non-converged. "
-                     f"Preamble S4.3 forbids continuing on a degraded path that produces a "
+                     f"S4.3 forbids continuing on a degraded path that produces a "
                      f"normal-looking result.")
         sys.exit(1)
     logger.info(f"QMLE recovery: all {len(frame)} cells converged; no fit was replaced by the "
@@ -647,9 +647,9 @@ def run_qmle_recovery(logger):
                 f"[{lo:.4f}, {hi:.4f}]. This count GATES NOTHING; it is the delivered statistic, "
                 f"reported so that the redesign can be compared against it.")
 
-    # S4bis, corollaire DEPENDANCE: enumerate and MEASURE the dependence between the
+    # S4bis corollary DEPENDENCE: enumerate and measure the dependence between the
     # pooled units before any pooled interval is read; never assume it away. The
-    # replicate key carries no parameter (common random numbers, SPECS 1.4), so ONE
+    # replicate key carries no parameter (common random numbers, §1.4), so ONE
     # innovation stream serves every configuration, and the two unconditional scales
     # of a target return the same scale-invariant fit. Dividing by sqrt(88) would
     # understate the standard error of the mean margin by the square root of the
@@ -667,7 +667,7 @@ def run_qmle_recovery(logger):
         deff = 1.0 + (m_cfg - 1) * rho_bar
         if not np.isfinite(deff) or deff < 1.0:
             logger.error(f"QMLE recovery: the measured design effect on {name} is {deff!r}, "
-                         f"which is not a usable inflation factor. Preamble S4.3 forbids "
+                         f"which is not a usable inflation factor. S4.3 forbids "
                          f"continuing on a fallback: the gate has no computable variance.")
             sys.exit(1)
         n_eff = float(len(margins)) / deff
@@ -704,7 +704,7 @@ def run_qmle_recovery(logger):
 
     if not all(v['met'] for v in verdicts.values()):
         failed = [k for k, v in verdicts.items() if not v['met']]
-        logger.error(f"QMLE recovery gate FIRED on {failed}. Preamble S4.7: no seed, no tolerance "
+        logger.error(f"QMLE recovery gate FIRED on {failed}. S4.7: no seed, no tolerance "
                      f"and no parameter is touched. The 88 per-cell margins are in "
                      f"R13_qmle_recovery.csv, the family-wise trigger probability was logged "
                      f"before the result was read, and the failure is characterised in "
@@ -911,7 +911,7 @@ def run_detector_recovery(logger):
             logger.error(f"Detector recovery gate FIRED: [{det}, delta = {delta}] {label} "
                          f"requirement is resolved as violated at level {GATE_LEVEL:g} -- its "
                          f"interval lies entirely outside the required region.")
-        logger.error("Preamble S4.7: no seed, no tolerance and no parameter is touched. The "
+        logger.error("S4.7: no seed, no tolerance and no parameter is touched. The "
                      "sixteen rows are in R13_detector_recovery.csv and the failure is "
                      "characterised in AUDIT_R13.md.")
         sys.exit(1)
@@ -927,7 +927,7 @@ def process_episode(ep, census, frame_tick, seed_seq):
     ADAPTED. One episode: three volatility oracles, two detectors, the dead-band
     grid, the frozen-volatility bootstrap null, the ARL0 null and the four
     operating points. Returns the four record lists and the worker's log
-    messages, which the main thread writes in submission order (SPECS 1.5: a
+    messages, which the main thread writes in submission order (§1.5: a
     worker writing to the log file directly is a race condition that breaks the
     file's digest).
 
@@ -1479,7 +1479,7 @@ def run_campaign(logger, n_jobs):
     census = load_census(logger)
     episodes = resolve_episodes(census, logger)
 
-    # SPECS 1.14: the return series is read ONCE on the main thread and handed
+    # §1.14: the return series is read ONCE on the main thread and handed
     # to the workers in memory, read-only.
     tickers = sorted({ep['ticker'] for ep in episodes})
     data_cache = {ticker: load_returns(ticker) for ticker in tickers}
@@ -1503,7 +1503,7 @@ def run_campaign(logger, n_jobs):
     with concurrent.futures.ProcessPoolExecutor(max_workers=n_jobs) as executor:
         futures = [executor.submit(process_episode, ep, census, data_cache[ep['ticker']], seed)
                    for ep, seed in zip(episodes, seeds)]
-        # SPECS 1.5: iterate in SUBMISSION order, never as_completed, so the row
+        # §1.5: iterate in SUBMISSION order, never as_completed, so the row
         # order of every CSV is a property of the campaign and not of the
         # operating system scheduler.
         for ep, future in zip(episodes, futures):
@@ -1799,6 +1799,7 @@ def main():
     if not verify_hash_seed(logger):
         sys.exit(1)
     log_environment(logger, ["numpy", "pandas", "scipy", "statsmodels", "matplotlib", "pytest"])
+    log_artifact_manifest(logger, [], BASE_DIR / "experiments" / "R13_oracle_ceiling", BASE_DIR)
     t0 = time.time()
 
     logger.info("R13 (a) measures the empirical oracle detectability frontier of v87 Figure 14 "
@@ -1838,7 +1839,7 @@ def main():
         save_fair_csv(frame, DATA_DIR / name)
         logger.info(f"{name}: {len(frame)} rows, {len(frame.columns)} columns.")
 
-    # Preamble S2: the digests of every artefact, so that two successive runs
+    # §S2: the digests of every artefact, so that two successive runs
     # can be compared without reopening the files by hand.
     for name in cardinalities:
         logger.info(f"SHA-256 {name:<36} : {compute_sha256(DATA_DIR / name)}")

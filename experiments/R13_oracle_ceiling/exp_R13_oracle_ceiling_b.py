@@ -36,22 +36,32 @@ NOTATION: see the module docstring of exp_R13_oracle_ceiling_a.py.
 import sys
 from pathlib import Path
 
-# Determinism bootstrap, preamble S6's order. The module imported on the first
-# line below posts the environment block through fair_env -- which imports only
-# os and sys -- BEFORE NumPy is loaded by anyone, then imports numpy and pandas
-# and disables the pandas C backends. Repeating the block here would be inert:
-# enforce_strict_determinism() raises once NumPy is in sys.modules, and the BLAS
-# thread limits are read at NumPy load time.
+# Determinism bootstrap, in the order preamble S6 requires: fair_env imports only
+# os and sys, so the environment block is posted before NumPy is loaded by anyone
+# and before any BLAS thread limit is read. PYTHONHASHSEED cannot be set from
+# here -- CPython reads it at interpreter start-up -- so it is exported by
+# run_experiment_R13.sh and verified twice below.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR))
 
+from experiments.common.fair_env import enforce_strict_determinism, verify_hash_seed, log_environment
+
+enforce_strict_determinism()
+
+import os
+
+if os.environ.get("PYTHONHASHSEED") != "42":
+    sys.exit("FATAL: PYTHONHASHSEED is not 42. Execute via run_experiment_R13.sh")
+
 from experiments.R13_oracle_ceiling import exp_R13_oracle_ceiling_a as campaign_module
 
-from experiments.common.fair_env import verify_hash_seed, log_environment
-from experiments.common.fair_harness import setup_logging, compute_sha256, save_fair_csv
+from experiments.common.fair_harness import (setup_logging, disable_pandas_multithreading,
+                                             compute_sha256, save_fair_csv, log_artifact_manifest)
 
 import numpy as np
 import pandas as pd
+
+disable_pandas_multithreading()
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -193,6 +203,7 @@ def main():
     if not verify_hash_seed(logger):
         sys.exit(1)
     log_environment(logger, ["numpy", "pandas", "scipy", "statsmodels", "matplotlib", "pytest"])
+    log_artifact_manifest(logger, [], BASE_DIR / "experiments" / "R13_oracle_ceiling", BASE_DIR)
     t0 = time.time()
 
     logger.info("R13 (b) renders v87 Figure 14 (fig:oracle_frontier) and emits the macros of "
