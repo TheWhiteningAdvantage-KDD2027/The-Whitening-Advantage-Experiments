@@ -53,16 +53,16 @@ candidate is needed to fix that; it is stated here because the effect is the one
 `articleB_whitening_v87.tex` **line 392** verbatim and occurs **exactly once** in the file
 (`grep -Fc` returns `1`). Verify once more before applying, as a matter of routine.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 that both depresses the mean and inflates the variance of the phase that follows, biasing its floor upward.
 ~~~~~~~~~
 
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 that both depresses the mean and inflates the variance of the phase that follows, biasing its floor upward. Three of the $66$ census phases change detectability with this convention, all three in the same direction, so the published count of $53$ is the conservative end of the interval $[53, 56]$ that the two conventions bracket.
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END BLOCK
 
 The addition states the count, its direction and the resulting interval, and places the
 published figure inside it. It is a measurement of the convention the sentence already declares,

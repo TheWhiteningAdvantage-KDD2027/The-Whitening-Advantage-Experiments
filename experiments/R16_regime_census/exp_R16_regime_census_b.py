@@ -79,7 +79,7 @@ if os.environ.get("PYTHONHASHSEED") != "42":
 import numpy as np
 import pandas as pd
 from experiments.common.fair_harness import (setup_logging, disable_pandas_multithreading,
-                                             compute_sha256, save_fair_csv)
+                                             compute_sha256, save_fair_csv, log_artifact_manifest)
 
 disable_pandas_multithreading()
 
@@ -615,6 +615,10 @@ def main():
     if undefined:
         logger.error(f"{len(undefined)} macros carry the body `nan`: {undefined}")
         sys.exit(1)
+
+    # Build artifact paths for manifest
+    artifact_paths = [DATA_DIR / "R16_sign_floor.csv", DATA_DIR / "R16_feasibility_vs_gamma.csv", tex_path]
+    log_artifact_manifest(logger, artifact_paths, RESULTS_DIR, BASE_DIR)
 
     # =====================================================================
     # THE SECTION ADDRESSED TO R13

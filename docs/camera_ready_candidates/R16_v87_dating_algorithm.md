@@ -54,16 +54,16 @@ established by any measurement, and this repository does not decide it.**
 `articleB_whitening_v87.tex` **line 329** verbatim and occurs **exactly once** in the file
 (`grep -Fc` returns `1`). Verify once more before applying, as a matter of routine.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 A retrospective multi-scale Pagan--Sossounov bull/bear dating~\cite{pagan_sossounov_2003} of the four streams (2000--2025; $66$ phases after duration censoring, the COVID-19 crash---too brief for the filter---dated at the raw scale)
 ~~~~~~~~~
 
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 A retrospective multi-scale Pagan--Sossounov bull/bear dating~\cite{pagan_sossounov_2003} of PFF, VNQ and BWX, with SPY dated by the uncensored Lunde--Timmermann filter~\cite{lunde_timmermann_2004} at $\lambda_1 = \lambda_2 = 0.15$ because the Pagan--Sossounov dating of that stream censors the COVID-19 crash at its $84$-day minimum-phase rule (2000--2025; $66$ phases in all)
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END BLOCK
 
 The replacement states the two datings, names the stream each applies to, gives the reason the
 code gives, and drops "after duration censoring" — which is true of the Pagan–Sossounov streams

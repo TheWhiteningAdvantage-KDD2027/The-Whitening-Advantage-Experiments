@@ -119,7 +119,7 @@ if os.environ.get("PYTHONHASHSEED") != "42":
 import numpy as np
 import pandas as pd
 from experiments.common.fair_harness import (setup_logging, disable_pandas_multithreading,
-                                             compute_sha256, save_fair_csv)
+                                             compute_sha256, save_fair_csv, log_artifact_manifest)
 
 disable_pandas_multithreading()
 
@@ -1008,6 +1008,10 @@ def main():
     if "symmetric" in arms_to_run:
         save_fair_csv(census["symmetric"], DATA_DIR / "R16_regime_census_symmetric.csv")
         written += ["R16_regime_census_symmetric.csv"]
+
+    # Build artifact paths for manifest
+    artifact_paths = [DATA_DIR / name for name in written]
+    log_artifact_manifest(logger, artifact_paths, RESULTS_DIR, BASE_DIR)
 
     expected_rows = {"canonical": 66, "strict_ps": 48, "symmetric": 102}
     for arm in arms_to_run:

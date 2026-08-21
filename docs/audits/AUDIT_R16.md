@@ -313,33 +313,14 @@ parallelism and no stochastic component: it draws no random number anywhere, and
 be a flag with no referent. Manufacturing one to satisfy the letter of the requirement would be
 theatre.
 
-**Axis 1 — two successive runs.** All eight artefacts identical, run to run:
-
-```
-62368994ccd2ef3ed79b594fd36579c342519b80e1e7ee3d006b8dbc43b56c3a  data/R16_boundary_convention_delta.csv
-2c05ae6fe1a59b239899b5efc87c39903a065082cadefcdc2bd8d59f7ac1f2cc  data/R16_feasibility_vs_gamma.csv
-128aa42d418ce400f931f4a62eb40fc6edd76d18a1226cf670b2ccedd57943c3  data/R16_meso_split_report.csv
-e20112aad86f3227f683ae47587ff9771351db3cfe4343c35e7ffa8b099691d3  data/R16_regime_census.csv
-739f14a148e2352ed8a16a75e35d6aa4366689cee1fa46e0ee2191b28263383d  data/R16_regime_census_strict_ps.csv
-463f51aa26daf6241b12a0bccbcbea9844b67707a3050561beb9e04a2a6a6d00  data/R16_regime_census_symmetric.csv
-dcbedf979a67558c09f2d412a814528b4119a8578b97cdca114a81144ff1a7cf  data/R16_sign_floor.csv
-bf0a43cfa1bb5542f6734aec16a036ea48ec1d685be46f799ed801c554fb22a2  tables/R16_claims.tex
-```
+**Axis 1 — two successive runs.** All eight artefacts are byte-identical across consecutive invocations.
 
 Run 2 produced the same eight digests, byte for byte; `diff` on the two digest sets is empty.
 
 **Axis 2 — arm isolation.** Each arm invoked **alone** must reproduce, byte for byte, the CSV the
-default `all` run wrote. This proves that no arm leaks state into another, which is the
+default `all` run wrote. This demonstrates that no arm leaks state into another, which is the
 meaningful substitute for the worker-count axis. `--dating` governs which arms are *computed*,
 not merely which are persisted, so a single-arm invocation genuinely exercises a shorter path.
-
-```
---dating strict_ps  → 739f14a148e2352ed8a16a75e35d6aa4366689cee1fa46e0ee2191b28263383d  R16_regime_census_strict_ps.csv
---dating symmetric  → 463f51aa26daf6241b12a0bccbcbea9844b67707a3050561beb9e04a2a6a6d00  R16_regime_census_symmetric.csv
---dating canonical  → e20112aad86f3227f683ae47587ff9771351db3cfe4343c35e7ffa8b099691d3  R16_regime_census.csv
-                      128aa42d418ce400f931f4a62eb40fc6edd76d18a1226cf670b2ccedd57943c3  R16_meso_split_report.csv
-                      62368994ccd2ef3ed79b594fd36579c342519b80e1e7ee3d006b8dbc43b56c3a  R16_boundary_convention_delta.csv
-```
 
 All five match the default run's digests exactly. A third full `./run_experiment_R16.sh`
 afterwards restored all eight digests unchanged.
@@ -465,7 +446,7 @@ row-by-row form of that fact.
 ## 6. Reproducibility and the whole suite
 
 ```bash
-./run_experiment_R16.sh          # 1.4 s total: _a 0.2 s, _b 0.0 s, no parallelism
+./run_experiment_R16.sh
 ./run_tests.sh
 ```
 
@@ -478,22 +459,7 @@ Environment, recorded by `importlib.metadata.version()` at run time and copied v
 `experiments/common/fair_env.py` before NumPy loads; `PYTHONHASHSEED=42` is exported by the
 orchestrator and verified at start-up by both scripts, which exit if it is absent.
 
-`./run_tests.sh` — **197 tests collected, 197 passed, 0 failures in 1.51 s**, of which **28 are
-R16's**. Collected counts per file, from `pytest tests/ --collect-only -q`:
-
-```
-platform linux -- Python 3.12.9, pytest-9.0.3, pluggy-1.6.0
-rootdir: /home/m53/The-Whitening-Advantage-Experiments
-collected 197 items
-
-  5  tests/test_R01_claims.py        27  tests/test_R04_claims.py       16  tests/test_R06_claims.py
-  8  tests/test_R02_claims.py        21  tests/test_R04b_claims.py      25  tests/test_R11_claims.py
-  5  tests/test_R02b_claims.py       22  tests/test_R05_claims.py       28  tests/test_R16_claims.py
-  7  tests/test_R02c_claims.py        9  tests/test_R03_claims.py       24  tests/test_R18_claims.py
-
-============================= 197 passed in 1.51s ==============================
-Tests Passed.
-```
+`./run_tests.sh` confirms all 197 tests pass, of which 28 belong to R16.
 
 **No blocking assertion of `tests/test_R16_claims.py` rests on a value R16 produced.** Every one
 rests either on a value v87 prints, compared at v87's own printing precision, or on a
