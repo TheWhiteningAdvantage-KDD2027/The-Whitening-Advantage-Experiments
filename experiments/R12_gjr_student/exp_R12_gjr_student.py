@@ -171,7 +171,7 @@ if os.environ.get("PYTHONHASHSEED") != "42":
 import numpy as np
 import pandas as pd
 from experiments.common.fair_harness import (setup_logging, disable_pandas_multithreading,
-                                             compute_sha256, save_fair_csv)
+                                             compute_sha256, save_fair_csv, log_artifact_manifest)
 
 disable_pandas_multithreading()
 
@@ -2593,6 +2593,16 @@ def main():
     for name in ("fig12_leverage.png", "fig13_fat_tails.png"):
         logger.info(f"SHA-256 {name:<34} : {compute_sha256(FIGURES_DIR / name)}")
     logger.info(f"SHA-256 {'R12_claims.tex':<34} : {compute_sha256(TABLES_DIR / 'R12_claims.tex')}")
+
+    # Log artifact manifest
+    all_artifacts = [
+        DATA_DIR / name for name in artefacts
+    ] + [
+        FIGURES_DIR / name for name in ("fig12_leverage.png", "fig13_fat_tails.png")
+    ] + [
+        TABLES_DIR / "R12_claims.tex"
+    ]
+    log_artifact_manifest(logger, all_artifacts, RESULTS_DIR, BASE_DIR)
 
     n_d2 = sum(1 for r in rows if r[7] == "D2")
     logger.info(f"CONTROL SUMMARY. C1: `det_rate_concept` = `{det_rate_expression}`, computed. "

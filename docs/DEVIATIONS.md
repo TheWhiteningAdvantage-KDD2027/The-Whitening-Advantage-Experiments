@@ -73,6 +73,13 @@ values are printed and the reason is stated.
 | `R07-dispersion-cost`             | R07        | `sec:ar_garch` L308                        | A     | D2       | dispersion cost `0.4` points rejected; OLS-LB envelope `[4.6%, 5.6%]` and OLS-FPR `[4.3%, 5.9%]` move   |
 | `R07-figure7-exactness`           | R07        | Figure 7 caption L307                      | A     | D2       | caption calls `4.29 %` an "exact lattice level" while L241 sources it to Monte-Carlo            |
 | `R07-panelB-operating-level`      | R07        | Figure 7 panel B, L308                     | A     | D2       | oracle LB rejection range moves from `[5.1%, 5.6%]` to `[4.9%, 5.6%]`                              |
+| `R12-campaign-redraw`             | R12        | Section "Volatility Misspecification", L349, Fig. 12, 13 | A     | D2       | 128-bit seeding redraws both campaigns; every Monte-Carlo value moves, no claim moves |
+| `R12-leverage-invariant-fpr`       | R12        | L349, Fig. 12                               | A     | D2       | Concept FPR envelope `7.6`--`8.4\%` → **`7.4`--`8.5\%`**                              |
+| `R12-leverage-invariant-lb`       | R12        | L349, Fig. 12                               | A     | D2       | Concept Ljung--Box envelope `4.6`--`5.4\%` → **`4.7`--`5.4\%`**                      |
+| `R12-baseline-explosion`          | R12        | L349, Fig. 12                               | A     | D2       | Data FPR rises from `3.2\%` to **`3.5\%`** at gamma_lev = 0; LB rejection `5.1\%` → **`5.4\%`**   |
+| `R12-detection-at-nu-ten`         | R12        | L353, Fig. 13                               | A     | D2       | detection rate at `nu = 10` **`83\%` → `82\%`**                                            |
+| `R12-detection-at-nu-seven`       | R12        | L353, Fig. 13                               | A     | D2       | detection rate at `nu = 7` **`61\%` → `62\%`**                                             |
+| `R12-censored-delay`              | R12        | L353, Fig. 13                               | A     | D2       | censored delay range `2,400`--`3,000` → **`2,610`--`2,999`** (bracket intact)          |
 
 *Entries are added as each experiment is certified. Streams R06 onwards are not yet complete;
 this register is not final.*
@@ -762,3 +769,43 @@ Four deviations are registered for R07, all Class A (correction of defects in th
 **R07-panelB-operating-level.** Figure 7 panel B caption states that oracle Ljung--Box rejection "stays within $4.6$--$5.6\%$". The regenerated oracle LB rejection range is $[4.9\%, 5.6\%]$, with the lower bound moving. The qualitative claim that oracle control is maintained still holds.
 
 Full account: `docs/camera_ready_candidates/R07_v87_bias_bound.md`, `R07_v87_dispersion_cost.md`, `R07_v87_figure7_exactness.md`, `R07_v87_panelB_operating_level.md`, `docs/sections/R07.md`, and `AUDIT_R07.md`.
+
+---
+
+### R12 — volatility misspecification and moment singularity (Class A, D2)
+
+Seven deviations are registered for R12, all Class A (correction of entropy defects in the submitted
+code) with D2 severity (printed values change but qualitative claims still hold).
+
+**`R12-campaign-redraw`.** The submitted campaign derived seeds by integer offset from process
+parameters (`seed = int(gamma_lev * 1000) + s * 17` for Experiment A, `seed = int(nu * 100) + s * 23`
+for Experiment B). Repository policy replaces these with 128-bit digests keyed on role and index
+only, never on `gamma_lev` or `nu`. Both campaigns are therefore redrawn; every Monte-Carlo value
+moves mechanically. The movement affects no qualitative claim of the section.
+
+**`R12-leverage-invariant-fpr`.** L349 states the Concept pipeline false-alarm rate stays within
+`7.6`--`8.4\%` across the leverage grid. The regenerated envelope is `7.4`--`8.5\%`; the range
+moves by less than one percentage point on each end and the invariance claim holds.
+
+**`R12-leverage-invariant-lb`.** L349 states the Concept pipeline Ljung--Box rejection stays within
+`4.6`--`5.4\%`. The regenerated envelope is `4.7`--`5.4\%`; the lower bound moves by 0.1 points
+and the upper bound is unchanged.
+
+**`R12-baseline-explosion`.** L349 reports Data FPR rising from `3.2\%` to `20.6\%` and LB rejection
+from `5.1\%` to `24.6\%` at `gamma_lev = 0.28`. The regenerated values at `gamma_lev = 0` are `3.5\%`
+and `5.4\%`; both the sixfold explosion and the baseline calibration failure still hold.
+
+**`R12-detection-at-nu-ten`.** L353 states detection at `nu = 10` is `83\%`. The regenerated
+campaign measures `82\%` (820/1000); the one-point shift preserves the monotone decay narrative.
+
+**`R12-detection-at-nu-seven`.** L353 states detection at `nu = 7` is `61\%`. The regenerated
+campaign measures `62\%` (621/1000).
+
+**`R12-censored-delay`.** L353 reports censored delays of `2,400`--`3,000` steps. The regenerated
+range is `2,610`--`2,999` steps. The manuscript prints values rounded to the hundreds; the
+regenerated pair `2610.23` and `2998.77` round onto the same numerals, so the printed bracket
+`[2350, 3050)` is not breached (control C4 halt condition). All qualitative claims hold: the
+delays are survivorship-biased, they collapse toward the singularity, and they remain in the
+thousands.
+
+Full account: `docs/sections/R12.md` and `AUDIT_R12.md`.
