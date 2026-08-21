@@ -427,9 +427,9 @@ the same family the whole power curve is built on, and it is stated here and in
 interval with the evenness of the power in `rho` respected: an interval straddling zero has the
 **level** as its lower bound on the power, not the power at the smaller endpoint.
 
-**7.7 A fifth CSV, `R18_size_at_null.csv`, beyond the prompt's four.** Preamble §S4bis item 3
-requires the `m` individual p-values of a multiple-test control to be kept "dans le CSV de
-diagnostic, à titre descriptif". C1's four rates, four Wilson intervals, four KS statistics and
+**7.7 A fifth CSV, `R18_size_at_null.csv`, beyond the prompt's four.** Preamble S4bis item 3
+requires the `m` individual p-values of a multiple-test control to be kept "in the diagnostic CSV
+descriptively". C1's four rates, four Wilson intervals, four KS statistics and
 four KS p-values had no home in the prompt's schema, and folding them into `R18_power_vs_horizon.csv` would have mixed a diagnostic into a deliverable.
 
 **7.8 Columns added beyond the prompt's schema.** `R18_detectable_amplitude.csv` carries

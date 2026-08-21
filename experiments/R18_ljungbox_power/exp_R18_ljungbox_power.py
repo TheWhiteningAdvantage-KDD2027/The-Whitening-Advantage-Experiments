@@ -103,7 +103,7 @@ if os.environ.get("PYTHONHASHSEED") != "42":
 import numpy as np
 import pandas as pd
 from experiments.common.fair_harness import (setup_logging, disable_pandas_multithreading,
-                                             compute_sha256, save_fair_csv)
+                                             compute_sha256, save_fair_csv, log_artifact_manifest)
 
 disable_pandas_multithreading()
 
@@ -1584,6 +1584,11 @@ def main():
     # =====================================================================
     artefacts = [(name, DATA_DIR / name) for name in outputs]
     artefacts += [(fig_path.name, fig_path), (tex_path.name, tex_path)]
+    
+    # Log artifact manifest with hierarchical tree structure
+    artifact_paths = [path for _, path in artefacts]
+    log_artifact_manifest(logger, artifact_paths, DATA_DIR.parent, BASE_DIR)
+    
     for label, path in artefacts:
         logger.info(f"SHA-256 {label:<40} : {compute_sha256(path)}")
 

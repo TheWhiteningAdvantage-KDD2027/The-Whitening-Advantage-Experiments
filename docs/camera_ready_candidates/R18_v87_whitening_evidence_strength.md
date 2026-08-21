@@ -41,16 +41,16 @@ smaller than `rho_80`.
 `articleB_whitening_v87.tex` **line 290** verbatim and occurs **exactly once** in the file
 (`grep -Fc` returns `1`). Verify once more before applying, as a matter of routine.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 yet the binary error stream stays strictly white up to $\Gamma = 200$
 ~~~~~~~~~
 
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 yet the binary error stream shows no detectable autocorrelation up to $\Gamma = 200$, at a lag-20 Ljung--Box test whose power against a lag-1 autocorrelation of $0.051$ is $0.8$ at this horizon
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END OF BLOCK
 
 "Stays strictly white" states a property; the measurement supporting it is a non-rejection, and
 "shows no detectable autocorrelation" is what the measurement licenses. The replacement is also
@@ -63,16 +63,16 @@ with each other.
 `articleB_whitening_v87.tex` **line 318** verbatim and occurs **exactly once** in the file
 (`grep -Fc` returns `1`). The leading comma is part of the match and is what makes it unique.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 , licensing the filter.
 ~~~~~~~~~
 
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 , licensing the filter at a resolution of $0.05$--$0.10$ in lag-1 autocorrelation, which is the amplitude a single lag-20 test detects with probability $0.8$ on warm-up windows of this length.
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END OF BLOCK
 
 The four ETF tests run on pre-2020 daily warm-up windows, which are bracketed by the two
 shortest horizons R18 measures (`n = 2000` and `n = 8000`), so `rho_80` at those sites lies
