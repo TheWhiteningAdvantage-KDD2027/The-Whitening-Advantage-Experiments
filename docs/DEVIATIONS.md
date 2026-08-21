@@ -77,6 +77,9 @@ Nothing in this repository is adjusted to match the manuscript. Where the two di
 | `R13-operating-points-unnamed`    | R13        | `sec:real_world`, L331                     | A     | —        | numerals read at unnamed operating points; two different calibrations used                     |
 | `R13-frozen-null-scope`           | R13        | `sec:real_world`, L331                     | A     | —        | frozen null description applies to one arm only; ARL0 null regenerates GARCH paths            |
 | `R13-negative-control-scope`     | R13        | `sec:real_world`, L331                     | A     | —        | negative control claim holds only at caption's two dead-band settings; four others alarm      |
+| `R17-campaign-redraw`             | R17        | `sec:misspecification` L341                 | A     | D2       | 128-bit re-keying redraws all Monte-Carlo values: persistence `0.62` → **`0.63`**, FPR `9.5%` → **`10.5%`**, `3.0%` → **`7.0%`**, `3`–`8%` → **`10`–`11%`** |
+| `R17-sign-arm-crn-degeneracy`    | R17        | `sec:misspecification` L341                 | A     | —        | sign stream bit-identical across leverage axis; envelope narrower than eight cells suggest         |
+| `R17-eco-l1-arm-identity`         | R17        | Table 1 L117, `sec:misspecification` L341 | A     | **D3**   | Eco-L1 monitors squared residual `(ε_t^2 - μ)/σ`, not location `ε_t/σ̂_t` as L117 defines        |
 
 *Entries are added as each experiment is certified. Streams R06 onwards are not yet complete;
 this register is not final.*
@@ -498,6 +501,18 @@ Four deviations are registered for R13. One carries D2 severity (a printed numer
 **`R13-negative-control-scope` — Class A, no severity.** The Figure 14 caption's "the 2011 correction is not detected at either setting" is exact because it names its two settings. The L331 sentence "no alarm on the 2011 correction at the matched operating point" does not name them and is true only of those two; four larger dead bands inside the same iso-FPR band do alarm.
 
 Full account: `docs/sections/R13.md` and `AUDIT_R13.md` section 4.
+
+### R17 — estimation cost of the parametric route (Class A, D2 and D3)
+
+Three deviations are registered for R17. Two carry D2 severity (printed values change but qualitative claims hold) and one carries D3 severity (a qualitative claim is falsified by a method description mismatch).
+
+**`R17-campaign-redraw` — Class A, D2, pre-classified.** The 128-bit entropy migration required by §S6 redraws every Monte-Carlo cell of the four protocols. Four printed numerals of L341 move — persistence median `0.62` → **`0.63`**, FPR at `n = 250` `9.5%` → **`10.5%`**, FPR at `n = 500` `3.0%` → **`7.0%`**, sign FPR envelope `3`–`8%` → **`10`–`11%`** — and every qualitative claim of L341 survives the displacement. Mechanism: the delivered script keyed seeds on process parameters (`s*77`, `s*77+99`, etc.); the port keys on role and index alone, redrawing both arms. Pre-classified before the first run by the `R05/R07/R09/R10/R13/R14`-`campaign-redraw` precedents.
+
+**`R17-sign-arm-crn-degeneracy` — Class A, no severity.** Under the mandated 128-bit key, which carries no grid coordinate, the monitored sign stream is bit-identical across the leverage axis of `protocol_3d`, so its eight cells hold only four readings. No published value is affected — the envelope L341 quotes is a min–max over the warm-up axis, which is not degenerate — but the statistical evidence behind it is narrower than eight cells suggest. The paired-stream bootstrap interval `[−0.0153, +0.0195]` on the WLS slope covers zero, satisfying L341's "warm-up-independent in practice" claim.
+
+**`R17-eco-l1-arm-identity` — Class A, D3.** Table 1 L117 defines `Eco-L1` as the location monitor `ε_t/σ̂_t`, QMLE-standardized, for a first-order change. The cell L341 quotes its `9.5%` from is `protocol_3d`, which monitors the **squared** statistic `(ẑ² − μ)/σ` at the `(0.5, 65.0)` operating point. The delivered script distinguishes the two in its own `protocol_3b`: `adds_eco_l2` runs `strict_cusum(z_eco_hat**2 ..., 0.5, 65.0)` and `adds_eco_l1` runs `strict_cusum(z_eco_hat, 0.5, 10.0)`. At `protocol_3b`'s 100 seeds the rate lattice is `k/100` and `9.5%` is unattainable, whereas `9.5% = 19/200` matches `protocol_3d`'s resolution exactly. A method description the pipeline does not produce falsifies a qualitative claim whatever the numeral does. The persistence median is not affected: the QMLE fit is common to both monitors, so `α̂+β̂` is arm-agnostic.
+
+Full account: `docs/camera_ready_candidates/R17_v87_persistence_collapse_mechanism.md`, `R17_v87_warmup_restoration_scope.md`, `R17_v87_warmup_resolution.md`, `docs/sections/R17.md`, and `AUDIT_R17.md`.
 
 ### R12 — volatility misspecification and moment singularity (Class A, D2)
 

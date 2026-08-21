@@ -141,7 +141,7 @@ if os.environ.get("PYTHONHASHSEED") != "42":
 import numpy as np
 import pandas as pd
 from experiments.common.fair_harness import (setup_logging, disable_pandas_multithreading,
-                                             compute_sha256, save_fair_csv)
+                                             compute_sha256, save_fair_csv, log_artifact_manifest)
 
 disable_pandas_multithreading()
 
@@ -392,7 +392,7 @@ def get_deterministic_seed(*args) -> int:
     Floats are formatted through .hex() rather than str(): the decimal repr of a
     float is platform-dependent at the last digit on some C libraries, which
     would silently re-key a cell across machines. The native hash() is randomly
-    salted and is forbidden outright (SPECS 1.2).
+    salted and is forbidden outright (§1.2).
     """
     def format_arg(arg):
         if isinstance(arg, (float, np.floating)):
@@ -1839,6 +1839,10 @@ def main():
         sys.exit(1)
     log.info(f"Emitted {len(emitted)} macros to {tex_path.name}, cardinal prefix \\RSeventeen per "
              f"preamble S6. Every value is computed from an object in memory.")
+
+    # --- ARTIFACT INTEGRITY MANIFEST ---
+    artifact_paths = [DATA_DIR / name for name in artefacts.keys()] + [tex_path]
+    log_artifact_manifest(log, artifact_paths, BASE_DIR, BASE_DIR)
 
     # --- PREAMBLE S3: THE CLASSIFICATION, COMPUTED ---
     witnesses = read_witness_csvs(log)
