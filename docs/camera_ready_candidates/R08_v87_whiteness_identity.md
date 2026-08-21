@@ -56,16 +56,16 @@ inside `\caption{…}` of the float carrying `\label{fig:adverse}`, and it is di
 string `R08_v87_adverse_numerals.md` searches in the same caption. Verify once more before applying,
 as a matter of routine.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 yield identical whiteness loss
 ~~~~~~~~~
 
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 yield whiteness loss agreeing within three points
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END BLOCK
 
 The replacement keeps the parenthetical that follows it — `($|\mathrm{Cov}(y_t, y_{t+k})|$
 response)` — untouched, so the mechanism is still stated; what changes is that the caption now

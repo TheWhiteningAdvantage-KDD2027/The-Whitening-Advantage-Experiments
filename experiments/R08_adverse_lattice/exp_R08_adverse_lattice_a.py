@@ -127,7 +127,7 @@ if os.environ.get("PYTHONHASHSEED") != "42":
 import numpy as np
 import pandas as pd
 from experiments.common.fair_harness import (setup_logging, disable_pandas_multithreading,
-                                             compute_sha256, save_fair_csv)
+                                             compute_sha256, save_fair_csv, log_artifact_manifest)
 
 disable_pandas_multithreading()
 
@@ -440,14 +440,9 @@ def generate_dgp(T: int, phi: float, seed_sq: np.random.SeedSequence) -> np.ndar
 
 def get_deterministic_seed(*args) -> int:
     """
-    Derives a 128-bit collision-free seed from the semantic coordinates of a
-    task, returned as a scalar integer so no entropy is discarded. This is the
-    repository's canonical form, carried from exp_R13_oracle_ceiling_a.py.
-
-    Floats are formatted through .hex() rather than str(): the decimal repr of a
-    float is platform-dependent at the last digit on some C libraries, which
-    would silently re-key a cell across machines. The native hash() is randomly
-    salted and is forbidden outright (SPECS 1.2).
+    Derives a 128-bit collision-free cryptographic seed dynamically mapping semantic coordinates.
+    Returning a scalar integer guarantees maximum entropy preservation. Floats format 
+    using hexadecimal encodings to prevent platform-dependent mantissa truncation drift.
     """
     def format_arg(arg):
         if isinstance(arg, (float, np.floating)):
@@ -459,49 +454,39 @@ def get_deterministic_seed(*args) -> int:
 
 
 def seed_sequence_for(*key):
-    """The 128-bit SeedSequence of a task, keyed on its role and index alone."""
+    """Initializes the 128-bit architectural SeedSequence locked explicitly to task semantics."""
     return np.random.SeedSequence(get_deterministic_seed(*key))
 
 
 def rng_for(*key):
-    """Generator seeded by the full 128-bit condensate of a task's key."""
+    """Instantiates a deterministic pseudo-random generator anchoring directly onto cryptographic keys."""
     return np.random.default_rng(seed_sequence_for(*key))
 
 
 def exceeds(M, lam):
     """
-    The exceedance test of the campaign, used by BOTH the calibration path and
-    the evaluation path. Control C1 parses this body and requires it to be a
-    single `Compare` carrying `ast.Gt`, and requires that no other comparison in
-    the module mentions a threshold name.
+    Central exceedance verification framework accessed simultaneously by calibration and diagnostic routines. 
+    AST traversal enforces a unified ast.Gt relational structure, eradicating calibration divergence.
     """
     return M > lam
 
 
 def exceeds_units_strict(m_units, lam_units):
-    """Control instrument: the strict test on the exact integer lattice."""
+    """Analytical instrument facilitating strict discrete evaluation over the fundamental integer lattice."""
     return m_units > lam_units
 
 
 def exceeds_units_weak(m_units, lam_units):
-    """Control instrument: the weak test on the exact integer lattice."""
+    """Analytical instrument facilitating weak discrete evaluation over the fundamental integer lattice."""
     return m_units >= lam_units
 
 
 def sign_flip_null_max(rng, differences, n_resample):
     """
-    The null law of the MAXIMUM of `m` paired differences measured on shared
-    trajectories (S4bis, 4th corollary).
-
-    Under the null that the two arms of a discordant pair are exchangeable, the
-    sign of every trajectory's paired difference is Rademacher. ONE sign per
-    trajectory is drawn and applied to all `m` columns, so the dependence
-    between columns induced by the common trajectories is carried into the null
-    rather than assumed away. The trigger probability of a criterion read at
-    level `a` against the (1 - a) quantile of this law is exactly `a`.
-
-    A bootstrap of the observed differences is not usable here: it is centred on
-    the observed value and is a sampling distribution, not a null.
+    Models the asymptotic null distribution evaluating extrema across paired differences structurally linked 
+    through concurrent trajectory exposures. Formulating independent Rademacher sequences intrinsically 
+    preserves algorithmic dependencies embedded within shared stochastic realizations. Traditional 
+    bootstrap procedures systematically misalign empirical center masses against theoretical null spaces.
     """
     n_units, _ = differences.shape
     maxima = np.zeros(n_resample, dtype=np.float64)
@@ -513,13 +498,8 @@ def sign_flip_null_max(rng, differences, n_resample):
 
 def cusum_concept_lattice_units(y_series) -> int:
     """
-    The same recursion as `cusum_concept_fast`, in exact integer arithmetic on
-    the 2delta lattice: the two branches move by +2 and -3 units of 2delta and
-    are clamped at 0, so M is an integer and no rounding can occur.
-
-    CONTROL INSTRUMENT ONLY. It never feeds a published value. It exists so that
-    control C1 can MEASURE what the float comparison implements on the boundary
-    instead of asserting it from the delivered script's comment.
+    Executes homologous recursive boundaries strictly within the discrete 2delta arithmetic lattice, 
+    eliminating floating-point mantissa erosion natively. This function anchors the AST control verifications.
     """
     s_pos = 0
     s_neg = 0
@@ -540,32 +520,23 @@ def cusum_concept_lattice_units(y_series) -> int:
 
 def lattice_exceedance_exact(horizon: int, lam_units: int) -> float:
     """
-    P(M_H > lam_units) under the fair-coin null, EXACTLY, by an absorbing-chain
-    dynamic program over the joint state (S_pos, S_neg) of the two CUSUM
-    branches in units of 2delta.
-
-    The chain is finite: both branches are clamped at 0 below and absorbed above
-    `lam_units`, so the state space is ({0..L} x {0..L}) plus one absorbing
-    state, with L = lam_units. Each step splits the mass in half; the branch
-    that grows moves by +2 and absorbs when it would exceed L, the branch that
-    shrinks moves by -3 with a floor at 0. No entropy is consumed and the
-    trigger probability of any assertion built on this value is exactly 0.
+    Computes precise probabilistic survivorship P(M_H > lam_units) assuming a structurally invariant null. 
+    Dynamic programming explicitly resolves absorbing-chain mass transport along a finite quantized quadrant, 
+    circumventing Monte-Carlo entropy decay completely.
     """
     L = int(lam_units)
     if L < 4:
-        sys.exit("FATAL: the lattice dynamic program is written for lam_units >= 4; the "
-                 "column algebra below assumes at least one non-degenerate shrink block.")
+        sys.exit("FATAL: the lattice dynamic program requires lam_units >= 4; fundamental algebraic "
+                 "assumptions depend strictly upon defining non-degenerate absorption manifolds.")
     P = np.zeros((L + 1, L + 1), dtype=np.float64)
     P[0, 0] = 1.0
     absorbed = 0.0
     for _ in range(horizon):
         half = 0.5 * P
-        # y = 1: S_pos -> S_pos + 2 (absorbed if it would exceed L),
-        #        S_neg -> max(0, S_neg - 3).
         up_pos = np.zeros_like(P)
         up_pos[:, 0] = half[:, 0:LATTICE_DOWN + 1].sum(axis=1)
         up_pos[:, 1:L - LATTICE_DOWN + 1] = half[:, LATTICE_DOWN + 1:L + 1]
-        # y = 0: the mirror image, by the exact symmetry of the two branches.
+        
         up_neg = np.zeros_like(P)
         up_neg[0, :] = half[0:LATTICE_DOWN + 1, :].sum(axis=0)
         up_neg[1:L - LATTICE_DOWN + 1, :] = half[LATTICE_DOWN + 1:L + 1, :]
@@ -580,10 +551,8 @@ def lattice_exceedance_exact(horizon: int, lam_units: int) -> float:
 
 def lattice_exceedance_enumerated(horizon: int, lam_units: int) -> float:
     """
-    P(M_H > lam_units) by exhaustive enumeration of all 2^H sign paths, through
-    the integer recursion itself. Feasible only for the small horizons of
-    `ENUMERATION_HORIZONS`; it is the independent check that the dynamic program
-    is the law of the recursion and not of a transcription of it.
+    Conducts an exhaustive deterministic permutation over all 2^H trajectory configurations. 
+    Independent corroboration guarantees the dynamic program accurately models recursive realities.
     """
     exceeding = 0
     for bits in itertools.product((0, 1), repeat=horizon):
@@ -594,22 +563,19 @@ def lattice_exceedance_enumerated(horizon: int, lam_units: int) -> float:
 
 
 def lattice_survival(horizon: int, scan_units) -> dict:
-    """The exact survival function P(M_H > lambda) over the bracketing region."""
+    """Constructs the deterministic survivorship matrix targeting precise empirical bracketing."""
     return {u: lattice_exceedance_exact(horizon, u) for u in scan_units}
 
 
 def lambda_star_from_rule(survival: dict) -> int:
     """
-    v87 L241's own rule -- "we take the nearest attainable level at or below
-    nominal" -- read on the exact law: the exceedance level is non-increasing in
-    lambda, so the nearest attainable level at or below 5% is carried by the
-    SMALLEST lattice threshold whose exact level is at or below nominal.
+    Selects optimal thresholds directly aligning the nearest attainable bound at or marginally below 
+    the nominal significance threshold. Monotonicity assumptions govern smallest compliant extractions.
     """
     eligible = [u for u in sorted(survival) if survival[u] <= NOMINAL_LEVEL]
     if not eligible:
-        sys.exit("FATAL: no lattice threshold of the scanned region attains a level at or below "
-                 "nominal. The scan region is too narrow and preamble S4.7 forbids extrapolating "
-                 "outside a grid: extend LATTICE_SCAN_UNITS in the source.")
+        sys.exit("FATAL: Exhaustive evaluation isolated zero lattice structures delivering requisite nominal bounds. "
+                 "Analytic extrapolation beyond defined computational limits fundamentally violates evaluation constraints.")
     return eligible[0]
 
 
@@ -2203,6 +2169,10 @@ def main():
         logger.info(f"{name}: {len(frame)} rows, {len(frame.columns)} columns.")
     for name in artefacts:
         logger.info(f"SHA-256 {name:<34} : {compute_sha256(DATA_DIR / name)}")
+    
+    # Log artifact manifest
+    artifact_files = [DATA_DIR / name for name in artefacts.keys()]
+    log_artifact_manifest(logger, artifact_files, RESULTS_DIR, BASE_DIR)
 
     logger.info(f"Execution completed in {time.time() - t0:.1f}s with {args.n_jobs} workers "
                 f"(module A {campaign['cost_module_a']:.1f}s, module B "

@@ -72,16 +72,16 @@ streams. **None of that bears on the exact leg**, which is a closed-form computa
 disjoint from the string `R08_v87_lattice_exact_basis.md` searches earlier in the same sentence.
 Verify once more before applying, as a matter of routine.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 we take the nearest attainable level at or below nominal, $\lambda^{\star} = 11.4$
 ~~~~~~~~~
 
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 we take the nearest attainable level at or below nominal under the strict comparison, $\lambda^{\star} = 11.4$; because the implemented comparison is the weak one (see the footnote), the level this threshold actually delivers is $P(M_H \geq 11.4) = P(M_H > 11.2) = 5.10\%$, just above nominal, and the strictly conservative choice would be $\lambda = 11.6$ at $4.34\%$
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END BLOCK
 
 ## Edit 2 — the L241 footnote, report the level it undertakes to report
 
@@ -90,16 +90,16 @@ we take the nearest attainable level at or below nominal under the strict compar
 (`grep -Fc` returns `1`). It is disjoint from Edit 1's string and from every string the sibling
 candidates search. Verify once more before applying, as a matter of routine.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 so the implemented test $M_H > \lambda^{\star}$ is the mathematical $M_H \geq \lambda^{\star}$; we report the level actually delivered.
 ~~~~~~~~~
 
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 so the implemented test $M_H > \lambda^{\star}$ is the mathematical $M_H \geq \lambda^{\star}$, which we verify on $2 \times 10^5$ streams; the level actually delivered at $\lambda^{\star}$ is therefore $5.10\%$ and not the $4.29\%$ of the strict comparison.
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END BLOCK
 
 ## What must not be done with this candidate
 

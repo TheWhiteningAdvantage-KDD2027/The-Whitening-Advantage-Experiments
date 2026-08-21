@@ -58,18 +58,28 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR))
 
+from experiments.common.fair_env import enforce_strict_determinism, verify_hash_seed, log_environment
+
+enforce_strict_determinism()
+
 from experiments.R08_adverse_lattice import exp_R08_adverse_lattice_a as campaign_module
 
-from experiments.common.fair_env import verify_hash_seed, log_environment
-from experiments.common.fair_harness import setup_logging, compute_sha256, save_fair_csv
+from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, compute_sha256, save_fair_csv, log_artifact_manifest
 
 import numpy as np
+import pandas as pd
+
+disable_pandas_multithreading()
+
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 import os
+
+if os.environ.get("PYTHONHASHSEED") != "42":
+    sys.exit("FATAL: PYTHONHASHSEED is not 42. Execute via run_experiment_R08.sh")
 import time
 import argparse
 import tempfile
@@ -427,6 +437,19 @@ def main():
 
     logger.info(f"SHA-256 {figure_path.name:<34} : {compute_sha256(figure_path)}")
     logger.info(f"SHA-256 {tex_path.name:<34} : {compute_sha256(tex_path)}")
+    
+    # Log artifact manifest
+    artifact_files = [
+        FIGURES_DIR / figure_path.name,
+        TABLES_DIR / tex_path.name,
+        DATA_DIR / f"R08_adverse_bias{campaign['stamp']}.csv",
+        DATA_DIR / f"R08_null_law_lattice{campaign['stamp']}.csv",
+        DATA_DIR / f"R08_operator_levels{campaign['stamp']}.csv",
+        DATA_DIR / f"R08_lattice_exact_law{campaign['stamp']}.csv",
+        DATA_DIR / f"R08_pairing_diagnostic{campaign['stamp']}.csv",
+    ]
+    log_artifact_manifest(logger, artifact_files, RESULTS_DIR, BASE_DIR)
+    
     logger.info(f"Execution completed in {time.time() - t0:.1f}s.")
 
 

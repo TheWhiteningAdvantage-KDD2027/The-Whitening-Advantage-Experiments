@@ -53,80 +53,80 @@ verbatim; occurs **exactly once** (`grep -Fc` returns `1`). Disjoint from Edit 2
 caption and from the string `R08_v87_whiteness_identity.md` searches. Verify once more before
 applying.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 FPR collapses to $0.86\%$
 ~~~~~~~~~
 
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 FPR collapses to $0.95\%$
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END BLOCK
 
 ## Edit 2 — Figure 8 caption, line 551, the inflation numeral
 
 **Verification of the search string.** Quoted from `articleB_whitening_v87.tex` **line 551**
 verbatim; occurs **exactly once** (`grep -Fc` returns `1`). Disjoint from Edit 1's string.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 FPR inflates to $20.8\%$
 ~~~~~~~~~
 
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 FPR inflates to $21.0\%$
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END BLOCK
 
 ## Edit 3 — `sec:ar_garch` L311, the collapse numeral
 
 **Verification of the search string.** Quoted from `articleB_whitening_v87.tex` **line 311**
 verbatim; occurs **exactly once** (`grep -Fc` returns `1`). Disjoint from Edits 1, 2, 4 and 5.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 collapses to $0.86\%$ at $b = 0.15$
 ~~~~~~~~~
 
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 collapses to $0.95\%$ at $b = 0.15$
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END BLOCK
 
 ## Edit 4 — `sec:ar_garch` L311, the inflation numeral
 
 **Verification of the search string.** Quoted from `articleB_whitening_v87.tex` **line 311**
 verbatim; occurs **exactly once** (`grep -Fc` returns `1`). Disjoint from Edits 1, 2, 3 and 5.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 inflates it to $20.8\%$
 ~~~~~~~~~
 
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 inflates it to $21.0\%$
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END BLOCK
 
 ## Edit 5 — `sec:ar_garch` L311, the under-centering penalty
 
 **Verification of the search string.** Quoted from `articleB_whitening_v87.tex` **line 311**
 verbatim; occurs **exactly once** (`grep -Fc` returns `1`). Disjoint from Edits 1, 2, 3 and 4.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 the under-centering penalty is still only $1.1$ points of false-alarm rate
 ~~~~~~~~~
 
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 the under-centering penalty is still only $1.3$ points of false-alarm rate
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END BLOCK
 
 ## What must not be done with this candidate
 

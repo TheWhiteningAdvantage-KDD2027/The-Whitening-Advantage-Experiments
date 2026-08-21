@@ -133,7 +133,7 @@ did not presume it, it measured it.
 R08 prompt asks the levels at `λ ∈ {11.2, 11.4}`, `δ = 0.1`, `H = 5 000` to coincide with **both**
 `R07_lattice_exact_law.csv` and `R10_lattice_exact_law.csv`. `R10_lattice_exact_law.csv` carries
 **zero** rows at `H = 5 000`: its own campaign runs at `H = 8 000` (`lambda_units 74/75/76`) and it
-validates its dynamic program on small-`H` enumerations at `q = 1/2`. No level at either threshold
+verifies its dynamic program on small-`H` enumerations at `q = 1/2`. No level at either threshold
 can be looked up in it. The control is therefore split:
 
 - **C2a** — R08's `lattice_exceedance_exact(5000, u)` against R07's `exact_survival` cells, on all

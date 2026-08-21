@@ -60,16 +60,16 @@ disjoint from the string `R08_v87_delivered_level.md` searches later in the same
 the footnote string that candidate also searches. Verify once more before applying, as a matter of
 routine.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 the levels bracketing $5\%$ are $5.03\%$ at $\lambda = 11.2$ and $4.29\%$ at $\lambda = 11.4$ ($2 \times 10^5$ fair-coin streams)
 ~~~~~~~~~
 
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 the levels bracketing $5\%$ are $5.03\%$ at $\lambda = 11.2$ and $4.29\%$ at $\lambda = 11.4$ ($2 \times 10^5$ fair-coin streams; the law is a finite absorbing chain on the lattice and is computable in closed form, giving $5.1021\%$ and $4.3428\%$ exactly)
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END BLOCK
 
 ## The blocking dependency, stated as a merge and not as an order
 
