@@ -32,7 +32,8 @@ from experiments.common.fair_harness import (
     disable_pandas_multithreading, 
     setup_logging, 
     compute_sha256, 
-    save_fair_csv
+    save_fair_csv,
+    log_artifact_manifest,
 )
 
 import numpy as np
@@ -64,7 +65,7 @@ for d in [RAW_FIRSTRATE_DIR, DERIVED_FIRSTRATE_DIR, DATA_OUT_DIR, FIG_OUT_DIR, T
 
 TICKERS = ['SPY', 'PFF', 'VNQ', 'BWX']
 
-# --- PRIMITIVES SCIENTIFIQUES (Strict verbatim enforcement) ---
+# --- SCIENTIFIC PRIMITIVES (Strict verbatim enforcement) ---
 def _garch_nll(params, eps, var_emp):
     alpha, beta = params
     omega = var_emp * (1.0 - alpha - beta)
@@ -511,6 +512,21 @@ def run_experiment(args):
     plt.tight_layout()
     fig.savefig(FIG_OUT_DIR / f"fig02_spy_in_the_wild{sfx}.png")
     plt.close()
+    
+    # Collect all generated artifacts for manifest (output files only)
+    artifacts = [
+        DATA_OUT_DIR / f"R01_garch_models{sfx}.csv",
+        DATA_OUT_DIR / f"R01_covid_trajectories{sfx}.csv",
+        DATA_OUT_DIR / f"R01_covid_alarms{sfx}.csv",
+        DATA_OUT_DIR / f"R01_symmetry_2020{sfx}.csv",
+        DATA_OUT_DIR / f"R01_injection_summary{sfx}.csv",
+        DATA_OUT_DIR / f"R01_placebo_control{sfx}.csv",
+        DATA_OUT_DIR / f"R01_magnitude_sweep{sfx}.csv",
+        TAB_OUT_DIR / f"R01_claims{sfx}.tex",
+        FIG_OUT_DIR / f"fig02_spy_in_the_wild{sfx}.png",
+    ]
+    
+    log_artifact_manifest(logger, artifacts, R01_DIR, BASE_DIR)
     logger.info("[SUCCESS] Pipeline completed.")
 
 if __name__ == "__main__":

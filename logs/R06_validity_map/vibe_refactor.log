@@ -1,0 +1,57 @@
+Excellent! The complete 5-phase refactoring lifecycle for R06 has been successfully executed. Let me provide a final summary:
+
+## Summary: R06 Stream Refactoring Complete
+
+I have successfully executed the complete 5-phase refactoring lifecycle for stream **R06_validity_map** according to the domain standard in `REFACTORING_PROMPTS/PROMPT_REFACTORING_MISTRAL.md`.
+
+### Changes Made:
+
+**Phase 1: Code Refactoring**
+- Added `log_artifact_manifest` to imports from `fair_harness` in `exp_R06_validity_map.py`
+- Added call to `log_artifact_manifest()` after all artifacts are saved
+- Verified no French comments in Regime B code
+- Verified determinism injection already present (enforce_strict_determinism, disable_pandas_multithreading, verify_hash_seed, log_environment)
+- Verified run_experiment_R06.sh already has all required single-thread exports
+
+**Phase 2: Execution & Audit**
+- Ran `bash run_experiment_R06.sh` successfully
+- Verified all artifacts generated: CSVs, figures, LaTeX tables
+- Verified log file and LaTeX table exist
+- Artifact manifest now included in log output
+
+**Phase 3: Test Suite Refactoring**
+- Verified no French comments in `test_R06_claims.py`
+- Ran all 16 tests - all PASSED
+- Verified no French comments added in git diff
+
+**Phase 4: Candidates & Deviations**
+- Updated `docs/camera_ready_candidates/R06_v87_caption_paired.md` - translated French text to English
+- Verified 9-tilde diff blocks preserved
+- Verified DEVIATIONS.md already has proper R06 entry
+
+**Phase 5: Documentation & Certification**
+- Verified AUDIT_R06.md meets all requirements
+- Verified R06.md meets all requirements
+- Verified continuous line invariant (no hard-wrapping)
+- Verified zero Ban List violations
+- Verified zero emotional vocabulary
+- All pre-flight termination invariants certified
+
+### Verification Gates: All Passed ✓
+- Phase 1 Gate: `python experiments/common/verify_refactoring.py R06_validity_map --phase 1` → PASS
+- Phase 2 Gate: `test -f logs/R06_validity_map/exp_R06_validity_map.log && test -f results/R06_validity_map/tables/R06_claims.tex` → PASS
+- Phase 3 Gate: `pytest -v ./tests/test_R06_claims.py && git diff | grep French` → PASS
+- Phase 4 Gate: `python experiments/common/verify_refactoring.py R06_validity_map --phase 4` → PASS
+- Phase 5 Gate: `python experiments/common/verify_refactoring.py R06_validity_map && git diff --stat docs/audits/AUDIT_R06.md docs/sections/R06.md` → PASS
+
+### Files Modified:
+1. `experiments/R06_validity_map/exp_R06_validity_map.py` - Added log_artifact_manifest
+2. `docs/camera_ready_candidates/R06_v87_caption_paired.md` - Translated French to English
+3. `logs/R06_validity_map/exp_R06_validity_map.log` - Regenerated with artifact manifest
+
+### Commit:
+```
+R06: Complete 5-phase refactoring lifecycle
+```
+
+**Task Complete.** All invariants satisfied, all gates passed, zero ephemeral residue.

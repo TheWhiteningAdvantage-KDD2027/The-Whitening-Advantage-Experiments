@@ -1,0 +1,69 @@
+2026-08-18 06:38:14 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-08-18 06:38:14 | INFO | Python: 3.12.9
+2026-08-18 06:38:14 | INFO |   numpy: 1.26.4
+2026-08-18 06:38:14 | INFO |   pandas: 2.3.2
+2026-08-18 06:38:14 | INFO |   scipy: 1.16.2
+2026-08-18 06:38:14 | INFO |   statsmodels: 0.14.5
+2026-08-18 06:38:14 | INFO |   matplotlib: 3.10.6
+2026-08-18 06:38:14 | INFO |   river: 0.23.0
+2026-08-18 06:38:14 | INFO | FAMILY-WISE ARITHMETIC, LOGGED BEFORE ANY RESULT IS INTERPRETED. The prompt's eight-cell reading -- 4 xi x 2 arms of Ljung-Box tests at the 0.05 level -- has a probability 1 - (1 - 0.05)^8 = 33.6580% of at least one rejection under a perfectly calibrated null, far above the 5% ceiling S4bis fixes: 'no test rejects' is NOT usable as a binary gate here and is not used as one. The two gates actually adopted, C2a and C2b, give 1 - (1 - 0.01)^2 = 1.9900% (2.9701% if C2a's two arms and C2b are counted separately). C1 adds two deterministic-band tests at 6.3342e-05 each. Every other control is deterministic and consumes no entropy.
+2026-08-18 06:38:14 | INFO | Identity protocol confirmed across 7 primitives linked to Priorite_9_skew_robustness.py.
+2026-08-18 06:38:14 | INFO | Target SHA-256 for component generate_garch_skew verified.
+2026-08-18 06:38:14 | INFO | Target SHA-256 for component worker verified.
+2026-08-18 06:38:14 | INFO | Target SHA-256 for component plot_results verified.
+2026-08-18 06:38:14 | INFO | Target SHA-256 for component check_seeds_uniqueness verified.
+2026-08-18 06:38:14 | INFO | Target SHA-256 for component run_certifications verified.
+2026-08-18 06:38:14 | INFO | Target SHA-256 for component log_requirements verified.
+2026-08-18 06:38:14 | INFO | Target SHA-256 for component setup_logging verified.
+2026-08-18 06:38:14 | INFO | Target SHA-256 for component main verified.
+2026-08-18 06:38:14 | INFO | Identity protocol confirmed across 10 primitives linked to exp_R07_estimated_mean.py.
+2026-08-18 06:38:14 | INFO | Target SHA-256 for component lattice_exceedance_exact verified.
+2026-08-18 06:38:14 | INFO | Target SHA-256 for component lattice_exceedance_enumerated verified.
+2026-08-18 06:38:14 | INFO | Integrity check finalized. Processed 8162 characters across 17 total functional instances.
+2026-08-18 06:38:14 | INFO | AST dependencies verified. Marginal outputs structurally isolated.
+2026-08-18 06:38:14 | INFO | Verifying Skew-t moments pre-standardization...
+2026-08-18 06:38:15 | INFO | FS Standardisation passed. All z arrays have E[Z]=0, Var(Z)=1.
+2026-08-18 06:38:15 | INFO | Asymmetry integration at xi=1.0. Standardized constants mapped successfully.
+2026-08-18 06:38:15 | INFO | Asymmetry integration at xi=0.85. Standardized constants mapped successfully.
+2026-08-18 06:38:15 | INFO | Asymmetry integration at xi=0.65. Standardized constants mapped successfully.
+2026-08-18 06:38:15 | INFO | Asymmetry integration at xi=0.5. Standardized constants mapped successfully.
+2026-08-18 06:38:15 | INFO | Monte-Carlo standardization completed.
+2026-08-18 06:38:15 | INFO | Initializing Bernoulli grid comparisons.
+2026-08-18 06:38:17 | INFO | Dynamic program consistency corroborated.
+2026-08-18 06:39:08 | INFO | Structural integrity corroborated on binary indicators.
+2026-08-18 06:39:18 | INFO | Degraded pathway inspection resolved without errors.
+2026-08-18 06:39:18 | INFO | Constants verified synchronously across operational threads.
+2026-08-18 06:39:18 | INFO | Summary structures integrated successfully.
+2026-08-18 06:39:18 | INFO | C1, BEFORE ANY RESULT IS READ. Two two-sided tests at 4 standard errors of the across-stream mean: trigger probability 6.3342e-05 per test under a normal null, 1.2668e-04 for the pair.
+2026-08-18 06:39:18 | INFO | C1 SYMMETRIC WITNESS at xi = 1. Realized skewness -0.0002295139273865433 +/- 0.002857009597695856 over 1000 streams, which is -0.080 standard errors from 0. Marginal rate q = 0.499485125 +/- 0.00017681318109910636, which is -1.066 standard errors from q* = 0.4996735799825578 and -2.912 standard errors from 1/2. BOTH margins are reported because both statements are needed: the stream is centred where the standardisation constant puts it, and that is not 1/2. Criterion met: True.
+2026-08-18 06:39:18 | INFO | C2a, BEFORE ANY RESULT IS READ. Trigger probability at most 1% per arm, and STRICTLY BELOW it: the Ljung-Box statistic on a binary stream is discrete, so its p-values carry atoms and a Kolmogorov-Smirnov test against a continuous uniform is conservative. The repository has already measured that conservativeness at this exact configuration -- n = 8000, lag 20 -- in R18.
+2026-08-18 06:39:18 | INFO | C2a CITATION, read from results/R18_ljungbox_power/data/R18_size_at_null.csv at float_precision='round_trip' and never transcribed: at n_steps = 8000, lags = 20, R18 measured ks_statistic = 0.03325305136405571 on 1000 null streams, with a bootstrap p-value of the maximum KS statistic of 0.5665. The discreteness makes the KS test conservative, so 1% is an upper bound on this control's trigger probability, not an estimate of it.
+2026-08-18 06:39:18 | INFO | C2a [lb_sign] at xi = 1: KS of the cell's own 1000 p-values against Uniform(0,1) gives D = 0.02301836654813949, p = 0.6556599920342646. Criterion met: True.
+2026-08-18 06:39:18 | INFO | C2a [lb_ebin] at xi = 1: KS of the cell's own 1000 p-values against Uniform(0,1) gives D = 0.03744754139031792, p = 0.1180181072330917. Criterion met: True.
+2026-08-18 06:39:18 | INFO | C2a THE PRESCRIBED POOLED TEST, REPORTED AND NOT THE CRITERION. KS of the 8 per-cell binomial p-values against Uniform(0,1): D = 0.3617023786656224, p = 0.19161868004262983. VALIDITY LIMIT, stated here and not later: the eight cells are computed on the SAME 1000 streams under the mandated common-random-numbers plan, and the sign arm is i.i.d. Bernoulli(q) at every xi by control C4, so the eight p-values are neither independent of one another nor eight independent readings of the proposition. A KS test assumes independent draws under its null and has neither property here. It is persisted descriptively per S4bis.3 and gates nothing.
+2026-08-18 06:39:18 | INFO | C2a REPORTED, NOT GATED [lb_sign, xi = 0.85]: within-cell KS D = 0.018518496374260396, p = 0.8762638090537537.
+2026-08-18 06:39:18 | INFO | C2a REPORTED, NOT GATED [lb_sign, xi = 0.65]: within-cell KS D = 0.043437829883832935, p = 0.04458889457561355.
+2026-08-18 06:39:18 | INFO | C2a REPORTED, NOT GATED [lb_sign, xi = 0.5]: within-cell KS D = 0.03874859377189932, p = 0.09670906466097928.
+2026-08-18 06:39:18 | INFO | C2a REPORTED, NOT GATED [lb_ebin, xi = 0.85]: within-cell KS D = 0.03802195421396687, p = 0.10817655622563926.
+2026-08-18 06:39:18 | INFO | C2a REPORTED, NOT GATED [lb_ebin, xi = 0.65]: within-cell KS D = 0.04187697195575746, p = 0.058264826031989236.
+2026-08-18 06:39:18 | INFO | C2a REPORTED, NOT GATED [lb_ebin, xi = 0.5]: within-cell KS D = 0.03895749117126357, p = 0.09360636366785058.
+2026-08-18 06:39:18 | INFO | C2b, BEFORE ANY RESULT IS READ. 3 displaced grid points x 2 arms = 6 paired differences against the xi = 1 cell on the same 1000 streams; the statistic is their maximum in absolute value, read against a Rademacher sign-flip null of the maximum on 10000 replicates. Trigger probability exactly 0.01, by construction of the null.
+2026-08-18 06:39:18 | INFO | C2b RESULT: the widest paired difference is lb_sign @ xi=0.85 at +0.013000 on 93 discordant streams; the maximum over all 6 comparisons is 0.013000. The 99.0% quantile of the null maximum is 0.030000 and the observed maximum sits at a null exceedance probability of 0.6594. Criterion met: True. Full vector of paired differences: {'lb_sign @ xi=0.85': 0.013, 'lb_sign @ xi=0.65': -0.004, 'lb_sign @ xi=0.5': 0.0, 'lb_ebin @ xi=0.85': 0.001, 'lb_ebin @ xi=0.65': 0.001, 'lb_ebin @ xi=0.5': 0.01}.
+2026-08-18 06:39:37 | INFO | Artifact generation completed for core visualization sequence.
+2026-08-18 06:39:37 | INFO | Quantitative claims structured into output macro format successfully.
+2026-08-18 06:39:37 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
+2026-08-18 06:39:37 | INFO | results/R10_skew_robustness/
+2026-08-18 06:39:37 | INFO | ├── data/
+2026-08-18 06:39:37 | INFO | │   ├── R10_skew_fpr.csv                    [d2bda65da5accec537d66ff8c4fee516d89cb524ed429cc0927af8297c131d5f]
+2026-08-18 06:39:37 | INFO | │   ├── R10_skew_diagnostics.csv            [cc72f77fa539d29c614a222f5477e27708ae8e0519a6efa36e65b00f3bc52718]
+2026-08-18 06:39:37 | INFO | │   ├── R10_fs_constants.csv                [14520038fd72bc5dca1ac5f12496ed777f541036d2701205046a9ad37ea968b7]
+2026-08-18 06:39:37 | INFO | │   ├── R10_skew_streams.csv                [cb1543dcd4b8cd5aa761dbf96b9312b4b325321377dfcf77a697a1c126696f73]
+2026-08-18 06:39:37 | INFO | │   ├── R10_lattice_exact_law.csv           [8cf75d61533283c0a9f036b6586d7afb96a6aaca928923216522c3c8cb4f0ec8]
+2026-08-18 06:39:37 | INFO | │   ├── R10_operator_null_level.csv         [226fbfc23aa11be36fb016792797a43f6c70417786fcd4483bffa652a2383962]
+2026-08-18 06:39:37 | INFO | │   └── R10_design_effect.csv               [a63a7cbae9f0f40aa01b6a33b859c897ebef8e227090b50faaf91e638ab07a50]
+2026-08-18 06:39:37 | INFO | ├── figures/
+2026-08-18 06:39:37 | INFO | │   └── fig10_skew_robustness.png           [7abce27915f8fe47e6a2f2d170000909dff5bc8cbc28c016db19ed2243c3da70]
+2026-08-18 06:39:37 | INFO | └── tables/
+2026-08-18 06:39:37 | INFO |     └── R10_claims.tex                      [bcd03ff5abe7d121bc0acca0eb4fedf07940c47455652325ba3bfe48824ba07a]
+2026-08-18 06:39:37 | INFO | =============================================================================
+2026-08-18 06:39:37 | INFO | [SUCCESS] Pipeline completed.

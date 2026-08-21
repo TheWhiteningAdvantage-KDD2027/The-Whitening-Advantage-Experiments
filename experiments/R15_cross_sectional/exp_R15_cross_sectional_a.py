@@ -103,7 +103,7 @@ if os.environ.get("PYTHONHASHSEED") != "42":
 import numpy as np
 import pandas as pd
 from experiments.common.fair_harness import (setup_logging, disable_pandas_multithreading,
-                                             compute_sha256)
+                                             compute_sha256, log_artifact_manifest)
 
 disable_pandas_multithreading()
 
@@ -356,6 +356,7 @@ def verify_against_committed(panel, log):
                     f"is the frozen reviewer input of exp_R15_cross_sectional_b.py, and a network "
                     f"fetch is not a bit-stable object.")
         panel.to_csv(PANEL_PATH, index_label="Date")
+        log_artifact_manifest(log, [PANEL_PATH], DERIVED_DIR, BASE_DIR)
         return
     committed = pd.read_csv(PANEL_PATH, index_col="Date", parse_dates=True,
                             float_precision='round_trip')
@@ -472,14 +473,20 @@ def main():
              f"{args.stage}; data source: {args.data_source}.")
     pin_witness(log)
 
+    artefacts = []
     if args.stage in ("ingest", "all"):
         panel = build_panel(log)
         verify_against_committed(panel, log)
+        if not PANEL_PATH.exists():
+            artefacts.append(PANEL_PATH)
     if args.stage in ("analyse", "all"):
         analyse(log)
+        artefacts.append(PANEL_PATH)
     else:
         log.info("Stage `ingest` completed. The nominal reviewer path is `--stage analyse`, "
                  "which touches no network.")
+    if artefacts:
+        log_artifact_manifest(log, artefacts, DERIVED_DIR, BASE_DIR)
     log.info(f"Execution completed in {time.time() - t0:.1f}s (stage {args.stage}).")
 
 

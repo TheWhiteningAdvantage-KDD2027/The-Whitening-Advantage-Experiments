@@ -56,7 +56,7 @@ nothing else**. It says nothing whatever about the sampling behaviour of `ρ` or
 draw was frozen before the campaign began. The epistemic-asymmetry rule applies at full force, and
 it is why control C1 asserts the *integer* composition rather than observing a float.
 
-**2. The freeze is not licensed by §S6's *règle de partage*.** That clause covers analytic
+**2. The freeze is not licensed by §S6's sharing rule.** That clause covers analytic
 constants of the apparatus. `assets_idx` is a uniform draw over subsets of size `K`. It is carried
 because it selects *which real series enter the experiment* — the same category as R01's four ETFs,
 R16's four streams and R14's 106 monthly onsets, none of which is redrawn — and on that ground
@@ -355,14 +355,8 @@ finding as `R12-concept-crn-degeneracy`. No published aggregate reads `K = 1`.
 
 Three clarifications, each with a camera-ready candidate headed `NO DEVIATION`:
 
-- **The composition attribution** (`R15_v87_scatter_attribution.md`). Confounded with `K`;
-  untestable here. The caption is not false — compositions do vary.
-- **The bound's referent** (`R15_v87_budget_bound_referent.md`). The caption names `K_eff` and the
-  delivered figure draws `√K_eff` (line 381). The regenerated reduction exceeds `√K_eff = 1.9331` at
-  **six of ten** plotted cells and exceeds `K_eff = 3.7370` at **none**, so the caption's literal
-  reading holds and the figure's own reference line does not bound the curve. Also recorded there:
-  `K_eff ≈ 3.8` is `1/ρ̂ = 3.8314`, whereas the measured `K_eff` at `K = 97` is `3.7370`; the gap is
-  the finite-panel term and the caption's `≈` covers it. The regenerated figure draws **both** lines.
+- **The composition attribution** (`R15_v87_scatter_attribution.md`). Confounded with `K`; untestable here. The caption is not false — compositions do vary.
+- **The bound's referent** (`R15_v87_budget_bound_referent.md`). The caption names `K_eff` and the delivered figure draws `√K_eff` (line 381). The regenerated reduction exceeds `√K_eff = 1.9331` at **six of ten** plotted cells and exceeds `K_eff = 3.7370` at **none**, so the caption's literal reading holds and the figure's own reference line does not bound the curve. Also recorded there: `K_eff ≈ 3.8` is `1/ρ̂ = 3.8314`, whereas the measured `K_eff` at `K = 97` is `3.7370`; the gap is the finite-panel term and the caption's `≈` covers it. The regenerated figure draws **both** lines.
 - **The naive baseline** (`R15_v87_naive_baseline.md`). §6 below.
 
 ---
@@ -396,22 +390,9 @@ summation order* — the qualifier the planned assertion omitted.
 
 **What replaced it, and why it asserts more.**
 
-1. **Leg 1 is now exact and BLAS-independent**: the integer composition, bit-identical at all ten
-   `K`, replayed by executing the witness's own statements. It gates. It is achievable in any BLAS
-   regime, and it is the assertion that actually protects the stream — if the composition moved,
-   nothing here would be comparable to v87 at all.
-2. **Leg 3 holds the four floats to a bound derived from the mechanism**, `T·K·ε` from the classical
-   reordering bound (Higham 2002, ch. 4), stated in the source above the run and **not** read off
-   the measured residual. A bound derived from the observation would assert nothing; this one is
-   exceeded by nothing here at a worst margin of `2.81e-4`, and being exceeded would be a real
-   finding.
-3. **`--witness-blas` keeps its purpose, which is attribution and not passing.** It removes
-   `MKL_CBWR` before NumPy loads, runs **unconditionally** after the default arm, and stamps every
-   output. It answers one question: does the residual come from the reordering or from the port?
-   It comes from the reordering — with `MKL_CBWR` gone, all four columns are bit-identical to the
-   witness at all ten `K`. R01's `--legacy-blas` **refuted** its hypothesis and R14's
-   `--legacy-seeds` confirmed its own; either outcome is information, which is why the arm cannot be
-   conditional on a result.
+1. **Leg 1 is now exact and BLAS-independent**: the integer composition, bit-identical at all ten `K`, replayed by executing the witness's own statements. It gates. It is achievable in any BLAS regime, and it is the assertion that actually protects the stream — if the composition moved, nothing here would be comparable to v87 at all.
+2. **Leg 3 holds the four floats to a bound derived from the mechanism**, `T·K·ε` from the classical reordering bound (Higham 2002, ch. 4), stated in the source above the run and **not** read off the measured residual. A bound derived from the observation would assert nothing; this one is exceeded by nothing here at a worst margin of `2.81e-4`, and being exceeded would be a real finding.
+3. **`--witness-blas` keeps its purpose, which is attribution and not passing.** It removes `MKL_CBWR` before NumPy loads, runs **unconditionally** after the default arm, and stamps every output. It answers one question: does the residual come from the reordering or from the port? It comes from the reordering — with `MKL_CBWR` gone, all four columns are bit-identical to the witness at all ten `K`. R01's `--legacy-blas` **refuted** its hypothesis and R14's `--legacy-seeds` confirmed its own; either outcome is information, which is why the arm cannot be conditional on a result.
 
 **`experiments/common/fair_env.py` is not touched.** It is shared by every stream, and the removal is
 three lines local to `exp_R15_cross_sectional_b.py`, executed before NumPy exists because `MKL_CBWR`
@@ -634,12 +615,7 @@ columns in order and its 5154 dates. Values bit-identical: False; worst absolute
 2.1631744715252393e-06. The committed file is NOT overwritten.
 ```
 
-Same two abandonments, same three coverage failures at the same row counts, same 97 columns **in
-the same order**, same 5 154 dates. The *values* differ by at most `2.16e-06` in absolute
-log-return, which is the provider restating history — and is exactly why the committed CSV is the
-frozen input and why the ingest branch **verifies and refuses to overwrite** it. A campaign keyed to
-a panel that silently changes under it would not be reproducible at all. This limitation is registered 
-as **`R15-panel-vendor-drift`** (Class B, D0).
+Same two abandonments, same three coverage failures at the same row counts, same 97 columns **in the same order**, same 5 154 dates. The *values* differ by at most `2.16e-06` in absolute log-return, which is the provider restating history — and is exactly why the committed CSV is the frozen input and why the ingest branch **verifies and refuses to overwrite** it. A campaign keyed to a panel that silently changes under it would not be reproducible at all. This limitation is registered as **`R15-panel-vendor-drift`** (Class B, D0).
 
 This also closes F6 empirically rather than by argument: had `MMC` or `K` fetched successfully
 today, `K_max` would have become 98 or 99, the last element of the published `K_GRID` would have

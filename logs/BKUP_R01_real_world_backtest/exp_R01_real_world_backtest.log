@@ -1,0 +1,24 @@
+2026-08-12 23:32:30 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-08-12 23:32:30 | INFO | Python: 3.12.9
+2026-08-12 23:32:30 | INFO |   numpy: 1.26.4
+2026-08-12 23:32:30 | INFO |   pandas: 2.3.2
+2026-08-12 23:32:30 | INFO |   scipy: 1.16.2
+2026-08-12 23:32:30 | INFO |   statsmodels: 0.14.5
+2026-08-12 23:32:30 | INFO |   matplotlib: 3.10.6
+2026-08-12 23:32:30 | INFO |   yfinance: 1.2.0
+2026-08-12 23:32:30 | INFO | Hashing derived file R01_daily_SPY.csv: 44b0fdd7ddd121558f3d2e22bba743f180d6165a3bf4f05e1520c737289627f4
+2026-08-12 23:32:30 | INFO | [SPY] Data points: 2000-01-04 to 2025-07-07 (6414 days)
+2026-08-12 23:32:30 | INFO | Hashing derived file R01_daily_PFF.csv: e1581f58e4bc746531f7d1faf1e084b954167cfd0ab3717b2680aac957720817
+2026-08-12 23:32:30 | INFO | [PFF] Data points: 2007-12-27 to 2025-07-07 (4403 days)
+2026-08-12 23:32:30 | INFO | Hashing derived file R01_daily_VNQ.csv: c46c477438f508063a119ab4d05dc9624402a5fabec5fc16abb5cc82d23ad0bf
+2026-08-12 23:32:30 | INFO | [VNQ] Data points: 2005-01-04 to 2025-07-07 (5014 days)
+2026-08-12 23:32:30 | INFO | Hashing derived file R01_daily_BWX.csv: 9aad7d97509744ebaebc0f22c9f45b78572765f87ea190b1b0c5fade599d0be6
+2026-08-12 23:32:30 | INFO | [BWX] Data points: 2007-10-09 to 2025-07-07 (4451 days)
+2026-08-12 23:32:30 | INFO | --- PHASE 1: WARM-UP & GATEKEEPER (2018-2019) ---
+2026-08-12 23:32:31 | INFO | --- PHASE 2: PANEL A - COVID-19 VARIANCE SHOCK (SPY) ---
+2026-08-12 23:32:31 | INFO | Concept alarms in 2020: 0
+2026-08-12 23:32:31 | INFO | --- PHASE 2.5: SYMMETRY 2020 ---
+2026-08-12 23:32:31 | INFO | --- PHASE 3: PANEL B - SEMI-REAL INJECTIONS (2021-2023) ---
+2026-08-12 23:32:31 | INFO | --- GENERATING LATEX MACROS ---
+2026-08-12 23:32:31 | INFO | --- GENERATING FIGURES ---
+2026-08-12 23:32:31 | INFO | [SUCCESS] Pipeline completed.

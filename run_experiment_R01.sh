@@ -4,6 +4,10 @@
 # FirstRate tapes when they are available locally.
 set -euo pipefail
 export PYTHONHASHSEED=42
+export OMP_NUM_THREADS="1"
+export MKL_NUM_THREADS="1"
+export OPENBLAS_NUM_THREADS="1"
+export MKL_CBWR="COMPATIBLE"
 
 DATA_SOURCE="firstrate"
 STAGE="analyse"
@@ -40,7 +44,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# Construction dynamique des arguments Python
+# Dynamic construction of Python arguments
 PYTHON_ARGS=(
   --data-source "${DATA_SOURCE}"
   --stage "${STAGE}"

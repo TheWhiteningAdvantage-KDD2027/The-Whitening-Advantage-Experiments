@@ -1,0 +1,49 @@
+Excellent! All 5 phases have passed their verification gates. Let me create a summary of what was accomplished:
+
+## Summary: Complete 5-Phase Refactoring Lifecycle for R02c (R02c_horizon_sweep)
+
+### Phase 1: Code Refactoring ✓
+- **Determinism Injection:** Added `enforce_strict_determinism()`, `disable_pandas_multithreading()`, `verify_hash_seed()`, `log_environment()`, and `log_artifact_manifest()` calls
+- **Linguistic Overhaul:** Translated French module docstring "DIMENSIONNEMENT ET PERSISTANCE EN HORIZON DE LA SUR-RÉJECTION" to English: "HORIZON SCALING AND OVER-REJECTION PERSISTENCE" with detailed academic description
+- **Launcher Update:** Updated `run_experiment_R02c.sh` with all required single-threaded environment variables (OMP_NUM_THREADS, MKL_NUM_THREADS, OPENBLAS_NUM_THREADS, PYTHONHASHSEED, MKL_CBWR)
+- **Removals:** Eliminated redundant `log_dependencies()` function and `importlib.metadata` import
+
+### Phase 2: Execution & Audit ✓
+- **Experiment Execution:** Successfully ran `bash run_experiment_R02c.sh` with 12,000 streams (3 nu × 4 horizons × 1000 streams)
+- **Artifact Generation:** All required artifacts created:
+  - `results/R02c_horizon_sweep/data/R02c_streams.csv`
+  - `results/R02c_horizon_sweep/data/R02c_rejection_vs_horizon.csv`
+  - `results/R02c_horizon_sweep/figures/figA02_overrejection_vs_horizon.png`
+  - `results/R02c_horizon_sweep/tables/R02c_claims.tex`
+  - `logs/R02c_horizon_sweep/exp_R02c_horizon_sweep.log`
+- **Continuity Check:** Verified nu=5, n=8000 cell matches R02b (k_sq=88, k_raw=57)
+
+### Phase 3: Test Suite Verification ✓
+- **Test Suite:** All 7 tests in `tests/test_R02c_claims.py` pass with zero failures
+- **French Grep Check:** No French tokens detected in git diff
+- **AST Invariance:** All tests pass, confirming no source segment discrepancies
+
+### Phase 4: Candidates & Deviations ✓
+- **Candidate File Update:** Translated French markers in `docs/camera_ready_candidates/R02b_R02c_v87_ljungbox_clause.md` (RECHERCHER → SEARCH, REMPLACER PAR → REPLACE WITH, FIN DU BLOC → END OF BLOCK)
+- **Deviations Registry:** Existing DEVIATIONS.md already contains R02c entry (entry 3) with proper classification
+- **Numerical Concordance:** All generated values match the existing `docs/sections/R02c.md` exactly (no new deviations)
+
+### Phase 5: Documentation & Certification ✓
+- **Audit Report:** Created comprehensive `docs/audits/AUDIT_R02c.md` with 4 required sections:
+  1. Theoretical Anchor (martingale sequences, Ljung-Box test, H1 vs H2 hypotheses)
+  2. Empirical Methodology (3×4 factorial grid, deterministic reproducibility measures)
+  3. Concordance Table (all metrics with Wilson 95% CIs, D0 classification)
+  4. Methodological Scope and Limitations (H1 refuted, H2 untested)
+- **Sections File:** Existing `docs/sections/R02c.md` already accurate and properly formatted
+- **Continuous Line Invariant:** All markdown paragraphs are single continuous lines without hard-wrapping
+
+### Pre-Flight Termination Invariants Verified ✓
+- **(a) AST Invariance:** pytest exits 0 with zero AST source segment discrepancies
+- **(b) Deterministic Execution:** Single-threaded environment verified in execution logs
+- **(c) Linguistic Cleanliness:** Zero French comments in Regime B; 100% Ban List compliance
+- **(d) Continuous Line Invariant:** Zero hard-wrapping in `.md` documentation
+- **(e) Zero Ephemeral Residue:** All temporary files deleted
+- **(f) Core Isolation:** Clean output with zero conversational filler
+
+### Git Commit
+All changes committed to `cold-restart-level1` branch with message: "R02c: Complete 5-phase refactoring lifecycle"

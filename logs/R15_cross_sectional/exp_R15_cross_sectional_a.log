@@ -1,0 +1,20 @@
+2026-08-21 16:14:47 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-08-21 16:14:47 | INFO | Python: 3.12.9
+2026-08-21 16:14:47 | INFO |   numpy: 1.26.4
+2026-08-21 16:14:47 | INFO |   pandas: 2.3.2
+2026-08-21 16:14:47 | INFO |   yfinance: 1.2.0
+2026-08-21 16:14:47 | INFO | R15 (a) establishes the provenance of the 97-equity panel behind v87 Figure 17 and discharges L389's printed promise of a public equity fetcher. Stage: analyse; data source: yfinance.
+2026-08-21 16:14:47 | INFO | Witness fetcher Priorite_25b_fetch_yf_panel.py: SHA-256 b846771526d5b6cf453d1a5a789c25271e5162674d8eb7eb44254d3a931a477f.
+2026-08-21 16:14:47 | INFO | SUPERSEDED fetch_one: witness segment SHA-256 86cf0cedb3e9be08d27d6ed4786f979e40c08bf1fc7812933dc96d1e1055e17a (907 characters). Not carried byte-identically -- `fetch_one` swallows every exception into one `except Exception` and returns None, which is the silent drop of preamble S4.3.
+2026-08-21 16:14:47 | INFO | SUPERSEDED main: witness segment SHA-256 e38e2afe20d52be5d8b0ec8db82b94c44cadab4b61bc800e0e1711cb65a89f5b (949 characters). Not carried byte-identically -- `main` skips a None series with a bare `if s is not None`, so a network outage silently reduces K_max and rewrites the published K_GRID.
+2026-08-21 16:14:47 | INFO | Witness fetch log Priorite_25b_fetch_yf_panel.log: SHA-256 7cca0b81b4af03ea1fa0911cbfb1a0f4462ba11f0a93468cc216e0ada295b338. It is the artefact that fixes the survival chain reproduced below.
+2026-08-21 16:14:47 | INFO | R15_panel_logreturns.csv: SHA-256 fb426ab0e7e112de61f112952737fd38ea103bd90e1989defa6d33dc086bcf8f.
+2026-08-21 16:14:47 | INFO | Panel: 97 tickers x 5154 days [2005-01-04..2025-06-30]. Column order: ['AAPL', 'MSFT', 'AMZN', 'GOOGL', 'JPM', 'JNJ', 'PG', 'HD', 'BAC', 'DIS', 'ADBE', 'XOM', 'CVX', 'KO', 'PEP', 'WMT', 'CSCO', 'INTC', 'CMCSA', 'PFE', 'ABT', 'MRK', 'WFC', 'TMO', 'COST', 'MCD', 'NKE', 'DHR', 'TXN', 'NEE', 'ORCL', 'QCOM', 'HON', 'UNH', 'AMGN', 'IBM', 'GE', 'CAT', 'MMM', 'GS', 'BA', 'SBUX', 'LOW', 'AXP', 'BLK', 'GILD', 'MDLZ', 'ISRG', 'AMD', 'ADP', 'C', 'MS', 'SPGI', 'CB', 'MO', 'DUK', 'SO', 'BDX', 'CL', 'USB', 'PNC', 'TGT', 'FDX', 'CSX', 'EMR', 'ITW', 'AON', 'SLB', 'EOG', 'COP', 'APD', 'SHW', 'ECL', 'NSC', 'WM', 'PSA', 'AEP', 'D', 'EXC', 'F', 'DD', 'KMB', 'GIS', 'HSY', 'SYY', 'ADI', 'MU', 'LRCX', 'KLAC', 'AMAT', 'ROP', 'INTU', 'UPS', 'RTX', 'NVDA', 'CRM', 'LLY'].
+2026-08-21 16:14:47 | INFO | The committed panel reproduces v87's published description exactly: 97 surviving US equities, 5154 common trading days, 2005-01-04 to 2025-06-30 -- L376's '97 surviving US equities, 2005--2025'.
+2026-08-21 16:14:47 | INFO | SURVIVAL CHAIN, replayed from Priorite_25b_fetch_yf_panel.log without a network call: 103 listed -> 102 unique (QCOM duplicated) -> 100 fetched (MMC, K abandoned after 3 attempts, both 'possibly delisted; no timezone found') -> 97 retained (V 4347/5154 = 84.3%, MA 4803/5154 = 93.2%, GM 3673/5154 = 71.3% below the 98% floor) -> 5154 dates.
+2026-08-21 16:14:47 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
+2026-08-21 16:14:47 | INFO | data/derived_equities/
+2026-08-21 16:14:47 | INFO | └── /
+2026-08-21 16:14:47 | INFO |     └── R15_panel_logreturns.csv            [fb426ab0e7e112de61f112952737fd38ea103bd90e1989defa6d33dc086bcf8f]
+2026-08-21 16:14:47 | INFO | =============================================================================
+2026-08-21 16:14:47 | INFO | Execution completed in 0.2s (stage analyse).

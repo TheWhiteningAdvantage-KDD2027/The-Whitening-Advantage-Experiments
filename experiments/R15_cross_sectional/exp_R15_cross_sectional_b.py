@@ -172,7 +172,7 @@ if WITNESS_BLAS:
 import numpy as np
 import pandas as pd
 from experiments.common.fair_harness import (setup_logging, disable_pandas_multithreading,
-                                             compute_sha256, save_fair_csv)
+                                             compute_sha256, save_fair_csv, log_artifact_manifest)
 
 disable_pandas_multithreading()
 
@@ -465,13 +465,13 @@ def worker_race_h1_real(rng, eps_K_full, H_ref, H_det, c, lam_boot):
     t_start = rng.integers(0, max_start + 1)
     eps_window = eps_K_full[:, t_start : t_start + H_ref + H_det]
 
-    # Standardisation sur H_ref pour l'injection c*sigma
+    # Standardization over H_ref for c*sigma injection
     med = np.median(eps_window[:, :H_ref], axis=1, keepdims=True)
     std = np.std(eps_window[:, :H_ref], axis=1, keepdims=True)
     std[std == 0] = 1.0
     eps_std = (eps_window - med) / std
 
-    # Injection semi-reelle H1
+    # Semi-real H1 injection
     eps_std[:, H_ref:] += c
 
     x = fraction_stream(eps_std)[H_ref:]
@@ -886,7 +886,7 @@ def run_diagnostics(eps_real_full, compositions, K_grid, log):
     for k_index, K in enumerate(K_grid):
         eps_K_full = eps_real_full[compositions[K], :]
 
-        # Recentrage sur la mediane temporelle globale pour symetrie directionnelle
+        # Re-centering on the global temporal median for directional symmetry
         med_full = np.median(eps_K_full, axis=1, keepdims=True)
         eps_K_centered = eps_K_full - med_full
         x_diag = fraction_stream(eps_K_centered)
@@ -1955,6 +1955,14 @@ def main():
         sys.exit(1)
     log.info(f"Emitted {len(emitted)} macros to {tex_path.name}, cardinal prefix \\RFifteen per "
              f"preamble S6. Every value is computed from an object in memory.")
+
+    # =====================================================================
+    # ARTIFACT MANIFEST
+    # =====================================================================
+    artefact_paths = [DATA_DIR / name for name in artefacts]
+    artefact_paths.append(FIGURES_DIR / f"fig17_cross_section{sfx}.png")
+    artefact_paths.append(tex_path)
+    log_artifact_manifest(log, artefact_paths, RESULTS_DIR, BASE_DIR)
 
     # =====================================================================
     # PREAMBLE S3 -- THE CLASSIFICATION, COMPUTED

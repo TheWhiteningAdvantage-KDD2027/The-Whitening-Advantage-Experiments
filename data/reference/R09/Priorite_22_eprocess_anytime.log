@@ -1,0 +1,86 @@
+2026-07-29 00:57:38 | INFO | --- Execution Environment Requirements ---
+2026-07-29 00:57:38 | INFO | numpy==1.26.4
+2026-07-29 00:57:38 | INFO | pandas==2.3.2
+2026-07-29 00:57:38 | INFO | scipy==1.16.2
+2026-07-29 00:57:38 | INFO | statsmodels==0.14.5
+2026-07-29 00:57:38 | INFO | matplotlib==3.10.6
+2026-07-29 00:57:38 | INFO | joblib==1.4.2
+2026-07-29 00:57:38 | INFO | tqdm==4.67.1
+2026-07-29 00:57:38 | INFO | ------------------------------------------
+2026-07-29 00:57:38 | INFO | Master SeedSequence initialized with entropy: 42027
+2026-07-29 00:57:38 | INFO | Fast mode: False | N_CAL=50000, N_NULL=20000, N_ALT=2000, T_EXT=20000
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, ()) for context 'Master'.
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (0,)) for context 'main_branches'.
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (1,)) for context 'main_branches'.
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (2,)) for context 'main_branches'.
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (3,)) for context 'main_branches'.
+2026-07-29 00:57:38 | INFO | Executing M1 Certificate (Parallelized via invariant PRNG spawning)...
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (0, 0)) for context 'M1_main'.
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (0, 1)) for context 'M1_main'.
+2026-07-29 00:57:38 | INFO | M1(i) Mean of lambda_t over 2e6 steps: 0.99988
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (0, 1, 0)) for context 'M1_chunks'.
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (0, 1, 1)) for context 'M1_chunks'.
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (0, 1, 2)) for context 'M1_chunks'.
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (0, 1, 3)) for context 'M1_chunks'.
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (0, 1, 4)) for context 'M1_chunks'.
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (0, 1, 5)) for context 'M1_chunks'.
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (0, 1, 6)) for context 'M1_chunks'.
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (0, 1, 7)) for context 'M1_chunks'.
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (0, 1, 8)) for context 'M1_chunks'.
+2026-07-29 00:57:38 | INFO | Registered PRNG seed key (42027, (0, 1, 9)) for context 'M1_chunks'.
+2026-07-29 00:59:50 | INFO | M1(ii) alpha=0.1: FPR anytime over T_EXT = 0.0929 (Wilson CI: [0.0889, 0.0970])
+2026-07-29 00:59:50 | INFO | M1(ii) alpha=0.07: FPR anytime over T_EXT = 0.0668 (Wilson CI: [0.0634, 0.0703])
+2026-07-29 00:59:50 | INFO | M1(ii) alpha=0.05: FPR anytime over T_EXT = 0.0478 (Wilson CI: [0.0449, 0.0508])
+2026-07-29 00:59:50 | INFO | M1(ii) alpha=0.035: FPR anytime over T_EXT = 0.0331 (Wilson CI: [0.0307, 0.0357])
+2026-07-29 00:59:50 | INFO | M1(ii) alpha=0.025: FPR anytime over T_EXT = 0.0226 (Wilson CI: [0.0207, 0.0248])
+2026-07-29 00:59:50 | INFO | M1(ii) alpha=0.015: FPR anytime over T_EXT = 0.0131 (Wilson CI: [0.0116, 0.0148])
+2026-07-29 00:59:50 | INFO | M1(ii) alpha=0.01: FPR anytime over T_EXT = 0.0081 (Wilson CI: [0.0069, 0.0094])
+2026-07-29 00:59:50 | INFO | M1 Certificate PASS.
+2026-07-29 00:59:50 | INFO | Calibrating CUSUM threshold on lattice...
+2026-07-29 00:59:50 | INFO | Registered PRNG seed key (42027, (1, 0)) for context 'CUSUM_calib'.
+2026-07-29 00:59:56 | INFO | Calibration alpha=0.1: lambda_star=10.4000, achieved=0.1005
+2026-07-29 00:59:56 | INFO | Calibration alpha=0.07: lambda_star=11.0000, achieved=0.0707
+2026-07-29 00:59:56 | INFO | Calibration alpha=0.05: lambda_star=11.4000, achieved=0.0504
+2026-07-29 00:59:56 | INFO | Calibration alpha=0.035: lambda_star=11.8000, achieved=0.0352
+2026-07-29 00:59:56 | INFO | Calibration alpha=0.025: lambda_star=12.2000, achieved=0.0250
+2026-07-29 00:59:56 | INFO | Calibration alpha=0.015: lambda_star=12.8000, achieved=0.0150
+2026-07-29 00:59:56 | INFO | Calibration alpha=0.01: lambda_star=13.4000, achieved=0.0101
+2026-07-29 00:59:56 | INFO | CUSUM comparison semantics: flottants bruts >= lambda_star (niveau effectif ~5.03%)
+2026-07-29 00:59:56 | INFO | Simulating H0 streams for M2, M3, M6 (Parallelized via invariant PRNG spawning)...
+2026-07-29 00:59:56 | INFO | Registered PRNG seed key (42027, (2, 0)) for context 'H0_chunks'.
+2026-07-29 00:59:56 | INFO | Registered PRNG seed key (42027, (2, 1)) for context 'H0_chunks'.
+2026-07-29 00:59:56 | INFO | Registered PRNG seed key (42027, (2, 2)) for context 'H0_chunks'.
+2026-07-29 00:59:56 | INFO | Registered PRNG seed key (42027, (2, 3)) for context 'H0_chunks'.
+2026-07-29 00:59:56 | INFO | Registered PRNG seed key (42027, (2, 4)) for context 'H0_chunks'.
+2026-07-29 00:59:56 | INFO | Registered PRNG seed key (42027, (2, 5)) for context 'H0_chunks'.
+2026-07-29 00:59:56 | INFO | Registered PRNG seed key (42027, (2, 6)) for context 'H0_chunks'.
+2026-07-29 00:59:56 | INFO | Registered PRNG seed key (42027, (2, 7)) for context 'H0_chunks'.
+2026-07-29 00:59:56 | INFO | Registered PRNG seed key (42027, (2, 8)) for context 'H0_chunks'.
+2026-07-29 00:59:56 | INFO | Registered PRNG seed key (42027, (2, 9)) for context 'H0_chunks'.
+2026-07-29 01:02:12 | INFO | Simulating H1 streams for M4...
+2026-07-29 01:02:12 | INFO | Registered PRNG seed key (42027, (3, 0)) for context 'H1_sim'.
+2026-07-29 01:03:54 | INFO | Validating control flags (b) to (g)...
+2026-07-29 01:03:54 | INFO | Control (b): CUSUM alpha=0.05 lambda_star=11.4000, FPR_M2=0.0493
+2026-07-29 01:03:54 | INFO | Control (c): eCUSUM FPR on [1, T_ext] at alpha=0.05 is 1.0000
+2026-07-29 01:03:54 | INFO | Control (g): MIX FPR_ext=0.0495, Det=0.9855, ADD=409.11
+2026-07-29 01:03:54 | INFO | Censorship registered: CUSUM alpha=0.1 has right-censored fraction = 0.6535. ARL0_mean behaves strictly as a lower bound.
+2026-07-29 01:03:54 | INFO | Censorship registered: CUSUM alpha=0.07 has right-censored fraction = 0.7485. ARL0_mean behaves strictly as a lower bound.
+2026-07-29 01:03:54 | INFO | Censorship registered: CUSUM alpha=0.05 has right-censored fraction = 0.8199. ARL0_mean behaves strictly as a lower bound.
+2026-07-29 01:03:54 | INFO | Censorship registered: CUSUM alpha=0.035 has right-censored fraction = 0.8698. ARL0_mean behaves strictly as a lower bound.
+2026-07-29 01:03:54 | INFO | Censorship registered: CUSUM alpha=0.025 has right-censored fraction = 0.9074. ARL0_mean behaves strictly as a lower bound.
+2026-07-29 01:03:54 | INFO | Censorship registered: CUSUM alpha=0.015 has right-censored fraction = 0.9411. ARL0_mean behaves strictly as a lower bound.
+2026-07-29 01:03:54 | INFO | Censorship registered: CUSUM alpha=0.01 has right-censored fraction = 0.9579. ARL0_mean behaves strictly as a lower bound.
+2026-07-29 01:03:54 | INFO | Censorship registered: MIX alpha=0.1 has right-censored fraction = 0.9046. ARL0_mean behaves strictly as a lower bound.
+2026-07-29 01:03:54 | INFO | Censorship registered: MIX alpha=0.07 has right-censored fraction = 0.9314. ARL0_mean behaves strictly as a lower bound.
+2026-07-29 01:03:54 | INFO | Censorship registered: MIX alpha=0.05 has right-censored fraction = 0.9506. ARL0_mean behaves strictly as a lower bound.
+2026-07-29 01:03:54 | INFO | Censorship registered: MIX alpha=0.035 has right-censored fraction = 0.9663. ARL0_mean behaves strictly as a lower bound.
+2026-07-29 01:03:54 | INFO | Censorship registered: MIX alpha=0.025 has right-censored fraction = 0.9758. ARL0_mean behaves strictly as a lower bound.
+2026-07-29 01:03:54 | INFO | Censorship registered: MIX alpha=0.015 has right-censored fraction = 0.9853. ARL0_mean behaves strictly as a lower bound.
+2026-07-29 01:03:54 | INFO | Censorship registered: MIX alpha=0.01 has right-censored fraction = 0.9906. ARL0_mean behaves strictly as a lower bound.
+2026-07-29 01:03:54 | INFO | Censorship registered: eCUSUM alpha=0.01 has right-censored fraction = 0.0006. ARL0_mean behaves strictly as a lower bound.
+2026-07-29 01:03:55 | INFO | --- File Integrity Checks (SHA-256) ---
+2026-07-29 01:03:55 | INFO | protocol_22a_validity_stopping.csv SHA-256: 4dfe5a34a834c96747d122ae87c88c25b228b1dd871e05572dcf5c6c26dd8c45
+2026-07-29 01:03:55 | INFO | protocol_22b_eprocess_race.csv SHA-256: 0a3e63dd432e286642003e823fce3049c748140cd0128ac64b110a5528fcab98
+2026-07-29 01:03:55 | INFO | protocol_22c_level_granularity.csv SHA-256: 82c1c7ed076cb5a663b68e138d80ed8b8bf66ad63dc957a9f2fd53a71dd7dc2d
+2026-07-29 01:03:55 | INFO | protocol_22d_arl0.csv SHA-256: 90cb89944dd1869b8e2eede28db09d395d18077d9e4c697ff0296b813adae722
+2026-07-29 01:03:55 | INFO | All deliverables generated successfully.

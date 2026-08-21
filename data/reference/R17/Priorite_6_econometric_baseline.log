@@ -1,0 +1,78 @@
+
+--- PROTOCOL 3A: FPR Well-Specified (H0) ---
+Gamma=	1.0 | Uncal: 0.01 | Recalib: 0.01 | Eco: 0.01 | ML: 0.07
+Gamma=	5.0 | Uncal: 0.42 | Recalib: 0.04 | Eco: 0.01 | ML: 0.07
+Gamma= 11.6 | Uncal: 0.66 | Recalib: 0.04 | Eco: 0.03 | ML: 0.07
+Gamma= 30.0 | Uncal: 0.75 | Recalib: 0.04 | Eco: 0.03 | ML: 0.07
+Gamma= 50.0 | Uncal: 0.74 | Recalib: 0.03 | Eco: 0.03 | ML: 0.07
+Gamma= 90.0 | Uncal: 0.77 | Recalib: 0.03 | Eco: 0.03 | ML: 0.07
+Gamma=140.0 | Uncal: 0.78 | Recalib: 0.03 | Eco: 0.03 | ML: 0.07
+Gamma=200.0 | Uncal: 0.78 | Recalib: 0.03 | Eco: 0.03 | ML: 0.07
+
+--- PROTOCOL 3B: ADD Abrupt Shift (Commensurable) ---
+Gamma=	1.0 | c=0.0 | FPR_Recalib: 0.02 | FPR_Eco_L2: 0.02 | FPR_Eco_L1: 0.07 | FPR_ML: 0.04
+Gamma=	1.0 | c= 0.5 | ADD_Recalib: 3250.0 | ADD_Eco_L2: 3250.0 | ADD_Eco_L1:  126.1 | ADD_ML:	 79.8
+Gamma=	1.0 | c= 1.0 | ADD_Recalib: 1211.1 | ADD_Eco_L2: 1233.6 | ADD_Eco_L1:	19.4 | ADD_ML:	 37.6
+Gamma=	1.0 | c= 2.0 | ADD_Recalib:   44.4 | ADD_Eco_L2:   44.3 | ADD_Eco_L1:	 6.4 | ADD_ML:	 25.9
+Gamma=	1.0 | c= 5.0 | ADD_Recalib:    4.9 | ADD_Eco_L2:    4.8 | ADD_Eco_L1:	 1.8 | ADD_ML:	 24.0
+Gamma=	1.0 | c=10.0 | ADD_Recalib:    0.9 | ADD_Eco_L2:    0.9 | ADD_Eco_L1:	 0.7 | ADD_ML:	 24.0
+Gamma=	5.0 | c=0.0 | FPR_Recalib: 0.01 | FPR_Eco_L2: 0.02 | FPR_Eco_L1: 0.12 | FPR_ML: 0.04
+Gamma=	5.0 | c= 0.5 | ADD_Recalib: 2461.0 | ADD_Eco_L2: 3250.0 | ADD_Eco_L1:	91.3 | ADD_ML:	 72.8
+Gamma=	5.0 | c= 1.0 | ADD_Recalib: 1804.5 | ADD_Eco_L2:  609.7 | ADD_Eco_L1:	17.2 | ADD_ML:	 36.9
+Gamma=	5.0 | c= 2.0 | ADD_Recalib:  272.4 | ADD_Eco_L2:   36.7 | ADD_Eco_L1:	 5.8 | ADD_ML:	 25.7
+Gamma=	5.0 | c= 5.0 | ADD_Recalib:   29.3 | ADD_Eco_L2:    4.3 | ADD_Eco_L1:	 1.7 | ADD_ML:	 24.0
+Gamma=	5.0 | c=10.0 | ADD_Recalib:    6.6 | ADD_Eco_L2:    0.7 | ADD_Eco_L1:	 0.5 | ADD_ML:	 24.0
+Gamma= 11.6 | c=0.0 | FPR_Recalib: 0.02 | FPR_Eco_L2: 0.02 | FPR_Eco_L1: 0.11 | FPR_ML: 0.04
+Gamma= 11.6 | c= 0.5 | ADD_Recalib: 1439.5 | ADD_Eco_L2: 3250.0 | ADD_Eco_L1:	78.5 | ADD_ML:	 70.7
+Gamma= 11.6 | c= 1.0 | ADD_Recalib: 2764.2 | ADD_Eco_L2:  448.6 | ADD_Eco_L1:	16.1 | ADD_ML:	 36.2
+Gamma= 11.6 | c= 2.0 | ADD_Recalib:  686.7 | ADD_Eco_L2:   33.5 | ADD_Eco_L1:	 5.5 | ADD_ML:	 25.4
+Gamma= 11.6 | c= 5.0 | ADD_Recalib:   75.5 | ADD_Eco_L2:    4.0 | ADD_Eco_L1:	 1.5 | ADD_ML:	 24.0
+Gamma= 11.6 | c=10.0 | ADD_Recalib:   17.5 | ADD_Eco_L2:    0.6 | ADD_Eco_L1:	 0.4 | ADD_ML:	 24.0
+Gamma= 30.0 | c=0.0 | FPR_Recalib: 0.02 | FPR_Eco_L2: 0.02 | FPR_Eco_L1: 0.12 | FPR_ML: 0.04
+Gamma= 30.0 | c= 0.5 | ADD_Recalib: 1448.5 | ADD_Eco_L2: 3250.0 | ADD_Eco_L1:	63.0 | ADD_ML:	 66.5
+Gamma= 30.0 | c= 1.0 | ADD_Recalib: 2991.5 | ADD_Eco_L2:  234.8 | ADD_Eco_L1:	14.7 | ADD_ML:	 34.7
+Gamma= 30.0 | c= 2.0 | ADD_Recalib: 1622.0 | ADD_Eco_L2:   29.5 | ADD_Eco_L1:	 5.0 | ADD_ML:	 25.2
+Gamma= 30.0 | c= 5.0 | ADD_Recalib:  229.9 | ADD_Eco_L2:    3.5 | ADD_Eco_L1:	 1.4 | ADD_ML:	 24.0
+Gamma= 30.0 | c=10.0 | ADD_Recalib:   52.9 | ADD_Eco_L2:    0.5 | ADD_Eco_L1:	 0.2 | ADD_ML:	 24.0
+Gamma= 50.0 | c=0.0 | FPR_Recalib: 0.02 | FPR_Eco_L2: 0.02 | FPR_Eco_L1: 0.11 | FPR_ML: 0.04
+Gamma= 50.0 | c= 0.5 | ADD_Recalib: 1690.7 | ADD_Eco_L2: 3250.0 | ADD_Eco_L1:	58.2 | ADD_ML:	 64.5
+Gamma= 50.0 | c= 1.0 | ADD_Recalib: 3112.7 | ADD_Eco_L2:  181.5 | ADD_Eco_L1:	13.9 | ADD_ML:	 33.8
+Gamma= 50.0 | c= 2.0 | ADD_Recalib: 2086.0 | ADD_Eco_L2:   28.6 | ADD_Eco_L1:	 4.8 | ADD_ML:	 25.0
+Gamma= 50.0 | c= 5.0 | ADD_Recalib:  392.1 | ADD_Eco_L2:    3.3 | ADD_Eco_L1:	 1.3 | ADD_ML:	 24.0
+Gamma= 50.0 | c=10.0 | ADD_Recalib:   96.0 | ADD_Eco_L2:    0.4 | ADD_Eco_L1:	 0.2 | ADD_ML:	 24.0
+Gamma= 90.0 | c=0.0 | FPR_Recalib: 0.02 | FPR_Eco_L2: 0.02 | FPR_Eco_L1: 0.10 | FPR_ML: 0.04
+Gamma= 90.0 | c= 0.5 | ADD_Recalib: 1296.0 | ADD_Eco_L2: 3250.0 | ADD_Eco_L1:	82.2 | ADD_ML:	 61.1
+Gamma= 90.0 | c= 1.0 | ADD_Recalib: 2064.0 | ADD_Eco_L2:  198.7 | ADD_Eco_L1:	13.5 | ADD_ML:	 32.6
+Gamma= 90.0 | c= 2.0 | ADD_Recalib: 2758.1 | ADD_Eco_L2:   28.7 | ADD_Eco_L1:	 4.5 | ADD_ML:	 24.8
+Gamma= 90.0 | c= 5.0 | ADD_Recalib:  682.4 | ADD_Eco_L2:    3.0 | ADD_Eco_L1:	 1.2 | ADD_ML:	 24.0
+Gamma= 90.0 | c=10.0 | ADD_Recalib:  190.0 | ADD_Eco_L2:    0.4 | ADD_Eco_L1:	 0.2 | ADD_ML:	 24.0
+Gamma=140.0 | c=0.0 | FPR_Recalib: 0.02 | FPR_Eco_L2: 0.02 | FPR_Eco_L1: 0.10 | FPR_ML: 0.04
+Gamma=140.0 | c= 0.5 | ADD_Recalib: 1326.0 | ADD_Eco_L2: 2122.3 | ADD_Eco_L1:	46.4 | ADD_ML:	 57.8
+Gamma=140.0 | c= 1.0 | ADD_Recalib: 2577.0 | ADD_Eco_L2:  130.5 | ADD_Eco_L1:	12.0 | ADD_ML:	 31.7
+Gamma=140.0 | c= 2.0 | ADD_Recalib: 3029.4 | ADD_Eco_L2:   27.4 | ADD_Eco_L1:	 4.4 | ADD_ML:	 24.7
+Gamma=140.0 | c= 5.0 | ADD_Recalib:  985.0 | ADD_Eco_L2:    3.0 | ADD_Eco_L1:	 1.2 | ADD_ML:	 24.0
+Gamma=140.0 | c=10.0 | ADD_Recalib:  324.6 | ADD_Eco_L2:    0.4 | ADD_Eco_L1:	 0.2 | ADD_ML:	 24.0
+Gamma=200.0 | c=0.0 | FPR_Recalib: 0.00 | FPR_Eco_L2: 0.02 | FPR_Eco_L1: 0.10 | FPR_ML: 0.04
+Gamma=200.0 | c= 0.5 | ADD_Recalib: 2332.0 | ADD_Eco_L2: 1595.4 | ADD_Eco_L1:	45.8 | ADD_ML:	 59.4
+Gamma=200.0 | c= 1.0 | ADD_Recalib: 2420.0 | ADD_Eco_L2:  104.1 | ADD_Eco_L1:	10.8 | ADD_ML:	 30.6
+Gamma=200.0 | c= 2.0 | ADD_Recalib: 3267.4 | ADD_Eco_L2:   23.2 | ADD_Eco_L1:	 4.2 | ADD_ML:	 24.6
+Gamma=200.0 | c= 5.0 | ADD_Recalib: 1273.4 | ADD_Eco_L2:    2.9 | ADD_Eco_L1:	 1.0 | ADD_ML:	 24.0
+Gamma=200.0 | c=10.0 | ADD_Recalib:  376.9 | ADD_Eco_L2:    0.4 | ADD_Eco_L1:	 0.2 | ADD_ML:	 24.0
+
+--- PROTOCOL 3C: Misspecification (DGP = GJR) ---
+Lev=0.00 | FPR Eco: 0.02 | FPR ML: 0.09 | LB_Eco: 0.07 | LB_ML: 0.06
+Lev=0.10 | FPR Eco: 0.02 | FPR ML: 0.09 | LB_Eco: 0.08 | LB_ML: 0.06
+Lev=0.20 | FPR Eco: 0.02 | FPR ML: 0.09 | LB_Eco: 0.09 | LB_ML: 0.06
+Lev=0.28 | FPR Eco: 0.03 | FPR ML: 0.09 | LB_Eco: 0.12 | LB_ML: 0.06
+
+--- PROTOCOL 3D: Warm-up Sensitivity ---
+g_lev=0.00 | nw= 250 | FPR Eco: 0.095 | FPR ML: 0.075 | Fails: 0.00%
+g_lev=0.00 | nw= 500 | FPR Eco: 0.030 | FPR ML: 0.030 | Fails: 0.00%
+g_lev=0.00 | nw=1000 | FPR Eco: 0.030 | FPR ML: 0.055 | Fails: 0.00%
+g_lev=0.00 | nw=2000 | FPR Eco: 0.030 | FPR ML: 0.080 | Fails: 0.00%
+g_lev=0.28 | nw= 250 | FPR Eco: 0.115 | FPR ML: 0.075 | Fails: 0.50%
+g_lev=0.28 | nw= 500 | FPR Eco: 0.060 | FPR ML: 0.030 | Fails: 0.50%
+g_lev=0.28 | nw=1000 | FPR Eco: 0.045 | FPR ML: 0.055 | Fails: 0.00%
+g_lev=0.28 | nw=2000 | FPR Eco: 0.035 | FPR ML: 0.080 | Fails: 0.00%
+
+Execution completed in 332.1s.

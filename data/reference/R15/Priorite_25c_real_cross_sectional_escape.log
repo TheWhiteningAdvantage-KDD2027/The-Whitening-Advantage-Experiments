@@ -1,0 +1,27 @@
+[2026-07-25 19:25:16] INFO: Execution mode: FULL (REAL DATA)
+[2026-07-25 19:25:17] INFO: Loaded real panel: 97 tickers x 5154 days.
+[2026-07-25 19:25:17] INFO: Control (b) Whiteness K=1: p-value=9.8412e-01
+[2026-07-25 19:25:17] INFO: Control (e) Consistency K=1: K_eff_meas/K_eff_ana = 1.0000
+[2026-07-25 19:25:17] INFO: Control (a) Non-anticipativity K=1: max recentring diff = 0.00e+00
+[2026-07-25 19:25:17] INFO: Control (g) Bounds K=1: max|P_t|=0.5000, NaNs=False
+[2026-07-25 19:25:26] INFO: Control (c) ISO-FPR K=1: FPR_naive=0.1115, FPR_boot=0.0490
+[2026-07-25 19:25:26] WARNING: Control (b) Whiteness K=20: p-value=4.2705e-03 < 0.05. Temporal whiteness degraded on real data (expected).
+[2026-07-25 19:25:26] INFO: Control (e) Consistency K=20: K_eff_meas/K_eff_ana = 1.0008
+[2026-07-25 19:25:26] INFO: Control (a) Non-anticipativity K=20: max recentring diff = 0.00e+00
+[2026-07-25 19:25:26] INFO: Control (g) Bounds K=20: max|P_t|=0.5000, NaNs=False
+[2026-07-25 19:25:37] INFO: Control (c) ISO-FPR K=20: FPR_naive=0.9060, FPR_boot=0.0615
+[2026-07-25 19:25:37] WARNING: Control (b) Whiteness K=50: p-value=3.7368e-04 < 0.05. Temporal whiteness degraded on real data (expected).
+[2026-07-25 19:25:37] INFO: Control (e) Consistency K=50: K_eff_meas/K_eff_ana = 1.0002
+[2026-07-25 19:25:37] INFO: Control (a) Non-anticipativity K=50: max recentring diff = 0.00e+00
+[2026-07-25 19:25:37] INFO: Control (g) Bounds K=50: max|P_t|=0.5000, NaNs=False
+[2026-07-25 19:25:48] INFO: Control (c) ISO-FPR K=50: FPR_naive=0.9865, FPR_boot=0.0525
+[2026-07-25 19:25:48] WARNING: Control (b) Whiteness K=97: p-value=1.9778e-04 < 0.05. Temporal whiteness degraded on real data (expected).
+[2026-07-25 19:25:48] INFO: Control (e) Consistency K=97: K_eff_meas/K_eff_ana = 1.0010
+[2026-07-25 19:25:48] INFO: Control (a) Non-anticipativity K=97: max recentring diff = 0.00e+00
+[2026-07-25 19:25:48] INFO: Control (g) Bounds K=97: max|P_t|=0.5000, NaNs=False
+[2026-07-25 19:26:00] INFO: Control (c) ISO-FPR K=97: FPR_naive=1.0000, FPR_boot=0.0495
+[2026-07-25 19:26:10] INFO: --- COVID 2020 Natural Experiment ---
+[2026-07-25 19:26:10] INFO: COVID K=1: Delay Naive = -1, Delay Boot = -1
+[2026-07-25 19:26:10] INFO: COVID K=20: Delay Naive = 291, Delay Boot = -1
+[2026-07-25 19:26:10] INFO: COVID K=50: Delay Naive = 505, Delay Boot = -1
+[2026-07-25 19:26:10] INFO: COVID K=97: Delay Naive = 15, Delay Boot = -1

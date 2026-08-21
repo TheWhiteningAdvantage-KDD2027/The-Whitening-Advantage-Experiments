@@ -1,0 +1,4 @@
+2026-07-27 07:25:37 | INFO | NOTE: Execution order -> Priorite_21c_plot_adverse_lattice (21c) MUST be run LAST.
+2026-07-27 07:25:37 | INFO | MD5 protocol_21c_adverse_bias.csv: 150cf30022916afbfd1aa13f386ae294
+2026-07-27 07:25:37 | INFO | MD5 protocol_21d_null_law_lattice.csv: e83647394c8607c1a6b231d377511d72
+2026-07-27 07:25:38 | INFO | Fig26_Adverse_Bias_and_Lattice.png generated successfully.

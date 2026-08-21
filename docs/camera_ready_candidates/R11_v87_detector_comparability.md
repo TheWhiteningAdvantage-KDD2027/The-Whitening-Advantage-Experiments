@@ -68,14 +68,14 @@ numerals is comparing across two conventions**, and nothing in the caption says 
 more before applying.
 
 <<< RECHERCHER
-~~~~~~~~~latex
+~~~~~~~~~~~latex
 flat delays across CUSUM ($\approx 28.3$), PHT ($\approx 27.1$), ADWIN ($\approx 61$), DDM ($\approx 250$)
-~~~~~~~~~
+~~~~~~~~~~~
 
 === REMPLACER PAR >>>
-~~~~~~~~~latex
+~~~~~~~~~~~latex
 flat delays across CUSUM ($\approx 28.3$; monitored from the onset), PHT ($\approx 27.1$), ADWIN ($\approx 61$), DDM ($\approx 250$; the latter three warm-started on the pre-onset stream, so the delays are not comparable across detectors)
-~~~~~~~~~
+~~~~~~~~~~~
 >>> FIN DU BLOC
 
 **The alternative is to unify the convention rather than to declare it**, which would change all

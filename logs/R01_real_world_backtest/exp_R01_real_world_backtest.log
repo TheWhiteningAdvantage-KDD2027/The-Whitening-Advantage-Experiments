@@ -1,24 +1,39 @@
-2026-08-01 04:23:11 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
-2026-08-01 04:23:11 | INFO | Python: 3.12.9
-2026-08-01 04:23:11 | INFO |   numpy: 1.26.4
-2026-08-01 04:23:11 | INFO |   pandas: 2.3.2
-2026-08-01 04:23:11 | INFO |   scipy: 1.16.2
-2026-08-01 04:23:11 | INFO |   statsmodels: 0.14.5
-2026-08-01 04:23:11 | INFO |   matplotlib: 3.10.6
-2026-08-01 04:23:11 | INFO |   yfinance: 1.2.0
-2026-08-01 04:23:11 | INFO | Hashing derived file R01_daily_SPY.csv: 44b0fdd7ddd121558f3d2e22bba743f180d6165a3bf4f05e1520c737289627f4
-2026-08-01 04:23:11 | INFO | [SPY] Data points: 2000-01-04 to 2025-07-07 (6414 days)
-2026-08-01 04:23:11 | INFO | Hashing derived file R01_daily_PFF.csv: e1581f58e4bc746531f7d1faf1e084b954167cfd0ab3717b2680aac957720817
-2026-08-01 04:23:11 | INFO | [PFF] Data points: 2007-12-27 to 2025-07-07 (4403 days)
-2026-08-01 04:23:11 | INFO | Hashing derived file R01_daily_VNQ.csv: c46c477438f508063a119ab4d05dc9624402a5fabec5fc16abb5cc82d23ad0bf
-2026-08-01 04:23:11 | INFO | [VNQ] Data points: 2005-01-04 to 2025-07-07 (5014 days)
-2026-08-01 04:23:11 | INFO | Hashing derived file R01_daily_BWX.csv: 9aad7d97509744ebaebc0f22c9f45b78572765f87ea190b1b0c5fade599d0be6
-2026-08-01 04:23:11 | INFO | [BWX] Data points: 2007-10-09 to 2025-07-07 (4451 days)
-2026-08-01 04:23:11 | INFO | --- PHASE 1: WARM-UP & GATEKEEPER (2018-2019) ---
-2026-08-01 04:23:11 | INFO | --- PHASE 2: PANEL A - COVID-19 VARIANCE SHOCK (SPY) ---
-2026-08-01 04:23:11 | INFO | Concept alarms in 2020: 0
-2026-08-01 04:23:11 | INFO | --- PHASE 2.5: SYMMETRY 2020 ---
-2026-08-01 04:23:11 | INFO | --- PHASE 3: PANEL B - SEMI-REAL INJECTIONS (2021-2023) ---
-2026-08-01 04:23:11 | INFO | --- GENERATING LATEX MACROS ---
-2026-08-01 04:23:11 | INFO | --- GENERATING FIGURES ---
-2026-08-01 04:23:12 | INFO | [SUCCESS] Pipeline completed.
+2026-08-21 05:31:22 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-08-21 05:31:22 | INFO | Python: 3.12.9
+2026-08-21 05:31:22 | INFO |   numpy: 1.26.4
+2026-08-21 05:31:22 | INFO |   pandas: 2.3.2
+2026-08-21 05:31:22 | INFO |   scipy: 1.16.2
+2026-08-21 05:31:22 | INFO |   statsmodels: 0.14.5
+2026-08-21 05:31:22 | INFO |   matplotlib: 3.10.6
+2026-08-21 05:31:22 | INFO |   yfinance: 1.2.0
+2026-08-21 05:31:22 | INFO | Hashing derived file R01_daily_SPY.csv: 44b0fdd7ddd121558f3d2e22bba743f180d6165a3bf4f05e1520c737289627f4
+2026-08-21 05:31:23 | INFO | [SPY] Data points: 2000-01-04 to 2025-07-07 (6414 days)
+2026-08-21 05:31:23 | INFO | Hashing derived file R01_daily_PFF.csv: e1581f58e4bc746531f7d1faf1e084b954167cfd0ab3717b2680aac957720817
+2026-08-21 05:31:23 | INFO | [PFF] Data points: 2007-12-27 to 2025-07-07 (4403 days)
+2026-08-21 05:31:23 | INFO | Hashing derived file R01_daily_VNQ.csv: c46c477438f508063a119ab4d05dc9624402a5fabec5fc16abb5cc82d23ad0bf
+2026-08-21 05:31:23 | INFO | [VNQ] Data points: 2005-01-04 to 2025-07-07 (5014 days)
+2026-08-21 05:31:23 | INFO | Hashing derived file R01_daily_BWX.csv: 9aad7d97509744ebaebc0f22c9f45b78572765f87ea190b1b0c5fade599d0be6
+2026-08-21 05:31:23 | INFO | [BWX] Data points: 2007-10-09 to 2025-07-07 (4451 days)
+2026-08-21 05:31:23 | INFO | --- PHASE 1: WARM-UP & GATEKEEPER (2018-2019) ---
+2026-08-21 05:31:23 | INFO | --- PHASE 2: PANEL A - COVID-19 VARIANCE SHOCK (SPY) ---
+2026-08-21 05:31:23 | INFO | Concept alarms in 2020: 0
+2026-08-21 05:31:23 | INFO | --- PHASE 2.5: SYMMETRY 2020 ---
+2026-08-21 05:31:23 | INFO | --- PHASE 3: PANEL B - SEMI-REAL INJECTIONS (2021-2023) ---
+2026-08-21 05:31:23 | INFO | --- GENERATING LATEX MACROS ---
+2026-08-21 05:31:23 | INFO | --- GENERATING FIGURES ---
+2026-08-21 05:31:23 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
+2026-08-21 05:31:23 | INFO | results/R01_real_world_backtest/
+2026-08-21 05:31:23 | INFO | ├── data/
+2026-08-21 05:31:23 | INFO | │   ├── R01_garch_models.csv                [9f155933732a78546caad9ef8a66c4a097e6e3a2d95e3d4379f9ac95baf2025c]
+2026-08-21 05:31:23 | INFO | │   ├── R01_covid_trajectories.csv          [71f8451a6d0c44b328e3a3de77fdabec8fa38434c6543b8fadb686560aea776f]
+2026-08-21 05:31:23 | INFO | │   ├── R01_covid_alarms.csv                [c614e9952d968004b5bbc94c873657845c62d7279649b9a69dc43aae275aadd7]
+2026-08-21 05:31:23 | INFO | │   ├── R01_symmetry_2020.csv               [edb0f663f9d3e3630c60d41832213819b4617141f2664065adbb445ca2db89c5]
+2026-08-21 05:31:23 | INFO | │   ├── R01_injection_summary.csv           [e2205dd57d1c5c1e02f7ea13059c0c541a93f48fff91c5925c288998eb5b8c3b]
+2026-08-21 05:31:23 | INFO | │   ├── R01_placebo_control.csv             [4b472fd3fe50da7612bce84a87d1e29154bb540609b88a7d5a471ecd83a1898d]
+2026-08-21 05:31:23 | INFO | │   └── R01_magnitude_sweep.csv             [592e040468e55515217ce5a831f4289f220768adb5d4afe5e358c20b734667f3]
+2026-08-21 05:31:23 | INFO | ├── figures/
+2026-08-21 05:31:23 | INFO | │   └── fig02_spy_in_the_wild.png           [9bc12be34b7f7bba919e7bb0c65bece4a2cfedc349aa616503393be8bf0e6254]
+2026-08-21 05:31:23 | INFO | └── tables/
+2026-08-21 05:31:23 | INFO |     └── R01_claims.tex                      [e61b39131ef894ce0eab9240754d27c3d47cfdaed4176142c5bf8f9e0c922619]
+2026-08-21 05:31:23 | INFO | =============================================================================
+2026-08-21 05:31:23 | INFO | [SUCCESS] Pipeline completed.

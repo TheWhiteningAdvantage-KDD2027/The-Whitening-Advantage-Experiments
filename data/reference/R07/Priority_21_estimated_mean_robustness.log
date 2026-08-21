@@ -1,0 +1,12 @@
+2026-07-27 09:52:24 | INFO | NOTE: Execution order -> Priorite_21_estimated_mean_robustness (21a) MUST be run FIRST.
+2026-07-27 09:52:24 | INFO | Execution initialized. Mode: STANDARD.
+2026-07-27 09:52:24 | INFO | Check (a) Passed: Strict non-anticipative properties validated.
+2026-07-27 09:52:40 | INFO | Calibration completed: lambda_star = 11.400000. Check (d) Passed: Validation FPR = 0.0552.
+2026-07-27 09:52:41 | INFO | Control (a) Passed: 70000 unique trajectory seeds verified without collision.
+2026-07-27 09:54:50 | INFO | Simulation completed in 129.04 seconds.
+2026-07-27 09:54:51 | INFO | All final sanity checks passed successfully.
+2026-07-27 09:54:51 | INFO | Control (b) & (c) Passed: Programmatic certification invariants strictly verified.
+2026-07-27 09:54:51 | INFO | requirements.txt dynamically generated.
+2026-07-27 09:54:51 | INFO | Control (f) Reproducibility SHA-256 [protocol_21a]: d84770e1bf403b90e5c237c61e770bd11da744e1bc5c9a6b5aa7794f5f0e3e24
+2026-07-27 09:54:51 | INFO | Control (f) Reproducibility SHA-256 [protocol_21b]: 761f8c88105fef957e6b57d66cbaab78617cb705d9c61ea612be618f4ce2b682
+2026-07-27 09:54:51 | INFO | Output files generated successfully.

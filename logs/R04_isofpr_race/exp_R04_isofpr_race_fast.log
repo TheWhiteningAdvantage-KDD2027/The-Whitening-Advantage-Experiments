@@ -1,0 +1,124 @@
+2026-08-21 14:54:21 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-08-21 14:54:21 | INFO | Python: 3.12.9
+2026-08-21 14:54:21 | INFO |   numpy: 1.26.4
+2026-08-21 14:54:21 | INFO |   pandas: 2.3.2
+2026-08-21 14:54:21 | INFO |   scipy: 1.16.2
+2026-08-21 14:54:21 | INFO |   matplotlib: 3.10.6
+2026-08-21 14:54:21 | WARNING | DEGRADED PATH selected by --fast: certification gates are disabled and every artefact is stamped '_fast'. This path never certifies a manuscript number.
+2026-08-21 14:54:21 | INFO | Deterministic reduction: ProcessPoolExecutor with max_workers = 48, executor.map in submission order, no completion-order reduction, no worker-side logging. Outputs are invariant to the worker count because every task derives its own 128-bit seed.
+2026-08-21 14:54:21 | INFO | Seeding: 128-bit MD5 condensate of the semantic coordinates of each task, injected as a scalar integer. Every cell is keyed independently, including across Gamma and across c. Common random numbers are deliberately NOT used here: the claims under test are invariance claims, and sharing innovations across Gamma would make the sign stream identical by construction, turning control (d) into an identity rather than a measurement.
+2026-08-21 14:54:21 | INFO | Interpolation rule fixed before measurement: nu_star is linear interpolation of the delay ratio between the two grid points bracketing unity, on the nu grid as sampled (3.0, 4.0, 4.5, 5.0, 7.0, 30.0), reported with its bracket and rounded to one decimal for macro emission.
+2026-08-21 14:54:21 | INFO | QMLE budgets fixed before measurement: stationarity 0% (the guard is unreachable once an infeasible pair is projected onto alpha + beta = 0.999), non-convergence 0.5% (derived from the sampling error of the means it protects, not from any observed rate). Multistart ladder: ((0.05, 0.9), (0.1, 0.85), (0.02, 0.95)).
+2026-08-21 14:54:21 | INFO | Gamma grid check: at alpha = 0.05 the attainable floor is Gamma(alpha, beta=0) = 1.105263; target 1.0 -> beta = 0.000000 -> realised 1.1053, target 11.58 -> beta = 0.930072 -> realised 11.5800, target 50.0 -> beta = 0.942467 -> realised 50.0000, target 200.0 -> beta = 0.946813 -> realised 200.0000
+2026-08-21 14:54:21 | INFO | Gamma grid check: every target above the floor is realised to within 1e-6, so the grid genuinely spans Gamma from 1.1053 to 200.0. The point labelled Gamma = 1 in v87 is in fact Gamma = 1.1053, an ARCH(1) stream rather than an i.i.d. one.
+2026-08-21 14:54:21 | INFO | Equivalence check: sup_t S_t > lambda matches strict_cusum at four probe thresholds, so the bisection evaluates exactly the false-alarm count the submitted script computed.
+2026-08-21 14:54:21 | INFO | M0 [garch]: FPR = 0.050000 (2/40), Wilson 95% [0.013821, 0.165039]
+2026-08-21 14:54:21 | INFO | M0 [bernoulli_iid]: FPR = 0.100000 (4/40), Wilson 95% [0.039580, 0.230518]
+2026-08-21 14:54:22 | INFO | M1 Gamma=1.0 arm=Recalib    lambda*=343.750656 FPR=0.0500 iters=5 converged=True
+2026-08-21 14:54:22 | INFO | M1 Gamma=1.0 arm=Eco_L1     lambda*=19.532230 FPR=0.0500 iters=8 converged=True
+2026-08-21 14:54:22 | INFO | M1 Gamma=1.0 arm=Oracle_Eco lambda*=20.752932 FPR=0.0500 iters=12 converged=True
+2026-08-21 14:54:22 | INFO | M1 Gamma=1.0 arm=Concept    lambda*=11.231458 FPR=0.0500 iters=11 converged=True
+2026-08-21 14:54:23 | INFO | M2 Gamma=1.0 c=0.25: Recalib=4704.0(0.050), Eco_L1=485.0(1.000), Oracle_Eco=596.1(1.000), Concept=467.4(1.000)
+2026-08-21 14:54:23 | INFO | M2 Gamma=1.0 c=0.5: Recalib=2438.5(0.675), Eco_L1=79.7(1.000), Oracle_Eco=81.0(1.000), Concept=115.5(1.000)
+2026-08-21 14:54:24 | INFO | M2 Gamma=1.0 c=1.0: Recalib=479.8(1.000), Eco_L1=26.8(1.000), Oracle_Eco=27.2(1.000), Concept=42.8(1.000)
+2026-08-21 14:54:25 | INFO | M2 Gamma=1.0 c=2.0: Recalib=146.4(1.000), Eco_L1=13.1(1.000), Oracle_Eco=12.2(1.000), Concept=29.5(1.000)
+2026-08-21 14:54:25 | INFO | M1 Gamma=11.58 arm=Recalib    lambda*=750.000250 FPR=0.0500 iters=2 converged=True
+2026-08-21 14:54:25 | INFO | M1 Gamma=11.58 arm=Eco_L1     lambda*=20.508792 FPR=0.0500 iters=10 converged=True
+2026-08-21 14:54:25 | INFO | M1 Gamma=11.58 arm=Oracle_Eco lambda*=19.532230 FPR=0.0500 iters=8 converged=True
+2026-08-21 14:54:25 | INFO | M1 Gamma=11.58 arm=Concept    lambda*=9.034194 FPR=0.0500 iters=12 converged=True
+2026-08-21 14:54:26 | INFO | M2 Gamma=11.58 c=0.25: Recalib=nan(0.000), Eco_L1=513.9(1.000), Oracle_Eco=352.6(1.000), Concept=265.6(1.000)
+2026-08-21 14:54:27 | INFO | M2 Gamma=11.58 c=0.5: Recalib=2846.0(0.125), Eco_L1=76.3(1.000), Oracle_Eco=59.6(1.000), Concept=67.8(1.000)
+2026-08-21 14:54:28 | INFO | M2 Gamma=11.58 c=1.0: Recalib=2325.9(0.375), Eco_L1=32.7(1.000), Oracle_Eco=25.2(1.000), Concept=37.2(1.000)
+2026-08-21 14:54:28 | INFO | M2 Gamma=11.58 c=2.0: Recalib=1738.2(0.900), Eco_L1=17.3(1.000), Oracle_Eco=12.0(1.000), Concept=25.0(1.000)
+2026-08-21 14:54:29 | INFO | M1 Gamma=50.0 arm=Recalib    lambda*=3000.000250 FPR=0.0500 iters=2 converged=True
+2026-08-21 14:54:29 | INFO | M1 Gamma=50.0 arm=Eco_L1     lambda*=23.438477 FPR=0.0500 iters=7 converged=True
+2026-08-21 14:54:29 | INFO | M1 Gamma=50.0 arm=Oracle_Eco lambda*=18.555669 FPR=0.0500 iters=10 converged=True
+2026-08-21 14:54:29 | INFO | M1 Gamma=50.0 arm=Concept    lambda*=11.719738 FPR=0.0500 iters=8 converged=True
+2026-08-21 14:54:30 | INFO | M2 Gamma=50.0 c=0.25: Recalib=3708.5(0.050), Eco_L1=599.2(1.000), Oracle_Eco=295.1(1.000), Concept=385.9(1.000)
+2026-08-21 14:54:31 | INFO | M2 Gamma=50.0 c=0.5: Recalib=nan(0.000), Eco_L1=90.8(1.000), Oracle_Eco=64.8(1.000), Concept=126.7(1.000)
+2026-08-21 14:54:31 | INFO | M2 Gamma=50.0 c=1.0: Recalib=3135.6(0.125), Eco_L1=38.5(1.000), Oracle_Eco=26.6(1.000), Concept=45.8(1.000)
+2026-08-21 14:54:32 | INFO | M2 Gamma=50.0 c=2.0: Recalib=3674.2(0.275), Eco_L1=19.8(1.000), Oracle_Eco=10.7(1.000), Concept=31.9(1.000)
+2026-08-21 14:54:33 | INFO | M1 Gamma=200.0 arm=Recalib    lambda*=875.000125 FPR=0.0500 iters=3 converged=True
+2026-08-21 14:54:33 | INFO | M1 Gamma=200.0 arm=Eco_L1     lambda*=23.438477 FPR=0.0500 iters=7 converged=True
+2026-08-21 14:54:33 | INFO | M1 Gamma=200.0 arm=Oracle_Eco lambda*=17.579107 FPR=0.0500 iters=9 converged=True
+2026-08-21 14:54:33 | INFO | M1 Gamma=200.0 arm=Concept    lambda*=10.132826 FPR=0.0500 iters=13 converged=True
+2026-08-21 14:54:34 | INFO | M2 Gamma=200.0 c=0.25: Recalib=2866.8(0.150), Eco_L1=469.7(0.975), Oracle_Eco=250.9(1.000), Concept=316.1(1.000)
+2026-08-21 14:54:35 | INFO | M2 Gamma=200.0 c=0.5: Recalib=2697.3(0.225), Eco_L1=130.0(1.000), Oracle_Eco=97.3(1.000), Concept=118.6(1.000)
+2026-08-21 14:54:35 | INFO | M2 Gamma=200.0 c=1.0: Recalib=2559.8(0.125), Eco_L1=38.3(1.000), Oracle_Eco=22.1(1.000), Concept=43.1(1.000)
+2026-08-21 14:54:36 | INFO | M2 Gamma=200.0 c=2.0: Recalib=2636.5(0.475), Eco_L1=20.2(1.000), Oracle_Eco=10.3(1.000), Concept=29.3(1.000)
+2026-08-21 14:54:38 | INFO | M3 nu=3.0: ADD_Eco=89.92 ADD_Oracle=73.17 ADD_Concept=42.12 ratio=0.468446 ratio_oracle=0.575675 pred=0.616850
+2026-08-21 14:54:39 | INFO | M3 nu=4.0: ADD_Eco=106.83 ADD_Oracle=77.10 ADD_Concept=48.35 ratio=0.452609 ratio_oracle=0.627108 pred=0.888889
+2026-08-21 14:54:41 | INFO | M3 nu=4.5: ADD_Eco=86.33 ADD_Oracle=56.17 ADD_Concept=74.47 ratio=0.862728 ratio_oracle=1.325768 pred=0.974374
+2026-08-21 14:54:42 | INFO | M3 nu=5.0: ADD_Eco=117.70 ADD_Oracle=75.10 ADD_Concept=77.40 ratio=0.657604 ratio_oracle=1.030626 pred=1.040935
+2026-08-21 14:54:44 | INFO | M3 nu=7.0: ADD_Eco=103.03 ADD_Oracle=63.33 ADD_Concept=75.28 ratio=0.730648 ratio_oracle=1.188709 pred=1.204786
+2026-08-21 14:54:45 | INFO | M3 nu=30.0: ADD_Eco=72.05 ADD_Oracle=59.65 ADD_Concept=81.38 ratio=1.129424 ratio_oracle=1.364208 pred=1.490711
+2026-08-21 14:54:47 | INFO | M3 [counterfactual beta=0] nu=3.0: ADD_Eco=105.47 ADD_Oracle=104.03 ADD_Concept=52.23 ratio=0.495141 ratio_oracle=0.502043 pred=0.616850
+2026-08-21 14:54:48 | INFO | M3 [counterfactual beta=0] nu=4.0: ADD_Eco=93.70 ADD_Oracle=94.12 ADD_Concept=54.20 ratio=0.578442 ratio_oracle=0.575830 pred=0.888889
+2026-08-21 14:54:50 | INFO | M3 [counterfactual beta=0] nu=4.5: ADD_Eco=82.72 ADD_Oracle=69.40 ADD_Concept=78.62 ratio=0.950438 ratio_oracle=1.132925 pred=0.974374
+2026-08-21 14:54:51 | INFO | M3 [counterfactual beta=0] nu=5.0: ADD_Eco=83.85 ADD_Oracle=78.40 ADD_Concept=80.38 ratio=0.958557 ratio_oracle=1.025191 pred=1.040935
+2026-08-21 14:54:52 | INFO | M3 [counterfactual beta=0] nu=7.0: ADD_Eco=81.95 ADD_Oracle=66.75 ADD_Concept=81.47 ratio=0.994204 ratio_oracle=1.220599 pred=1.204786
+2026-08-21 14:54:54 | INFO | M3 [counterfactual beta=0] nu=30.0: ADD_Eco=72.17 ADD_Oracle=67.47 ADD_Concept=86.35 ratio=1.196398 ratio_oracle=1.279733 pred=1.490711
+2026-08-21 14:54:54 | INFO | M4 CUSUM calibration on i.i.d. Gaussian: lambda = 19.532230, FPR = 0.0500, iters = 8, converged = True
+2026-08-21 14:55:21 | WARNING | M4 ADWIN calibration did NOT reach the 5% target and terminated at the boundary of its search domain. The loosest admissible delta of that domain, 0.794328, attains only 0.000000 on i.i.d. Gaussian streams, so no delta in (0, 1) brings this detector to the nominal level over a 5000-step horizon. The ADWIN column below is therefore NOT iso-FPR with the CUSUM column: it is read at the level this detector can attain, and delta = 0.78992 is the last midpoint the search visited, not a calibrated value. The submitted script ran the same search and reported neither the failure nor the ceiling.
+2026-08-21 14:55:21 | INFO |   ADWIN search: delta = 8.91251e-06 -> FPR = 0.000000
+2026-08-21 14:55:21 | INFO |   ADWIN search: delta = 0.00266073 -> FPR = 0.000000
+2026-08-21 14:55:21 | INFO |   ADWIN search: delta = 0.0459727 -> FPR = 0.000000
+2026-08-21 14:55:21 | INFO |   ADWIN search: delta = 0.191095 -> FPR = 0.000000
+2026-08-21 14:55:21 | INFO |   ADWIN search: delta = 0.389605 -> FPR = 0.000000
+2026-08-21 14:55:21 | INFO |   ADWIN search: delta = 0.556304 -> FPR = 0.000000
+2026-08-21 14:55:21 | INFO |   ADWIN search: delta = 0.664747 -> FPR = 0.000000
+2026-08-21 14:55:21 | INFO |   ADWIN search: delta = 0.726655 -> FPR = 0.000000
+2026-08-21 14:55:21 | INFO |   ADWIN search: delta = 0.759738 -> FPR = 0.000000
+2026-08-21 14:55:21 | INFO |   ADWIN search: delta = 0.776841 -> FPR = 0.000000
+2026-08-21 14:55:21 | INFO |   ADWIN search: delta = 0.785536 -> FPR = 0.000000
+2026-08-21 14:55:21 | INFO |   ADWIN search: delta = 0.78992 -> FPR = 0.000000
+2026-08-21 14:55:23 | INFO | M4 Gamma=1.0: CUSUM FPR=0.0250, ADWIN FPR=0.0000
+2026-08-21 14:55:26 | INFO | M4 Gamma=11.58: CUSUM FPR=0.2250, ADWIN FPR=0.0750
+2026-08-21 14:55:28 | INFO | M4 Gamma=50.0: CUSUM FPR=0.3750, ADWIN FPR=0.1000
+2026-08-21 14:55:30 | INFO | M4 Gamma=200.0: CUSUM FPR=0.5000, ADWIN FPR=0.1750
+2026-08-21 14:55:31 | INFO | M4 counterfactual (beta pinned to 0, as the submitted generator produced it): Gamma=1.0: CUSUM FPR=0.0250, Gamma=11.58: CUSUM FPR=0.0250, Gamma=50.0: CUSUM FPR=0.0250, Gamma=200.0: CUSUM FPR=0.0000; spread = 0.025000. The realised process is identical at all four labels, so a flat level here is an identity of the degraded generator and not a property of the detector.
+2026-08-21 14:55:31 | INFO | Seed uniqueness check (A2): 1560 distinct 128-bit seeds over 1560 tasks, zero collisions.
+2026-08-21 14:55:31 | INFO | QMLE non-convergence: 0 of 1280 fitted warm-ups (0.0000%) failed on all 3 starts of the multistart ladder and reverted to (alpha, beta) = (0.05, 0.9); budget 0.5%.
+2026-08-21 14:55:31 | INFO | QMLE stationarity guard: 0 of 1280 (0.0000%); budget 0%. The guard is unreachable once an infeasible pair is projected back onto alpha + beta = 0.999, so any firing is structural.
+2026-08-21 14:55:31 | INFO | QMLE constraint boundary: 10 of 1280 warm-ups (0.7812%) returned alpha + beta >= 0.999, the feasibility boundary of the optimiser. Those fits are stationary and are KEPT here. The submitted script guarded on that same predicate and reverted every one of them to (0.05, 0.9) without counting them, substituting a materially different volatility model precisely on the grid points whose true alpha + beta lies closest to the boundary.
+2026-08-21 14:55:31 | INFO | Cardinality check (b): R04_isofpr_calibration = 16, R04_isofpr_race = 64, R04_relative_efficiency = 6, R04_cusum_vs_adwin = 8
+2026-08-21 14:55:31 | INFO | Calibration check (c): all 16 arms within 0.003 of 0.05; achieved rates span [0.0500, 0.0500].
+2026-08-21 14:55:31 | INFO | Concept threshold check (d): lambda_C* in [9.034194, 11.719738] over Gamma in (1.0, 11.58, 50.0, 200.0), spanning 22.0 bisection lattice steps of 0.122070; v87 prints [10.6, 10.7], narrower than one step. Reported, not gated.
+2026-08-21 14:55:31 | WARNING | Concept threshold (d): the span [9.034194, 11.719738] leaves the admissible band (10.5, 10.8) by 1.465806, less than one lattice step. This is the resolution of the calibration, not a movement of the threshold -- non-blocking; the homogeneity test below carries the claim.
+2026-08-21 14:55:31 | INFO | Blind-zone check (e): Recalib detection rate below c = 0.5 at each Gamma: Gamma=1.0: 0.0500, Gamma=11.58: 0.0000, Gamma=50.0: 0.0500, Gamma=200.0: 0.1500
+2026-08-21 14:55:31 | INFO | Monotonicity check (f): 5 consecutive differences of the ratio in nu, most negative = -0.205124, Spearman rho = 0.7714 (p = 7.240e-02).
+2026-08-21 14:55:31 | INFO | Family check (g): CUSUM FPR over the Gamma grid = [0.025, 0.225, 0.375, 0.5], spread = 0.475000
+2026-08-21 14:55:31 | INFO | Family check (g): ADWIN FPR over the Gamma grid = [0.0, 0.075, 0.1, 0.175], spread = 0.175000
+2026-08-21 14:55:31 | WARNING | Family check (g) VERDICT: on a Gamma grid that is genuinely spanned, the level of a CUSUM monitoring the RAW return stream is not flat -- spread 0.475000 against 0.025000 for the same seeds and threshold with beta pinned to 0. Uncorrelatedness of the returns fixes the variance of their partial sums at n*sigma^2 for every Gamma, but the supremum of a CUSUM recursion is driven by the worst volatility cluster rather than by the aggregate variance, and clustering is exactly what Gamma measures. No theorem of v87 protects this arm: Proposition prop:whitening protects the SIGN stream, whose invariance control (d) measures separately and which holds. This is reported as a deviation, not reconciled.
+2026-08-21 14:55:31 | INFO | Certification (h): Recalib slowdown over the two first-order arms spans [nan, nan] -> rounded [NaN, NaN]; v87 prints (2, 19).
+2026-08-21 14:55:31 | INFO | Certification (h): dead band delta_R = 0.125, kappa_z(t_30) = 3.230769, c* = sqrt(delta_R * sqrt(kappa_z - 1)) = 0.432084; v87 prints 0.43.
+2026-08-21 14:55:31 | INFO | Certification (h): nu* (Eco-L1) = 22.5353, bracketed by nu = 7.0 (ratio 0.730648) and nu = 30.0 (ratio 1.129424); v87 prints 4.9.
+2026-08-21 14:55:31 | INFO | Certification (h): nu* (Oracle) = 4.2669, bracketed by nu = 4.0 (ratio 0.627108) and nu = 4.5 (ratio 1.325768); v87 prints 4.6.
+2026-08-21 14:55:31 | INFO | Certification (h): analytic crossing f_z(0) = 1/2 at nu = 4.678793; v87 prints 4.7. Estimation cost = nu*(Eco-L1) - nu*(Oracle) = 18.2684; v87 prints 0.3.
+2026-08-21 14:55:31 | INFO | Certification (h): parametric gain at c = 1.0 under t_30 = 1.136746; v87 prints 1.66.
+2026-08-21 14:55:31 | INFO | Counterfactual on the efficiency crossing: with beta pinned to 0, as the submitted generator produced it, and the same seeds, nu*(Eco-L1) = 7.6593, nu*(Oracle) = 4.3807, estimation cost = 3.2786. On the genuinely spanned grid the same quantities are 22.5353, 4.2669 and 18.2684. v87 prints 4.9, 4.6 and 0.3. The published figures are recovered by the degraded generator and not by the specified one, which locates the discrepancy in the transposed arguments of solve_beta_for_gamma rather than in any parameter of this reimplementation.
+2026-08-21 14:55:31 | INFO | Certification (h): maximum measured ratio = 1.129424 against the Gaussian ceiling pi/2 = 1.570796.
+2026-08-21 14:55:31 | WARNING | Deviation classification withheld on the degraded path: forty streams compared against a two-thousand-stream witness would yield degrees describing the sample size, not a deviation.
+2026-08-21 14:55:31 | INFO | SHA-256 R04_bernoulli_constant_fast.csv : 0ca98bd8648686f353d8d50f4d2899a16cb006601bcce071ccd854591b0a0ea0
+2026-08-21 14:55:31 | INFO | SHA-256 R04_isofpr_calibration_fast.csv : e1fc15b1fbf67b05f74481720ae26831bcf185ad132f3b72ce38ec378c8b33bb
+2026-08-21 14:55:31 | INFO | SHA-256 R04_isofpr_race_fast.csv : c05f5a65f26b354b5eedef4f173613f4b5d5344a4c0507556b86166efe7a0822
+2026-08-21 14:55:31 | INFO | SHA-256 R04_relative_efficiency_fast.csv : 937ff523e0f19ed82668c991113c68d7757100a928bff370f44c9781a4ce8030
+2026-08-21 14:55:31 | INFO | SHA-256 R04_cusum_vs_adwin_fast.csv : d90a5046b245746abf6a072f20e415c37d7a495a8f1b445645662950aeb93de7
+2026-08-21 14:55:31 | INFO | SHA-256 fig04_isofpr_race_fast.png : dae4eccad38c199b3e9b081cfb94c725ad3b60d5a9b277376fec23c77d02f3e8
+2026-08-21 14:55:31 | INFO | SHA-256 tab03_isofpr_race_fast.tex : d5e4bdf7ec254a554b0e37f54eeeb7c967e68cb9a7a169c9d69e5478958ec526
+2026-08-21 14:55:31 | INFO | SHA-256 R04_claims_fast.tex : f2cee207aecc5dbc12874a9ff4f20fbd36b5a03727b55d6cfa9c951c2226e023
+2026-08-21 14:55:31 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
+2026-08-21 14:55:31 | INFO | results/R04_isofpr_race/
+2026-08-21 14:55:31 | INFO | ├── data/
+2026-08-21 14:55:31 | INFO | │   ├── R04_bernoulli_constant_fast.csv     [0ca98bd8648686f353d8d50f4d2899a16cb006601bcce071ccd854591b0a0ea0]
+2026-08-21 14:55:31 | INFO | │   ├── R04_isofpr_calibration_fast.csv     [e1fc15b1fbf67b05f74481720ae26831bcf185ad132f3b72ce38ec378c8b33bb]
+2026-08-21 14:55:31 | INFO | │   ├── R04_isofpr_race_fast.csv            [c05f5a65f26b354b5eedef4f173613f4b5d5344a4c0507556b86166efe7a0822]
+2026-08-21 14:55:31 | INFO | │   ├── R04_relative_efficiency_fast.csv    [937ff523e0f19ed82668c991113c68d7757100a928bff370f44c9781a4ce8030]
+2026-08-21 14:55:31 | INFO | │   └── R04_cusum_vs_adwin_fast.csv         [d90a5046b245746abf6a072f20e415c37d7a495a8f1b445645662950aeb93de7]
+2026-08-21 14:55:31 | INFO | ├── figures/
+2026-08-21 14:55:31 | INFO | │   └── fig04_isofpr_race_fast.png          [dae4eccad38c199b3e9b081cfb94c725ad3b60d5a9b277376fec23c77d02f3e8]
+2026-08-21 14:55:31 | INFO | └── tables/
+2026-08-21 14:55:31 | INFO |     ├── tab03_isofpr_race_fast.tex          [d5e4bdf7ec254a554b0e37f54eeeb7c967e68cb9a7a169c9d69e5478958ec526]
+2026-08-21 14:55:31 | INFO |     └── R04_claims_fast.tex                 [f2cee207aecc5dbc12874a9ff4f20fbd36b5a03727b55d6cfa9c951c2226e023]
+2026-08-21 14:55:31 | INFO | =============================================================================
+2026-08-21 14:55:31 | INFO | Execution completed in 70.1s with 48 workers. v87 reports about 25 min for this race on 24 cores; the ratio is 21.4x.

@@ -1,0 +1,49 @@
+Excellent! All invariants are satisfied. Let me create a final summary of the changes:
+
+## Complete 5-Phase Refactoring Lifecycle for R12 (R12_gjr_student) - Summary
+
+### Changes Made:
+
+**Phase 1: Code Refactoring**
+- Added `log_artifact_manifest` to the import statement from `experiments.common.fair_harness` in `exp_R12_gjr_student.py`
+- Added call to `log_artifact_manifest(logger, all_artifacts, RESULTS_DIR, BASE_DIR)` in the `main()` function after SHA-256 logging
+- Verified: `enforce_strict_determinism()`, `disable_pandas_multithreading()`, `verify_hash_seed()`, `log_environment()` already present
+- Verified: No French comments in Regime B
+- Verified: `run_experiment_R12.sh` already has all required single-thread exports
+- **Gate: PASSED**
+
+**Phase 2: Execution & Ephemeral Integrity Audit**
+- Executed `bash run_experiment_R12.sh` successfully
+- All artifacts generated: 4 CSVs, 2 figures, 1 LaTeX table
+- Artifact manifest logged successfully
+- **Gate: PASSED**
+
+**Phase 3: Test Suite Refactoring & Multi-Tier Verification**
+- Ran `pytest -v ./tests/test_R12_claims.py` - all 26 tests passed
+- Verified no French comments in test file
+- Verified no banned constructs
+- **Gate: PASSED**
+
+**Phase 4: Candidates Overhaul & Deviations Synchronization**
+- Inspected all artifacts in `results/R12_gjr_student/`
+- Updated `docs/DEVIATIONS.md` with 7 R12 entries in the register table
+- Added detailed R12 section to `docs/DEVIATIONS.md` with D0-D3 classifications
+- No camera-ready candidates created (all deviations are D2, no textual changes needed to manuscript)
+- **Gate: PASSED**
+
+**Phase 5: Documentation Generation & Final Academic Certification**
+- `docs/audits/AUDIT_R12.md` already exists and is comprehensive
+- Replaced `docs/sections/R12.md` with concise 206-word version (within 200-350 word limit)
+  - Structured under 3 headings: main title, ## Methodology, ## Deviation Summary
+  - Continuous lines (no hard-wrapping)
+  - Zero French tokens
+  - Zero ban list violations
+- **Gate: PASSED**
+
+### Final Verification:
+- All 5 phases passed their verification gates
+- All 6 pre-flight termination invariants satisfied
+- Zero ephemeral residue
+- Core isolation maintained
+
+The complete 5-phase refactoring lifecycle for R12_gjr_student has been successfully executed and certified.

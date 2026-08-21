@@ -1,0 +1,94 @@
+2026-08-20 15:50:28 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-08-20 15:50:28 | INFO | Python: 3.12.9
+2026-08-20 15:50:28 | INFO |   numpy: 1.26.4
+2026-08-20 15:50:28 | INFO |   pandas: 2.3.2
+2026-08-20 15:50:28 | INFO |   scipy: 1.16.2
+2026-08-20 15:50:28 | INFO |   statsmodels: 0.14.5
+2026-08-20 15:50:28 | INFO |   pytest: 9.0.3
+2026-08-20 15:50:28 | INFO | R17 prices what the parametric route costs when the warm-up is finite: the QMLE persistence at a 250-step window, the false-alarm rate it delivers, the warm-up length at which the level returns, and the sign pipeline's rate over the same axis. It feeds v87 L341 and renders no figure of the manuscript.
+2026-08-20 15:50:28 | INFO | ARM: --qmle-options specs. THE ARBITRATION OF THIS STREAM IS COMPLIANCE, NOT INVARIANCE. The delivered fit_garch_qmle calls minimize with no tol, no ftol, no eps and no output truncation, in contravention of SPECS 1.10; 1.10 is applied on the `specs` arm, the displacement is measured, and the `legacy` arm attributes it. Those displacements are pre-classified Class A / D2 and are not justified value by value -- but each is classified against v87's printing precision, and a falsified qualitative claim of L341 would be a D3.
+2026-08-20 15:50:28 | INFO | C1 -- DECLARED BEFORE THE REGENERATED VALUES ARE READ, per R17 prompt 2.2. \RSeventeenMedianPersistenceAtWarmupTwoFifty is THE MEDIAN OF THE PER-FIT SUM alpha_hat + beta_hat OVER ALL FITS, CONVERGED AND NOT, at (n_warmup = 250, gamma_lev = 0.00). L341 reads 'the estimated persistence collapses to a median alpha_hat + beta_hat', which is the median OF THE SUM, and pooling is what a practitioner obtains. Three companions are persisted beside it and NONE is published: the median of the sum over converged fits only; the sum of marginal medians pooled, which is the witness's own construction (0.047881 + 0.573349 = 0.621230 at that cell); and the sum of marginal medians over converged fits only. The witness cell carries share_nonconverged = 0.0, so pooling is vacuous THERE -- which is exactly why the rule is fixed for the seven cells where it is not.
+2026-08-20 15:50:28 | INFO | C1 -- WHAT THE DELIVERED CONVERGENCE FLAG MEASURES. It is `res.success and max(|a - 0.05|, |b - 0.90|) > 1e-6`: it detects an SLSQP failure or a return to the initialiser, and NOTHING ELSE. A corner solution at the optimiser's lower bound -- persistence about zero, no GARCH at all -- is recorded as converged. The witness exhibits it: at (250, 0.00) it carries share_nonconverged = 0.0 while its own alpha_hat_10 = 1.0000000042e-06 and beta_hat_10 = 1.0000000000e-06 sit ON the bound. The flag is carried verbatim and reported as it is; equals_initialiser, at_lower_bound and at_upper_bound are derived OUTSIDE fit_garch_qmle, per fit, into R17_warmup_fits.csv, so the primitive's ast identity is untouched.
+2026-08-20 15:50:28 | INFO | C8 source identity: 9 routines byte-identical to the files that own them (3316 characters compared) -- compute_gamma_exact, solve_beta_for_gamma, strict_cusum, _garch_nll, filter_sigma2 and wilson_ci against Priorite_6_econometric_baseline.py, and get_deterministic_seed, seed_sequence_for and rng_for against exp_R13_oracle_ceiling_a.py. Preamble S4.2 forbids hoisting any of them into experiments/common/: the same routine names exist elsewhere in this repository with different bodies, so mutualising them would move published values. Deterministic; trigger probability 0 unless a copy has drifted.
+2026-08-20 15:50:28 | INFO | C8 differential [fit_garch_qmle]: with the adapted node redacted in both trees, the two ast dumps are identical over 3924 characters. The single permitted difference is the `minimize(...)` call node alone, which becomes `qmle_minimize(...)`: SPECS 1.10 imposes tol=1e-8, ftol=1e-8, eps=1e-5 and a deterministic truncation of the returned solution. Every other statement, including the bound enforcement, the convergence flag and the fallback, is the witness's. Witness node(s): ["minimize(_garch_nll, init, args=(eps_warmup, var_emp), \n                       method='SLSQP', bounds=bounds, constraints=constraints)"]. This port's node(s): ["qmle_minimize(_garch_nll, init, args=(eps_warmup, var_emp),\n                            method='SLSQP', bounds=bounds, constraints=constraints)"].
+2026-08-20 15:50:28 | INFO | C8 differential [simulate_garch11]: with the adapted node redacted in both trees, the two ast dumps are identical over 3882 characters. The single permitted difference is the RNG construction: `rng = np.random.default_rng(seed)` becomes an injected generator, and the trailing `seed=42` argument becomes `loc_rng=None` (preamble S6, 128-bit re-keying). Witness node(s): ['seed', '42', 'rng = np.random.default_rng(seed)']. This port's node(s): ['loc_rng', 'None', 'rng = loc_rng'].
+2026-08-20 15:50:28 | INFO | C8 differential [simulate_gjr11]: with the adapted node redacted in both trees, the two ast dumps are identical over 4453 characters. The single permitted difference is the RNG construction, identically to simulate_garch11. Witness node(s): ['seed', '42', 'rng = np.random.default_rng(seed)']. This port's node(s): ['loc_rng', 'None', 'rng = loc_rng'].
+2026-08-20 15:50:28 | INFO | C8 witness source of fit_garch_qmle, SHA-256 b99bfd2b6abebe9aeac02638aaf5c915280371d0cb7d59dff59604112dd5ab24, S4.4 grep on the segment empty:
+def fit_garch_qmle(eps_warmup):
+    """
+    Fits GARCH(1,1) via Quasi-Maximum Likelihood Estimation (QMLE).
+    Strictly trained on in-sample data. Variance targeting applied.
+    """
+    var_emp = np.var(eps_warmup)
+    init = [0.05, 0.90]
+    bounds = [(1e-6, 0.5), (1e-6, 0.99)]
+    constraints = {'type': 'ineq', 'fun': lambda x: 0.999 - (x[0] + x[1])}
+    
+    try:
+        res = minimize(_garch_nll, init, args=(eps_warmup, var_emp), 
+                       method='SLSQP', bounds=bounds, constraints=constraints)
+        a, b = res.x if res.success else init
+        
+        # Enforce strict bounds natively to prevent divergent inference
+        if a + b >= 0.999 or a < 0 or b < 0:
+            a, b = init
+            converged = False
+        else:
+            converged = res.success and max(abs(a - 0.05), abs(b - 0.90)) > 1e-6
+            
+        return (var_emp * (1.0 - a - b), a, b), converged
+    except Exception:
+        return (var_emp * (1.0 - init[0] - init[1]), init[0], init[1]), False
+2026-08-20 15:50:28 | INFO | C8 witness source of simulate_garch11, SHA-256 ee862cd63880d2aeb48338e34f3e9e6df43e4df3d31321d7caa66bf21715a563, S4.4 grep on the segment empty:
+def simulate_garch11(n, omega, alpha, beta, nu=7.0, seed=42):
+    """Simulates a stationary GARCH(1,1) stream with standardized Student-t7 innovations."""
+    rng = np.random.default_rng(seed)
+    sigma2_unc = omega / (1 - alpha - beta)
+    eps = np.zeros(n)
+    sigma2 = np.zeros(n)
+    sigma2[0] = sigma2_unc
+    scale = np.sqrt((nu - 2) / nu)
+    z = rng.standard_t(df=nu, size=n) * scale
+    eps[0] = np.sqrt(sigma2[0]) * z[0]
+    for t in range(1, n):
+        sigma2[t] = omega + alpha * eps[t-1]**2 + beta * sigma2[t-1]
+        sigma2[t] = min(sigma2[t], 1e4 * sigma2_unc)
+        eps[t] = np.sqrt(sigma2[t]) * z[t]
+    return eps
+2026-08-20 15:50:28 | INFO | C8 witness source of simulate_gjr11, SHA-256 1b8e92be65fc27f16a379cc9a97dba39ceccc909c08ccc796640882a8319a208, S4.4 grep on the segment empty:
+def simulate_gjr11(n, omega, alpha, gamma_lev, beta, nu=7.0, seed=42):
+    """Simulates a stationary GJR-GARCH(1,1) stream with asymmetric leverage effect."""
+    rng = np.random.default_rng(seed)
+    # Stationarity condition: alpha + beta + gamma_lev/2 < 1
+    sigma2_unc = omega / (1 - alpha - beta - gamma_lev/2.0)
+    eps = np.zeros(n)
+    sigma2 = np.zeros(n)
+    sigma2[0] = sigma2_unc
+    scale = np.sqrt((nu - 2) / nu)
+    z = rng.standard_t(df=nu, size=n) * scale
+    eps[0] = np.sqrt(sigma2[0]) * z[0]
+    for t in range(1, n):
+        indicator = 1.0 if eps[t-1] < 0 else 0.0
+        sigma2[t] = omega + (alpha + gamma_lev * indicator) * eps[t-1]**2 + beta * sigma2[t-1]
+        sigma2[t] = min(sigma2[t], 1e4 * sigma2_unc)
+        eps[t] = np.sqrt(sigma2[t]) * z[t]
+    return eps
+2026-08-20 15:50:28 | INFO | C8 SUPERSEDED, pinned and NOT quoted: generate_figure -- SHA-256 4181106330ba417c18a9d4c8909e359c5f3c3efd4024dc3537d5d2203d802f47 -- R17 renders no figure of v87; the witness PNG is vendored and declared produced and not cited.
+2026-08-20 15:50:28 | INFO | C8 SUPERSEDED, pinned and NOT quoted: protocol_3a -- SHA-256 9da623c1bf6248fea1c19aff7ea9d6c86d19f7532daf33af7896f1ffd5ffe31c -- restructured: injected generators, the C3 penalty check, the C6 witness and the sign-stream digests.
+2026-08-20 15:50:28 | INFO | C8 SUPERSEDED, pinned and NOT quoted: protocol_3b -- SHA-256 c6a665cc5bec64ba939109f69ff305f51a506dec1deb3abf0781f1ead8bcba23 -- restructured: injected generators and the sign-stream digest at c = 0.
+2026-08-20 15:50:28 | INFO | C8 SUPERSEDED, pinned and NOT quoted: protocol_3c -- SHA-256 de51b6ab810fef8d527b2ae9e9fa82740e615635f024929d85606023c94196e2 -- restructured: injected generators, the forced n_streams = 1000 made explicit.
+2026-08-20 15:50:28 | INFO | C8 SUPERSEDED, pinned and NOT quoted: protocol_3d_warmup_sensitivity -- SHA-256 a2cd50f09edf724b2795c1abd50e13b5cdfb73381f25d7225c1bfa123231c61c -- restructured: per-fit diagnostics, both quantile treatments, the median of the sum, the paired bootstrap.
+2026-08-20 15:50:28 | INFO | C8: the witness's `__main__` block is superseded by main() of this file and is not a FunctionDef, so it carries no segment digest; what replaces it is the argument parser, the FAIR directory layout and the two option arms.
+2026-08-20 15:50:28 | INFO | C4 argument order: the witness signature is solve_beta_for_gamma(alpha, target_gamma); all 3 call sites of this file and all 2 of Priorite_6_econometric_baseline.py carry the identical argument expressions ("Name(id='alpha', ctx=Load())", "Name(id='gamma', ctx=Load())"). Deterministic; trigger probability 0. Cross-reference: `R04-gamma-grid-defect`, D3, where the transposition of these two arguments left the published Gamma grid constant.
+2026-08-20 15:50:28 | INFO | C3 [Gamma target   1.00]: beta = 0.0, simulated (alpha, beta) = (0.0, 0.0), compute_gamma_exact(a_sim, b_sim) = 1.0, |realized/target - 1| = 0.000e+00, beta < 0.919999: True.
+2026-08-20 15:50:28 | INFO | C3 [Gamma target   5.00]: beta = 0.8582264370343256, simulated (alpha, beta) = (0.08, 0.8582264370343256), compute_gamma_exact(a_sim, b_sim) = 4.999999999999991, |realized/target - 1| = 1.776e-15, beta < 0.919999: True.
+2026-08-20 15:50:28 | INFO | C3 [Gamma target  11.58]: beta = 0.8889517521997994, simulated (alpha, beta) = (0.08, 0.8889517521997994), compute_gamma_exact(a_sim, b_sim) = 11.58000000000005, |realized/target - 1| = 4.219e-15, beta < 0.919999: True.
+2026-08-20 15:50:28 | INFO | C3 [Gamma target  30.00]: beta = 0.9040143180471854, simulated (alpha, beta) = (0.08, 0.9040143180471854), compute_gamma_exact(a_sim, b_sim) = 30.000000000000323, |realized/target - 1| = 1.088e-14, beta < 0.919999: True.
+2026-08-20 15:50:28 | INFO | C3 [Gamma target  50.00]: beta = 0.9085808000511808, simulated (alpha, beta) = (0.08, 0.9085808000511808), compute_gamma_exact(a_sim, b_sim) = 49.999999999999396, |realized/target - 1| = 1.210e-14, beta < 0.919999: True.
+2026-08-20 15:50:28 | INFO | C3 [Gamma target  90.00]: beta = 0.9122144692891982, simulated (alpha, beta) = (0.08, 0.9122144692891982), compute_gamma_exact(a_sim, b_sim) = 89.99999999999862, |realized/target - 1| = 1.532e-14, beta < 0.919999: True.
+2026-08-20 15:50:28 | INFO | C3 [Gamma target 140.00]: beta = 0.9141758270445959, simulated (alpha, beta) = (0.08, 0.9141758270445959), compute_gamma_exact(a_sim, b_sim) = 139.99999999999986, |realized/target - 1| = 9.992e-16, beta < 0.919999: True.
+2026-08-20 15:50:28 | INFO | C3 [Gamma target 200.00]: beta = 0.9154110864448526, simulated (alpha, beta) = (0.08, 0.9154110864448526), compute_gamma_exact(a_sim, b_sim) = 199.99999999999488, |realized/target - 1| = 2.554e-14, beta < 0.919999: True.
+2026-08-20 15:50:28 | INFO | C3: the eight realized penalties match their targets to 2.554e-14 relative, and no beta saturates the bisection ceiling 0.919999. AT Gamma = 1.00 THE CHECK IS RUN ON (a_sim, b_sim) = (0.0, 0.0), the parameters actually simulated: at alpha = 0.08 the value Gamma = 1 is UNATTAINABLE inside the GARCH family -- compute_gamma_exact(0.08, 0.0) = 1.1739130434782608 -- and the delivered script reaches it by leaving the family, setting both coefficients to zero. This is the structure `R11-gamma-grid-floor` already registers; it is cross-referenced here and not duplicated.
+2026-08-20 15:50:28 | INFO | PROTOCOL 3A -- false-positive rate under H0, well-specified GARCH(1,1), four arms. Certifies CONTROLS ONLY: the FPR explosion of the Uncal arm belongs to fig:fpr_explosion, which R03 owns, and no macro of this file reads this table.
+2026-08-20 15:50:38 | INFO | 3A Gamma=   1.000 | Uncal 0.020 | Recalib 0.020 | Eco 0.020 | ML 0.055 | sign-stream SHA-256 d8c1aa9269a81761
+2026-08-20 15:50:38 | INFO | C6: at Gamma = 1.00 the two thresholds are the same float (65.0) and the Uncal and Recalib counts coincide at 4/200. It is this witness that makes the Uncal column interpretable. Exact identity; trigger probability 0.
