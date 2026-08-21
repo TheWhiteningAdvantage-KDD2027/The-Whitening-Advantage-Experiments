@@ -23,7 +23,7 @@
 ~~~~~~~~~
 >>> FIN DU BLOC
 
-### Action requise pour les figures :
-Remplacer le fichier binaire `figures/Fig11_Whitening_Boundary.png` par l'artefact généré `results/R06_validity_map/figures/fig06_validity_map.png`.
+### Required action for the figures:
+Replace the binary file `figures/Fig11_Whitening_Boundary.png` with the generated artifact `results/R06_validity_map/figures/fig06_validity_map.png`.
 
-**Justification :** La figure soumise plaçait une graduation d'axe à la frontière analytique du quatrième moment en superposant le marqueur `Γ = 41`, induisant visuellement en erreur quant à la localisation de la mesure. La nouvelle figure sépare la grille des graduations et place la frontière sur sa propre règle isolée.
+**Justification:** The submitted figure placed an axis tick at the analytic fourth-moment boundary while superimposing the `Γ = 41` marker, visually misleading the reader as to the measurement location. The new figure separates the grid from the ticks and places the boundary on its own isolated rule.

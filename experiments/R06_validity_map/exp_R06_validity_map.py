@@ -68,7 +68,7 @@ enforce_strict_determinism()
 
 import numpy as np
 import pandas as pd
-from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, compute_sha256, save_fair_csv
+from experiments.common.fair_harness import setup_logging, disable_pandas_multithreading, compute_sha256, save_fair_csv, log_artifact_manifest
 
 disable_pandas_multithreading()
 
@@ -944,6 +944,12 @@ def main():
     for rel, path in ((f"fig06_validity_map{suffix}.png", FIGURES_DIR / f"fig06_validity_map{suffix}.png"),
                       (tex_name, TABLES_DIR / tex_name)):
         logger.info(f"SHA-256 {rel} : {compute_sha256(path)}")
+
+    # Log artifact manifest
+    all_artifacts = [DATA_DIR / name for name in outputs] + \
+                    [FIGURES_DIR / f"fig06_validity_map{suffix}.png"] + \
+                    [TABLES_DIR / tex_name]
+    log_artifact_manifest(logger, all_artifacts, BASE_DIR / "results" / "R06_validity_map", BASE_DIR)
 
     logger.info(f"Execution completed in {elapsed:.1f}s over {len(tasks_A) + len(tasks_B) + len(tasks_cf)} "
                 f"monitored streams, of which {len(tasks_cf)} are the counterfactual arm.")
