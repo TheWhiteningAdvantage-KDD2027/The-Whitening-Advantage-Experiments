@@ -555,7 +555,7 @@ def test_R07_the_seven_carried_primitives_are_byte_identical_to_the_witness():
     """
     Mandatory blocking deterministic constraint asserting flawless cryptographic preservation connecting specific designated baseline mechanisms absolutely flawlessly.
     """
-    witness_path = REFERENCE_DIR / "Priorite_21_estimated_mean_robustness.py"
+    witness_path = REFERENCE_DIR / "Priority_21_estimated_mean_robustness.py"
     assert witness_path.exists()
 
     def segments(path, names):

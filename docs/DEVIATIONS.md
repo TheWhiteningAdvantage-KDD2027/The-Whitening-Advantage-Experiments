@@ -69,6 +69,10 @@ values are printed and the reason is stated.
 | `R16-boundary-sensitivity`        | R16        | `app:repro`, L392                          | A     | —        | 3 of 66 phases flip with the convention, all one way; the count is `[53, 56]`, never reported                 |
 | `R16-sign-arm-disagreement`       | R16        | `sec:real_world`, L329                     | A     | —        | "moves that count by one phase" is a net of 10 and 9; the arms disagree on 19 of 66                           |
 | `R16-substitution-scope`          | R16        | `sec:real_world`, L329                     | A     | —        | the published fraction is conditional on the substitution reaching one ticker of four: 80.3% → 73.5%          |
+| `R07-bias-bound-not-a-bound`     | R07        | `sec:ar_garch` L308                        | A     | D2       | bias bound `2.9 × 10⁻³` exceeded: regenerated campaign measures `3.1 × 10⁻³` at the grid corner            |
+| `R07-dispersion-cost`             | R07        | `sec:ar_garch` L308                        | A     | D2       | dispersion cost `0.4` points rejected; OLS-LB envelope `[4.6%, 5.6%]` and OLS-FPR `[4.3%, 5.9%]` move   |
+| `R07-figure7-exactness`           | R07        | Figure 7 caption L307                      | A     | D2       | caption calls `4.29 %` an "exact lattice level" while L241 sources it to Monte-Carlo            |
+| `R07-panelB-operating-level`      | R07        | Figure 7 panel B, L308                     | A     | D2       | oracle LB rejection range moves from `[5.1%, 5.6%]` to `[4.9%, 5.6%]`                              |
 
 *Entries are added as each experiment is certified. Streams R06 onwards are not yet complete;
 this register is not final.*
@@ -742,3 +746,19 @@ is a different census rather than a better one. What it establishes is the condi
 that is all it is recorded as establishing.
 
 Full account: `docs/sections/R16.md` and `AUDIT_R16.md`.
+
+---
+
+### R07 — estimated conditional mean (Class A, D2)
+
+Four deviations are registered for R07, all Class A (correction of defects in the submitted code) with D2 severity (printed values change but qualitative claims still hold).
+
+**R07-bias-bound-not-a-bound.** L308 states that the classical small-sample AR bias $\mathbb{E}[\hat{\phi}] - \phi \approx -2.5\,\phi/n$ "stays under $2.9 \times 10^{-3}$". The regenerated campaign measures $3.1 \times 10^{-3}$ at the grid corner $(0.15, 125)$, exceeding the printed bound by 1.44 standard errors. The sentence contradicts itself: the printed formula already exceeds the printed bound at the same corner ($-2.5 \times 0.15 / 125 = -3.0 \times 10^{-3}$). The maximum is where the formula says it should be, and the claim that the bias channel is small and that calibration depends on estimator bias rather than dispersion is untouched.
+
+**R07-dispersion-cost.** L308 states that the dispersion channel "costs at most $0.4$ points of rejection". The OLS-LB envelope moves from $[4.6\%, 5.6\%]$ to $[4.7\%, 5.6\%]$ and the OLS-FPR envelope from $[4.3\%, 5.9\%]$ to $[4.8\%, 5.6\%]$. The dispersion cost reading is rejected; however, every rolling-OLS arm still matches oracle false-alarm control.
+
+**R07-figure7-exactness.** The Figure 7 caption calls "$4.29\%$" an "exact lattice level" while L241 explicitly sources it to a $2 \times 10^5$-stream Monte-Carlo campaign. R07's control C1 computes the exact law via an absorbing-chain forward recursion, yielding levels that differ from the Monte-Carlo numerals. The caption's wording, not the values, is at issue.
+
+**R07-panelB-operating-level.** Figure 7 panel B caption states that oracle Ljung--Box rejection "stays within $4.6$--$5.6\%$". The regenerated oracle LB rejection range is $[4.9\%, 5.6\%]$, with the lower bound moving. The qualitative claim that oracle control is maintained still holds.
+
+Full account: `docs/camera_ready_candidates/R07_v87_bias_bound.md`, `R07_v87_dispersion_cost.md`, `R07_v87_figure7_exactness.md`, `R07_v87_panelB_operating_level.md`, `docs/sections/R07.md`, and `AUDIT_R07.md`.
