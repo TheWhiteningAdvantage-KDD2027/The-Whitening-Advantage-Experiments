@@ -1,8 +1,9 @@
 """
-==========================================================================
-TEST SUITE FOR R01 REAL WORLD BACKTEST
-Validates mathematical invariance against baseline claims.
-==========================================================================
+Test suite for R01 Real World Backtest.
+
+Validates mathematical invariance and non-regression against baseline claims
+for GARCH calibrations, CUSUM trajectories, injection detection, placebo
+controls, and symmetry properties.
 """
 
 import math
@@ -15,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 R01_DATA_DIR = BASE_DIR / "results" / "R01_real_world_backtest" / "data"
 
 def test_r01_models():
-    """Validates GARCH model calibrations (Invariant c)."""
+    """Validates GARCH(1,1) QMLE parameter calibrations and whitening bounds."""
     df = pd.read_csv(R01_DATA_DIR / "R01_garch_models.csv", float_precision='round_trip').set_index('Ticker')
     
     assert df.loc['SPY', 'gamma_hat'] == 14.998367977816738
@@ -28,7 +29,7 @@ def test_r01_models():
     assert df.loc['SPY', 'q_hat'] == 0.558648111332008
     # omega and sigma_unc are the only quantities the single-threaded BLAS
     # bootstrap moves. The submitted campaign ran under multithreaded BLAS, so
-    # exact agreement is unattainable once SPECS section 1.1 is enforced: this is
+    # exact agreement is unattainable once the determinism protocol is enforced: this is
     # a deviation of the manuscript from the compliant pipeline, not a defect.
     # The budget below is set from the largest relative drift measured across the
     # four tickers (2.7e-14 on PFF omega), rounded up one decade to 1e-13. It is
@@ -46,7 +47,7 @@ def test_r01_models():
     assert (df['n_truncated_windows'] == 0).all()
 
 # Reference values from the submitted campaign
-# (protocol_6g_covid_trajectories.csv), read back with float_precision='round_trip'.
+# (R01_covid_trajectories.csv), read back with float_precision='round_trip'.
 # Transcribing them from a default pandas read is unsafe: the fast float parser is
 # not correctly rounded and returns a value one unit in the last place away, which
 # manufactures a drift that does not exist.
@@ -54,7 +55,7 @@ def test_r01_models():
 # Concept: bit-identical to the submitted campaign under both the multithreaded and
 #   the single-threaded bootstrap, because the sign stream consumes neither the GARCH
 #   variance target nor the conditional volatility. Budget kept at zero.
-# Data: eight ULP away once SPECS section 1.1 is enforced, propagated from the
+# Data: eight ULP away once the determinism protocol is enforced, propagated from the
 #   variance-target drift on omega. Budget set to 16 ULP, one binary decade above the
 #   measured value, and not to be widened further.
 REF_COVID_PEAK_DATA = 0.37192244808245406
@@ -69,7 +70,7 @@ def _within_ulp(observed: float, reference: float, budget: int) -> bool:
 
 
 def test_r01_trajectories():
-    """Checks COVID CUSUM trajectories against the submitted campaign (Invariant d)."""
+    """Checks COVID-19 CUSUM trajectories against the submitted campaign baseline."""
     df = pd.read_csv(R01_DATA_DIR / "R01_covid_trajectories.csv", float_precision='round_trip')
     assert len(df) == 253
     assert df['Date'].iloc[0] == "2020-01-02"
@@ -91,7 +92,7 @@ def test_r01_trajectories():
     assert round(peak_data, 2) == 0.37 and round(peak_concept, 2) == 0.45
 
 def test_r01_injection_summary():
-    """Validates directional injections (Invariant e)."""
+    """Validates directional injection detection rates and delays."""
     df = pd.read_csv(R01_DATA_DIR / "R01_injection_summary.csv", float_precision='round_trip')
     
     spy_data = df[(df['ETF'] == 'SPY') & (df['Pipeline'] == 'Data')].iloc[0]
@@ -107,7 +108,7 @@ def test_r01_injection_summary():
     assert bwx_concept['ADD'] == 46.22222222222222
 
 def test_r01_placebo():
-    """Validates placebo control bounds (Invariant f)."""
+    """Validates placebo control false alarm rates under null conditions."""
     df = pd.read_csv(R01_DATA_DIR / "R01_placebo_control.csv", float_precision='round_trip')
     
     spy_concept = df[(df['ETF'] == 'SPY') & (df['Pipeline'] == 'Concept')].iloc[0]
@@ -117,7 +118,7 @@ def test_r01_placebo():
     assert pff_data['AlarmRate'] == 0.2222222222222222
 
 def test_r01_magnitude_and_symmetry():
-    """Validates sweep shapes and 2020 symmetry (Invariant g)."""
+    """Validates magnitude sweep detection rates and 2020 sign symmetry."""
     df_mag = pd.read_csv(R01_DATA_DIR / "R01_magnitude_sweep.csv")
     assert len(df_mag) == 24
     
