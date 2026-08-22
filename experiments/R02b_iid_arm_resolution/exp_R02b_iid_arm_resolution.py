@@ -28,7 +28,6 @@ if os.environ.get("PYTHONHASHSEED") != "42":
 import hashlib
 import logging
 import argparse
-from pathlib import Path
 import importlib.metadata
 
 import numpy as np
@@ -44,17 +43,18 @@ from experiments.common.fair_harness import (
     log_artifact_manifest,
     setup_logging,
 )
-from experiments.common.fair_env import log_environment
+from experiments.common.fair_env import (
+    log_environment,
+    verify_hash_seed,
+)
 
 # Disable pandas multithreading immediately after import
 disable_pandas_multithreading()
 
 # Verify hash seed
-from experiments.common.fair_env import verify_hash_seed
 verify_hash_seed()
 
-BASE_DIR = Path(__file__).resolve().parent if '__file__' in locals() else Path.cwd()
-PROJECT_ROOT = BASE_DIR.parent.parent
+PROJECT_ROOT = BASE_DIR
 DATA_DIR = PROJECT_ROOT / "results" / "R02b_iid_arm_resolution" / "data"
 FIGS_DIR = PROJECT_ROOT / "results" / "R02b_iid_arm_resolution" / "figures"
 TABS_DIR = PROJECT_ROOT / "results" / "R02b_iid_arm_resolution" / "tables"
@@ -250,6 +250,16 @@ def main():
             excluded_up_to = f"{excluded_up_to:g}"
         f.write(f"\\newcommand{{\\RTwoBNominalExcludedUpTo}}{{{excluded_up_to}}}\n")
         
+    # Log artifact manifest
+    RESULTS_DIR = PROJECT_ROOT / "results" / "R02b_iid_arm_resolution"
+    artifact_files = [
+        DATA_DIR / "R02b_streams.csv",
+        DATA_DIR / "R02b_rejection_vs_nu.csv",
+        FIGS_DIR / "figA01_iid_overrejection_vs_nu.png",
+        TABS_DIR / "R02b_claims.tex",
+    ]
+    log_artifact_manifest(logger, artifact_files, RESULTS_DIR, PROJECT_ROOT)
+    
     logger.info("Empirical verification of the I.I.D. mechanism completed successfully.")
 
 if __name__ == '__main__':
