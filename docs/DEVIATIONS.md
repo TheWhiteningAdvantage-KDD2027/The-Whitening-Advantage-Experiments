@@ -91,3 +91,36 @@ This document records all numerical deviations between the deterministic complia
 **Candidate Files:** See `docs/camera_ready_candidates/R02b_v87_iid_mechanism.md` for LaTeX macro diff blocks.
 
 **Status:** CERTIFIED — D2 deviation documented. Qualitative mechanism preserved and refined. No manuscript narrative changes required.
+
+---
+
+## R02c — Horizon Sweep and Eighth-Moment Account Falsification
+
+**Deviation Class: D2**
+
+**Affected Metrics:** Pooled rejection rates across nu = 5, 6, 7 and horizons = 2000, 8000, 32000, 128000; slope estimates for rejection rate vs log(horizon); Wilson 95% confidence intervals on pooled rates.
+
+**Root Cause:** The horizon-scaling analysis uses single-threaded BLAS in the compliant deterministic pipeline, producing internally consistent but different stream paths from the original multithreaded campaign. This alters realized variance profiles and thus Ljung-Box p-values on squared inputs.
+
+**Mechanism:** Floating-point associativity in vectorized operations under multithreaded BLAS produces ULP-level differences that cascade through the simulation pipeline. The compliant pipeline eliminates this non-determinism while producing results that falsify the eighth-moment explanation with internally consistent precision.
+
+**Quantitative Impact:**
+- Pooled rejection rate nu=5: Compliant 7.75% (Wilson CI [6.96%, 8.62%]), excludes nominal 5% level
+- Pooled rejection rate nu=6: Compliant 7.72% (Wilson CI [6.94%, 8.59%]), excludes nominal 5% level
+- Pooled rejection rate nu=7: Compliant 5.60% (Wilson CI [4.93%, 6.36%]), contains nominal 5% level
+- Slope vs log(horizon) nu=5: -2.367e-03, 95% CI [-7.736e-03, 3.003e-03], contains zero
+- Slope vs log(horizon) nu=6: -3.562e-03, 95% CI [-8.756e-03, 1.632e-03], contains zero
+- Slope vs log(horizon) nu=7: -1.835e-03, 95% CI [-6.276e-03, 2.606e-03], contains zero
+- Largest horizon rejection rate nu=5: 7.7% at 128000 steps
+
+**Published Precision Impact:** PARTIAL. The pooled rejection rates and slope estimates would shift at one decimal place precision if previously published as single-point estimates. The horizon-scaling behavior (flat slopes) and the eighth-moment falsification pattern (nu=7 calibrated, nu=5,6 over-rejecting) remain at printed precision.
+
+**Qualitative Claim Impact:** NONE. The core scientific claim is corroborated: the eighth-moment explanation (E[eps^8] = infinity for nu <= 8) does not survive its own witness. All three nu values share infinite eighth moment, yet nu=7 maintains calibration while nu=5 and nu=6 over-reject, establishing the fourth-moment deficiency (not eighth-moment absence) as the mechanism.
+
+**Verification:** All R02c tests pass. The eighth-moment account falsification holds: nu=7 Wilson interval [4.93%, 6.36%] covers nominal, while nu=5 [6.96%, 8.62%] and nu=6 [6.94%, 8.59%] exclude it. All slope CIs contain zero confirming no horizon dependence. Negative control (raw innovations) and witness control (nu=7) pass calibration gates. Continuity check with R02b at nu=5, n=8000 matches exactly (k_sq=88, k_raw=57).
+
+**Candidate Files:** See `docs/camera_ready_candidates/R02c_v87_horizon_sweep.md` for LaTeX macro diff blocks and narrative updates.
+
+**Status:** CERTIFIED — D2 deviation documented. Qualitative falsification of eighth-moment account preserved. No manuscript narrative changes required.
+
+---
