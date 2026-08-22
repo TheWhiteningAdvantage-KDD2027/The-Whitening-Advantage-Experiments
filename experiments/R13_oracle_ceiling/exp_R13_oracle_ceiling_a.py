@@ -47,11 +47,11 @@ THE THREE VOLATILITY ORACLES.
 SIX STRUCTURAL CHANGES AGAINST THE DELIVERED SCRIPT, EACH FORCED BY THE
 PREAMBLE.
 
-1. DATA SOURCE. `try: from Priorite_14_real_world_backtest import get_daily_data
+1. DATA SOURCE. `try: from <legacy_vendor> import get_daily_data
    / except ImportError: sys.exit` is replaced by a direct read of
    `data/derived_firstrate/R01_daily_SPY.csv` with
    `float_precision='round_trip'` -- the same series R16 dated.
-2. CENSUS SOURCE. `protocol_10b_regime_census_refined.csv` beside the delivered
+2. CENSUS SOURCE. `<legacy_protocol>` beside the delivered
    script is replaced by `results/R16_regime_census/data/R16_regime_census.csv`,
    the DEFAULT-RUN CANONICAL ARM (AUDIT_R16.md section 5). `phase_id` is
    resolved by `(ticker, start_date, end_date)`, never typed.
@@ -64,10 +64,9 @@ PREAMBLE.
 4. NO SILENT FALLBACK (S4.3). `fit_garch_qmle` returns `(params, converged)`;
    the delivered caller discards `converged` and would ship the `(0.05, 0.90)`
    initialiser as a fit. Every fit is asserted converged.
-5. NO SILENT OVERRIDE. The delivered "P16/P3 INCOMMENSURABILITY ... SEQUENTIAL
-   OVERRIDE" branch replaces the census `T_days` and `sharpe` with recomputed
-   values in place. Both are kept as distinct columns and their divergence is
-   FATAL. That is control C6.
+5. NO SILENT OVERRIDE. The delivered legacy branch replaces the census `T_days` and
+   `sharpe` with recomputed values in place. Both are kept as distinct columns and
+   their divergence is FATAL. That is control C6.
 6. CERTIFICATION GATES REDESIGNED PER S4bis, NOT WEAKENED. `run_qmle_recovery`
    gated on `passes == 88`, a max-statistic over 88 simultaneous binary tests
    with no null distribution, which the third corollary of S4bis bans outright.
@@ -168,7 +167,7 @@ REF_WINDOW_MIN = 500
 SURVIVAL_T_MULTIPLIER = 3
 SURVIVAL_CAP = 750
 # The one-sided normal quantile at 5%, which is the level of the clairvoyant
-# floor of `protocol_19d` (delivered l.401, l.405).
+# floor of the delivered legacy protocol (delivered l.401, l.405).
 CLAIRVOYANT_Z = 1.6449
 # A cell whose ARL0 is right-censored on more than this fraction of replicates
 # has its mean suppressed: the mean of a right-censored run length is biased
@@ -465,13 +464,12 @@ def load_returns(ticker):
     """
     The daily log-return series, read directly from the derived FirstRate CSV.
 
-    This replaces the delivered script's `try: from
-    Priorite_14_real_world_backtest import get_daily_data / except ImportError:
-    sys.exit(1)` block. The fallback branch never ran in the submitted campaign,
-    but an absent module leaving a pipeline to decide its own data source is
-    exactly what preamble S4.3 bans. `float_precision='round_trip'` is required
-    on every numeric read of this repository (preamble S3): the fast float
-    parser is not correctly rounded.
+    This replaces the delivered script's `try: from <legacy_vendor> import
+    get_daily_data / except ImportError: sys.exit(1)` block. The fallback branch
+    never ran in the submitted campaign, but an absent module leaving a pipeline to
+    decide its own data source is exactly what preamble S4.3 bans.
+    `float_precision='round_trip'` is required on every numeric read of this
+    repository (preamble S3): the fast float parser is not correctly rounded.
     """
     path = BASE_DIR / "data" / "derived_firstrate" / f"R01_daily_{ticker}.csv"
     if not path.exists():
@@ -727,12 +725,11 @@ def run_detector_recovery(logger):
     same defect the QMLE gate carried.
 
     What replaces it: the point estimates stay in the CSV under their delivered
-    column names, and the GATE reads the Wilson interval that
-    `data/reference/R13/Priorite_19_oracle_ceiling_parallel.py` already
-    computes. A requirement is declared FAILED only when its interval at the
-    pre-declared level lies entirely outside the required region, which is an
-    equivalence statement with a null law rather than a maximum over twelve
-    points.
+    column names, and the GATE reads the Wilson interval that the delivered
+    legacy script already computes. A requirement is declared FAILED only when
+    its interval at the pre-declared level lies entirely outside the required
+    region, which is an equivalence statement with a null law rather than a
+    maximum over twelve points.
 
     The two innovation blocks are keyed on their role alone, so the H1 arms
     share one base noise matrix exactly as the delivered design intends.
@@ -956,11 +953,10 @@ def process_episode(ep, census, frame_tick, seed_seq):
     idx_end = frame_tick.index.get_loc(en_date)
 
     # C6. The delivered script recomputes T_days and the Sharpe here and, on
-    # divergence, OVERWRITES the census values in place under the banner
-    # "P16/P3 INCOMMENSURABILITY ... SEQUENTIAL OVERRIDE". A silent substitution
-    # of the census R13 is supposed to consume is exactly the degraded path
-    # preamble S4.3 bans, so both quantities are kept as distinct columns and
-    # any divergence stops the run.
+    # divergence, OVERWRITES the census values in place under a legacy banner. A
+    # silent substitution of the census R13 is supposed to consume is exactly the
+    # degraded path preamble S4.3 bans, so both quantities are kept as distinct
+    # columns and any divergence stops the run.
     T_recomputed = idx_end - idx_onset
     r_phase_strict = frame_tick['log_ret'].iloc[idx_onset + 1: idx_end + 1]
     sharpe_recomputed = float((r_phase_strict.mean() / r_phase_strict.std(ddof=1)) * np.sqrt(252))
@@ -1095,7 +1091,7 @@ def process_episode(ep, census, frame_tick, seed_seq):
             'sigma_path_sha256': digest_h0, 'sigma_path_len': int(H_ep),
         })
 
-        # The clairvoyant floor of `protocol_19d`.
+        # The clairvoyant floor of the delivered legacy protocol.
         S_n_num = np.cumsum((r_sv - mu_0) / sig_sv**2)
         S_n_den = np.sqrt(np.cumsum(1 / sig_sv**2))
         Zn_real = np.sign(mu_1 - mu_0) * S_n_num / S_n_den
@@ -1610,8 +1606,9 @@ def control_c2(campaign, published_rows, logger):
 def control_c3(campaign, logger):
     """No ARL0 is persisted without its censored fraction on the same row."""
     logger.info(f"C3 -- an ARL0 mean over right-censored replicates is biased DOWNWARD and must "
-                f"never be published without its censored fraction. `protocol_19b` carries no "
-                f"such column; this port adds `arl0_censored_frac` to the operating-point CSV. "
+                f"never be published without its censored fraction. The delivered legacy "
+                f"protocol carries no such column; this port adds `arl0_censored_frac` to "
+                f"the operating-point CSV. "
                 f"Structural assertion, deterministic; trigger probability 0.")
     for name, frame in (('R13_oracle_frontier', campaign['frontier']),
                         ('R13_oracle_operating_points', campaign['operating_points'])):

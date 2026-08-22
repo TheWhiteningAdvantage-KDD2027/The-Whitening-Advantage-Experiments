@@ -430,6 +430,35 @@ This document records all numerical deviations between the deterministic complia
 
 ---
 
+## R13 — Oracle Ceiling and the Clairvoyant Frontier
+
+**Deviation Class: D2**
+
+**Affected Metrics:** Phase false-alarm probability for likelihood-ratio CUSUM on 2020 crash (1.3% vs 1.1%). All other published numerals (3-day detection delay, 16-day standardized-mean delay, 10.6x Jensen ratio) are D0-D1.
+
+**Root Cause:** Campaign redraw due to 128-bit re-seeding of all Monte Carlo components (bootstrap FPR_H with 20,000 replicates, ARL0 null with 5,000 replicates) using the repository's canonical `get_deterministic_seed`/`seed_sequence_for`/`rng_for` keyed on semantic coordinates. The submitted campaign used bare integer seeds that produced a different draw. The delivered script's fallback branch (`try: from <legacy_vendor> import get_daily_data / except ImportError: sys.exit(1)`) was replaced by direct read of `data/derived_firstrate/R01_daily_SPY.csv`, further ensuring deterministic data provenance.
+
+**Mechanism:** The original campaign and the compliant pipeline differ in their Monte Carlo draws while sharing the same deterministic algorithm. The 20,000-replicate bootstrap false-alarm probability and the 5,000-replicate ARL0 null that selects the threshold are both redrawn, producing a different but internally consistent operating point. Control C1 asserts that the published delay and FPR pair (3 days, 1.3%) is carried by a single row; the compliant pipeline preserves this structural invariant while the probability value shifts.
+
+**Quantitative Impact:**
+- COVID-19 crash LR CUSUM FPR_H at OP2b_ARL0_252: Manuscript 1.3% vs compliant 1.1% (absolute difference: 0.2 percentage points)
+- COVID-19 crash LR CUSUM detection delay: Manuscript 3 days vs compliant 3 days (D0, bit-identical)
+- COVID-19 crash standardized-mean CUSUM detection delay: Manuscript 16 days vs compliant 16 days (D0, bit-identical)
+- Jensen ratio (V1 oracle): Manuscript 10.6x vs compliant 10.644703 (D0, rounds to 10.6 at one decimal place)
+- Census verdicts at matched operating point: Qualitative claims preserved (E2 detected, E3 missed, E4 no alarm)
+
+**Published Precision Impact:** PARTIAL. The phase false-alarm probability shifts from 1.3% to 1.1% at one decimal place precision (D2). All other printed numerals are preserved at their published precision (D0-D1).
+
+**Qualitative Claim Impact:** NONE. The core scientific claims of L331 are corroborated: (1) A clairvoyant monitor with look-ahead GARCH parameters detects the 2020 crash in 3 trading days at a low single-digit false-alarm probability, (2) The standardized-mean CUSUM takes 16 days, (3) The path divergence is 10.6x the unconditional budget, (4) The protocol discriminates census flags (2009 recovery detected, 2019 advance missed, no alarm on 2011 correction). Control C1 (single-row invariant) holds. Control C4 (frozen volatility path digest) holds for all episodes.
+
+**Verification:** All R13 tests pass. The deviation `R13-campaign-redraw` is explicitly asserted by `test_R13_the_phase_false_alarm_probability_of_L331_does_not_reproduce_at_its_printed_precision`. The qualitative FPR bound (0 < observed < 2.0%) and detection delay (3 days) are preserved. Wilson 95% confidence intervals on all FPR_H values cover their respective targets. Control C7 source identity passes for all 6 carried primitives.
+
+**Candidate Files:** See `docs/camera_ready_candidates/R13_v87_oracle_ceiling.md` for LaTeX macro diff blocks.
+
+**Status:** CERTIFIED — D2 deviation documented. All qualitative claims preserved. No manuscript narrative changes required at published precision.
+
+---
+
 ## R14 — Crypto iso-FPR Efficiency Reversal
 
 **Deviation Class: D0-D2**
