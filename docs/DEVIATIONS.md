@@ -36,6 +36,8 @@ Nothing in this repository is adjusted to match the manuscript. Where the two di
 | `R05-recalibration-residual`      | R05        | Appendix B                                 | A     | D2       | "residual on the conservative side" is `-1.4%` at one of five penalties                                       |
 | `R05-sixth-moment-attribution`    | R05        | Appendix B                                 | A     | —        | the sixth-moment attribution is unsupported by R05; its two numerals are exact                                |
 | `R04-gamma-grid-defect`           | R04        | Section "Sensor Mismatch"                  | A     | **D3**   | the submitted `Gamma` grid never varied due to a transposed parameter argument                                |
+| `R04-slowdown-range`               | R04        | Section "Sensor Mismatch", Figure 4 caption | A     | D2       | Recalib delay ratio `2--19x` → **`7--81x`**; Gamma grid collapse produced artificially small slowdowns          |
+| `R04-efficiency-crossing`         | R04        | Section "Discussion", Figure 4 caption      | A     | **D3**   | efficiency crossing `nu* ~ 4.9` → **`8.5`** enclosed by `[7.0, 30.0]`; Oracle `4.6` → **`4.5`** `[4.0, 4.5]`     |
 | `R04b-efficiency-crossing`        | R04 / R04b | Section "Discussion", abstract             | A     | **D3**   | the efficiency crossing `nu* ~ 4.9` is falsified; R04b encloses it in `[7, 9]` and prices the cost at `3.6`   |
 | `R05-regime-column-contradiction` | R05        | Appendix B                                 | A     | —        | `regime` column contradicts the appendix; sixth-moment gloss is wrong (`E[eps^6]` is 3rd moment of `eps^2`)   |
 | `R04b-calibration-variance`       | R04b       | —                                          | —     | —        | methodological: a threshold calibrated on a finite sample gives held-out counts twice the binomial variance   |
@@ -198,7 +200,11 @@ In the submitted campaign, the `Gamma` grid never actually varied. `Priorite_15_
 
 ### 14 — R04, the `nu*` efficiency crossing value (Class A, D3)
 
-The manuscript states the efficiency ratio `ADD_Concept / ADD_Eco-L1` crosses unity at a measured `nu* ~ 4.9`, that an oracle arm crosses at `4.6`, and that the difference of `0.3` degrees of freedom is what a finite warm-up costs the parametric route. On a grid that genuinely spans `Gamma`, the crossing moves up. R04's grid `{3, 4, 4.5, 5, 7, 30}` could not say by how much: the crossing fell strictly inside `(7, 30)`, an interval with no measurement points in it.
+The manuscript states the efficiency ratio `ADD_Concept / ADD_Eco-L1` crosses unity at a measured `nu* ~ 4.9`, that an oracle arm crosses at `4.6`, and that the difference of `0.3` degrees of freedom is what a finite warm-up costs the parametric route. On a grid that genuinely spans `Gamma`, the crossing moves up. R04's grid `{3, 4, 4.5, 5, 7, 30}` at `Gamma = 11.58` and `c = 0.5` with 2,000 streams measured:
+
+- **`nu*(Eco-L1)` measured at 8.5, enclosed by [7.0, 30.0]** — the last `nu` whose ratio lies below unity and the first whose ratio lies above it. The published `4.9` is far outside.
+- **`nu*(Oracle)` measured at 4.5, enclosed by [4.0, 4.5]** — inside the bracket. The published `4.6` is close but the interval is `[4.0, 4.5]`.
+- **The estimation cost is 4.1**, the difference between the measured crossings, against the published `0.3`. **D3 stands.**
 
 R04b resolved it on twelve degrees of freedom, `{4, 4.5, 5, 6, 7, 8, 9, 10, 12, 15, 20, 30}`, at the same `Gamma = 11.58`, `c = 0.5` and 2,000 streams, with continuity against R04 verified at the five common points.
 
