@@ -74,6 +74,10 @@ Nothing in this repository is adjusted to match the manuscript. Where the two di
 | `R12-detection-at-nu-ten`         | R12        | L353, Fig. 13                               | A     | D2       | detection rate at `nu = 10` **`83\%` → `82\%`**                                            |
 | `R12-detection-at-nu-seven`       | R12        | L353, Fig. 13                               | A     | D2       | detection rate at `nu = 7` **`61\%` → `62\%`**                                             |
 | `R12-censored-delay`              | R12        | L353, Fig. 13                               | A     | D2       | censored delay range `2,400`--`3,000` → **`2,610`--`2,999`** (bracket intact)          |
+| `R09-campaign-redraw`             | R09        | L243, L559 Figure 9                        | A     | D2       | 128-bit re-keying redraws campaign: peeking FPR `18%` → **`20%`**, MIX ADD `409` → **`410`**, CUSUM ADD `539` → **`533`** |
+| `R09-arl0-censoring`              | R09        | L559 Figure 9 panel C                      | A     | —        | CUSUM and MIX ARL0 curves are horizon artefacts at `65%`–`99%` censoring; e-CUSUM holds as printed  |
+| `R09-add-conditioning`            | R09        | L243, L559 Figure 9 panel B                | A     | —        | delay is conditional on detection within `(τ, H]`; marginal curve inverts ordering at small `η`     |
+| `R09-stream-counts`               | R09        | L243, L559 Figure 9                        | A     | —        | caption's `$2\times10^4$ streams per cell` describes only panels A and C; panel B uses `2\times10^3` |
 | `R13-campaign-redraw`             | R13        | `sec:real_world`, L331                     | A     | D2       | phase false-alarm probability `1.3%` → **`1.1%`**; bootstrap redraw per specification          |
 | `R13-operating-points-unnamed`    | R13        | `sec:real_world`, L331                     | A     | —        | numerals read at unnamed operating points; two different calibrations used                     |
 | `R13-frozen-null-scope`           | R13        | `sec:real_world`, L331                     | A     | —        | frozen null description applies to one arm only; ARL0 null regenerates GARCH paths            |
@@ -516,6 +520,20 @@ Three deviations are registered for R17. Two carry D2 severity (printed values c
 **`R17-eco-l1-arm-identity` — Class A, D3.** Table 1 L117 defines `Eco-L1` as the location monitor `ε_t/σ̂_t`, QMLE-standardized, for a first-order change. The cell L341 quotes its `9.5%` from is `protocol_3d`, which monitors the **squared** statistic `(ẑ² − μ)/σ` at the `(0.5, 65.0)` operating point. The delivered script distinguishes the two in its own `protocol_3b`: `adds_eco_l2` runs `strict_cusum(z_eco_hat**2 ..., 0.5, 65.0)` and `adds_eco_l1` runs `strict_cusum(z_eco_hat, 0.5, 10.0)`. At `protocol_3b`'s 100 seeds the rate lattice is `k/100` and `9.5%` is unattainable, whereas `9.5% = 19/200` matches `protocol_3d`'s resolution exactly. A method description the pipeline does not produce falsifies a qualitative claim whatever the numeral does. The persistence median is not affected: the QMLE fit is common to both monitors, so `α̂+β̂` is arm-agnostic.
 
 Full account: `docs/camera_ready_candidates/R17_v87_persistence_collapse_mechanism.md`, `R17_v87_warmup_restoration_scope.md`, `R17_v87_warmup_resolution.md`, `docs/sections/R17.md`, and `AUDIT_R17.md`.
+
+### R09 — anytime-valid detection on the fair-coin stream (Class A, D2 and no severity)
+
+Five deviations are registered for R09. One carries D2 severity (printed values change but qualitative claims still hold) and three carry no severity (clarifications only).
+
+**`R09-campaign-redraw` — Class A, D2, pre-classified.** The 128-bit entropy migration required by §S6 redraws the campaign under role-and-index-only keys. Three printed numerals move at v87's own printing precision — peeking FPR `18%` → **`20%`**, MIX ADD at `η = 0.10` `409` → **`410`**, CUSUM ADD `539` → **`533`** — while every qualitative claim of L243 and Figure 9 survives: mixture remains bounded by `α` under continuous monitoring, CUSUM exceeds mixture at all seven levels, e-CUSUM satisfies `ARL₀ ≥ 1/α` with minimum margin `20.54×`, and mixture matches or exceeds CUSUM speed at `η ≤ 0.10`. Mechanism: the delivered script keyed seeds off a `SeedSequence.spawn` tree rooted at `master_seed = 42027`; the port replaces this with `get_deterministic_seed` / `seed_sequence_for` / `rng_for`, redrawing by construction. Pre-classified by the `R05/R07/R10/R13/R14`-`campaign-redraw` precedents.
+
+**`R09-arl0-censoring` — Class A, no severity.** Panel C's CUSUM and MIX curves are right-censored at `65%`–`99%`; their `ARL₀` values are horizon artefacts (`mean(min(fa, 4H))` bounded below by `censored_frac × 4H`) rather than measurements. The published caption names only e-CUSUM, whose censoring is `0%` at six of seven levels, so no printed claim is falsified. The repository's figure marks censored arms with hollow markers, rules the horizon, and carries the per-arm censoring range in the legend; the caption should state this explicitly.
+
+**`R09-add-conditioning` — Class A, no severity.** Panel B's ADD is conditional on an alarm within `(τ, H]`, and the two arms condition on different events at detection rates differing by a factor of `2.8` at `η = 0.02`. At the two smallest drifts the marginal curve inverts the ordering the data support. The selection-free matched-detection-rate quantile (control C4) confirms mixture is faster at every drift on the grid.
+
+**`R09-stream-counts` — Class A, no severity.** The Figure 9 caption's `"$2\times10^4$ streams per cell"` describes panels A and C only (both use `N_NULL = 20 000`). Panel B uses `N_ALT = 2 000` drift streams per cell, carrying `sqrt(20000/2000) = 3.16×` wider standard errors. The caption should name all three sample sizes explicitly.
+
+Full account: `docs/camera_ready_candidates/R09_v87_anytime_numerals.md`, `R09_v87_arl0_censoring.md`, `R09_v87_delay_parity_scope.md`, `R09_v87_stream_counts.md`, `docs/sections/R09.md`, and `AUDIT_R09.md`.
 
 ### R12 — volatility misspecification and moment singularity (Class A, D2)
 
