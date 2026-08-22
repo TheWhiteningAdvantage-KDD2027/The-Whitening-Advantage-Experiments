@@ -63,7 +63,7 @@ NOTATION (prompt section 6)
 import sys
 from pathlib import Path
 
-# Determinism bootstrap, preamble S6's order: fair_env imports only os and sys.
+# Determinism bootstrap: fair_env imports only os and sys.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR))
 
@@ -337,7 +337,7 @@ def main():
     # C2 -- RECONSTRUCTION OF THE PUBLISHED COUNTS
     # =====================================================================
     # The comparison values are READ from the vendored witness rather than typed,
-    # per preamble S7's rule that anchors come from v87 or from the reference CSV.
+    # as required: anchors come from v87 or from the reference CSV.
     logger.info("C2 reconstruction of the published counts on the canonical arm. Portage checks, "
                 "not targets: a displaced count is a deviation to classify, never a parameter to "
                 "adjust. Deterministic; trigger probability 0 under a correct port.")
@@ -438,7 +438,7 @@ def main():
                 f"applied to every ticker whose check_sanity fails). The symmetric arm moves the "
                 f"headline AGAINST the manuscript's thesis by "
                 f"{100 * (arm_counts['canonical']['frac'] - arm_counts['symmetric']['frac']):.1f} "
-                f"points, so preamble S3's asymmetry rule assigns it the lighter examination, not "
+                f"points, so the asymmetry rule assigns it the lighter examination, not "
                 f"the heavier. Its CSV ships and it is registered as `R16-substitution-scope`.")
 
     # =====================================================================
@@ -512,7 +512,7 @@ def main():
     logger.info(f"None of the variants yields 55--92%. The single phase at "
                 f"{long_floor_frac:.1%} rounds to 55%, which SUGGESTS the published lower bound "
                 f"was read off that one phase rather than off the minimum of the set, but no "
-                f"measurement here establishes it. Per preamble S4.5 the cause is NOT identified. "
+                f"measurement here establishes it. The cause is NOT identified. "
                 f"Classified D2 as `R16-floor-frac-envelope`.")
 
     # =====================================================================
@@ -538,7 +538,7 @@ def main():
     # =====================================================================
     # LATEX MACROS
     # =====================================================================
-    # Cardinal, not ordinal: preamble S6 fixes \R<Ordinal><Claim> with the
+    # Cardinal, not ordinal: the specification uses \R<Ordinal><Claim> with the
     # ordinal in English words, and the repository realises cardinals throughout
     # (ROne ... RSix, REleven, REighteen). Every value below is computed from an
     # object in memory; no literal is typed.

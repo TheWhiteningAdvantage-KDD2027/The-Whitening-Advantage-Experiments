@@ -25,11 +25,11 @@ THREE DATING ARMS, ALL PERSISTED, ONE CANONICAL.
               `R16_regime_census_symmetric.csv`.
 
 WHAT THE SUBSTITUTION IS, AND WHAT IS AND IS NOT SILENT ABOUT IT.  The
-delivered `Priorite_16_regime_census.py` guards the substitution with
+delivered legacy script guards the substitution with
 `if ticker == 'SPY'` (l.233) and logs it: line 3 of the vendored
 `data/reference/R16/Priorite_16_regime_census.log` reads
 `WARNING | [SPY] Sanity check P-S failed. Fallback to Lunde-Timmermann for
-MACRO.`  The script is therefore NOT silent.  What preamble S4.3 requires of a
+MACRO.`  The script is therefore NOT silent.  What the reproducibility specification requires of a
 fallback that is kept rather than removed is more than a warning: it must be
 selected by an explicit argument and stamped in the output filename.  That is
 what the three arms above restructure, and the substitution is additionally
@@ -99,9 +99,8 @@ NOTATION (prompt section 6)
 import sys
 from pathlib import Path
 
-# Determinism bootstrap, in the order preamble S6 requires: fair_env imports only
-# os and sys, so the environment block is posted before numpy is loaded by anyone
-# and before any BLAS thread limit is read. PYTHONHASHSEED cannot be set from
+# Determinism bootstrap: fair_env imports only os and sys, so the environment
+# block is posted before numpy is loaded and before any BLAS thread limit is read. PYTHONHASHSEED cannot be set from
 # here -- CPython reads it at interpreter start-up -- so it is exported by
 # run_experiment_R16.sh and verified twice below.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -377,9 +376,9 @@ def load_returns(ticker):
     This replaces the delivered script's `try: from
     Priorite_14_real_world_backtest import get_daily_data / except ImportError:
     ... NotImplementedError` block, which is a fallback of exactly the kind
-    preamble S4.3 bans: an absent module left the script running with a stub.
+    the specification bans: an absent module left the script running with a stub.
     `float_precision='round_trip'` is required on every numeric read of this
-    repository (preamble S3): the fast float parser is not correctly rounded.
+    repository: the fast float parser is not correctly rounded.
     """
     path = BASE_DIR / "data" / "derived_firstrate" / f"R01_daily_{ticker}.csv"
     if not path.exists():
@@ -461,7 +460,7 @@ def build_phases(final_pts, pts_macro):
 def classify_pathology(vol_pct, sharpe):
     """
     Vectorised form of the delivered script's `df_t.apply(classify_pathology,
-    axis=1)` (l.359-368), which preamble S7 bans in its row-wise form. The
+    axis=1)` (l.359-368), which the specification bans in its row-wise form. The
     branch order of the original if-chain is preserved exactly by `np.select`,
     which returns the first condition that holds.
     """
@@ -599,7 +598,7 @@ def census_for_ticker(arm, ticker, returns, prices, pts_macro, algorithm, pts_me
         # C5, counted even at zero. A non-finite Sharpe or a degenerate sign rate
         # reaching a detectability flag would count the phase out of budget
         # WITHOUT measurement -- `NaN < T_days` is False -- which is the degraded
-        # path preamble S3's asymmetry rule targets on a claim the defect would
+        # path the specification's asymmetry rule targets on a claim the defect would
         # inflate.
         if not np.isfinite(sr_a):
             degeneracies['sharpe_non_finite'] += 1
@@ -784,7 +783,7 @@ def main():
                 f"{CONCORDANCE_TOLERANCES} trading days (0 = exact, "
                 f"{MESO_PARAMS['min_phase']} = MESO min_phase, {MACRO_PARAMS['min_phase']} = "
                 f"MACRO min_phase). Never tuned. Reported with a Wilson interval, DESCRIPTIVE "
-                "ONLY per preamble S4bis: two dating algorithms do not coincide, and a gate on "
+                "ONLY: two dating algorithms do not coincide, and a gate on "
                 "their agreement would ring empty.")
     concordance_records = []
     for ticker in TICKERS:
@@ -1019,7 +1018,7 @@ def main():
         if observed != expected_rows[arm]:
             logger.warning(f"Cardinality displacement on the {arm} arm: {observed} phases against "
                            f"the {expected_rows[arm]} this configuration produced when the port "
-                           f"was established. Logged before classification, per preamble S3; no "
+                           f"was established. Logged before classification; no "
                            f"parameter is moved toward the expected value.")
         else:
             logger.info(f"Cardinality [{arm}]: {observed} phases, as measured when the port was "
