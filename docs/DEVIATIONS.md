@@ -588,3 +588,38 @@ This document records all numerical deviations between the deterministic complia
 
 **Status:** CERTIFIED — D2 deviations documented. All qualitative claims of L341 preserved. No manuscript narrative changes required.
 
+
+---
+
+## R18 — Ljung-Box Power Bound on Binary Streams
+
+**Deviation Class: NO DEVIATION (R18 reproduces no v87 figure, table, or number)**
+
+**Affected Metrics:** None — R18 establishes a positive control bound, not a reproduction.
+
+**Root Cause:** R18 is a global positive control introduced to bound what the manuscript's Ljung-Box non-rejections exclude. It does not appear in v87 and reproduces no manuscript numeral.
+
+**Mechanism:** The experiment computes the analytic power curve of the Ljung-Box test against a symmetric two-state Markov chain alternative with lag-1 autocorrelation ρ(k) = (2θ)^k. The detectable amplitude θ₈₀ is the root of P(χ²_nc(20, ncp) > q₀.₉₅) = 0.80, where ncp = n * Σₖ₌₁²⁰ ρ(k)² and q₀.₉₅ = 31.4104 is the 0.95 quantile of χ²(20). The bound is: a non-rejection at n = 8000 excludes ρ₁ > ρ₈₀ with probability 0.8.
+
+**Quantitative Output (not manuscript comparisons):**
+- ρ₈₀ at n = 2000: 0.1023 (grid), 0.1018 (analytic)
+- ρ₈₀ at n = 8000: 0.0506 (grid), 0.0511 (analytic)
+- ρ₈₀ at n = 32000: 0.0265 (grid), 0.0256 (analytic)
+- ρ₈₀ at n = 128000: 0.0127 (grid), 0.0128 (analytic)
+- Max |empirical - analytic| on domain power_analytic < 0.95: 0.0421 against tolerance 0.0474
+- Size at null (n = 8000): 4.5% [3.4%, 6.0%], KS p-value = 0.214
+- Measured |ρ₁| on classifier error arm: max = 0.0008, power at that ρ = 0.050
+- Measured |ρ₁| on raw sign arm: max = 0.0007, power at that ρ = 0.050
+- Design effect (Kish): 1.96 on 36000 readings
+
+**Finding:** At n = 32000, the cluster-bootstrap 95% interval on θ₈₀ [0.012956, 0.013490] does not cover the analytic root 0.012793. Four intervals at 95% miss at least once with probability 0.1855 under their own null, so this is unremarkable. No draw, grid, or tolerance is touched.
+
+**Published Precision Impact:** NOT APPLICABLE. R18 produces no v87 values.
+
+**Qualitative Claim Impact:** NOT APPLICABLE. R18 validates the manuscript's non-rejection claims by establishing what they exclude.
+
+**Verification:** All 24 R18 tests pass. The self-invalidating assertion confirms every measured lag-1 autocorrelation lies below ρ₈₀, licensing the bound stated in docs/sections/R18.md.
+
+**Candidate Files:** See `docs/camera_ready_candidates/R18_v87_ljungbox_power_bound.md` for LaTeX macro definitions.
+
+**Status:** CERTIFIED — No manuscript values to deviate from. Bound established and validated.
