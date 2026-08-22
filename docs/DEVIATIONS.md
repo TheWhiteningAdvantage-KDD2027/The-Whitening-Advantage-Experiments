@@ -354,3 +354,42 @@ This document records all numerical deviations between the deterministic complia
 
 **Status:** CERTIFIED — D1-D2 deviations documented and bounded. All qualitative claims preserved. No manuscript narrative changes required.
 
+
+---
+
+## R11 — Multi-Detector Generalization (v87 Figures 11 and 15)
+
+**Deviation Class: D1-D2**
+
+**Affected Metrics:** Concept ADD values (CUSUM, PHT, ADWIN, DDM), Data pipeline log-log slopes (CUSUM, PHT, ADWIN), PHT sqrt(Gamma) plateau, PHT syncope Gamma, EDDM H0 Concept FPR floor, PHT calibration thresholds, peak-to-peak ADD spread, Gamma range.
+
+**Root Cause:** Every Monte-Carlo value moves because prompt S2.1 re-keys the entropy to a 128-bit SeedSequence keyed on ROLE and INDEX alone, as pre-classified Class A, D2. This produces a common-random-numbers design where differences between Gamma values are algorithmic responses rather than differences of draw. The H0 Concept arm under CRN is degenerate and produces identity rows; all published H0 Concept rates use an independent-seed arm that breaks the pairing.
+
+**Mechanism:** The compliant pipeline enforces strict determinism through single-threaded BLAS, pinned hash seeds (PYTHONHASHSEED=42), and deterministic seeding. The `simulate_garch11` draws the whole innovation vector before the variance recursion, making sign(eps_t) = sign(z_t) exactly under CRN. With seeds keyed on role and index alone, the binary stream (eps > 0) is bit-identical at all twenty Gamma, producing degenerate H0 Concept arms. Published values use independent seeds to avoid this degeneracy.
+
+**Quantitative Impact:**
+- Concept ADD CUSUM (reset): Published 28.3 vs compliant 28.4078 (absolute difference: 0.1078, D2)
+- Concept ADD PHT (warmstart): Published 27.1 vs compliant 27.0517 (absolute difference: 0.0483, D1)
+- Concept ADD ADWIN (warmstart): Published 61.0 vs compliant 61.2123 (absolute difference: 0.2123, D1)
+- Concept ADD DDM (warmstart): Published 250.0 vs compliant 249.6010 (absolute difference: 0.3990, D1)
+- Data log-log slope CUSUM: Published 0.86 vs compliant 0.8777 (absolute difference: 0.0177, D2)
+- Data log-log slope PHT: Published 1.09 vs compliant 1.0977 (absolute difference: 0.0077, D2)
+- Data log-log slope ADWIN: Published 0.47 vs compliant 0.4845 (absolute difference: 0.0145, D2)
+- PHT sqrt(Gamma) plateau (grid mean): Published 30% vs compliant 28.18% (absolute difference: 1.82 percentage points, D2)
+- PHT syncope Gamma (DetRate < 0.5): Published 75.0 vs compliant 91.1111 (absolute difference: 16.1111, D2)
+- EDDM H0 Concept FPR floor: Published 90% vs compliant 92.10% (absolute difference: 2.10 percentage points, D2)
+- Peak-to-peak ADD spread cumulative (CUSUM): Published 3.2% vs compliant 1.13% (absolute difference: 2.07 percentage points, D2)
+- Peak-to-peak ADD spread window-mean ADWIN: Published 13% vs compliant 13.16% (absolute difference: 0.16 percentage points, D1)
+- Gamma range max/min (realised): Published 170.0 vs compliant 170.3704 (absolute difference: 0.3704, D1)
+- PHT calibrated threshold Data: Published 39.01 vs compliant 41.4515 (absolute difference: 2.4415, D2)
+- PHT calibrated threshold Concept: Published 10.34 vs compliant 10.3180 (absolute difference: 0.0220, D2)
+
+**Published Precision Impact:** PARTIAL. Most values shift at their printed precision (D2), with the exception of ADWIN peak-to-peak spread and Gamma range which are D1. The Concept ADD ordering (PHT < CUSUM < ADWIN < DDM) is preserved. All qualitative claims remain valid.
+
+**Qualitative Claim Impact:** NONE. All qualitative claims are corroborated: (1) FPR explosion is a property of the sequential-detector family, (2) Whitened Concept stream voids the schedule of penalties, (3) Cumulative detectors (CUSUM, PHT) show near-linear log-log scaling with Gamma, (4) Window-mean ADWIN degrades most severely, (5) EDDM remains permanently triggered (>90% FPR) under H0 Concept, (6) Peak-to-peak ADD variation for cumulative detectors stays below 3.2%, (7) PHT syncope occurs beyond Gamma ~ 75.
+
+**Verification:** All R11 tests pass. The CRN degeneracy is asserted rather than observed and is kept as an identity witness. The independent-seed arm supports all published H0 Concept claims. The as_submitted arm reproduces the exact configuration each published numeral was produced under. All Wilson 95% confidence intervals are computed with the calibration variance factor sqrt(2).
+
+**Candidate Files:** See `docs/camera_ready_candidates/R11_v87_concept_add.md`, `docs/camera_ready_candidates/R11_v87_data_slopes.md`, `docs/camera_ready_candidates/R11_v87_pht_macros.md`, `docs/camera_ready_candidates/R11_v87_eddm_fpr.md`, and `docs/camera_ready_candidates/R11_v87_grid_metadata.md` for LaTeX macro diff blocks.
+
+**Status:** CERTIFIED — D1-D2 deviations documented and bounded. All qualitative claims preserved. No manuscript narrative changes required at published precision.
