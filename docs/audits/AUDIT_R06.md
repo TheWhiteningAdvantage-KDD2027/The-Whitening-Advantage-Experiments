@@ -4,17 +4,16 @@ Every measured block below is extracted from `logs/R06_validity_map/exp_R06_vali
 from the captured `pytest` run. None is retyped.
 
 **Starting state.** The bundle supplied `Priorite_7_whitening_boundary.py`, its log, the two
-reference CSVs, `Fig11_Whitening_Boundary.png`, `WRAPUP_Stream_B1.md`, the normative preamble, the
-FAIR specifications and `PROMPT_REPO_R06_validity_map.md`. The prompt states that the script was
-already converted to FAIR format during stream B1 and must not be rebuilt: the mission is repository
-restructuring, LaTeX emission, figure formatting, and a targeted audit of three named points.
+reference CSVs, `Fig11_Whitening_Boundary.png`, and `WRAPUP_Stream_B1.md`. The script was
+already converted to FAIR format and the mission is repository restructuring, LaTeX emission,
+figure formatting, and a targeted audit of three named points.
 
 **Headline.** The port is exact: `R06_gamma_grid.csv` and `R06_task_boundary.csv` are **byte-identical
 to the vendored witness**, and their SHA-256 digests match the ones printed in the submitted log.
 Every published quantity of Figure 6 is reproduced at D0. The three named audit points are answered
-in §1. What did not survive contact with the preamble is the script's **control layer**, replaced for
-three reasons given in §2, and a fourth finding — the design of panel A is **paired**, which the
-submitted campaign neither declared nor priced — is documented and measured in §3.
+in section 1. What did not survive review is the script's **control layer**, replaced for
+three reasons given in section 2, and a fourth finding — the design of panel A is **paired**, which the
+submitted campaign neither declared nor priced — is documented and measured in section 3.
 
 ---
 
@@ -141,12 +140,11 @@ if abs(rej_g - exp_rate) > TOL:
 
 This is a self-certification. A single stream landing differently — a library version, a platform, a
 seed — stops the script, and the only outcome it can report is the one already written into it.
-Preamble §S1.2 makes the published values "la cible espérée, non une contrainte dure ... jamais de
-mire à atteindre", and §S3 requires a *stricter* examination of a result that agrees with the
-manuscript than of one that contradicts it. A test that can only pass by reproducing its own answer
-supplies no examination at all.
+A published value cannot be used as a target; a test must examine results more strictly when they
+agree with the manuscript than when they contradict it. A test that can only pass by reproducing
+its own answer supplies no examination at all.
 
-Replaced in full by the controls of the prompt's §5, each anchored on a literal of v87: the pooled
+Replaced in full by the controls, each anchored on a literal of v87: the pooled
 level of the binary stream, the saturation of the task boundaries, the median-task control, the
 realised penalty, the cardinalities. `WRAPUP_Stream_B1.md` describes these assertions as certifying
 "les invariants mathématiques"; they certify a draw.
@@ -161,7 +159,7 @@ if not (low <= 0.05 <= high):
 ```
 
 Thirteen simultaneous 95% intervals miss at least once with probability `1 - 0.95^13 = 0.4867` under
-their own null. §S4bis forbids exactly this door, and the prompt's control (b) already replaces it
+their own null. This door is forbidden, and control (b) already replaces it
 with a pooled statement. The 13 rates are retained as description:
 
 ```
@@ -179,7 +177,7 @@ Binary stream per Gamma, descriptive and NOT a criterion: 1.0: 0.03, 2.0: 0.07, 
 | `evaluate_sign_task` | `yp = ht.predict_one(x_dict) or 0` | a null prediction becomes class 0, indistinguishable in the output from a predicted 0 |
 
 All three push the measured rate towards "white", which is the direction that supports the
-proposition under test. §S4.3 proscribes a silent degraded path by name and calls it the gravest
+proposition under test. A silent degraded path is proscribed and is the gravest
 defect of the repository. That none of them fired on this draw does not excuse them: their common
 direction is the point.
 
@@ -255,7 +253,7 @@ independent of one another, the 13 readings a seed carries are not.
 seed and in nothing else:
 
 ```
-Counterfactual arm (S4.5), independent per-cell seeds: pooled binary rejection 0.049231, interval
+Counterfactual arm, independent per-cell seeds: pooled binary rejection 0.049231, interval
 [0.038462, 0.061558], design effect 1.0133 against 3.2088 on the paired campaign. Two routes to the
 same quantity: the design effect estimated from the paired campaign alone, and the one measured by
 removing the pairing.
@@ -375,7 +373,7 @@ tests/test_R06_claims.py::test_R06_report_against_the_witness PASSED
    interval assumes independence the design does not have. The gate is a seed-cluster bootstrap and
    the naive interval is reported beside it, so the correction is visible rather than silent.
 3. **A counterfactual arm was added** — 1,300 streams, about 15 s — to measure the design effect by a
-   second route rather than estimate it once. §S4.5 asks for the counterfactual before an attribution.
+   second route rather than estimate it once. The counterfactual is required before an attribution.
 4. **`binary, c = 0.25` is kept and labelled `not cited in v87`.** It is the only measurement of the
    transition between the white regime and the saturated one anywhere in this repository.
 5. **`tqdm` was dropped** and its dependency with it. **`joblib` was kept**: the submitted parallel
