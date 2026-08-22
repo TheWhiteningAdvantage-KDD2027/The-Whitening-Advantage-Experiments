@@ -267,3 +267,29 @@ This document records all numerical deviations between the deterministic complia
 **Candidate Files:** See `docs/camera_ready_candidates/R05_v87_scale_law.md` for LaTeX macro diff blocks, `docs/camera_ready_candidates/R05_v87_lambda_c_numeral.md` for the Concept CUSUM numeral correction, and `docs/camera_ready_candidates/R05_v87_sixth_moment_gloss.md` for the moment order descriptive fix.
 
 **Status:** CERTIFIED — D2 and D1 deviations documented. All qualitative claims preserved. No manuscript narrative changes required at published precision.
+
+---
+
+## R06 — Empirical Validity Map
+
+**Deviation Class: D1**
+
+**Affected Metrics:** Fourth-moment boundary Gamma value in Figure 6 caption and text.
+
+**Root Cause:** The submitted campaign carried the fourth-moment boundary as a hard-coded literal (41.6). The compliant pipeline computes this value from first principles using the closed-form expression derived from the Student-t7 kurtosis and the GARCH penalty factor relationship. The analytic result is 41.584288, which rounds to 41.6 at the one-decimal-place precision used in the manuscript.
+
+**Mechanism:** The boundary Gamma where E[eps^4] diverges is computed as follows: for nu = 7, kurtosis = 3(nu-2)/(nu-4) = 5.0; solving the quadratic equation kurtosis * alpha^2 + 2 * alpha * beta + beta^2 = 1 with alpha = 0.08 yields beta = 0.907117; mapping through the closed form gamma_exact(alpha, beta) = 1 + 2 * alpha * (1 - beta * (alpha + beta)) / (1 - (alpha + beta)) / (1 - 2 * alpha * beta - beta^2) gives Gamma = 41.584288. This value is not a measured grid point (the nearest measured Gamma is 41) but an analytic boundary.
+
+**Quantitative Impact:**
+- Fourth-moment boundary Gamma: Manuscript value 41.6 vs computed 41.584288 (absolute difference: 0.015712).
+- At printed precision (one decimal place), round(41.584288, 1) = 41.6, matching the manuscript exactly.
+
+**Published Precision Impact:** NONE. The value rounds to 41.6 at the precision presented in the manuscript. The caption text "Γ ≈ 41.6" remains valid and the analytic boundary can be distinguished from the measured grid point (41) which sits below it.
+
+**Qualitative Claim Impact:** NONE. All qualitative claims are preserved: (1) The binary error stream stays strictly white up to Gamma = 200, (2) The fourth-moment boundary is approximately 41.6, (3) Task boundaries are sharp with 100% rejection for c ≥ 0.5 and for MSE, (4) The paired design is declared and its variance properly accounted for.
+
+**Verification:** All R06 tests pass. The Gamma grid is realized exactly at all 13 target values. All pooled rejection rates and task boundary rates match the submitted campaign byte-for-byte (D0). The design effect is measured at 3.21, and the cluster-robust interval [2.92%, 6.92%] covers the nominal 5% level. The median-task control contains the nominal level with the documented resolution limitation.
+
+**Candidate Files:** See `docs/camera_ready_candidates/R06_v87_validity_map.md` for LaTeX macro diff blocks.
+
+**Status:** CERTIFIED — D1 deviation documented and bounded. The manuscript value 41.6 is preserved at published precision. No manuscript changes required.
