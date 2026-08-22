@@ -406,7 +406,7 @@ def get_deterministic_seed(*args) -> int:
     Floats are formatted through .hex() rather than str(): the decimal repr of a
     float is platform-dependent at the last digit on some C libraries, which
     would silently re-key a cell across machines. The native hash() is randomly
-    salted and is forbidden outright (SPECS 1.2).
+    salted and is forbidden outright (§1.2).
     """
     def format_arg(arg):
         if isinstance(arg, (float, np.floating)):
