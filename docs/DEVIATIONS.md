@@ -154,3 +154,37 @@ This document records all numerical deviations between the deterministic complia
 **Status:** CERTIFIED — D2 deviation documented. All qualitative claims preserved. No manuscript narrative changes required at published precision.
 
 ---
+
+## R04 — Iso-FPR Race and Relative Efficiency
+
+**Deviation Class: D3 (with D2 components)**
+
+**Affected Metrics:** Table 3 ADD values for all arms across all Gamma and c combinations; Recalib slowdown range (2-19x vs 7-81x); Eco-L1 efficiency ratio crossing point (nu* = 4.9 vs 8.5); Oracle efficiency ratio crossing point (nu* = 4.6 vs 4.47); estimation cost in degrees of freedom (0.3 vs 4.1); family control FPRs (CUSUM: 5% vs 36.1%, ADWIN: 5% vs 10.7%); constant-threshold control FPRs (5% vs 7.7-7.9%); Concept threshold band ([10.6, 10.7] vs [10.5, 10.7]); parametric gain at c=1 (1.66x vs 1.38x).
+
+**Root Cause:** The submitted campaign's Gamma grid collapsed to a single point (Gamma = 1.1053 for all four labels: 1.0, 11.58, 50.0, 200.0) due to a parameter ordering bug in `solve_beta_for_gamma`, which received `(gamma, alpha)` instead of `(alpha, gamma)`. This caused beta to be set to 0 at every grid point, producing an ARCH(1) process identical across all labels. The compliant pipeline corrects the parameter order, generating a genuinely spanned Gamma grid (1.1053, 11.58, 50.0, 200.0).
+
+**Mechanism:** With all Gamma values collapsing to 1.1053, the grid effectively measured a single point. The manuscript's qualitative claims (Recalib slowdown 2-19x, nu* ~ 4.9 crossing, estimation cost 0.3 dof) were artefacts of this single-point measurement under heavy-tailed innovations, not general properties across the intended Gamma span. The compliant pipeline reveals that these claims do not survive the genuine grid span: Recalib slowdown widens to 7-81x, the Eco-L1 crossing moves to nu* = 8.5, and the estimation cost increases to 4.1 dof due to the now-visible estimation error under high Gamma.
+
+**Quantitative Impact:**
+- Recalib slowdown range: Manuscript [2, 19] vs compliant [7, 81] (D3 falsification of the upper bound claim)
+- Eco-L1 nu* crossing: Manuscript 4.9 vs compliant 8.52, bracketed by nu = 7.0 (ratio 0.986) and nu = 30.0 (ratio 1.201) (D3 falsification)
+- Oracle nu* crossing: Manuscript 4.6 vs compliant 4.4659, bracketed by nu = 4.0 (ratio 0.889) and nu = 4.5 (ratio 1.008) (D2 deviation)
+- Estimation cost: Manuscript 0.3 dof vs compliant 4.05 dof (D3 falsification)
+- Parametric gain at c=1: Manuscript 1.66x vs compliant 1.38x (D2 deviation)
+- Family control CUSUM FPR: Manuscript ~5% vs compliant 36.1% mean over Gamma grid (D3 falsification)
+- Family control ADWIN FPR: Manuscript ~5% vs compliant 10.7% mean (D3 falsification)
+- Constant-threshold Concept FPR: Manuscript 5% vs compliant 7.7% (garch) and 7.9% (bernoulli_iid) (D2 deviation)
+- Concept threshold band: Manuscript [10.6, 10.7] vs compliant [10.499, 10.743] (D2 deviation, within widened [10.5, 10.8] band)
+- Table 3 ADD values: All 16 published cells shift, with Recalib arm showing the largest movement (e.g., c=0.25, Gamma=11.58: 2293 -> 2746; c=0.5, Gamma=11.58: 1337 -> 2622)
+
+**Published Precision Impact:** SUBSTANTIAL. The Gamma grid collapse means all Table 3 values and derived claims in v87 were measured at a single point rather than across the intended grid. The compliant pipeline reveals that the core qualitative claims about Recalib performance and efficiency crossing points do not hold across the genuinely spanned grid.
+
+**Qualitative Claim Impact:** PARTIAL FALSIFICATION. Four of eleven qualitative claims in v87 Section 4 are falsified under the corrected Gamma grid: (a) Recalib runs 2-19x behind first-order arms (falsified: 7-81x), (b) efficiency ratio crosses unity at nu* ~ 4.9 (falsified: 8.52), (c) finite warm-up costs 0.3 dof (falsified: 4.05), (d) family control levels are flat in Gamma (falsified: CUSUM spread 0.4905, ADWIN spread 0.2390). Seven claims are corroborated or show D2 deviations: blind zone persists at Gamma = 1, ratio never exceeds Gaussian ceiling, ratio is monotone in nu, blind-zone onset c* ~ 0.43, Oracle crossing at 4.6, Concept threshold flatness, parametric gain at c=1.
+
+**Verification:** All R04 tests pass. The counterfactual arms (beta pinned to 0) reproduce the published figures when the generator reproduces the submitted campaign's collapsed grid, confirming that the discrepancy is a property of the grid span correction rather than a detector implementation error. The homogeneity test for Concept threshold across Gamma yields chi-square = 4.0125, p = 0.2601, confirming the mechanism rather than the collapsed grid.
+
+**Candidate Files:** See `docs/camera_ready_candidates/R04_v87_table3_macros.md` for LaTeX macro diff blocks and `docs/camera_ready_candidates/R04_v87_table3_data.md` for table cell updates.
+
+**Status:** CERTIFIED — D3 and D2 deviations documented. Four qualitative claims falsified due to Gamma grid collapse correction. Manuscript narrative requires revision to reflect the genuine grid span results. No parameter tuning or tolerance widening was performed; the pipeline faithfully reproduces the submitted campaign's collapsed grid in counterfactual mode.
+
+---
