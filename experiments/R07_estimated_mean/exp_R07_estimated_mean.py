@@ -71,6 +71,10 @@ import pandas as pd
 
 disable_pandas_multithreading()
 
+assert os.environ.get("PYTHONHASHSEED") == "42", (
+    "PYTHONHASHSEED must be set to 42 before interpreter start. "
+    "Run this script through run_experiment_R07.sh.")
+
 import ast
 import time
 import hashlib

@@ -307,7 +307,7 @@ def test_R07_the_dynamic_program_agrees_with_exhaustive_enumeration(lattice):
     assert len(checks) >= 6
     assert (checks['abs_difference'] == 0.0).all(), (
         "Detected mathematical deviations mapping continuous transition models onto discrete binary permutations. "
-        "Consequently, recursive algorithmic logic incorrectly approximates theoretically proven spatial realities.")
+        "Consequently, recursive algorithmic logic incorrectly approximates theoretically demonstrated spatial realities.")
     for row in checks.itertuples(index=False):
         assert row.n_streams == 2 ** int(row.H)
 
