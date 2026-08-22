@@ -100,24 +100,18 @@ Until the cause is established, this entry is not classified: it may be an envir
 
 Two defects in the submitted code:
 
-1. The script fell back to a majority-class stub whenever `river` was absent, and `river` was
-   absent from the pinned requirements. The manuscript specifies an online Hoeffding Tree.    Both learners produce an error rate near 0.5 on a sign stream, so no output revealed which    one had run.
+1. The script fell back to a majority-class stub whenever `river` was absent, and `river` was absent from the pinned requirements. The manuscript specifies an online Hoeffding Tree. Both learners produce an error rate near 0.5 on a sign stream, so no output revealed which one had run.
 2. The 128-bit seed digest was truncated to its leading 32 bits.
 
 Correcting both draws a different, equally valid set of 360 trajectories. Consequences:
 
-**Pooled binary-error rate (D2).** 4.4% → 4.2%, Wilson [2.8, 7.1]% → [2.5, 6.8]%. The nominal
-5% level remains inside the interval, so the claim that the binary error stream holds its nominal level is unaffected. The per-regime range printed in the manuscript, 3.3-5.0%, is reproduced exactly.
+**Pooled binary-error rate (D2).** 4.4% → 4.2%, Wilson [2.8, 7.1]% → [2.5, 6.8]%. The nominal 5% level remains inside the interval, so the claim that the binary error stream holds its nominal level is unaffected. The per-regime range printed in the manuscript, 3.3-5.0%, is reproduced exactly.
 
-**i.i.d.-arm over-rejection (D3).** The manuscript reports that the squared inputs "already
-over-reject on the i.i.d. arm (9.2%), where `t_7` innovations deprive `eps^2` of a fourth moment and the chi-square approximation fails". Three findings, of decreasing importance:
+**i.i.d.-arm over-rejection (D3).** The manuscript reports that the squared inputs "already over-reject on the i.i.d. arm (9.2%), where `t_7` innovations deprive `eps^2` of a fourth moment and the chi-square approximation fails". Three findings, of decreasing importance:
 
-- **The mechanism as stated is incorrect, independently of any sample.** For an i.i.d. series
-  the Ljung-Box asymptotics require a finite variance of the tested series; with `Y = eps^2`   that is `E[eps^4] < inf`, hence `nu > 4`, which holds at `t_7`. The moment that is missing   below `nu = 8` is `E[eps^8]`, the fourth moment of `eps^2`, which governs the tail quantile   rather than the validity of the limit.
-- **The phenomenon is real, at heavier tails than stated.** A dedicated sweep (R02b, 1000
-  streams per point) measures 8.8% at `nu = 5` (Wilson [7.2, 10.7]%) and 7.9% at `nu = 6`   ([6.4, 9.7]%), both excluding the nominal level, against 5.8% at `nu = 7` ([4.5, 7.4]%). A   negative control applying the same test to `eps_t` itself holds the nominal level at all six   grid points, so the distortion is specific to the squaring step.
-- **The published number is not itself an error.** Under a true rate of 5.8%, observing 11 or
-  more rejections out of 120 has probability 8.9%. The submitted campaign reported an ordinary   draw; what does not follow from 11/120 is the inference of a systematic effect.
+- **The mechanism as stated is incorrect, independently of any sample.** For an i.i.d. series the Ljung-Box asymptotics require a finite variance of the tested series; with `Y = eps^2` that is `E[eps^4] < inf`, hence `nu > 4`, which holds at `t_7`. The moment that is missing below `nu = 8` is `E[eps^8]`, the fourth moment of `eps^2`, which governs the tail quantile rather than the validity of the limit.
+- **The phenomenon is real, at heavier tails than stated.** A dedicated sweep (R02b, 1000 streams per point) measures 8.8% at `nu = 5` (Wilson [7.2, 10.7]%) and 7.9% at `nu = 6` ([6.4, 9.7]%), both excluding the nominal level, against 5.8% at `nu = 7` ([4.5, 7.4]%). A negative control applying the same test to `eps_t` itself holds the nominal level at all six grid points, so the distortion is specific to the squaring step.
+- **The published number is not itself an error.** Under a true rate of 5.8%, observing 11 or more rejections out of 120 has probability 8.9%. The submitted campaign reported an ordinary draw; what does not follow from 11/120 is the inference of a systematic effect.
 
 The mechanism behind the measured transition is not identified. A convergence-rate explanation predicts the transition point but fails its own counterfactual: the rejection rate at `nu = 5` is flat across horizons from 2,000 to 128,000 steps. This repository asserts no mechanism.
 
