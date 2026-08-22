@@ -188,3 +188,35 @@ This document records all numerical deviations between the deterministic complia
 **Status:** CERTIFIED — D3 and D2 deviations documented. Four qualitative claims falsified due to Gamma grid collapse correction. Manuscript narrative requires revision to reflect the genuine grid span results. No parameter tuning or tolerance widening was performed; the pipeline faithfully reproduces the submitted campaign's collapsed grid in counterfactual mode.
 
 ---
+
+## R04b — Nu Grid Refinement and Crossing Point Resolution
+
+**Deviation Class: D3 (with D2 components)**
+
+**Affected Metrics:** Eco-L1 efficiency crossing point (published 4.9 vs regenerated inferential bracket [7.0, 9.0], fit 8.10, interpolation 7.75); Oracle efficiency crossing point (published 4.6 vs regenerated fit 4.47 within bracket [4.0, 5.0]); estimation cost in degrees of freedom (published 0.3 vs regenerated 3.62 [3.31, 3.92]); analytic crossing (published 4.7 vs regenerated 4.6788); AUDIT_R04 interpolation (published 8.52 vs regenerated two-point interpolation 7.75).
+
+**Root Cause:** R04's six-point nu grid {3, 4, 4.5, 5, 7, 30} samples no point inside the interval (7, 30) where the efficiency ratio crosses unity, leaving the crossing location unresolved. The 8.52 quoted in AUDIT_R04.md was a two-point linear interpolation across that void on a curve governed by 1/(4 f_z(0)^2), which is not linear in nu. R04b refines the grid to twelve points {4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0, 15.0, 20.0, 30.0} and applies four distinct estimators: grid bracket (model-free, resolution-limited), inferential bracket (model-free with confidence), shape fit with stream-level bootstrap, and analytic root.
+
+**Mechanism:** The delay ratio ADD_Concept / ADD_Eco-L1 moves by approximately 0.045 per unit of nu near the crossing, while its standard error at N = 2000 is about 0.02, so one standard error spans roughly 0.45 units of nu. This is why R04b's primary estimate is a fit over all twelve points rather than an interpolation between two adjacent grid points. The bootstrap resamples both calibration and drifted streams, pricing the full variance of threshold estimation.
+
+**Quantitative Impact:**
+- Eco-L1 nu* crossing: Published 4.9 vs regenerated inferential bracket [7.0, 9.0], fit 8.10 [7.78, 8.37], interpolation 7.75 [7.03, 8.32] (D3 falsification — published value lies outside the entire measured interval)
+- Oracle nu* crossing: Published 4.6 vs regenerated fit 4.47 [4.31, 4.57], bracket [4.0, 5.0] (held — published value lies within the bracket, though the fit point differs)
+- Estimation cost (dof): Published 0.3 vs regenerated 3.62 [3.31, 3.92] (D3 falsification — the extra cost is the estimation error under the genuine Gamma span)
+- Estimation cost (model-free): Regenerated 3.22 [2.52, 3.82] as difference of interpolated crossings (D3 falsification relative to 0.3)
+- Analytic crossing: Published 4.7 vs regenerated 4.6788 (held — rounds to 4.7 at published precision)
+- AUDIT_R04 interpolation: Published 8.52 vs regenerated 7.75 (D3 falsification — the interpolation was across an unsampled interval on a non-linear curve)
+- Gaussian ceiling: Published pi/2 = 1.5708 vs regenerated max ratio 1.255 (held — well below ceiling)
+- Oracle ratio at nu >= 7: All values > 1.0 (held — no second crossing exists on the extended grid)
+
+**Published Precision Impact:** SUBSTANTIAL. The Eco-L1 crossing moves from 4.9 to approximately 8.1, and the estimation cost increases from 0.3 to 3.62. The Oracle crossing remains compatible with 4.6 at the bracket level, though the fit places it at 4.47. The analytic crossing is corroborated at higher precision.
+
+**Qualitative Claim Impact:** PARTIAL FALSIFICATION. Two of six v87 claims are falsified: (a) efficiency ratio crosses unity at nu* ~ 4.9 for Eco-L1 (falsified: bracket [7.0, 9.0]), (b) finite warm-up costs 0.3 dof (falsified: 3.62). Four claims are corroborated: (c) Oracle arm crosses at 4.6 (held within bracket), (d) analytic crossing at 4.7 (held at published precision), (e) ratio never exceeds Gaussian ceiling (held: max 1.255 < 1.5708), (f) no second crossing above seven for Oracle (held).
+
+**Verification:** All R04b tests pass. The grid bracket [7.0, 8.0] and inferential bracket [7.0, 9.0] both straddle unity for Eco-L1. The Oracle inferential bracket [4.0, 5.0] straddles unity. Continuity with R04 at the five common points (4.0, 4.5, 5.0, 7.0, 30.0) is confirmed via omnibus chi-square tests (Eco_L1: p = 0.4498, Oracle_Eco: p = 0.5736, both > 0.01 gate). Bootstrap variance inflation factor sqrt(2) = 1.413 corroborates the design effect calculation. The shape fit for Eco-L1 (weighted R^2 = 0.9904, p = 0.5929) and Oracle (weighted R^2 = 0.9855, p = 0.2960) both pass their goodness tests, so the fit-based crossing estimates are admissible.
+
+**Candidate Files:** See `docs/camera_ready_candidates/R04b_v87_crossing_macros.md` for LaTeX macro diff blocks.
+
+**Status:** CERTIFIED — D3 and D2 deviations documented. Two qualitative claims falsified (Eco-L1 crossing location, estimation cost magnitude). Four claims corroborated. No parameter tuning or tolerance widening was performed; results are faithful to the corrected Gamma = 11.58, N = 2000, c = 0.5 protocol.
+
+---
