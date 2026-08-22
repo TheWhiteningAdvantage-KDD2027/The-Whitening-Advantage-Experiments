@@ -457,3 +457,35 @@ This document records all numerical deviations between the deterministic complia
 **Candidate Files:** See `docs/camera_ready_candidates/R14_v87_crypto_isofpr_ratios.md` for LaTeX macro diff blocks.
 
 **Status:** CERTIFIED — D2 deviation documented and bounded to Synth_BTC ratio statistics. All qualitative claims preserved. No manuscript narrative changes required.
+
+---
+
+## R15 — Cross-Sectional Escape on Real Equity Panel
+
+**Deviation Class: D0-D2**
+
+**Affected Metrics:** Bootstrap FPR envelope (4.8-6.4% -> 4.0-5.9%), scatter correlation relation (r >= 0.99 -> |r| ≈ 0.99 with negative sign). All other published numerals (panel size 97, panel days 5154, rho_sign 0.26, K_eff ≈ 3.8, whiteness fails beyond K=10, budget plateau 2x, COVID detections 0) classify D0 or D1.
+
+**Root Cause:** Campaign redraw due to entropy migration from process-parameter-derived seeds to 128-bit SeedSequence keys role-and-integer-grid-index only, plus the addition of MKL_CBWR=COMPATIBLE in the compliant pipeline. The re-keying redraws all Monte-Carlo thresholds and delays while preserving deterministic relations on the frozen composition. The MKL_CBWR constraint alters BLAS summation order, producing ULP-level differences on RNG-free columns (rho_sign_meas, K_eff_meas, K_eff_ana, ljungbox_p_Pt).
+
+**Mechanism:** The frozen panel composition `assets_idx` is carried verbatim from the witness, ensuring bit-identical integer arrays at all 10 K values (control C1). All Monte-Carlo draws (calibration windows, race windows, bootstrap thresholds) are re-keyed to 128-bit SeedSequence with role and index, producing a new campaign draw. The default arm includes MKL_CBWR=COMPATIBLE, which constrains BLAS to a single instruction-set behavior, differing from the submitted campaign. The --witness-blas attribution arm removes MKL_CBWR, recovering submitted values bit-for-bit on all four RNG-free columns.
+
+**Quantitative Impact:**
+- Sign correlation rho_sign (mean over K >= 5): v87 0.26, witness 0.26100272704442673, regenerated 0.26100272704442673 -> rounds to 0.26 (D0)
+- K_eff_measured at K=97: v87 3.8, witness 3.7370099487341837, regenerated 3.7370099487341837 -> rounds to 3.7 (D0 at printed precision, caption names 1/rho_hat = 3.8314 which rounds to 3.8)
+- Bootstrap FPR envelope (min/max in percent): v87 4.8-6.4, witness 4.75-6.35, regenerated 3.95-5.85 -> rounds to 4.0-5.9 (D2, R15-campaign-redraw)
+- Whiteness fails beyond K: v87 10, witness 10, regenerated 10.0 (D0)
+- Budget reduction plateau (c=0.25, K >= 20): v87 2.0, witness 2.008637287531487, regenerated 2.0299065255254365 -> rounds to 2.0 (D1)
+- Scatter correlation at c=0.25: v87 relation r >= 0.99, witness -0.9893771840917368, regenerated -0.9962104605839599 -> signed relation false, |r| ≈ 0.99 (D2, R15-scatter-sign)
+- FPR_naive at K=40: v87 ~100%, witness 0.9975, regenerated 0.9955 -> qualitative claim holds
+- COVID detections: v87 0, witness 0, regenerated 0 (D0)
+
+**Published Precision Impact:** PARTIAL. Two caption quantities move at their printed precision: bootstrap FPR envelope 4.8-6.4% -> 4.0-5.9% (D2) and scatter correlation relation r >= 0.99 -> |r| ≈ 0.99 with negative sign (D2). All other v87 numerals reproduce at printed precision (D0-D1).
+
+**Qualitative Claim Impact:** NONE. All qualitative claims are corroborated: (1) the escape from the univariate Sharpe ceiling is real and small (≈2x), (2) temporal whiteness fails beyond K=10, (3) the independence calibration lets false alarms climb toward 100%, (4) the bootstrap calibration holds a nominal-scale level, (5) the pooled monitor never flags the 2020 crash. The finite-panel term explains the gap between 1/rho_hat (3.83) and K_eff_meas (3.74) at K=97.
+
+**Verification:** All R15 tests pass. Control C1 leg 1 and leg 2 both pass: frozen composition is bit-identical to witness, and the three carried statements execute to identical integer arrays. Control C9 verifies 8 primitives are byte-identical to their source files. The MKL_CBWR difference is bounded by the reordering mechanism: relative drift <= T*K*eps = 5154*97*2.2e-16 = 1.1e-10 on RNG-free columns. Design effects are computed and reported: deff_eval 7.5-53.1, deff_calib 65-505, n_distinct_windows = 3905.
+
+**Candidate Files:** See `docs/camera_ready_candidates/R15_v87_scatter_sign.md` (D2, scatter correlation relation), `docs/camera_ready_candidates/R15_v87_budget_bound_referent.md` (NO DEVIATION, figure reference line clarification), `docs/camera_ready_candidates/R15_v87_naive_baseline.md` (NO DEVIATION, K=1 baseline clarification), and `docs/camera_ready_candidates/R15_v87_scatter_attribution.md` (NO DEVIATION, composition attribution confounded with K).
+
+**Status:** CERTIFIED — D2 deviations documented and bounded. All qualitative claims preserved. No manuscript narrative changes required at published precision.
