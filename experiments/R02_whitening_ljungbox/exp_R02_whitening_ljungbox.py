@@ -1,3 +1,4 @@
+import os
 import sys
 import logging
 import random
@@ -18,6 +19,8 @@ except NameError:
 from experiments.common.fair_env import enforce_strict_determinism, verify_hash_seed, log_environment
 
 enforce_strict_determinism()
+
+assert os.environ.get("PYTHONHASHSEED") == "42", "PYTHONHASHSEED must be pinned to 42 before interpreter start"
 
 import numpy as np
 import pandas as pd
