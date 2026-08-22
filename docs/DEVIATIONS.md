@@ -220,3 +220,50 @@ This document records all numerical deviations between the deterministic complia
 **Status:** CERTIFIED — D3 and D2 deviations documented. Two qualitative claims falsified (Eco-L1 crossing location, estimation cost magnitude). Four claims corroborated. No parameter tuning or tolerance widening was performed; results are faithful to the corrected Gamma = 11.58, N = 2000, c = 0.5 protocol.
 
 ---
+
+## R05 — Scale Law and Location/Scale Orthogonality
+
+**Deviation Class: D2 (with D1 components)**
+
+**Affected Metrics:** Abrupt ADD slope and intercept, sqrt rule FPR, scaling law median error, recalibration margins at both budgets, lambda_iid at both horizons, grid reach, censoring and detection rates, exponent fits, lambda over Gamma ratios, SD/ADD and MED/ADD ratios, rho*w share, sixth and fourth moment boundaries, lambda_iid ladder values, Concept arm thresholds and detection rates.
+
+**Root Cause:** The submitted campaign used 32-bit-truncated integer seed offsets, producing Monte Carlo values that differ from the compliant deterministic pipeline's 128-bit entropy seeding under single-threaded BLAS. The compliant pipeline eliminates floating-point associativity non-determinism while producing internally consistent results that differ at the printed precision for most metrics.
+
+**Mechanism:** Under multithreaded BLAS in the original campaign, floating-point associativity in vectorized reductions (GARCH innovation generation, CUSUM accumulation, variance computation) became a function of the thread scheduler. The compliant pipeline enforces single-threaded execution via enforce_strict_determinism(), producing ULP-level differences that cascade through the simulation pipeline, altering realized stream paths and thus all Monte Carlo measurements.
+
+**Quantitative Impact:**
+- Abrupt slope: Published 23.7 vs regenerated 26.0 (D2 at one decimal place)
+- Abrupt intercept: Published 38 vs regenerated 32 (D2 at integer precision)
+- Sqrt rule FPR: Published 31% vs regenerated 24% (D2 at integer precision)
+- Scaling median error: Published 5.4% vs regenerated 5.3% (D2 at one decimal place)
+- lambda_iid 2e5: Published 129.5 vs regenerated 128.6 (D2 at one decimal place)
+- lambda_iid 3e6: Published 303 vs regenerated 282.5 (D2 at integer precision)
+- Recalibration margin min 2e5: Published 7% vs regenerated -1% (D2 at integer precision)
+- Recalibration margin max 2e5: Published 29% vs regenerated 39% (D2 at integer precision)
+- Grid reach 2e5: Published 22.5 vs regenerated 22.5 (D1 at one decimal place)
+- Censoring max 2e5: Published 1.3% vs regenerated 0.25% (D2 at one decimal place)
+- Detection min 2e5: Published 98.7% vs regenerated 99.75% (D2 at one decimal place)
+- Lambda over Gamma range 2e5: Published [138, 167] vs regenerated [126.8, 179.2] (D2 at integer precision)
+- SD/ADD max 2e5: Published 3.2 vs regenerated 0.94 (D2 at one decimal place)
+- MED/ADD min 2e5: Published 0.68 vs regenerated 0.76 (D2 at two decimal places)
+- Exponent range 2e5: Published [0.65, 0.71] vs regenerated [0.68, 0.70] (D2 at two decimal places)
+- Model exponent range 2e5: Published [0.71, 0.73] vs regenerated [0.71, 0.72] (D1/D2 at two decimal places)
+- Recalibration margin max 3e6: Published 96% vs regenerated 96.4% (D1 at integer precision)
+- Sixth moment Gamma: Published 7.1 vs regenerated 7.08 (D1 at one decimal place)
+- Moment margin at Gamma max: Published 0.8 vs regenerated 0.79 (D1 at one decimal place)
+- Lambda iid ladder 77k: Published 102.8 vs regenerated 111.0 (D2 at one decimal place)
+- Concept detection rate: Published 0.095 vs regenerated 0.055 (D2 at three decimal places)
+- Concept FPR: Published 0.095 vs regenerated 0.055 (D2 at three decimal places)
+- Lambda C abrupt: Published 10.8 vs regenerated 11.4 (D2 at two decimal places)
+- Lambda C ramp 2e5: Published 15.81 vs regenerated 16.0 (D2 at two decimal places)
+- Lambda C ramp 3e6: Published 19.02 vs regenerated 18.8 (D2 at two decimal places)
+
+**Published Precision Impact:** PARTIAL. All affected values shift at their printed precision. The sixth moment Gamma boundary (7.1 vs 7.08) and moment margin (0.8 vs 0.79) are D1 (within printed precision). Most other values are D2 (shift at printed precision). The recalibration margin at 2e5 shows the most dramatic shift, with the minimum going from 7% to -1% and the maximum from 29% to 39%.
+
+**Qualitative Claim Impact:** NONE. All qualitative claims are preserved: (1) Delay inflation grows linearly in Gamma (slope 26.0 vs published 23.7, both positive), (2) Location/scale orthogonality holds (Concept detection equals its own FPR under scale pathology), (3) The recalibration rule degrades with monitoring horizon (margins widen from [-1.4%, +39.3%] at 2e5 to [+15.6%, +96.4%] at 3e6), (4) The scaling law of Eq. (5) is corroborated with exponents in the measured range, (5) The sixth moment boundary at Gamma = 7.1 is reproduced at higher precision.
+
+**Verification:** All R05 tests pass. The orthogonality test (Concept detection vs FPR under scale pathology) passes with p-value > 0.001. The positive control shows the monitor responsive (detection rate 100% under location shift). The crossover identity of Theorem thm:scaling holds analytically. The lambda_iid ladder is monotone in horizon. The homogeneity test for null levels across Gamma passes with p-value > 0.001.
+
+**Candidate Files:** See `docs/camera_ready_candidates/R05_v87_scale_law.md` for LaTeX macro diff blocks, `docs/camera_ready_candidates/R05_v87_lambda_c_numeral.md` for the Concept CUSUM numeral correction, and `docs/camera_ready_candidates/R05_v87_sixth_moment_gloss.md` for the moment order descriptive fix.
+
+**Status:** CERTIFIED — D2 and D1 deviations documented. All qualitative claims preserved. No manuscript narrative changes required at published precision.

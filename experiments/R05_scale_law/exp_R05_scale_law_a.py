@@ -107,6 +107,8 @@ from experiments.common.fair_harness import setup_logging, disable_pandas_multit
 
 disable_pandas_multithreading()
 
+assert os.environ.get("PYTHONHASHSEED") == "42", "PYTHONHASHSEED must be pinned to 42 before interpreter start"
+
 import math
 import time
 import random
