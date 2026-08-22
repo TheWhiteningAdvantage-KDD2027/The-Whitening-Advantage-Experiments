@@ -489,3 +489,39 @@ This document records all numerical deviations between the deterministic complia
 **Candidate Files:** See `docs/camera_ready_candidates/R15_v87_scatter_sign.md` (D2, scatter correlation relation), `docs/camera_ready_candidates/R15_v87_budget_bound_referent.md` (NO DEVIATION, figure reference line clarification), `docs/camera_ready_candidates/R15_v87_naive_baseline.md` (NO DEVIATION, K=1 baseline clarification), and `docs/camera_ready_candidates/R15_v87_scatter_attribution.md` (NO DEVIATION, composition attribution confounded with K).
 
 **Status:** CERTIFIED — D2 deviations documented and bounded. All qualitative claims preserved. No manuscript narrative changes required at published precision.
+
+---
+
+## R16 — Regime Census and Sign Floor
+
+**Deviation Class: D1-D3**
+
+**Affected Metrics:** Out-of-budget fraction at gamma=20 (80% -> 80.3%), floor fraction envelope (55-92% -> 50.1-92.1%), Sharpe-one cost at gamma=20 (1510 -> 1509.85) and gamma=252 (2790 -> 2786.83), COVID floor at gamma=20 (18.5 -> 18.49) and gamma=252 (34 -> 34.12), phase count under strict Pagan-Sossounov (66 claimed -> 48 measured).
+
+**Root Cause:** The dating misdescription in v87 L329 attributes the 66-phase census to a pure Pagan-Sossounov dating of all four streams, when in fact the delivered script substitutes Lunde-Timmermann for SPY alone. The compliant pipeline carries this substitution into an explicit `dating_algorithm` column and three distinct arms (canonical, strict_ps, symmetric), making the discrepancy measurable. Numerical evaluations of closed-form expressions (Sharpe ceiling, Bernoulli divergence) differ at the ULP level due to floating-point associativity in the deterministic compliant pipeline.
+
+**Mechanism:** v87 L329: "a retrospective multi-scale Pagan--Sossounov bull/bear dating ... of the four streams (2000--2025; 66 phases after duration censoring)". Strict Pagan-Sossounov on all four streams yields 48 phases, not 66. The canonical census (66 phases) is produced by substituting Lunde-Timmermann for SPY alone when `check_sanity` fails, which the delivered script logs. The compliant pipeline materializes both algorithms on every ticker and makes the substitution rule explicit in three arms. The floor fraction envelope is measured over the phases the ceiling does not exclude at gamma=20 unconditional; the minimum measured is 50.1%, not 55%.
+
+**Quantitative Impact:**
+- Phase count strict PS: Manuscript implies 66 vs compliant measures 48 (D3, qualitative claim falsified)
+- Phase count canonical: 66 vs 66 (D0, exact match)
+- Out-of-budget fraction gamma=20 unc: 80% vs 80.3% (D1, rounds to same integer)
+- Floor fraction envelope: 55-92% vs 50.1-92.1% (D2, lower bound shifts at printed precision)
+- Sharpe-one cost gamma=20: 1510 vs 1509.85 (D0/D1, rounds to 1510)
+- Sharpe-one cost gamma=252: 2790 vs 2786.83 (D2, shifts at printed precision)
+- COVID floor gamma=20: 18.5 vs 18.49 (D0/D1, rounds to 18.5)
+- COVID floor gamma=252: 34 vs 34.12 (D2, shifts at printed precision)
+- COVID KL divergence: 0.162 vs 0.1620 (D0, exact at printed precision)
+- Step of one (count): 1 vs 1 (D0, exact match)
+- Step of one (set): 19 phases disagree vs 1 implied (D2, mechanism clarified)
+
+**Published Precision Impact:** PARTIAL. The dating description is qualitatively falsified (D3). The floor fraction envelope lower bound, Sharpe-one cost at gamma=252, and COVID floor at gamma=252 shift at their printed precision (D2). The out-of-budget fraction and COVID values at gamma=20 are D1 (invariant at printed precision). Phase count and step of one count are D0.
+
+**Qualitative Claim Impact:** PARTIAL FALSIFICATION. The claim that "a retrospective multi-scale Pagan--Sossounov ... dating ... of the four streams (2000--2025; 66 phases)" is unreachable by strict Pagan--Sossounov (D3). However, the canonical census DOES produce 66 phases, and the 80% out-of-budget claim is corroborated at printed precision. The floor consumption claim "55--92%" is partially falsified (lower bound only). All other qualitative claims (step of one, COVID characterization, sign vs unconditional comparison) are corroborated.
+
+**Verification:** All R16 tests pass. Control C2 verifies the three published counts (53, 52, 64) reproduce exactly. Control C3 confirms the step of one on the count while the set behind it spans 19 phases. Control C4 confirms all boundary convention flips run in one direction (gaining detectability under post-onset). Control C8 asserts byte-identity of 7 carried primitives. The counterfactual arms (strict_ps: 48 phases, symmetric: 102 phases) bound the dating misdescription.
+
+**Candidate Files:** See `docs/camera_ready_candidates/R16_v87_regime_census.md` for LaTeX macro diff blocks.
+
+**Status:** CERTIFIED — D3 and D2 deviations documented. Dating description claim falsified; all other qualitative claims preserved. Manuscript narrative requires revision to reflect the substitution mechanism and the counterfactual arm results.
+
