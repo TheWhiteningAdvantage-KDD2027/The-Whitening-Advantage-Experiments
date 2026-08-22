@@ -26,7 +26,10 @@ from experiments.common.fair_env import (
 # flag is therefore read directly from sys.argv; argparse re-parses it later and
 # remains the single source of truth for every other option.
 _LEGACY_BLAS = "--legacy-blas" in sys.argv
-enforce_strict_determinism(legacy_blas=_LEGACY_BLAS)
+if _LEGACY_BLAS:
+    enforce_strict_determinism(legacy_blas=True)
+else:
+    enforce_strict_determinism()
 
 from experiments.common.fair_harness import (
     disable_pandas_multithreading, 
