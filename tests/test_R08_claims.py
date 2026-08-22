@@ -629,7 +629,7 @@ def test_R08_the_carried_primitives_are_byte_identical_to_both_owning_files():
     """
     BLOCKING, deterministic. Control C7, re-run outside the experiment: the
     eighteen carried primitives must be byte-identical to the two files that own
-    them. Preamble S4.2 forbids hoisting any of them into experiments/common/, so
+    them. The protocol forbids hoisting any of them into experiments/common/, so
     the duplication is deliberate and this is what stops it drifting.
     """
     mine = source_segments(SOURCE_A, set(WITNESS_CARRIED) | set(R07_CARRIED))
@@ -728,7 +728,7 @@ def test_R08_the_three_point_bound_of_L311_holds_with_its_extremum_envelope(adve
     assert observed <= V87_WHITENESS_BOUND_POINTS, (
         f"the largest whiteness gap is {observed:.4f} points against the "
         f"{V87_WHITENESS_BOUND_POINTS:g} L311 states, with a 95% envelope of the maximum of "
-        f"[{float(bound.ci_low):.4f}, {float(bound.ci_high):.4f}]. Preamble S3 makes this a D3 "
+        f"[{float(bound.ci_low):.4f}, {float(bound.ci_high):.4f}]. The protocol makes this a D3 "
         f"only if that interval excludes the bound; either way no parameter, tolerance, seed or "
         f"bound is moved and docs/DEVIATIONS.md is what changes.")
     assert float(bound.ci_low) <= V87_WHITENESS_BOUND_POINTS <= float(bound.ci_high) \
@@ -811,7 +811,7 @@ def test_R08_macros_are_emitted_and_agree_with_the_frames(macros, adverse, null_
 
 
 def test_R08_text_artefacts_end_with_a_newline():
-    """BLOCKING. Preamble S6: the section and the requirements file are assembled
+    """BLOCKING. The protocol: the section and the requirements file are assembled
     by concatenation, so a missing final newline corrupts the result."""
     for path in (SECTION, AUDIT, ROOT / "requirements" / "R08.txt",
                  TABLES_DIR / "R08_claims.tex"):
@@ -820,7 +820,7 @@ def test_R08_text_artefacts_end_with_a_newline():
 
 
 def test_R08_no_confirmatory_language_in_the_scripts_the_logs_or_the_section():
-    """BLOCKING. Preamble S4.4: the grep must return empty on every produced file."""
+    """BLOCKING. The protocol: the grep must return empty on every produced file."""
     pattern = re.compile(BANNED_CONFIRMATORY, re.IGNORECASE)
     for path in (SOURCE_A, SOURCE_B, LOG_A, LOG_B, SECTION):
         assert path.exists(), f"Missing artefact: {path}"
@@ -866,7 +866,7 @@ def test_R08_the_scripts_own_S4_4_pattern_accepts_the_preambles_language():
 
 def test_R08_the_produced_sources_carry_no_banned_construct():
     """
-    BLOCKING. Preamble S7: no `iterrows`, no bare `except:`, no absolute path,
+    BLOCKING. The protocol: no `iterrows`, no bare `except:`, no absolute path,
     no `np.random.seed`. S4bis's 6th corollary: no bare `np.sqrt` of a sample
     size, which is the form that silently assumes independence.
     """
@@ -889,7 +889,7 @@ def test_R08_the_monte_carlo_numerals_of_L241_and_L311_move_within_their_own_sam
         adverse, null_law):
     """
     SELF-INVALIDATING. v87 prints 5.03%, 4.29%, 0.86% and 20.8%, each to a stated
-    number of decimals. Preamble S3 fixes the comparison: a printed numeral is
+    number of decimals. The protocol fixes the comparison: a printed numeral is
     read AT ITS PRINTING PRECISION, so a regenerated value that rounds to it has
     not moved at all (D0/D1) and there is nothing to compare against a standard
     error. Only a value whose rounding DIFFERS from the printed one has moved,

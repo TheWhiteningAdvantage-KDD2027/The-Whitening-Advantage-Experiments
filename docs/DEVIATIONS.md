@@ -328,6 +328,54 @@ This document records all numerical deviations between the deterministic complia
 
 ---
 
+---
+
+## R08 — The Adverse Direction and the Discrete Null Law
+
+**Deviation Class: D2**
+
+**Affected Metrics:** Lattice bounding levels (4.29% → 4.32%, 5.03% → 5.08%), FPR collapse (0.86% → 0.95%), FPR inflation (20.8% → 21.0%), whiteness rejection range (5--100% → 4.8--99.8%), whiteness gap maximum (2.21 points at b = 0.075).
+
+**Root Cause:** Cryptographic re-keying under single-threaded deterministic execution produces different but internally consistent stochastic realizations. The mandated 128-bit entropy seeding binds PRNG seeds uniquely to semantic task coordinates (trajectory role and index for module A, lattice_stream role and index for module B), fundamentally shifting all Monte-Carlo outputs while preserving structural relationships.
+
+**Mechanism:** The compliant pipeline enforces single-threaded BLAS execution and uses role-and-index-based seeding for all random draws. This eliminates the non-determinism of the original multithreaded BLAS environment but produces new path realizations. The injected-bias campaign (module A) and lattice null law streams (module B) are both re-keyed, cascading through the CUSUM statistics and resulting in ULP-level differences that accumulate into the observed numerical shifts.
+
+**Quantitative Impact:**
+- Lattice upper bound at λ = 11.2: 5.03% → 5.08% (absolute difference: 0.05 percentage points)
+- Lattice lower bound at λ = 11.4: 4.29% → 4.32% (absolute difference: 0.03 percentage points)
+- λ*: 11.4 (identical, D0)
+- Lattice step: 0.2 (identical, D0)
+- FPR collapse (over-centering, b = 0.15): 0.86% → 0.95% (absolute difference: 0.09 percentage points)
+- FPR inflation (under-centering, naive at φ = 0.15): 20.8% → 21.0% (absolute difference: 0.2 percentage points)
+- Whiteness rejection range: 5--100% → 4.8--99.8% (low end shifts by 0.2 percentage points, high end rounds to 100% at printed precision)
+- Whiteness gap maximum: 2.21 points at b = 0.075 (new metric, not in manuscript)
+- Operator delta (weak - strict at λ*): 0.76 points (new metric, not in manuscript)
+- Boundary cases within ULP budget: 78971 streams (new metric, not in manuscript)
+- Penalty at residual momentum 0.02: 1.3 points (R07 cell, movement registered under R07-campaign-redraw)
+
+**Published Precision Impact:** PARTIAL. All affected numerical values shift at one or two decimal places precision. The lattice levels (5.08% vs 5.03%, 4.32% vs 4.29%) shift at the second decimal place. The FPR values (0.95% vs 0.86%, 21.0% vs 20.8%) shift at the first or third decimal place.
+
+**Qualitative Claim Impact:** NONE. All qualitative claims are preserved:
+- Over-centering causes FPR collapse to near-zero (0.95% vs 0.86%)
+- Under-centering causes FPR inflation to approximately 20% (21.0% vs 20.8%)
+- Both arms yield identical whiteness loss across the b-grid (within three points as stated)
+- The null law is discrete with attainable levels bracketing 5% (4.32% and 5.08%)
+- λ* = 11.4 is the nearest attainable level at or below nominal
+- The adverse direction mechanism (sign of bias determines direction of FPR shift) is corroborated
+
+**Verification:** All R08 tests pass. Control C1 confirms a single comparison operator across both modules. Control C7 confirms byte-identity of carried primitives to reference files. The re-run reconciliation confirms that module B's in-memory re-execution matches module A's persisted CSVs. The digest check passes for all 5 CSV artifacts and the figure PNG.
+
+**Candidate Files:** See `docs/camera_ready_candidates/R08_v87_adverse_direction.md` and `docs/camera_ready_candidates/R08_v87_discrete_null_law.md` for LaTeX macro diff blocks.
+
+**Cross-References:**
+- R07-campaign-redraw: Movement of R07 cells (20.8%, 1.1-point penalty) used in R08 macros
+- R07-lambda-star-estimator: λ* computation rule already registered
+- R07-bias-bound-not-a-bound: Bound constants owned by R07, not R08
+
+**Status:** CERTIFIED — D2 deviation documented and bounded. All qualitative claims preserved. No manuscript narrative changes required.
+
+---
+
 ## R09 — Anytime-Valid Detection on the Fair-Coin Stream
 
 **Deviation Class: D1-D2**

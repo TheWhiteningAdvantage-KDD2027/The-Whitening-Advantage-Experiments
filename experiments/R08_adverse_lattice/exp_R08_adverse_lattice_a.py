@@ -25,13 +25,13 @@ party (`R08_operator_levels.csv`, `R08_lattice_exact_law.csv`,
 `exp_R08_adverse_lattice_b.py`, which re-runs this campaign in memory.
 
 SIX STRUCTURAL CHANGES AGAINST THE DELIVERED CHAIN
-(`Priorite_21b_adverse_bias_and_null_law.py` ->
- `Priorite_21c_plot_adverse_lattice.py`), EACH FORCED BY THE PREAMBLE.
+(`the legacy implementation` ->
+ `the legacy plotting script`), as required by the protocol.
 
 1. ENTROPY. The delivered `np.random.SeedSequence(424242).spawn(7 * 10000)`
    keyed a trajectory on its position in a spawn list, and the calibration ran
    on the bare integer seed `np.random.default_rng(100)` (witness l.228).
-   Preamble S6 requires a 128-bit key on the ROLE AND INDEX ALONE, calibration
+   The reproducibility protocol requires a 128-bit key on the ROLE AND INDEX ALONE, calibration
    included. Every Monte-Carlo value moves; that is pre-classified Class A / D2
    by the `R07/R09/R10/R13-campaign-redraw` precedents.
    THE TRAJECTORY KEY IS R07's, DELIBERATELY. Module A keys its trajectories on
@@ -57,13 +57,13 @@ SIX STRUCTURAL CHANGES AGAINST THE DELIVERED CHAIN
    `R08_*_fast.csv` / `.png` / `.tex`, on the `*_legacy_seeds` precedent of
    R14. The delivered script reduced `N_SEEDS` from 10,000 to 200 under the
    same file names.
-5. NO DISK ROUND TRIP AS A MEMORY BRIDGE (S7). `Priorite_21c` re-read its two
+5. NO DISK ROUND TRIP AS A MEMORY BRIDGE (S7). the legacy plotting script re-read its two
    CSVs with `pd.read_csv` and no `float_precision='round_trip'`, then plotted
    from disk. `_b` imports this module and re-runs `run_campaign`; every CSV
    read that survives for a structural reason is in `round_trip`.
 6. THE DELIVERED CERTIFICATION BLOCK IS REPLACED. The witness `main` gates on
    four literals it produced itself (`0.0086`, `0.2076`, `0.05027`, `0.04287`)
-   at `tol = 1e-9`, which preamble S7 forbids outright and which the mandated
+   at `tol = 1e-9`, which the protocol forbids outright and which the mandated
    re-keying makes fail by construction. The C-series replaces it.
 
 WHAT THIS STREAM DOES NOT OWN.
@@ -107,7 +107,7 @@ References:
 import sys
 from pathlib import Path
 
-# Determinism bootstrap, in the order preamble S6 requires: fair_env imports only
+# Determinism bootstrap, in the order the reproducibility protocol requires: fair_env imports only
 # os and sys, so the environment block is posted before NumPy is loaded by anyone
 # and before any BLAS thread limit is read. PYTHONHASHSEED cannot be set from
 # here -- CPython reads it at interpreter start-up -- so it is exported by
@@ -231,7 +231,7 @@ N_RESAMPLE_NULL = 10000
 # 97.5% quantile on the 50th order statistic from the top.
 N_RESAMPLE_KS = 2000
 # The sampling envelope of the maximum whiteness gap, used for the D-class of
-# v87's three-point bound under preamble S3's own rule: a printed bound is
+# v87's three-point bound under the protocol's own rule: a printed bound is
 # crossed at D3 only if the 95% interval of the regenerated value EXCLUDES it.
 N_RESAMPLE_BOOT = 2000
 BOOT_ALPHA = 0.05
@@ -246,7 +246,7 @@ ULP_BUDGET = 4
 FINDING_Z = 3.0
 
 # --- SOURCE-SEGMENT IDENTITY (control C7) ---
-# Preamble S4.2 forbids hoisting a scientific primitive into
+# The protocol forbids hoisting a scientific primitive into
 # experiments/common/, so every routine below is duplicated from the file that
 # owns it and asserted byte-identical to that file at run time.
 WITNESS_SOURCE = (BASE_DIR / "data" / "reference" / "R08"
@@ -270,7 +270,7 @@ CROSS_OWNER_AST_IDENTICAL = ('generate_dgp', 'compute_phi_hat_vectorized')
 # identity is not assertable and the witness source of each is quoted in full in
 # the log instead -- but only after the S4.4 grep clears the segment.
 ADAPTED_ROUTINES = ('worker_mod_A', 'worker_mod_B', 'plot_adverse_and_lattice', 'main')
-# The routines the port does NOT carry at all. Preamble S4.2 pins a superseded
+# The routines the port does NOT carry at all. The protocol pins a superseded
 # routine by its SHA-256 and does NOT quote it, so that proscribed language
 # cannot be imported into the log by way of a citation.
 SUPERSEDED_ROUTINES = ('setup_logging', 'get_sha256', 'dump_requirements', 'get_md5')
@@ -281,7 +281,7 @@ SUPERSEDED_ROUTINES = ('setup_logging', 'get_sha256', 'dump_requirements', 'get_
 # Without that device the pattern would make this file fail the very grep it
 # implements, and exempting the file that carries the pattern would be the wrong
 # repair: the exemption, and not the pattern, is what would then have to be
-# trusted. The equivalence is asserted against the preamble's own wording in
+# trusted. The equivalence is asserted against the the protocol's own wording in
 # tests/test_R08_claims.py.
 BANNED_CONFIRMATORY = re.compile(
     r"prove[sn]|perfectl[y] valid|validate[s] the (theorem|thesi[s]|claim)|confirm[s] the|"
@@ -436,7 +436,7 @@ def generate_dgp(T: int, phi: float, seed_sq: np.random.SeedSequence) -> np.ndar
 # --- CARRIED FROM exp_R07_estimated_mean.py, WHICH OWNS THEM ---
 # The seed derivation, the three comparison helpers, the two lattice control
 # instruments, the exact law and the sign-flip null. Byte-identical to R07 at
-# run time (control C7); preamble S4.2 forbids hoisting any of them.
+# run time (control C7); the protocol forbids hoisting any of them.
 
 def get_deterministic_seed(*args) -> int:
     """
@@ -602,7 +602,7 @@ def lattice_units_of(decimal_text):
 
 
 def clamp_unit_interval(value):
-    """Preamble S7: every interval bound is clipped into [0, 1] before persistence."""
+    """The protocol: every interval bound is clipped into [0, 1] before persistence."""
     return max(0.0, min(1.0, float(value)))
 
 
@@ -692,7 +692,7 @@ def bootstrap_max_envelope(rng, differences, n_resample, alpha):
     b, by resampling TRAJECTORIES with replacement.
 
     S4bis, 4th corollary: an extremum over six correlated cells has neither the
-    distribution nor the interval of one cell. Preamble S3 fixes what this
+    distribution nor the interval of one cell. The protocol fixes what this
     envelope is for -- a printed bound is crossed at D3 only when the 95%
     interval of the regenerated value EXCLUDES the bound -- so what is needed
     here is a sampling distribution and not a null, which is why this is a
@@ -714,7 +714,7 @@ def source_segments(path, names):
     Source text of the named top-level functions, extracted by position rather
     than by import: importing a delivered script would execute its environment
     block, its logger and its output-directory creation. Duplicated locally
-    because preamble S4.2 forbids hoisting it into experiments/common/.
+    because the protocol forbids hoisting it into experiments/common/.
     """
     text = Path(path).read_text()
     tree = ast.parse(text)
@@ -762,7 +762,7 @@ def control_c7_source_identity(logger):
                 f"{WITNESS_SOURCE.name} ({', '.join(WITNESS_CARRIED)}) and "
                 f"{len(R07_CARRIED)} byte-identical to {R07_SOURCE.name} "
                 f"({', '.join(R07_CARRIED)}); {compared} characters compared, 0 differences. "
-                f"Preamble S4.2 forbids hoisting any of them into experiments/common/, so the "
+                f"The protocol forbids hoisting any of them into experiments/common/, so the "
                 f"duplication is deliberate and it cannot drift. Deterministic; trigger "
                 f"probability 0 unless a copy has drifted.")
 
@@ -795,7 +795,7 @@ def control_c7_source_identity(logger):
 
     # The adapted routines, quoted in full -- but only after the S4.4 grep
     # clears the segment. A segment that carries proscribed language is NOT
-    # quoted: preamble S4.2 asks for the grep precisely so that a citation
+    # quoted: the protocol asks for the grep precisely so that a citation
     # cannot import banned wording into this log.
     logger.info(f"C7 ADAPTED ROUTINES. {list(ADAPTED_ROUTINES)} are restructured for the reasons "
                 f"stated in the module docstring -- keyed entropy, per-trajectory return values, "
@@ -815,7 +815,7 @@ def control_c7_source_identity(logger):
         logger.info(f"C7 witness SHA-256 of {name} [{origin}]: {digest}")
         if hits:
             logger.info(f"C7 {name} is NOT quoted: the S4.4 grep returns {len(hits)} line(s) "
-                        f"carrying proscribed wording inside the segment, and preamble S4.2 makes "
+                        f"carrying proscribed wording inside the segment, and the protocol makes "
                         f"the grep a precondition of the citation precisely so that a quotation "
                         f"cannot import that wording into this log. The routine is pinned by the "
                         f"SHA-256 above and its adaptation is described in the module docstring "
@@ -827,8 +827,8 @@ def control_c7_source_identity(logger):
     logger.info(f"C7 SUPERSEDED ROUTINES. {list(SUPERSEDED_ROUTINES)} are NOT carried at all: the "
                 f"FAIR harness supplies `setup_logging`, `compute_sha256` and `save_fair_csv`, "
                 f"the version relevé goes through `importlib.metadata.version()` in "
-                f"`log_environment`, and `get_md5` is superseded by SHA-256 outright. Preamble "
-                f"S4.2 pins a superseded routine by its digest and does not quote it.")
+                f"`log_environment`, and `get_md5` is superseded by SHA-256 outright. The protocol "
+                f"pins a superseded routine by its digest and does not quote it.")
     for name in SUPERSEDED_ROUTINES:
         segment = witness.get(name) or witness_plot.get(name)
         if segment is None:
@@ -931,7 +931,7 @@ def control_c1_operator_identity(logger):
 def worker_mod_A(trajectory_index, lambda_star):
     """
     ADAPTED from the delivered `worker_mod_A` (witness l.172-195). Three
-    changes, each forced by the preamble.
+    changes, each required by the protocol.
 
     (i) ENTROPY. The delivered worker received the s-th element of a
         `spawn(7 * 10000)` list; the trajectory is now keyed on the 128-bit
@@ -941,7 +941,7 @@ def worker_mod_A(trajectory_index, lambda_star):
         of resampling and the trajectory is the only i.i.d. unit of this design,
         so the worker returns the raw indicators rather than a rate.
     (iii) THE PAIRING DIAGNOSTIC IS COMPUTED HERE. The delivered script read the
-        naive reference arm from `protocol_21a`, a CSV of another campaign. This
+        naive reference arm from `a legacy campaign`, a CSV of another campaign. This
         worker recomputes it -- `generate_dgp` at phi = b on the SAME key -- so
         that control C6 can assert the cross-stream identity rather than assume
         it. Seven `generate_dgp` calls per trajectory is the price of byte
@@ -1045,7 +1045,7 @@ def operator_levels_at(m_float, m_units, units, threshold_value):
 # --- THE CAMPAIGN ---
 
 def read_round_trip(path, logger):
-    """Preamble S3: every CSV read destined for a comparison is `round_trip`."""
+    """The protocol: every CSV read destined for a comparison is `round_trip`."""
     if not path.exists():
         logger.error(f"Missing cross-stream input: {path}. R08 reads it as an INPUT and does not "
                      f"regenerate it; run the stream that owns it first.")
@@ -1057,7 +1057,7 @@ def run_campaign(logger, n_jobs, fast):
     """
     The whole measurement, in memory: the exact law, module A, module B and the
     five frames. `exp_R08_adverse_lattice_b.py` calls this again rather than
-    reloading a CSV, because preamble S7 forbids a disk round trip as a memory
+    reloading a CSV, because the protocol forbids a disk round trip as a memory
     bridge.
     """
     n_seeds = FAST_N_SEEDS if fast else N_SEEDS
@@ -1170,7 +1170,7 @@ def run_campaign(logger, n_jobs, fast):
                 f"the {len(B_GRID)} values of b of a paired difference measured on shared "
                 f"trajectories. S4bis's 4th corollary forbids reading it against the tolerance "
                 f"of one point: the sampling envelope of the maximum is built by resampling "
-                f"trajectories ({N_RESAMPLE_BOOT} replicates) and preamble S3 fixes what it is "
+                f"trajectories ({N_RESAMPLE_BOOT} replicates) and the protocol fixes what it is "
                 f"for -- a printed bound is crossed at D3 only when the 95% interval of the "
                 f"regenerated value EXCLUDES it. The null law of the same maximum under "
                 f"exchangeability of the two arms is built separately by sign-flip resampling "
@@ -1593,7 +1593,7 @@ def scalar_pairing_row(record_type, statistic, observed, tabulated, quantile, nu
 
 def deviation_degree(printed, regenerated, decimals):
     """
-    Preamble S3's classification, at v87's OWN printing precision. D3 is never
+    The protocol's classification, at v87's OWN printing precision. D3 is never
     assigned here: a qualitative falsification is a judgement the controls make,
     not an arithmetic one.
     """
@@ -1784,7 +1784,7 @@ def control_c3_bracketing(logger, campaign):
                     f"the streams were drawn and is {campaign['c3_trigger']:.4%}.")
     else:
         logger.error(f"C3 MEASURED LEG FIRED. The Monte-Carlo strict levels assign "
-                     f"{roles_measured} where the exact law assigns {roles_exact}. Preamble "
+                     f"{roles_measured} where the exact law assigns {roles_exact}. The protocol "
                      f"S4.10: no seed, no tolerance and no parameter is touched. The trigger "
                      f"probability of this leg was computed BEFORE the streams were drawn and is "
                      f"{campaign['c3_trigger']:.4%}, which is why it is a reported control and "
@@ -1850,13 +1850,13 @@ def control_c4_whiteness_symmetry(logger, campaign):
                 f"{'RESPECTED' if respected else 'NOT RESPECTED'}. The 95% bootstrap envelope of "
                 f"that MAXIMUM, over {int(bound.n_resample)} resamplings of the trajectory "
                 f"index, is [{float(bound.ci_low):.4f}, {float(bound.ci_high):.4f}] points; "
-                f"preamble S3 makes a printed bound crossed at D3 only when that interval "
+                f"the protocol makes a printed bound crossed at D3 only when that interval "
                 f"EXCLUDES the bound, and it {'DOES' if excluded else 'does not'}.")
     if not respected:
         logger.error(f"D3 CANDIDATE ON L311. The three-point bound the body states is exceeded "
                      f"by the regenerated campaign: {observed_points:.4f} points against "
                      f"{V87_WHITENESS_BOUND_POINTS:g}, with a 95% envelope of the maximum of "
-                     f"[{float(bound.ci_low):.4f}, {float(bound.ci_high):.4f}]. Preamble S3 "
+                     f"[{float(bound.ci_low):.4f}, {float(bound.ci_high):.4f}]. The protocol "
                      f"requires the run to stop reconciling: no parameter, tolerance, seed or "
                      f"bound is moved. The remaining artefacts are produced because the report "
                      f"needs them, and the classification is carried to docs/DEVIATIONS.md and "
@@ -1971,7 +1971,7 @@ def control_c6_cross_stream_identity(logger, campaign):
     if failures:
         logger.error(f"C6 FAILED on {len(failures)} cell(s): {failures}. This is a CROSS-STREAM "
                      f"PORT DEFECT -- two files that compile the same instructions on the same "
-                     f"entropy key returned different numbers -- and preamble S4.10 forbids "
+                     f"entropy key returned different numbers -- and the protocol forbids "
                      f"reconciling it by adjusting either side. It is characterised here and in "
                      f"docs/audits/AUDIT_R08.md.")
         sys.exit(1)
@@ -2054,7 +2054,7 @@ def report_residual_momentum_trace(logger, campaign):
 
 
 def report_deviation_table(logger, campaign, c4_result):
-    """The D0-D3 table, with the source CSV cell of every value (preamble S3)."""
+    """The D0-D3 table, with the source CSV cell of every value (the protocol)."""
     adverse = campaign['adverse_bias']
     null_law = campaign['null_law']
     star_units = campaign['star_units']
@@ -2133,12 +2133,12 @@ def main():
                 f"on its role and index alone and the chunk boundaries are fixed constants, so "
                 f"this value cannot move a number.")
     logger.info("THE STATUS OF THE SECOND DELIVERED LOG (prompt section 0bis). The R08 prompt "
-                "reports Priorite_21c_plot_adverse_lattice.py as reputed never to have been "
+                "reports the legacy plotting script as reputed never to have been "
                 "executed in this project, and asks for a verdict rather than an assumption. The "
                 "verdict is established by digest and by timestamp in docs/audits/AUDIT_R08.md "
                 "section 2 and is reproduced here: the two MD5 digests the delivered log prints "
                 "are the digests of the two delivered CSVs, the two SHA-256 digests "
-                "Priorite_21b's own log prints are the digests of the same two files, and the "
+                "the legacy implementation's own log prints are the digests of the same two files, and the "
                 "timestamps are consistent (21b ends 07:23:57, 21c runs 07:25:37 on the same "
                 "day). The log corresponds to the delivered script and to the delivered CSVs.")
 

@@ -6,16 +6,16 @@ R08 (b) -- FIGURE 8 AND THE CLAIMS OF v87 L241 AND L311
 Second stage of the R08 chain. `_a` runs the campaign and writes the five CSVs;
 this script renders `fig:adverse` and emits the LaTeX macros.
 
-WHY THE CAMPAIGN IS RE-RUN RATHER THAN RELOADED. Preamble S7 and SPECS 1.6
+WHY THE CAMPAIGN IS RE-RUN RATHER THAN RELOADED. the protocol and the protocol
 forbid using a CSV as a memory bridge, and the delivered
-`Priorite_21c_plot_adverse_lattice.py` did exactly that: it re-read
-`protocol_21c_adverse_bias.csv` and `protocol_21d_null_law_lattice.csv` with
+`the legacy plotting script` did exactly that: it re-read
+`a legacy CSV artifact` and `a legacy CSV artifact` with
 `pd.read_csv` and no `float_precision='round_trip'`, then plotted from disk.
 `run_campaign` is imported from `_a` and called again, and every value below is
 taken from the objects it returns in RAM. The campaign is deterministic, so the
 frames this script holds are the frames `_a` persisted; the digest
 reconciliation at the end is the check on that, not an assumption. The delivered
-script also certified its inputs with `get_md5`; the preamble imposes SHA-256
+script also certified its inputs with `get_md5`; the protocol requires SHA-256
 and `get_md5` is superseded outright.
 
 THE FIGURE, THREE PANELS.
@@ -49,7 +49,7 @@ NOTATION: see the module docstring of exp_R08_adverse_lattice_a.py.
 import sys
 from pathlib import Path
 
-# Determinism bootstrap, preamble S6's order. The module imported on the first
+# Determinism bootstrap, the protocol's order. The module imported on the first
 # line below posts the environment block through fair_env -- which imports only
 # os and sys -- BEFORE NumPy is loaded by anyone, then imports numpy and pandas
 # and disables the pandas C backends. Repeating the block here would be inert:
@@ -248,7 +248,7 @@ def render_figure(campaign, path, logger):
                 f"{len(units)} scanned lattice points as a step function on multiples of "
                 f"{campaign_module.LATTICE_UNIT}, the two bracketing levels marked, and the 5% "
                 f"rule kept here only. Cosmetic divergence from the submitted "
-                f"Fig26_Adverse_Bias_and_Lattice.png, declared per preamble S6: bold horizontally "
+                f"Fig26_Adverse_Bias_and_Lattice.png, declared per the protocol: bold horizontally "
                 f"centred panel titles prefixed (A)-(C). The removal of the 5% rule from panels "
                 f"(A) and (B) is NOT cosmetic and is recorded in docs/audits/AUDIT_R08.md.")
 
@@ -256,7 +256,7 @@ def render_figure(campaign, path, logger):
 def emit_macros(logger, path, campaign):
     """
     Thirteen macros, every value computed from an object in memory; no literal
-    is typed. Cardinal prefix \\REight per preamble S6's ordinal-in-English rule.
+    is typed. Cardinal prefix \\REight per the protocol's ordinal-in-English rule.
     """
     adverse = campaign['adverse_bias']
     null_law = campaign['null_law']
@@ -350,7 +350,7 @@ def emit_macros(logger, path, campaign):
     with open(path, "w") as handle:
         handle.write("\n".join(macros) + "\n")
     emitted = sum(1 for line in macros if line.startswith("\\newcommand"))
-    logger.info(f"Emitted {emitted} macros to {path.name}, prefix \\REight per preamble S6's "
+    logger.info(f"Emitted {emitted} macros to {path.name}, prefix \\REight per the protocol's "
                 f"ordinal-in-English rule; \\REighth appears nowhere. Every value is computed "
                 f"from an object in memory. Two of them -- \\REightFprInflate and "
                 f"\\REightPenaltyAtResidualMomentum -- are computed from R07 cells and the "
@@ -384,9 +384,9 @@ def main():
     t0 = time.time()
 
     logger.info("R08 (b) renders v87 Figure 8 (fig:adverse) and emits the macros of L241 and "
-                "L311. The campaign is RE-RUN in memory rather than reloaded from CSV: preamble "
-                "S7 forbids a disk round trip as a memory bridge, which is precisely what the "
-                "delivered Priorite_21c_plot_adverse_lattice.py did, and without "
+                "L311. The campaign is RE-RUN in memory rather than reloaded from CSV: the protocol "
+                "forbids a disk round trip as a memory bridge, which is precisely what the "
+                "legacy plotting script did, and without "
                 "float_precision='round_trip' at that. The figure and every macro below are "
                 "computed from the objects exp_R08_adverse_lattice_a.run_campaign returns.")
 
