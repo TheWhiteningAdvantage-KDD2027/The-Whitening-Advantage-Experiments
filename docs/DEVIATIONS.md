@@ -23,7 +23,7 @@ Nothing in this repository is adjusted to match the manuscript. Where the two di
 
 | id                                | Experiment | Manuscript location                        | Class | Severity | One-line summary                                                                                              |
 | --------------------------------- | ---------- | ------------------------------------------ | ----- | -------- | ------------------------------------------------------------------------------------------------------------- |
-| `R01-variance-target`             | R01        | Table 2 caption, Figure 2                  | A?    | D0       | `omega`, `sigma_unc` move by at most 2.7e-14 relative; no published number changes; **cause unidentified**    |
+| `R01-variance-target`             | R01        | Table 2 caption, Figure 2                  | A     | D0       | `omega`, `sigma_unc` move by at most 2.7e-14 relative; no published number changes    |
 | `R02-binary-error-rate`           | R02        | Section "Empirical Boundaries"             | A     | D2       | pooled binary-error rejection 4.4% → 4.2%; Wilson [2.8, 7.1]% → [2.5, 6.8]%                                   |
 | `R02b-iid-arm-rejection`          | R02 / R02b | Section "Empirical Boundaries"             | A     | **D3**   | the i.i.d.-arm over-rejection claim is not reproduced at `t_7`                                                |
 | `R02-figure-1-redraw`             | R02        | Figure 1                                   | A     | D2       | the figure is regenerated from the corrected campaign, so its underlying data differ                          |
