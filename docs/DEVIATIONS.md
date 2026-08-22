@@ -554,3 +554,37 @@ This document records all numerical deviations between the deterministic complia
 
 **Status:** CERTIFIED — D3 and D2 deviations documented. Dating description claim falsified; all other qualitative claims preserved. Manuscript narrative requires revision to reflect the substitution mechanism and the counterfactual arm results.
 
+---
+
+## R17 — Econometric Baseline and L341
+
+**Deviation Class: D2**
+
+**Affected Metrics:** Persistence median at n_warmup = 250 (0.62 -> 0.63), FPR_Eco at n_warmup = 250 (9.5% -> 10.5%), FPR_Eco at n_warmup = 500 (3.0% -> 7.0%), sign FPR envelope (3-8% -> 10-11%).
+
+**Root Cause:** The entropy migration (SPECS 1.2) redraws both the SPECS 1.10-compliant arm and the legacy-QMLE attribution arm from injected 128-bit SeedSequence keys. This produces different Monte-Carlo realizations from the submitted campaign, which employed bare integer seeds. The legacy arm explicitly certifies NO v87 value; its purpose is to isolate the SPECS 1.10 displacement at a common draw.
+
+**Mechanism:** In the delivered script, bare integer seeds (`s*77`, `s*77+99`, etc.) were used to initialize the random number generators. The compliant pipeline replaces these with 128-bit SeedSequence keys derived from semantic coordinates (role and index). Both simulators draw the whole innovation vector BEFORE the variance recursion, ensuring `sigma2[t] > 0` always and making `sign(eps_t) = sign(z_t)` exactly. The monitored binary stream depends on `(key, nu, n)` and on NO process parameter. Along the `n_warmup` axis, the evaluation windows overlap strongly but are NOT identical, carrying four genuine draws. This axis is where L341 makes its claims.
+
+**Quantitative Impact:**
+- True persistence: Manuscript value 0.85 vs compliant 0.85 (D0, exact match at printed precision)
+- Median persistence at n_warmup = 250: Manuscript value 0.62 vs compliant 0.63 (D2, shifts at printed precision)
+- FPR_Eco at n_warmup = 250: Manuscript value 9.5% vs compliant 10.5% (D2, shifts at printed precision)
+- FPR_Eco at n_warmup = 500: Manuscript value 3.0% vs compliant 7.0% (D2, shifts at printed precision)
+- Sign FPR envelope: Manuscript range 3-8% vs compliant range 10-11% (D2, both bounds shift at printed precision)
+- Non-convergence maximum: Manuscript prints none vs compliant 1.5% (not a manuscript value, no D-class)
+- QMLE option delta: SPECS minus legacy persistence displacement -0.0001 (not a manuscript value, no D-class)
+
+**Published Precision Impact:** PARTIAL. Four of the five L341 numerals shift at their printed precision. The true persistence 0.85 is D0. The remaining four are D2.
+
+**Qualitative Claim Impact:** NONE. All three qualitative claims of L341 are corroborated despite the D2 deviations:
+- The regenerated pooled median 0.63 is well below the true persistence 0.85, corroborating "the estimated persistence collapses to a median alpha_hat + beta_hat".
+- FPR_Eco falls from 10.5% at n=250 to 7.0% at n=500, corroborating "the level is restored from n = 500 onward". The Wilson 95% CI at n=500 [4.2%, 11.4%] contains the nominal 5% level.
+- The WLS slope of sign FPR on log(n_warmup) is 0.0021 with 95% paired-bootstrap interval [-0.0153, 0.0195], which covers zero, corroborating "the sign pipeline is warm-up-independent in practice".
+
+**Verification:** All R17 tests pass. The three-term decomposition of the persistence gap against v87's 0.62 decomposes into: (i) definition (median of sum vs sum of marginal medians): 0.04287, (ii) optimiser options (SPECS 1.10 vs legacy): -0.00014, (iii) 128-bit redraw: 0.00589. Test `test_R17_the_four_numerals_of_L341_do_not_reproduce_at_their_printed_precision` asserts the D2 deviations explicitly. Test `test_R17_the_persistence_collapse_of_L341_reproduces` corroborates the collapse claim. Test `test_R17_the_false_alarm_restoration_of_L341_reproduces` corroborates the restoration claim. Test `test_R17_the_sign_arm_is_warm_up_independent_by_an_exact_paired_test` corroborates the warm-up independence claim.
+
+**Candidate Files:** See `docs/camera_ready_candidates/R17_v87_econometric_baseline.md` for LaTeX macro diff blocks.
+
+**Status:** CERTIFIED — D2 deviations documented. All qualitative claims of L341 preserved. No manuscript narrative changes required.
+
