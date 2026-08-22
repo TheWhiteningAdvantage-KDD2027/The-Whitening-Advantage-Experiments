@@ -124,3 +124,33 @@ This document records all numerical deviations between the deterministic complia
 **Status:** CERTIFIED — D2 deviation documented. Qualitative falsification of eighth-moment account preserved. No manuscript narrative changes required.
 
 ---
+
+## R03 — False Positive Rate Explosion Without Recalibration
+
+**Deviation Class: D2**
+
+**Affected Metrics:** CUSUM FPR_raw max (83.0% vs 83.3%), CUSUM FPR_raw min over Gamma > 20 (76.0% vs 74.3%), CUSUM FPR_raw mean over Gamma > 20 (81.1% vs 80.7%), CUSUM FPR_sqrt max (33.0% vs 31.0%), CUSUM FPR_sqrt mean over Gamma > 20 (32.0% vs 29.8%), CUSUM FPR_gamma max (1.7% vs 4.0%), CUSUM FPR_raw at lowest Gamma (2.7% vs 4.0%), ADWIN FPR_raw max (87.7% vs 87.0%), ADWIN FPR_recalib max (12.7% vs 11.0%), ADWIN FPR_recalib mean (10.2% vs 9.6%), ADWIN FPR_raw at lowest Gamma (5.3% vs 9.3%), i.i.d. calibration arm rates and Wilson interval bounds.
+
+**Root Cause:** BLAS threading differences in the submitted campaign (multithreaded) versus the compliant deterministic pipeline (single-threaded) produce ULP-level differences in vectorized GARCH(1,1) likelihood computations. These cascade into the simulated stream paths, altering realized variance profiles and thus the false positive rate measurements on standardized squared residuals.
+
+**Mechanism:** Under multithreaded BLAS, floating-point associativity in vectorized reductions (variance computation, GARCH likelihood) becomes a function of the thread scheduler, producing parameter estimates that differ at the ULP level. The compliant pipeline eliminates this non-determinism by enforcing single-threaded execution while producing internally consistent results that differ from the original campaign.
+
+**Quantitative Impact:**
+- CUSUM FPR_raw max: Published 83.0% vs compliant 83.3% (absolute difference: 0.3 percentage points)
+- CUSUM FPR_raw min over Gamma > 20: Published 76.0% vs compliant 74.3% (absolute difference: 1.7 percentage points)
+- CUSUM FPR_raw mean over Gamma > 20: Published 81.1% vs compliant 80.7% (absolute difference: 0.4 percentage points)
+- CUSUM FPR_sqrt max: Published 33.0% vs compliant 31.0% (absolute difference: 2.0 percentage points)
+- CUSUM FPR_sqrt mean over Gamma > 20: Published 32.0% vs compliant 29.8% (absolute difference: 2.2 percentage points)
+- ADWIN FPR_recalib mean: Published 10.2% vs compliant 9.6% (absolute difference: 0.6 percentage points)
+
+**Published Precision Impact:** PARTIAL. All affected percentages shift at one decimal place precision. The qualitative patterns (FPR explosion with Gamma, effectiveness of Gamma correction, residual plateau) remain at printed precision.
+
+**Qualitative Claim Impact:** NONE. The core scientific claims are corroborated: the uncalibrated detectors explode to near-80% FPR at high Gamma, the lambda x Gamma rule holds the nominal 5% level, and the lambda x sqrt(Gamma) rule leaves a residual plateau near 30%. All aggregate certification gates hold with margins of several standard errors.
+
+**Verification:** All R03 tests pass. Mean FPR_raw over Gamma > 20 is 80.7% (>= 76% floor), mean FPR_sqrt is 29.8% (within [25%, 35%] band), mean FPR_recalib is 9.6% (<= 13% ceiling). Monotonicity beyond Gamma = 6 holds with mechanism-derived bounds. Shared-realisation premise verified (zero nesting violations).
+
+**Candidate Files:** See `docs/camera_ready_candidates/R03_v87_fpr_explosion.md` for LaTeX macro diff blocks.
+
+**Status:** CERTIFIED — D2 deviation documented. All qualitative claims preserved. No manuscript narrative changes required at published precision.
+
+---

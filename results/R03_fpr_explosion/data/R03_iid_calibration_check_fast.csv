@@ -1,0 +1,3 @@
+detector,Gamma,n_streams,alarms,FPR,wilson_low,wilson_high,contains_nominal
+StrictCUSUM,1,10,0,0,0,0.2775327998628892,True
+ADWIN,1,10,2,0.20000000000000001,0.05668215145437519,0.50983752846335828,False
