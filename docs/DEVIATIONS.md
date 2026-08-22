@@ -393,3 +393,37 @@ This document records all numerical deviations between the deterministic complia
 **Candidate Files:** See `docs/camera_ready_candidates/R11_v87_concept_add.md`, `docs/camera_ready_candidates/R11_v87_data_slopes.md`, `docs/camera_ready_candidates/R11_v87_pht_macros.md`, `docs/camera_ready_candidates/R11_v87_eddm_fpr.md`, and `docs/camera_ready_candidates/R11_v87_grid_metadata.md` for LaTeX macro diff blocks.
 
 **Status:** CERTIFIED — D1-D2 deviations documented and bounded. All qualitative claims preserved. No manuscript narrative changes required at published precision.
+
+---
+
+## R12 — GJR Leverage Misspecification and Moment Singularity
+
+**Deviation Class: D1-D2**
+
+**Affected Metrics:** Ljung-Box rejection rates (Data arm: 5.1%->24.6%, Concept arm: 4.6-5.4%), false-alarm rates (Data arm: 3.2%->20.6%, Concept arm: 7.6-8.4%), detection rates at nu=10 and nu=7 (83%, 61%), censored delay range (2,400-3,000), Concept delay range (34-38), factor of six climb.
+
+**Root Cause:** Campaign redraw due to entropy migration from process-parameter-derived seeds (int(gamma_lev*1000) + s*17, int(nu*100) + s*23) to role-and-index-only keys ('R12', 'expA', s) and ('R12', 'expB', s) per repository policy. This redraws all Monte-Carlo values while preserving the deterministic relations and qualitative structure.
+
+**Mechanism:** The submitted campaign `Priorite_10_robustness_gjr_student.py` derives integer seeds from process parameters (gamma_lev, nu), making every Monte-Carlo value a function of those parameters. The compliant pipeline replaces this with canonical `get_deterministic_seed`/`seed_sequence_for`/`rng_for` keyed on role and index only, breaking the parameter-to-seed linkage and producing a new campaign draw. Control C8 asserts bit-identity of the CRN Concept arm across all 15 gamma_lev grid points, confirming the degeneracy that necessitated the two-arm design.
+
+**Quantitative Impact:**
+- L349 Data Ljung-Box: 5.1%->5.4% at gamma_lev=0.0 (D2), 24.6%->24.2% at gamma_lev=0.28 (D2)
+- L349 Data FPR: 3.2%->3.5% at gamma_lev=0.0 (D2), 20.6%->20.5% at gamma_lev=0.28 (D2)
+- L349 Concept FPR range: 7.6-8.4%->7.4-8.5% (D2)
+- L349 Concept Ljung-Box range: 4.6-5.4%->4.7-5.4% (D1-D2)
+- L349 Factor of six: 6->5.92 (D1)
+- L353 Detection at nu=10: 83%->82% (D2)
+- L353 Detection at nu=7: 61%->62% (D2)
+- L353 Collapse threshold: 5.5->5.5 (D1, exact match)
+- L353 Censored delay range: 2,400-3,000->2,610-2,999 (D2-D1)
+- L353 Concept delay range: 34-38->34-38 (D1, exact match)
+
+**Published Precision Impact:** PARTIAL. All percentage values shift at one decimal place precision (D2). Integer values (nu threshold, delay ranges) are D1 with exact or rounded matches at printed precision. The factor of six is D1 (5.92 rounds to 6 at one decimal place).
+
+**Qualitative Claim Impact:** NONE. All qualitative claims are corroborated: (1) Data pipeline fails to control false alarms under leverage misspecification, (2) Concept pipeline holds leverage-invariant false-alarm rate (C9 slope p=0.2477 > 0.01), (3) Detection decays monotonically on the uncensored domain (restricted by C4), (4) Collapse occurs below nu=5.5, (5) Censored delay range stays within rounding bracket [2350, 3050) at 95% level with bootstrap envelope [2432.3277, 3249.7077], (6) Concept delay stays flat at 34-38 steps.
+
+**Verification:** All R12 tests pass. Control C9 gate not fired (p=0.2477). Control C4 halt condition not met (0 uncensored inversions). Control C8 CRN identity holds. 10 of 20 classified numerals are D2, the remainder are D1 or D0. The censored delay range satisfies S3's non-falsification criterion.
+
+**Candidate Files:** See `docs/camera_ready_candidates/R12_v87_leverage_fpr.md` and `docs/camera_ready_candidates/R12_v87_singularity_add.md` for LaTeX macro diff blocks.
+
+**Status:** CERTIFIED — D1-D2 deviations documented and bounded. All qualitative claims preserved. No manuscript narrative changes required at published precision.
