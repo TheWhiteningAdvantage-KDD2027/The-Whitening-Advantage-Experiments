@@ -427,3 +427,33 @@ This document records all numerical deviations between the deterministic complia
 **Candidate Files:** See `docs/camera_ready_candidates/R12_v87_leverage_fpr.md` and `docs/camera_ready_candidates/R12_v87_singularity_add.md` for LaTeX macro diff blocks.
 
 **Status:** CERTIFIED — D1-D2 deviations documented and bounded. All qualitative claims preserved. No manuscript narrative changes required at published precision.
+
+---
+
+## R14 — Crypto iso-FPR Efficiency Reversal
+
+**Deviation Class: D0-D2**
+
+**Affected Metrics:** Synth_BTC ADD ratio statistics (minimum, maximum, mean). All other published numerals (BTC/ETH diagnostics, Real_BTC ratios, onset counts, iso-FPR percentages) are D0.
+
+**Root Cause:** Campaign redraw due to entropy migration from hardcoded integer seeds (100, 200, 201, 300) to role-and-index-only keys ('R14', 'dither'), ('R14', 'synth', 'BTC'), ('R14', 'synth', 'ETH'), ('R14', 'qmle') per repository policy. The migrated arm redraws the synthetic GARCH stream paths, altering the ADD ratio trajectory for Synth_BTC. The witness arm (legacy seeds) reproduces v87 values exactly (D0), confirming the deviation arises solely from the entropy source change.
+
+**Mechanism:** The Synth_BTC ADD ratios are computed as ADD_Concept / ADD_Eco across a grid of drift magnitudes. Under the migrated entropy scheme, the synthetic stream generator produces different GARCH(1,1) paths with t(30) innovations, changing the realized detection delays and thus the ratio values. The Real_BTC and Real_ETH arms use observed data with fixed GARCH calibrations, so their ratios are invariant (D0). Control C2 verifies that the main arm matches the witness on all Real sources.
+
+**Quantitative Impact:**
+- Synth_BTC ratio minimum: v87 prints 0.98, witness 0.9818435754189944 (D0, rounds to 0.98), migrated 0.954491 (D2, rounds to 0.95)
+- Synth_BTC ratio maximum: v87 prints 1.14, witness 1.1426127128069126 (D0, rounds to 1.14), migrated 1.238414 (D2, rounds to 1.24)
+- Synth_BTC ratio mean: v87 prints 1.06, witness 1.0603026678597007 (D0, rounds to 1.06), migrated 1.041041514153539 (D2, rounds to 1.04)
+- All Real_BTC ratios (c=0.35: 0.74, c=1.5: 1.01, mean: 0.87) are D0
+- BTC diagnostics (nu_hat=2.78, FPR=4.7%, onsets=106) are D0
+- ETH diagnostics (nu_hat=3.25, lb_pvalue=0.019, onsets=72) are D0
+
+**Published Precision Impact:** PARTIAL. Three Synth_BTC ratio numerals shift at two-decimal-place precision (D2). All other published values are D0.
+
+**Qualitative Claim Impact:** NONE. The efficiency reversal claim of L345 is corroborated: the recentred sign filter (Concept) leads across the reliable range on Real_BTC (mean ratio 0.87 < 1), and the synthetic control inverts this ordering (mean ratio 1.04 > 1, with min=0.95 and max=1.24 indicating inversion). The statement that "the synthetic control does not recover the light-tailed ordering at its 72 onsets" is preserved: Synth_ETH mean ratio is 0.54 (well below 1).
+
+**Verification:** All R14 tests pass. Control C2 confirms Real_BTC and Real_ETH match v87 at printed precision. The Synth_BTC deviation is isolated to the migrated entropy source. Wilson 95% CIs on all ratio means cover the nominal expectation under whiteness.
+
+**Candidate Files:** See `docs/camera_ready_candidates/R14_v87_crypto_isofpr_ratios.md` for LaTeX macro diff blocks.
+
+**Status:** CERTIFIED — D2 deviation documented and bounded to Synth_BTC ratio statistics. All qualitative claims preserved. No manuscript narrative changes required.
