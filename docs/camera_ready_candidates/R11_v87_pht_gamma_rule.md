@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R11_v87_pht_gamma_rule.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** none
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — the PHT's `λ × Γ` rule does not hold the nominal level, it drifts across it
 
 | Field               | Value                                                                                     |

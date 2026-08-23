@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R13_v87_frozen_null_scope.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** none
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — "a bootstrap null freezing the same volatility path" describes one arm of one axis
 
 | Field               | Value                                                                                            |

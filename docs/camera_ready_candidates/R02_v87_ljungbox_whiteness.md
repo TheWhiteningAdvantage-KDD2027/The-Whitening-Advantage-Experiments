@@ -1,3 +1,9 @@
+# Camera-Ready Candidate: R02_v87_ljungbox_whiteness.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
 STATUS: PARKED — DO NOT APPLY
 
 ## R02 Ljung-Box Whiteness Macro Updates

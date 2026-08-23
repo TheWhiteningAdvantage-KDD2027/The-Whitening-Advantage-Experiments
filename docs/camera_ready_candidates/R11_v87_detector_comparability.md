@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R11_v87_detector_comparability.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** none
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — the four delays of Figure 15B were measured under two onset conventions
 
 | Field               | Value                                                                                     |

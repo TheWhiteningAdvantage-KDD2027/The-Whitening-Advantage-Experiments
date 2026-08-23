@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R13_v87_operating_points.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** none
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — L331 prints three numerals without naming their calibration, and calls a different calibration "the matched operating point"
 
 | Field               | Value                                                                                            |

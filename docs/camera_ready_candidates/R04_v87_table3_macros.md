@@ -1,3 +1,9 @@
+# Camera-Ready Candidate: R04_v87_table3_macros.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
 # R04 — Iso-FPR Race Table 3 Macro Definitions
 
 STATUS: PARKED — DO NOT APPLY
@@ -12,8 +18,8 @@ The submitted campaign's Gamma grid collapsed to a single point (Gamma = 1.1053 
 
 ### Core Protocol Parameters
 
-~~~~~~~~~~~latex
-% SEARCH
+<<< SEARCH
+~~~~~~~~~latex
 \newcommand{\RFourNullStreams}{2000}
 \newcommand{\RFourBisectionIters}{15}
 \newcommand{\RFourBisectionTol}{0.003}
@@ -21,7 +27,9 @@ The submitted campaign's Gamma grid collapsed to a single point (Gamma = 1.1053 
 \newcommand{\RFourGammaRace}{11.58}
 \newcommand{\RFourStreamLength}{5000}
 \newcommand{\RFourWarmup}{500}
-% REPLACE WITH
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
 \newcommand{\RFourNullStreams}{2000}
 \newcommand{\RFourBisectionIters}{15}
 \newcommand{\RFourBisectionTol}{0.003}
@@ -29,49 +37,55 @@ The submitted campaign's Gamma grid collapsed to a single point (Gamma = 1.1053 
 \newcommand{\RFourGammaRace}{11.58}
 \newcommand{\RFourStreamLength}{5000}
 \newcommand{\RFourWarmup}{500}
-% END OF BLOCK
-~~~~~~~~~~~
+~~~~~~~~~
+>>> END OF BLOCK
 
 ### Slowdown Range (D3 Falsification)
 
-~~~~~~~~~~~latex
-% SEARCH
+<<< SEARCH
+~~~~~~~~~latex
 \newcommand{\RFourRecalibSlowdownMin}{2}
 \newcommand{\RFourRecalibSlowdownMax}{19}
-% REPLACE WITH
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
 \newcommand{\RFourRecalibSlowdownMin}{7}
 \newcommand{\RFourRecalibSlowdownMax}{81}
-% END OF BLOCK
-~~~~~~~~~~~
+~~~~~~~~~
+>>> END OF BLOCK
 
 ### Blind Zone Parameters (Confirmed)
 
-~~~~~~~~~~~latex
-% SEARCH
+<<< SEARCH
+~~~~~~~~~latex
 \newcommand{\RFourDeadBand}{0.125}
 \newcommand{\RFourKappaZ}{3.231}
 \newcommand{\RFourBlindZoneCStar}{0.43}
-% REPLACE WITH
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
 \newcommand{\RFourDeadBand}{0.125}
 \newcommand{\RFourKappaZ}{3.231}
 \newcommand{\RFourBlindZoneCStar}{0.43}
-% END OF BLOCK
-~~~~~~~~~~~
+~~~~~~~~~
+>>> END OF BLOCK
 
 ### Parametric Gain (D2 Deviation)
 
-~~~~~~~~~~~latex
-% SEARCH
+<<< SEARCH
+~~~~~~~~~latex
 \newcommand{\RFourParametricGainAtCOne}{1.66$\times$}
-% REPLACE WITH
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
 \newcommand{\RFourParametricGainAtCOne}{1.38$\times$}
-% END OF BLOCK
-~~~~~~~~~~~
+~~~~~~~~~
+>>> END OF BLOCK
 
 ### Crossing Points
 
-~~~~~~~~~~~latex
-% SEARCH
+<<< SEARCH
+~~~~~~~~~latex
 \newcommand{\RFourNuStarMeasured}{4.9}
 \newcommand{\RFourNuStarLower}{4.0}
 \newcommand{\RFourNuStarUpper}{5.0}
@@ -79,7 +93,9 @@ The submitted campaign's Gamma grid collapsed to a single point (Gamma = 1.1053 
 \newcommand{\RFourNuStarOracleLower}{4.0}
 \newcommand{\RFourNuStarOracleUpper}{5.0}
 \newcommand{\RFourNuStarAnalytic}{4.7}
-% REPLACE WITH
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
 \newcommand{\RFourNuStarMeasured}{8.5}
 \newcommand{\RFourNuStarLower}{7.0}
 \newcommand{\RFourNuStarUpper}{30.0}
@@ -87,73 +103,86 @@ The submitted campaign's Gamma grid collapsed to a single point (Gamma = 1.1053 
 \newcommand{\RFourNuStarOracleLower}{4.0}
 \newcommand{\RFourNuStarOracleUpper}{4.5}
 \newcommand{\RFourNuStarAnalytic}{4.7}
-% END OF BLOCK
-~~~~~~~~~~~
+~~~~~~~~~
+>>> END OF BLOCK
 
 ### Estimation Cost (D3 Falsification)
 
-~~~~~~~~~~~latex
-% SEARCH
+<<< SEARCH
+~~~~~~~~~latex
 \newcommand{\RFourEstimationCostDof}{0.3}
-% REPLACE WITH
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
 \newcommand{\RFourEstimationCostDof}{4.1}
-% END OF BLOCK
-~~~~~~~~~~~
+~~~~~~~~~
+>>> END OF BLOCK
 
 ### Concept Threshold Band (D2 Deviation)
 
-~~~~~~~~~~~latex
-% SEARCH
+<<< SEARCH
+~~~~~~~~~latex
 \newcommand{\RFourConceptLambdaMin}{10.6}
 \newcommand{\RFourConceptLambdaMax}{10.7}
-% REPLACE WITH
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
 \newcommand{\RFourConceptLambdaMin}{10.5}
 \newcommand{\RFourConceptLambdaMax}{10.7}
-% END OF BLOCK
-~~~~~~~~~~~
+~~~~~~~~~
+>>> END OF BLOCK
 
 ### Ceiling and Max Ratio (Confirmed)
 
-~~~~~~~~~~~latex
-% SEARCH
+<<< SEARCH
+~~~~~~~~~latex
 \newcommand{\RFourGaussianCeiling}{1.57}
 \newcommand{\RFourRatioMax}{1.20}
-% REPLACE WITH
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
 \newcommand{\RFourGaussianCeiling}{1.57}
 \newcommand{\RFourRatioMax}{1.20}
-% END OF BLOCK
-~~~~~~~~~~~
+~~~~~~~~~
+>>> END OF BLOCK
 
 ### Family Control FPRs (D3 Falsification)
 
-~~~~~~~~~~~latex
-% SEARCH
+<<< SEARCH
+~~~~~~~~~latex
 \newcommand{\RFourFamilyCusumFpr}{5\%}
 \newcommand{\RFourFamilyAdwinFpr}{5\%}
-% REPLACE WITH
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
 \newcommand{\RFourFamilyCusumFpr}{36.1\%}
 \newcommand{\RFourFamilyAdwinFpr}{10.7\%}
-% END OF BLOCK
-~~~~~~~~~~~
+~~~~~~~~~
+>>> END OF BLOCK
 
 ### Constant Threshold Control (D2 Deviation)
 
-~~~~~~~~~~~latex
-% SEARCH
+<<< SEARCH
+~~~~~~~~~latex
 \newcommand{\RFourConstantThresholdFpr}{5\%}
 \newcommand{\RFourBernoulliFpr}{5\%}
-% REPLACE WITH
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
 \newcommand{\RFourConstantThresholdFpr}{7.7\%}
 \newcommand{\RFourBernoulliFpr}{7.9\%}
-% END OF BLOCK
-~~~~~~~~~~~
+~~~~~~~~~
+>>> END OF BLOCK
 
 ### ADWIN Attainable FPR
 
-~~~~~~~~~~~latex
-% SEARCH
+<<< SEARCH
+~~~~~~~~~latex
 % (Not present in manuscript)
-% REPLACE WITH
+\newcommand{\placeholder}{}
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
 \newcommand{\RFourAdwinAttainableFpr}{0.7\%}
-% END OF BLOCK
-~~~~~~~~~~~
+~~~~~~~~~
+>>> END OF BLOCK

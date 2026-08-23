@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R13_v87_covid_delay_numerals.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** none
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — the phase false-alarm probability beside the 3-day detection moves from 1.3 % to 1.1 %
 
 | Field               | Value                                                                                            |

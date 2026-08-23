@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R11_v87_figure11_caption.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** none
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — the Figure 11 caption states one panel's parameters for both
 
 | Field               | Value                                                                                     |

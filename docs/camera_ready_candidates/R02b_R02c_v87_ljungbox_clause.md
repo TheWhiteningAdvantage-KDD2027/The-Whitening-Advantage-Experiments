@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R02b_R02c_v87_ljungbox_clause.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** none
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — Ljung-Box clause, Section "Empirical Boundaries"
 
 | Field               | Value                                                         |
