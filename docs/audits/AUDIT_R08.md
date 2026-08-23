@@ -6,19 +6,22 @@ This audit report documents the reproducibility verification of stream R08 (slug
 
 ## 1. Deviation table (D0-D3)
 
-| quantity | manuscript value | regenerated value | severity | source CSV cell | log line |
-|----------|------------------|-------------------|----------|-----------------|----------|
-| Fig. 8 (B) FPR collapses to | 0.0086 | 0.0095 | D2 | R08_adverse_bias.csv :: fpr_biased, b=0.15 | L171 |
-| Fig. 8 (B) / L311 FPR inflates to | 0.208 | 0.21 | D2 | R07_estmean_lb_fpr.csv :: fpr_concept, NAIVE, phi=0.15 | L172 |
-| L241 level above nominal (lambda=11.2) | 0.0503 | 0.050815 | D2 | R08_null_law_lattice.csv :: P_exceed_strict, lambda=11.2 | L173 |
-| L241 level below nominal (lambda=11.4) | 0.0429 | 0.04323 | D2 | R08_null_law_lattice.csv :: P_exceed_strict, lambda=11.4 | L174 |
-| L241 lambda* | 11.4 | 11.4 | D0 | R08_null_law_lattice.csv :: bracket_role=below_nominal | L175 |
-| L311 whiteness gap bound (points) | 3.0 | 2.21 | D2 | R08_pairing_diagnostic.csv :: whiteness_bound | L176 |
-| L311 penalty at residual momentum 0.02 (points) | 1.1 | 1.2799999999999998 | D2 | R07_estmean_lb_fpr.csv :: fpr_concept, NAIVE, phi in (0, 0.02) | L177 |
-| L311 whiteness range, low end | 0.05 | 0.0478 | D1 | R08_adverse_bias.csv :: min over both arms of the rejection rate | L178 |
-| L311 whiteness range, high end | 1.0 | 0.9984 | D1 | R08_adverse_bias.csv :: max over both arms of the rejection rate | L179 |
+| quantity                                        | manuscript value | regenerated value  | severity | source CSV cell                                                  | log line |
+| ----------------------------------------------- | ---------------- | ------------------ | -------- | ---------------------------------------------------------------- | -------- |
+| Fig. 8 (B) FPR collapses to                     | 0.0086           | 0.0095             | D2       | R08_adverse_bias.csv :: fpr_biased, b=0.15                       | L171     |
+| Fig. 8 (B) / L311 FPR inflates to               | 0.208            | 0.21               | D2       | R07_estmean_lb_fpr.csv :: fpr_concept, NAIVE, phi=0.15           | L172     |
+| L241 level above nominal (lambda=11.2)          | 0.0503           | 0.050815           | D3       | R08_null_law_lattice.csv :: P_exceed_strict, lambda=11.2         | L173     |
+| L241 level below nominal (lambda=11.4)          | 0.0429           | 0.04323            | D2       | R08_null_law_lattice.csv :: P_exceed_strict, lambda=11.4         | L174     |
+| L241 lambda*                                    | 11.4             | 11.4               | D0       | R08_null_law_lattice.csv :: bracket_role=below_nominal           | L175     |
+| L311 whiteness gap bound (points)               | 3.0              | 2.21               | D2       | R08_pairing_diagnostic.csv :: whiteness_bound                    | L176     |
+| L311 penalty at residual momentum 0.02 (points) | 1.1              | 1.2799999999999998 | D2       | R07_estmean_lb_fpr.csv :: fpr_concept, NAIVE, phi in (0, 0.02)   | L177     |
+| L311 whiteness range, low end                   | 0.05             | 0.0478             | D1       | R08_adverse_bias.csv :: min over both arms of the rejection rate | L178     |
+| L311 whiteness range, high end                  | 1.0              | 0.9984             | D1       | R08_adverse_bias.csv :: max over both arms of the rejection rate | L179     |
 
-Count by severity: D0: 1, D1: 2, D2: 6, D3: 0.
+Count by severity: D0: 1, D1: 2, D2: 5, D3: 1.
+
+**Falsified qualitative claim (L241):** The manuscript states it selects "the nearest attainable level at or below nominal", and its own footnote makes the implemented test the weak comparison operator. The weak level at the selected threshold (11.4) is above the nominal level (0.050815 > 0.05).
+**Scope:** The null law itself remains exact and free of nuisance parameters; what is contradicted is the selection rule and the level reported, not the exactness result.
 
 ---
 
