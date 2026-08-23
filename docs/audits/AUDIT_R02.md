@@ -1,36 +1,65 @@
-# Audit Report: R02 Ljung-Box Whiteness on Multi-ETF GARCH Streams
+# Audit Report: R02 — Ljung-Box Whiteness on Multi-ETF GARCH Streams
 
-## Theoretical Anchor
+## 1. Deviation table (D0-D3)
 
-R02 establishes the whitening advantage on 360 independent stationary GARCH(1,1) streams (30 seeds × 4 ETF calibrations × 3 clustering levels, n=8000) with standardized t7 innovations. The theoretical target is to verify that the sign-prediction task on binary classification errors produces a serially uncorrelated stream under H0, while squared GARCH innovations exhibit detectable autocorrelation due to volatility clustering. The framework leverages Ljung-Box Q-tests at lag 20 to quantify serial dependence. Three regimes are tested: IID (Γ=1), Calibration A (Γ∈[4,8]), and Calibration B (Γ∈[32,110]), where Γ is the exact whitening penalty from the GARCH(1,1) variance inflation formula. The null hypothesis posits that binary errors from an online Hoeffding Tree classifier on the sign task form a martingale difference sequence, regardless of the heavy-tailed, heteroscedastic data generation process.
+NOT RECOVERABLE FROM THE LOG.
 
-## Empirical Methodology
+## 2. Controls
 
-The pipeline enforces strict S7 determinism protocol: single-threaded BLAS via OMP_NUM_THREADS=1, MKL_NUM_THREADS=1, OPENBLAS_NUM_THREADS=1, PYTHONHASHSEED=42, MKL_CBWR=COMPATIBLE. Stream generation uses 128-bit SeedSequence entropy with deterministic seed derivation per (regime, ETF, seed) triple, ensuring 360 unique seeds. GARCH(1,1) parameters are set per ETF calibration (SPY, PFF, VNQ, BWX) with target variance 0.04. The online Hoeffding Tree classifier trains on lagged features (ε_t-1, ε_t-2, |ε_t-1|, rolling std(ε) over 20 steps) to predict the sign of ε_t. Ljung-Box p-values are computed for both squared innovations (ε_t^2) and binary errors (e_t^bin) at lag 20 with α=0.05. Independence diagnostics apply Bonferroni correction (α/6) to 18 Pearson correlation tests across ETF pairs per regime, validating cross-stream independence. Wilson 95% confidence intervals use z=1.959963984540054.
+NOT RECOVERABLE FROM THE LOG.
 
-## Metric Concordance Table with Wilson 95% CIs
+## 3. Test suite
 
-| Metric | Manuscript Value | Compliant Pipeline | Deviation Class | Wilson 95% CI (Compliant) | Notes |
-|--------|-----------------|-------------------|----------------|----------------------------|-------|
-| Streams (total) | 360 | 360 | D0 | [360, 360] | Exact match |
-| Seeds | 30 | 30 | D0 | [30, 30] | Exact match |
-| ETF Calibrations | 4 | 4 | D0 | [4, 4] | Exact match |
-| Regimes | 3 | 3 | D0 | [3, 3] | Exact match |
-| Horizon (n) | 8000 | 8000 | D0 | [8000, 8000] | Exact match |
-| LB Lags | 20 | 20 | D0 | [20, 20] | Exact match |
-| IID Data Rejection Rate | 9.2% | 5.8% | D2 | [3.3%, 8.3%] | Wilson CI on 22/120 rejections |
-| Clustered A Data Rejection Rate | 100.0% | 100.0% | D0 | [100%, 100%] | All 120 streams reject |
-| Clustered B Data Rejection Rate | 100.0% | 100.0% | D0 | [100%, 100%] | All 120 streams reject |
-| Max Clustered p-value | <1e-10 | 5.26e-18 | D0 | [5.26e-18, 5.26e-18] | Bound satisfied |
-| Concept Rejection (min) | 3.3% | 3.3% | D0 | [3.3%, 3.3%] | Bit-identical at precision |
-| Concept Rejection (max) | 5.0% | 5.0% | D0 | [5.0%, 5.0%] | Bit-identical at precision |
-| Concept Rejection (pooled) | 4.4% | 4.2% | D1 | [2.5%, 6.8%] | Wilson CI on 15/360 rejections |
-| Gamma Penalty (Cal. A) | 3.90--8.32 | 3.90--8.32 | D0 | [3.90, 8.32] | Range identical |
-| Gamma Penalty (Cal. B) | 31.94--110.49 | 31.94--110.49 | D0 | [31.94, 110.49] | Range identical |
-| Distinct p_concept per regime | 120 | 120 | D0 | [120, 120] | Independence validated |
+```
+$ pytest tests/test_R02_claims.py -v
+============================= test session starts ==============================
+platform linux -- Python 3.12.9, pytest-9.3.3, pluggy-1.6.0
+rootdir: /home/m53/The-Whitening-Advantage-Experiments
+plugins: anyio-1.0
+collecting ... collected 8 items
 
-All metrics corroborate the Whitening Proposition. The IID arm over-rejection (5.8% > 5%) is consistent with the manuscript claim despite the numerical shift from 9.2%. Clustered calibrations achieve 100% rejection on squared inputs. Binary classification errors hold the nominal 5% level with pooled Wilson interval [2.5%, 6.8%] covering α=0.05. Wilson 95% CIs computed using z=1.959963984540054 with design effect deff=1.
+tests/test_R02_claims.py::test_stream_counts PASSED                      [ 12%]
+tests/test_R02_claims.py::test_classifier_integrity PASSED               [ 25%]
+tests/test_R02_claims.py::test_data_rejection_rates PASSED               [ 37%]
+tests/test_R02_claims.py::test_distinct_p_concept PASSED                 [ 50%]
+tests/test_R02_claims.py::test_independence_diagnostics PASSED           [ 62%]
+tests/test_R02_claims.py::test_iid_arm_rejection_is_reported_not_asserted PASSED [ 75%]
+tests/test_R02_claims.py::test_concept_level_covered_by_wilson PASSED    [ 87%]
+tests/test_R02_claims.py::test_max_clustered_pvalue_below_manuscript_bound PASSED [100%]
 
-## Methodological Scope & Limitations
+============================== 8 passed in 0.70s ===============================
+```
 
-The audit confirms R02 satisfies the Whitening Proposition: binary classification errors from the sign-prediction task show no detectable autocorrelation across all GARCH regimes, while squared inputs correctly detect volatility clustering. The primary deviation is D2-class: IID arm data rejection shifts from 9.2% to 5.8% due to BLAS threading effects on GARCH parameter recovery, altering generated paths. However, the qualitative claim of over-rejection (rate > 5%) remains valid. Limitations: The analysis uses variance-targeted QMLE which is sensitive to floating-point associativity. The IID arm rejection rate variance under t7 innovations is inherent to the fourth-moment deficiency; the χ^2 approximation fails for ε_t^2. Concept-level calibration is robust: pooled Wilson interval covers the nominal level, and all 18 independence tests pass Bonferroni correction at α/6. Positive controls confirm detector power (100% rejection in clustered regimes). The pipeline runs on 360 streams with River v0.23.0 Hoeffding Tree classifier.
+Command: `pytest tests/test_R02_claims.py -v`
+
+8 passed.
+
+## 4. Reproducibility digests
+
+SHA-256 digests from log lines 19-22 (single run, 1 worker):
+
+```
+4c9eb8b339d5f0a98168eb73362660ccff41a3bca05de576a2afce2956418204  results/R02_whitening_ljungbox/data/R02_ljungbox_360streams.csv
+5ca6496f5099e65f835eed5c626873ea447ae831b8c1af54319cfaf67d7fdbb1  results/R02_whitening_ljungbox/data/R02_independence_diagnostics.csv
+90734624b5343f7ffccd06645a72666b5ad3c7508b8170809589c1cc4a508c5b  results/R02_whitening_ljungbox/figures/fig01_ljungbox_whiteness.png
+c1f1d58c57f5352883025cab6b1bceaabc6dec4d1c5b79d0a7ef5ec363c2dcb8  results/R02_whitening_ljungbox/tables/R02_claims.tex
+```
+
+current tree, single run:
+
+```
+$ sha256sum results/R02_whitening_ljungbox/data/*.csv results/R02_whitening_ljungbox/figures/*.png results/R02_whitening_ljungbox/tables/*.tex
+4c9eb8b339d5f0a98168eb73362660ccff41a3bca05de576a2afce2956418204  results/R02_whitening_ljungbox/data/R02_ljungbox_360streams.csv
+5ca6496f5099e65f835eed5c626873ea447ae831b8c1af54319cfaf67d7fdbb1  results/R02_whitening_ljungbox/data/R02_independence_diagnostics.csv
+90734624b5343f7ffccd06645a72666b5ad3c7508b8170809589c1cc4a508c5b  results/R02_whitening_ljungbox/figures/fig01_ljungbox_whiteness.png
+c1f1d58c57f5352883025cab6b1bceaabc6dec4d1c5b79d0a7ef5ec363c2dcb8  results/R02_whitening_ljungbox/tables/R02_claims.tex
+```
+
+## 5. Design decisions taken outside the plan
+
+NOT RECOVERABLE FROM THE LOG.
+
+## 6. Open questions, left open
+
+NOT RECOVERABLE FROM THE LOG.
+
