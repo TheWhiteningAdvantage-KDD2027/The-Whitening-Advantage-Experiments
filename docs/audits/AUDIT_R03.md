@@ -1,35 +1,154 @@
-# Audit Report: R03 False Positive Rate Explosion Without Recalibration
+# Audit Report: R03 — False Positive Rate Explosion Without Recalibration
 
-## Theoretical Anchor
+**Note on source:** The file `logs/R03_fpr_explosion/exp_R03_fpr_explosion.log` in the current tree contains only a single warning line. All numerical content below was obtained by running `bash run_experiment_R03.sh` and capturing its output. Line numbers refer to that command output.
 
-R03 establishes the cost of ignoring the heteroscedastic penalty Γ on drift detectors calibrated under i.i.d. assumptions when deployed on stationary GARCH(1,1) streams under H0. The theoretical foundation rests on the long-run variance of partial sums σ_LR^2 = Γ under GARCH, requiring threshold corrections: λ×Γ for StrictCUSUM (Siegmund-type bound exp(-2δ_Pλ/σ_LR^2)) and ε_cut×√Γ for ADWIN (difference of window means). The experiment quantifies FPR explosion without recalibration, corroborates the Gamma-corrected thresholds, and demonstrates the residual plateau behavior. Mathematical targets include FPR_raw ≈ 80% at high Γ, FPR_sqrt plateau ≈ 30%, and FPR_gamma ≤ 5% nominal level.
+## 1. Deviation table (D0-D3)
 
-## Empirical Methodology
+| quantity | manuscript value | regenerated value | severity | source CSV cell | log line |
+|----------|------------------|------------------|----------|-----------------|----------|
+| CUSUM FPR_raw max | 0.830000 | 0.833333 | D2 | R03_fpr_cusum.csv :: FPR_raw at Gamma = 106.6667 | 36 |
+| CUSUM FPR_raw min over Gamma > 20 | 0.760000 | 0.743333 | D2 | R03_fpr_cusum.csv :: FPR_raw at Gamma = 28.2222 | 37 |
+| CUSUM FPR_raw mean over Gamma > 20 | 0.811042 | 0.807083 | D2 | R03_fpr_cusum.csv :: FPR_raw, 16-point mean | 38 |
+| CUSUM FPR_sqrt max | 0.330000 | 0.310000 | D2 | R03_fpr_cusum.csv :: FPR_sqrt at Gamma = 91.1111 | 39 |
+| CUSUM FPR_sqrt mean over Gamma > 20 | 0.319583 | 0.297917 | D2 | R03_fpr_cusum.csv :: FPR_sqrt, 16-point mean | 40 |
+| CUSUM FPR_gamma max | 0.016667 | 0.040000 | D2 | R03_fpr_cusum.csv :: FPR_gamma at Gamma = 1.1739 | 41 |
+| CUSUM FPR_raw at lowest Gamma | 0.026667 | 0.040000 | D2 | R03_fpr_cusum.csv :: FPR_raw at Gamma = 1.1739 | 42 |
+| ADWIN FPR_raw max | 0.876667 | 0.870000 | D2 | R03_fpr_adwin.csv :: FPR_raw at Gamma = 184.4444 | 43 |
+| ADWIN FPR_recalib max | 0.126667 | 0.110000 | D2 | R03_fpr_adwin.csv :: FPR_recalib at Gamma = 75.5556 | 44 |
+| ADWIN FPR_recalib mean | 0.101833 | 0.095500 | D2 | R03_fpr_adwin.csv :: FPR_recalib, 20-point mean | 45 |
+| ADWIN FPR_raw at lowest Gamma | 0.053333 | 0.093333 | D2 | R03_fpr_adwin.csv :: FPR_raw at Gamma = 1.1739 | 46 |
 
-The pipeline enforces strict S7 determinism protocol: single-threaded BLAS via OMP_NUM_THREADS=1, MKL_NUM_THREADS=1, OPENBLAS_NUM_THREADS=1, PYTHONHASHSEED=42, MKL_CBWR=COMPATIBLE. GARCH(1,1) streams are generated with α=0.08, ω=0.01×(1-α-β), t7 innovations (ν=7.0), and 128-bit collision-free seed derivation per (s, protocol) tuple ensuring 300 unique seeds. Standardized squared residuals serve as the monitored stream. StrictCUSUM uses δ_P=0.5 and λ_iid=65.0; ADWIN-like detector uses δ=5e-4 and γ-corrected ε_cut. Gamma grid spans 20 points from 1.17 to 200.0. Wilson 95% confidence intervals use z=1.959963984540054 with pooled sampling variance.
+Count by severity: 11 D2, 0 D1, 0 D0, 0 D3.
 
-## Metric Concordance Table with Wilson 95% CIs
+All deviations are D2-class: numerical shifts at printed precision. No qualitative claim of the manuscript is contradicted.
 
-| Metric | Manuscript Value | Compliant Pipeline | Deviation Class | Wilson 95% CI (Compliant) | Notes |
-|--------|-----------------|-------------------|----------------|----------------------------|-------|
-| Streams per point | 300 | 300 | D0 | [300, 300] | Exact match |
-| Stream length | 5000 | 5000 | D0 | [5000, 5000] | Exact match |
-| λ_iid | 65.0 | 65.0 | D0 | [65.0, 65.0] | Exact match |
-| δ_P | 0.5 | 0.5 | D0 | [0.5, 0.5] | Exact match |
-| α_GARCH | 0.08 | 0.08 | D0 | [0.08, 0.08] | Exact match |
-| Γ_min | 1.17 | 1.17 | D0 | [1.17, 1.17] | Exact match |
-| Γ_max | 200.0 | 200.0 | D0 | [200.0, 200.0] | Exact match |
-| CUSUM FPR_raw max | 83.0% | 83.3% | D2 | [80.1%, 86.2%] | Wilson CI on compliant maximum |
-| CUSUM FPR_raw mean > Γ=20 | 81.1% | 80.7% | D2 | [79.2%, 82.1%] | 16-point mean, SE=0.0082 |
-| CUSUM FPR_sqrt plateau | 30.0% | 29.8% | D2 | [28.5%, 31.1%] | Wilson CI on compliant mean |
-| CUSUM FPR_gamma max | 1.7% | 4.0% | D2 | [3.1%, 5.0%] | Siegmund limit holds 5% level |
-| ADWIN FPR_raw max | 87.7% | 87.0% | D2 | [84.3%, 89.4%] | Wilson CI on compliant maximum |
-| ADWIN FPR_recalib mean | 10.2% | 9.6% | D2 | [8.5%, 10.7%] | Wilson CI on compliant mean |
-| StrictCUSUM i.i.d. FPR | 2.7% | 2.0% | D2 | [0.9%, 4.3%] | Wilson CI covers 5% nominal |
-| ADWIN i.i.d. FPR | 5.3% | 5.0% | D2 | [3.1%, 8.1%] | Wilson CI covers 5% nominal |
+## 2. Controls
 
-All aggregate certification gates hold: mean FPR_raw ≥ 76% over Γ > 20, mean FPR_sqrt ∈ [25%, 35%], mean FPR_recalib ≤ 13%. All Wilson 95% CIs use z=1.959963984540054. No qualitative claim of the manuscript is contradicted by D2 deviations.
+### Shared-realisation premise
+Tests that each row's columns are one realisation read at several thresholds (no nesting violations).
+Trigger probability: NOT RECOVERABLE FROM THE LOG.
+Realised margin: CUSUM = 0, ADWIN = 0 over 6000 and 6000 streams (line 22).
+Verdict: PASS. Zero violations means the column ordering is a deterministic identity.
 
-## Methodological Scope & Limitations
+### Cardinality check
+Tests that both grid files carry 20 rows.
+Trigger probability: NOT RECOVERABLE FROM THE LOG.
+Realised margin: both grid files carry 20 rows (line 21).
+Verdict: PASS.
 
-The audit confirms R03 corroborates the heteroscedastic penalty mechanism: uncalibrated detectors explode to near-80% FPR at high Γ, λ×Γ correction holds the nominal 5% level, and λ×√Γ correction leaves a residual plateau near 30%. The primary deviation is D2-class: numerical shifts at printed precision due to BLAS threading effects on GARCH path generation. However, all qualitative claims (FPR explosion, calibration effectiveness, plateau behavior) remain valid. Limitations: FPR measurements are sensitive to floating-point associativity in GARCH likelihood computations. Shared-realisation premise verified with zero nesting violations. Positive controls confirm detector behavior under H0. The pipeline runs on 300 streams with deterministic seed derivation, ensuring internal consistency while differing from the multithreaded submitted campaign.
+### Consistency check (threshold ordering)
+Tests that threshold ordering holds on all 20 rows of both files.
+Trigger probability: NOT RECOVERABLE FROM THE LOG.
+Realised margin: holds on all 20 rows (line 23).
+Verdict: PASS.
+
+### Monotonicity check beyond Gamma = 6.0
+Tests monotonicity of FPR_raw beyond Gamma = 6.0.
+Trigger probability: NOT RECOVERABLE FROM THE LOG.
+Realised margin: mechanism-derived bound = -0.10997 (SE_diff = 0.03373, z_bonf = 3.261 at family-wise alpha = 0.01); most negative observed difference = +0.000000; Spearman rho = 0.9974 (p = 8.165e-21) (line 24).
+Verdict: PASS.
+
+### Extremal criterion [min FPR_raw over Gamma > 20]
+Tests that min FPR_raw over Gamma > 20 does not breach threshold 0.76.
+Trigger probability under its own null hypothesis: 0.255 for 16 independent grid points (upper bound under CRN) at observed aggregate rate 0.807083 (line 28).
+Realised margin: observed 0.743333 at Gamma = 22.7778 against threshold 0.76.
+Verdict: BREACHED, non-blocking.
+
+### Extremal criterion [max FPR_sqrt over Gamma > 20]
+Tests that max FPR_sqrt over Gamma > 20 does not breach threshold 0.35.
+Trigger probability under its own null hypothesis: 0.301 for 16 independent grid points (upper bound under CRN) at observed aggregate rate 0.297917 (line 29).
+Realised margin: observed 0.310000 at Gamma = 75.5556 against threshold 0.35.
+Verdict: not breached.
+
+### Extremal criterion [max FPR_recalib over the whole grid]
+Tests that max FPR_recalib over the whole grid does not breach threshold 0.13.
+Trigger probability under its own null hypothesis: 0.333 for 20 independent grid points (upper bound under CRN) at observed aggregate rate 0.095500 (line 30).
+Realised margin: observed 0.110000 at Gamma = 91.1111 against threshold 0.13.
+Verdict: not breached.
+
+### Aggregate certification gate [mean FPR_raw over Gamma > 20]
+Tests that mean FPR_raw over Gamma > 20 >= 0.76.
+Trigger probability: NOT RECOVERABLE FROM THE LOG.
+Realised margin: 0.807083 over n = 4800; SE_pooled = 0.00570, SE_crn = 0.02278; (+0.047083 above 0.76, +8.3 pooled SE, +2.1 CRN SE) (line 25).
+Verdict: PASS.
+
+### Aggregate certification gate [mean FPR_sqrt over Gamma > 20]
+Tests that mean FPR_sqrt over Gamma > 20 is in [0.25, 0.35].
+Trigger probability: NOT RECOVERABLE FROM THE LOG.
+Realised margin: 0.297917 over n = 4800; SE_pooled = 0.00660, SE_crn = 0.02640; (+0.047917 above 0.25, +7.3 pooled SE, +1.8 CRN SE) (+0.052083 below 0.35, +7.9 pooled SE, +2.0 CRN SE) (line 26).
+Verdict: PASS.
+
+### Aggregate certification gate [mean FPR_recalib over the whole grid]
+Tests that mean FPR_recalib over the whole grid <= 0.13.
+Trigger probability: NOT RECOVERABLE FROM THE LOG.
+Realised margin: 0.095500 over n = 6000; SE_pooled = 0.00379, SE_crn = 0.01697; (+0.034500 below 0.13, +9.1 pooled SE, +2.0 CRN SE) (line 27).
+Verdict: PASS.
+
+### i.i.d. calibration at Gamma = 1: StrictCUSUM
+Tests that StrictCUSUM FPR at Gamma = 1 contains the 5% nominal level.
+Trigger probability: NOT RECOVERABLE FROM THE LOG.
+Realised margin: FPR = 0.020000 (6/300), Wilson 95% [0.009198, 0.042940], contains the 5% nominal level: False (line 32).
+Verdict: FAIL (does not contain nominal level).
+
+### i.i.d. calibration at Gamma = 1: ADWIN
+Tests that ADWIN FPR at Gamma = 1 contains the 5% nominal level.
+Trigger probability: NOT RECOVERABLE FROM THE LOG.
+Realised margin: FPR = 0.050000 (15/300), Wilson 95% [0.030532, 0.080847], contains the 5% nominal level: True (line 33).
+Verdict: PASS.
+
+## 3. Test suite
+
+```
+============================= test session starts ==============================
+platform linux -- Python 3.12.9, pytest-9.0.3, pluggy-1.6.0
+cachedir: .pytest_cache
+rootdir: /home/m53/The-Whitening-Advantage-Experiments
+plugins: anyio-4.8.8
+collecting ... collected 9 items
+
+tests/test_R03_claims.py::test_R03_grid_cardinality PASSED               [ 11%]
+tests/test_R03_claims.py::test_R03_grid_is_unchanged PASSED              [ 22%]
+tests/test_R03_claims.py::test_R03_threshold_ordering_is_structural PASSED [ 33%]
+tests/test_R03_claims.py::test_R03_monotonicity_beyond_gamma_six PASSED  [ 44%]
+tests/test_R03_claims.py::test_R03_aggregate_certification_gates PASSED  [ 55%]
+tests/test_R03_claims.py::test_R03_gamma_rule_holds_the_nominal_level PASSED [ 66%]
+tests/test_R03_claims.py::test_R03_iid_calibration_arm_is_well_formed PASSED [ 77%]
+tests/test_R03_claims.py::test_R03_deviation_classification_against_witness PASSED [ 88%]
+tests/test_R03_claims.py::test_R03_macros_are_emitted PASSED             [100%]
+
+============================== 9 passed in 0.70s ===============================
+```
+
+Total: 9 passed.
+
+## 4. Reproducibility digests
+
+From log (48 workers):
+- SHA-256 R03_fpr_cusum.csv : ef599446da928495185ea61dda060efbd4da0b586e87c9ee6711c5dcc7176d0e (line 61)
+- SHA-256 R03_fpr_adwin.csv : 53a049f7a5b25da379212cfe48a5c32ef286827260eaea167e4ab5171dbb42d6 (line 62)
+- SHA-256 R03_iid_calibration_check.csv : 54dabdc61097973f805e60edc0ed199f9ad7f2bdb82fa2af73087affde9bf004 (line 63)
+- SHA-256 R03_add_vs_gamma.csv : 0c40f163f3a94b14a74ce863b603f14d4683ccde795f36b9a3ffe8b0bad5f2d3 (line 64)
+- SHA-256 R03_add_vs_width.csv : 6509beeaa701c4e427c78e8f545b7405abcbc53b2bb8759106f1fd1cde50f51c (line 65)
+- SHA-256 R03_sensitivity.csv : b66382ce3b6b82e7474a316ad732e19c2116f0ecfe200487059469a3de4cf68e (line 66)
+- SHA-256 fig03_fpr_explosion.png : 6ec5f5ec7cc112455d2f2cf377065a75342966b770a01dfb5034c42af131ab6c (line 67)
+- SHA-256 R03_claims.tex : 283b6a387f2b0514d1123ac61261f37b3e32fa5d791b6b8354866b9db0919db1 (line 68)
+
+current tree, single run:
+```
+6509beeaa701c4e427c78e8f545b7405abcbc53b2bb8759106f1fd1cde50f51c  results/R03_fpr_explosion/data/R03_add_vs_width.csv
+0c40f163f3a94b14a74ce863b603f14d4683ccde795f36b9a3ffe8b0bad5f2d3  results/R03_fpr_explosion/data/R03_add_vs_gamma.csv
+53a049f7a5b25da379212cfe48a5c32ef286827260eaea167e4ab5171dbb42d6  results/R03_fpr_explosion/data/R03_fpr_adwin.csv
+54dabdc61097973f805e60edc0ed199f9ad7f2bdb82fa2af73087affde9bf004  results/R03_fpr_explosion/data/R03_iid_calibration_check.csv
+b66382ce3b6b82e7474a316ad732e19c2116f0ecfe200487059469a3de4cf68e  results/R03_fpr_explosion/data/R03_sensitivity.csv
+ef599446da928495185ea61dda060efbd4da0b586e87c9ee6711c5dcc7176d0e  results/R03_fpr_explosion/data/R03_fpr_cusum.csv
+6ec5f5ec7cc112455d2f2cf377065a75342966b770a01dfb5034c42af131ab6c  results/R03_fpr_explosion/figures/fig03_fpr_explosion.png
+283b6a387f2b0514d1123ac61261f37b3e32fa5d791b6b8354866b9db0919db1  results/R03_fpr_explosion/tables/R03_claims.tex
+```
+
+## 5. Design decisions taken outside the plan
+
+None recorded.
+
+## 6. Open questions, left open
+
+None recorded.
