@@ -2,7 +2,7 @@
 
 - **Status:** PARKED — do not apply
 - **Trigger:** Acceptance notification of 14 November 2026
-- **Register entry:** none
+- **Register entry:** `R13-campaign-redraw`
 
 **Target file:** `articleB_whitening_v87.tex`
 
@@ -54,9 +54,15 @@ indices spanning `FPR_H` from `1.49\%` down to `0.95\%`, which is why the numera
 **Verification of the search string.** The block below is quoted from
 `articleB_whitening_v87.tex` **line 331** verbatim and occurs **exactly once** in the file (`grep -Fc` returns `1`). It is disjoint from the strings the two sibling candidates search. Verify once more before applying, as a matter of routine.
 
-<<< SEARCH ~~~~~~~~~latex phase false-alarm probability $1.3\%$ ~~~~~~~~~
+<<< SEARCH
+~~~~~~~~~latex
+phase false-alarm probability $1.3\%$
+~~~~~~~~~
 
-=== REPLACE WITH >>> ~~~~~~~~~latex phase false-alarm probability $1.1\%$ ~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
+phase false-alarm probability $1.1\%$
+~~~~~~~~~
 >>> END OF BLOCK
 
 ## What must not be done with this candidate

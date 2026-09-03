@@ -1,1 +1,7 @@
-2026-08-21 15:18:28 | WARNING | PYTHONHASHSEED is '0', expected '42'. String hashing is randomised: run this script through run_experiment_RXX.sh.
+2026-08-23 08:54:01 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-08-23 08:54:01 | INFO | Python: 3.12.9
+2026-08-23 08:54:01 | INFO |   numpy: 1.26.4
+2026-08-23 08:54:01 | INFO |   pandas: 2.3.2
+2026-08-23 08:54:01 | INFO |   scipy: 1.16.2
+2026-08-23 08:54:01 | INFO |   matplotlib: 3.10.6
+2026-08-23 08:54:01 | INFO | Driving steps a and b in this process; their frames are received in memory and no CSV is read back (SPECS 1.6).

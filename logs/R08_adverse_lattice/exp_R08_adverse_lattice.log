@@ -1,0 +1,366 @@
+2026-08-22 08:32:03 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-08-22 08:32:03 | INFO | Python: 3.12.9
+2026-08-22 08:32:03 | INFO |   numpy: 1.26.4
+2026-08-22 08:32:03 | INFO |   pandas: 2.3.2
+2026-08-22 08:32:03 | INFO |   scipy: 1.16.2
+2026-08-22 08:32:03 | INFO |   statsmodels: 0.14.5
+2026-08-22 08:32:03 | INFO |   matplotlib: 3.10.6
+2026-08-22 08:32:03 | INFO |   pytest: 9.0.3
+2026-08-22 08:32:03 | INFO | R08 (a) measures the two qualifications of v87's exactness claim: L311 and Figure 8 panels A-B, where an injected centring bias moves the false-alarm rate in both directions according to its sign at identical whiteness loss; and L241 and Figure 8 panel C, where the statistic lives on a 2delta lattice and the attainable levels are discrete.
+2026-08-22 08:32:03 | INFO | Worker processes requested: 48. Every task of this stream is keyed on its role and index alone and the chunk boundaries are fixed constants, so this value cannot move a number.
+2026-08-22 08:32:03 | INFO | THE STATUS OF THE SECOND DELIVERED LOG (prompt section 0bis). The R08 prompt reports the legacy plotting script as reputed never to have been executed in this project, and asks for a verdict rather than an assumption. The verdict is established by digest and by timestamp in docs/audits/AUDIT_R08.md section 2 and is reproduced here: the two MD5 digests the delivered log prints are the digests of the two delivered CSVs, the two SHA-256 digests the legacy implementation's own log prints are the digests of the same two files, and the timestamps are consistent (21b ends 07:23:57, 21c runs 07:25:37 on the same day). The log corresponds to the delivered script and to the delivered CSVs.
+2026-08-22 08:32:03 | INFO | C7 SOURCE IDENTITY: 6 primitives byte-identical to Priorite_21b_adverse_bias_and_null_law.py (wilson_ci, prop_test, lb_pvalue, compute_phi_hat_vectorized, cusum_concept_fast, generate_dgp) and 12 byte-identical to exp_R07_estimated_mean.py (exceeds, exceeds_units_strict, exceeds_units_weak, cusum_concept_lattice_units, lattice_exceedance_exact, lattice_exceedance_enumerated, lattice_survival, lambda_star_from_rule, get_deterministic_seed, seed_sequence_for, rng_for, sign_flip_null_max); 9086 characters compared, 0 differences. The protocol forbids hoisting any of them into experiments/common/, so the duplication is deliberate and it cannot drift. Deterministic; trigger probability 0 unless a copy has drifted.
+2026-08-22 08:32:03 | INFO | C7 CROSS-OWNER AST IDENTITY on generate_dgp: byte identity against exp_R07_estimated_mean.py is FALSE and is not asserted -- R07's copy carries 5 blank line(s) at positions [5, 10, 14, 18, 23] that the R08 witness does not, and every non-blank line is identical (True). `ast.dump(ast.parse(...))` of the two segments is EQUAL, so the two files compile the same instructions and control C6's cross-stream identity is a statement about entropy keys alone. SHA-256 witness 9772f0bc99705b56037dcdd863d1aa1d5c440f7420f7389e4d06fcc205ef7464, SHA-256 R07 8dda36b3707f8d9a152ec48e8c583b58eaaedb45b627ccca90d3d0c1412f6aec.
+2026-08-22 08:32:03 | INFO | C7 CROSS-OWNER AST IDENTITY on compute_phi_hat_vectorized: byte identity against exp_R07_estimated_mean.py is FALSE and is not asserted -- R07's copy carries 4 blank line(s) at positions [5, 10, 13, 16] that the R08 witness does not, and every non-blank line is identical (True). `ast.dump(ast.parse(...))` of the two segments is EQUAL, so the two files compile the same instructions and control C6's cross-stream identity is a statement about entropy keys alone. SHA-256 witness ae5cf1ceefdfa7d0845dc1f9262dd380536cac8a60ea296639f41fa03321d1b8, SHA-256 R07 d960886a69b4f09b21619f4bedc4381b2e822f8a18a09997d8f844c85f94a629.
+2026-08-22 08:32:03 | INFO | C7 ADAPTED ROUTINES. ['worker_mod_A', 'worker_mod_B', 'plot_adverse_and_lattice', 'main'] are restructured for the reasons stated in the module docstring -- keyed entropy, per-trajectory return values, the removal of the disk round trip, and the replacement of a certification block that gates on four literals the script itself produced -- so byte identity is not assertable on them. Each segment is passed through the S4.4 grep FIRST and quoted in full only if the grep is empty.
+2026-08-22 08:32:03 | INFO | C7 witness SHA-256 of worker_mod_A [Priorite_21b_adverse_bias_and_null_law.py]: d6af86161fa6fced4acac99a9a7e1780f34697e92d5749548869e3ec65f8fc7b
+2026-08-22 08:32:03 | INFO | C7 S4.4 grep on worker_mod_A: empty. Witness source of worker_mod_A:
+def worker_mod_A(seed_sq: np.random.SeedSequence, lambda_star: float, B_GRID: list) -> list:
+    phi = 0.00
+    r = generate_dgp(6001, phi, seed_sq)
+    r_prev = r[1000:6000]
+    r_curr = r[1001:6001]
+    
+    n_ols = 250
+    phi_hat = compute_phi_hat_vectorized(r, n_ols, 1001, 6001)
+    
+    res = []
+    for b in B_GRID:
+        phi_hat_biased = phi_hat + b
+        mu_hat_biased = phi_hat_biased * r_prev
+        y_ols_biased = (r_curr - mu_hat_biased > 0).astype(int)
+        
+        lb_pval = lb_pvalue(y_ols_biased, 20)
+        m_val = cusum_concept_fast(y_ols_biased, 0.1)
+        
+        res.append({
+            'b': b,
+            'lb_reject': lb_pval < 0.05,
+            'fpr_exceed': m_val > lambda_star
+        })
+    return res
+2026-08-22 08:32:03 | INFO | C7 witness SHA-256 of worker_mod_B [Priorite_21b_adverse_bias_and_null_law.py]: e8f2ab6ac01d7a63f377d1de4624de7c7cfba0f7f43b2cd07e9f58cf1c96d034
+2026-08-22 08:32:03 | INFO | C7 S4.4 grep on worker_mod_B: empty. Witness source of worker_mod_B:
+def worker_mod_B(seed: np.random.SeedSequence, H: int) -> float:
+    rng = np.random.default_rng(seed)
+    y = rng.integers(0, 2, size=H)
+    return cusum_concept_fast(y, 0.1)
+2026-08-22 08:32:03 | INFO | C7 witness SHA-256 of plot_adverse_and_lattice [Priorite_21c_plot_adverse_lattice.py]: 3bf316364da0d528f911487b1ff1f3ae2c65acf4ccb21da39d5ddbe1253c82e2
+2026-08-22 08:32:03 | INFO | C7 S4.4 grep on plot_adverse_and_lattice: empty. Witness source of plot_adverse_and_lattice:
+def plot_adverse_and_lattice():
+    import matplotlib.ticker as ticker
+    
+    csv_21c = FIGURES_DIR / 'protocol_21c_adverse_bias.csv'
+    csv_21d = FIGURES_DIR / 'protocol_21d_null_law_lattice.csv'
+    
+    logging.info(f"MD5 protocol_21c_adverse_bias.csv: {get_md5(csv_21c)}")
+    logging.info(f"MD5 protocol_21d_null_law_lattice.csv: {get_md5(csv_21d)}")
+
+    df_21c = pd.read_csv(csv_21c)
+    df_21d = pd.read_csv(csv_21d)
+
+    fig, axes = plt.subplots(1, 3, figsize=(18, 5), dpi=300)
+
+    # Panel A: Ljung-Box Rejection
+    ax = axes[0]
+    ax.grid(True, which='both', alpha=0.3)
+    ax.axhline(0.05, color='gray', linestyle=':', label='Target 0.05')
+
+    err_low_lb = np.maximum(0, df_21c['lb_reject_biased'] - df_21c['lb_ci_low'])
+    err_high_lb = np.maximum(0, df_21c['lb_ci_high'] - df_21c['lb_reject_biased'])
+
+    label_ols = r"Rolling OLS +" + "\n" + r"injected bias" + "\n" + r"(over-centering, $\phi=0$)"
+    label_naive = r"Naive sign" + "\n" + r"(under-centering," + "\n" + r"$\hat\mu_t=0$ at $\phi=b$)"
+
+    ax.errorbar(df_21c['b'], df_21c['lb_reject_biased'], yerr=[err_low_lb, err_high_lb],
+                fmt='-o', color='blue', capsize=4, label=label_ols)
+    ax.plot(df_21c['b'], df_21c['lb_reject_naive_ref'], '--s', color='red', alpha=0.7, label=label_naive)
+
+    ax.set_xlabel(r'Systematic mis-centering magnitude $b$')
+    ax.set_ylabel('Ljung-Box Rejection Rate')
+    ax.set_yscale('log')
+    ax.set_ylim(0.04, 1.2)
+    ax.set_xticks(df_21c['b'])
+    ax.set_yticks([0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0])
+    ax.get_yaxis().set_major_formatter(ticker.ScalarFormatter())
+    ax.get_yaxis().set_minor_formatter(ticker.NullFormatter())
+    ax.legend(loc='upper left', frameon=False)
+
+    # Panel B: FPR
+    ax = axes[1]
+    ax.grid(True, alpha=0.3)
+    ax.axhline(0.05, color='gray', linestyle=':', label='Target 0.05')
+    ax.axhspan(0.0429, 0.0503, color='gray', alpha=0.2)
+
+    err_low_fpr = np.maximum(0, df_21c['fpr_biased'] - df_21c['fpr_ci_low'])
+    err_high_fpr = np.maximum(0, df_21c['fpr_ci_high'] - df_21c['fpr_biased'])
+
+    ax.errorbar(df_21c['b'], df_21c['fpr_biased'], yerr=[err_low_fpr, err_high_fpr],
+                fmt='-o', color='blue', capsize=4, label=label_ols)
+    ax.plot(df_21c['b'], df_21c['fpr_naive_ref'], '--s', color='red', alpha=0.7, label=label_naive)
+
+    ax.set_xlabel(r'Systematic mis-centering magnitude $b$')
+    ax.set_ylabel('False Positive Rate (FPR)')
+    ax.set_ylim(0, 0.22)
+    ax.set_xticks(df_21c['b'])
+    ax.legend(loc='upper left', frameon=False)
+
+    # Panel C: Lattice
+    ax = axes[2]
+    ax.grid(True, alpha=0.3)
+    ax.axhline(0.05, color='gray', linestyle=':', label='Target 0.05')
+
+    ax.plot(df_21d['lambda'], df_21d['P_exceed'], drawstyle='steps-post', color='black', linewidth=1.5)
+    ax.plot(df_21d['lambda'], df_21d['P_exceed'], 'ko')
+
+    df_highlight = df_21d[df_21d['lambda'].isin([11.2, 11.4])]
+    ax.plot(df_highlight['lambda'], df_highlight['P_exceed'], 'ro', markersize=8, label='Quantile Brackets')
+
+    ax.set_xlabel(r'Critical Value ($\lambda$)')
+    ax.set_ylabel(r'Empirical Survival Probability $P(M > \lambda)$')
+    ax.set_xticks(df_21d['lambda'])
+    ax.legend(loc='upper right', frameon=False)
+
+    plt.tight_layout()
+    plt.savefig(FIGURES_DIR / 'Fig26_Adverse_Bias_and_Lattice.png')
+    plt.close()
+2026-08-22 08:32:03 | INFO | C7 witness SHA-256 of main [Priorite_21b_adverse_bias_and_null_law.py]: ba4a2bb353600e3ceb64fdd49fdba9a20b6ebb014f3cad73dcc1756b4299ee4d
+2026-08-22 08:32:03 | INFO | C7 main is NOT quoted: the S4.4 grep returns 1 line(s) carrying proscribed wording inside the segment, and the protocol makes the grep a precondition of the citation precisely so that a quotation cannot import that wording into this log. The routine is pinned by the SHA-256 above and its adaptation is described in the module docstring and in docs/audits/AUDIT_R08.md instead. Line numbers in Priorite_21b_adverse_bias_and_null_law.py: [123].
+2026-08-22 08:32:03 | INFO | C7 SUPERSEDED ROUTINES. ['setup_logging', 'get_sha256', 'dump_requirements', 'get_md5'] are NOT carried at all: the FAIR harness supplies `setup_logging`, `compute_sha256` and `save_fair_csv`, the version relevé goes through `importlib.metadata.version()` in `log_environment`, and `get_md5` is superseded by SHA-256 outright. The protocol pins a superseded routine by its digest and does not quote it.
+2026-08-22 08:32:03 | INFO | C7 superseded SHA-256 of setup_logging [Priorite_21b_adverse_bias_and_null_law.py]: b17e76eb0e5ea543f08fd31e2f83148242cb18afb0a26cdeb3ac4b8089d75cda
+2026-08-22 08:32:03 | INFO | C7 superseded SHA-256 of get_sha256 [Priorite_21b_adverse_bias_and_null_law.py]: 9e8dee911c4d2ddf2a406fc68fa13cf3ed9df36fbade580c715852c48ade5c83
+2026-08-22 08:32:03 | INFO | C7 superseded SHA-256 of dump_requirements [Priorite_21b_adverse_bias_and_null_law.py]: a4e83925eda906d84fec83bb14ab290454ebe98ff7b18adee24678234ab88cc4
+2026-08-22 08:32:03 | INFO | C7 superseded SHA-256 of get_md5 [Priorite_21c_plot_adverse_lattice.py]: 92465a5b7a879855c83bbbcffba899bd6b958d862a15ce4211af56c0a126e272
+2026-08-22 08:32:03 | INFO | C1 (i)-(iii) OPERATOR IDENTITY, by AST, over BOTH modules of this stream. `exceeds` is a single `Compare` carrying `ast.Gt`; of the 138 comparisons in exp_R08_adverse_lattice_a.py and exp_R08_adverse_lattice_b.py, the 3 inside ['exceeds', 'exceeds_units_strict', 'exceeds_units_weak'] are the only ones that may ORDER a threshold name against anything, and none of the others does. `worker_mod_A` calls `exceeds`; `operator_levels_at` calls all three helpers; `lattice_exceedance_enumerated` calls `exceeds_units_strict`. lambda* itself comes from `lambda_star_from_rule` on the EXACT law, so the selection path and the evaluation path test the same operator by construction. Deterministic; trigger probability 0.
+2026-08-22 08:32:03 | INFO | FAMILY-WISE ARITHMETIC, LOGGED BEFORE ANY RESULT IS INTERPRETED (S4bis.1). Control C4 compares the two arms at 6 values of b. Gating on 'no test rejects' at the 0.05 level would trigger with probability 1 - (1 - 0.05)^6 = 26.4908% under the hypothesis of equality itself -- far above the 5% ceiling S4bis fixes. 'No test rejects' is therefore NOT used as a gate, and neither is 'two tests reject' used as a refutation. The substitute is a KS calibration of the six p-values against Uniform(0,1), read against a null built by sign-flip resampling on the trajectory index, because the six p-values are dependent twice over and the tabulated Kolmogorov distribution assumes neither dependence.
+2026-08-22 08:32:03 | INFO | C1/C2 THE EXACT LATTICE LAW. With delta = 0.1 the two CUSUM branches move by +0.4 and -0.6, i.e. by +2 and -3 in units of 2delta = 0.2, so (S_pos, S_neg) is a Markov chain on the non-negative integer quadrant and M_H is an integer multiple of 0.2. An absorbing-chain dynamic program over that state space at H = 5000 gives P(M_H > lambda) exactly. No Monte-Carlo is involved and no entropy is consumed; the trigger probability of every assertion resting on it is 0.
+2026-08-22 08:32:05 | INFO | C1 lambda* BY L241's OWN RULE, evaluated on the exact law in 2.3s: 'we take the nearest attainable level at or below nominal' selects the SMALLEST lattice threshold whose exact level is at or below 0.05, which is 57 lattice units = 11.4. v87 prints lambda* = 11.4, and 57 * 0.2 == 11.4 is True bit-for-bit in float64. The delivered `float(np.quantile(Ms_cal, 0.95))` on 20,000 fair-coin streams (witness l.228-233) is a superseded estimator: it sits astride a lattice boundary and docs/DEVIATIONS.md `R07-lambda-star-estimator` already registers it with the exact probability that it returns 11.4. R08 cites that entry and opens no duplicate.
+2026-08-22 08:32:05 | INFO | IS_LATTICE_POINT IS COMPUTED, NOT WRITTEN (prompt section 2.6). The witness line 373 is the bare assignment `is_lattice = True` -- an `ast.Constant`, not a computation -- so the column carries no information in the delivered CSV. Here the verdict is taken in exact rational arithmetic on the decimal v87 prints: 5*lambda must be an integer. On the six grid points the verdict is [('11.0', 55, True), ('11.2', 56, True), ('11.4', 57, True), ('11.6', 58, True), ('11.8', 59, True), ('12.0', 60, True)]; on the probe 11.3, which is not a multiple of 2delta, it is False with units None. The probe is a negative control of the column and enters no artefact. Neither float route decides this: 11.2 / 0.2 = 55.99999999999999 and 56 * 0.2 = 11.200000000000001.
+2026-08-22 08:32:05 | INFO | C3, BEFORE ANY RESULT IS READ. The bracketing roles are computed on the EXACT law, where the trigger probability is 0. The SAME roles are then required of the MEASURED strict levels, and that leg has a computable trigger probability under its own null: the exact level at lambda = 11.2 is 5.1021%, which is only 2.07 binomial standard errors above the 0.05 nominal at 200000 streams, so a Monte-Carlo realisation on the wrong side of nominal is an ordinary event. Summed over the 6 grid points the probability that at least one lands on the wrong side of nominal is 1.9017%. S4bis forbids reading a gate whose trigger probability under its own null is of that size: the measured leg is a REPORTED control, it logs an error and the run continues, and only the exact leg exits.
+2026-08-22 08:32:05 | INFO | C4, BEFORE ANY RESULT IS READ. The three-point bound of L311 is a MAXIMUM over the 6 values of b of a paired difference measured on shared trajectories. S4bis's 4th corollary forbids reading it against the tolerance of one point: the sampling envelope of the maximum is built by resampling trajectories (2000 replicates) and the protocol fixes what it is for -- a printed bound is crossed at D3 only when the 95% interval of the regenerated value EXCLUDES it. The null law of the same maximum under exchangeability of the two arms is built separately by sign-flip resampling (10000 replicates), read at level 0.001, whose trigger probability under that null is exactly 0.001 by construction.
+2026-08-22 08:32:05 | INFO | MODULE A: 10000 trajectories, phi = 0.0, n_ols = 250, T = 6001, evaluation on [1001:6001], b in [0.0, 0.02, 0.05, 0.075, 0.1, 0.15]. Each trajectory carries BOTH arms: the injected-bias arm mu_hat = (phi_hat + b) r_prev at phi = 0, and the naive pairing diagnostic r_naive[t] > 0 at phi = b on the SAME key.
+2026-08-22 08:33:06 | INFO | Module A completed in 61.3s on 48 workers (200 chunks of 50).
+2026-08-22 08:33:06 | INFO | MODULE B: 200000 fair-coin streams at H = 5000, keyed ('lattice_stream', index). Each stream yields BOTH the float statistic and the exact integer one. Both are required: the integer form gives the two exact-operator levels, the float form gives the level the implemented test delivers and the boundary count. The delivered module B computed the float form alone and rounded it to six decimals before comparing, which reports the strict lattice level without saying so.
+2026-08-22 08:33:15 | INFO | Module B completed in 8.9s on 48 workers (100 chunks of 2000). The delivered module B computed the float statistic alone; computing both forms is the cost this stream pays to measure the operator instead of inferring it.
+2026-08-22 08:33:15 | INFO | NO DEGRADED PATH ON THE CARRIED lb_pvalue (S4.3): a constant sign stream would take its `np.std(series) < 1e-12` branch and return the non-rejection 1.0 without any test being run. Over the 120000 module-A streams the branch was taken 0 times. The other two fallbacks of the carried primitives -- `compute_phi_hat_vectorized`'s `sum_den >= 1e-12` mask and `generate_dgp`'s `h[t] = max(..., 1e-12)` floor -- are established unreachable on this DGP and these keys by control C7 of exp_R07_estimated_mean.py, which runs the same recursion on the same trajectory keys; R08 cites that measurement and does not re-run it.
+2026-08-22 08:33:20 | INFO | C1 (a) THE ULP BOUNDARY COUNTER, logged even at zero. Over the 200000 module-B streams the accumulated float M sits ABOVE its exact lattice value on 192842, BELOW on 2776 and exactly ON it on 4382. The number of streams whose float M lies within 4 ulp of its exact lattice point is 78971. 1517 streams have their EXACT maximum equal to lambda* = 11.4 itself, which is the configuration the L241 footnote describes.
+2026-08-22 08:33:20 | INFO | C1 (b) OPERATOR DISAGREEMENT COUNTS at lambda* = 11.4 (57 lattice units) over all 200000 streams. Realised level of `float M > lambda*` = 0.050815; of the exact `M_units > lambda*` = 0.04323; of the exact `M_units >= lambda*` = 0.050815. The float test disagrees with the STRICT operator on 1517 streams and with the WEAK operator on 0.
+2026-08-22 08:33:20 | INFO | C1 (c) THE TWO EXACT LEVELS AT lambda* AND THEIR DIFFERENCE. On the integer lattice P(M >= u) = P(M > u - 1), so the weak level at lambda* is the survival function one lattice point lower: strict 4.3428% at 57 units and weak 5.1021% at 56 units, a difference of 0.7592 points -- 15.2% of the nominal level itself. On this evidence the implemented test COINCIDES with the weak operator M >= lambda* on every one of the 200000 streams and differs from the strict one on 1517. v87's L241 footnote states that 'the implemented test M_H > lambda* IS the mathematical M_H >= lambda*'; what this control measures is whether that holds on R08's own apparatus, and the answer is read off the disagreement counts above rather than assumed from R10's or R07's.
+2026-08-22 08:33:20 | INFO | C1 THE LEVEL DELIVERED. L241's selection rule promises 'the nearest attainable level at or below nominal'. The level the implemented operator delivers at lambda* is 5.0815% measured and 5.1021% exactly, against the 5.0% the rule promises to stay at or below.
+2026-08-22 08:33:20 | INFO | C2a EXACT SURVIVAL AGAINST R07, at H = 5000. 16 of the 16 scanned lattice points carry an R07 cell; 16 agree BIT FOR BIT and 0 do not. Largest absolute difference 0.0. Two independently written absorbing-chain programs at the same H over the same state space; agreement is a statement about the transcription, not about the model. Deterministic; trigger probability 0.
+2026-08-22 08:33:20 | INFO | C2 RE-DERIVATION, RECORDED. The prompt asks for the levels at lambda in (11.2, 11.4), delta = 0.1, H = 5000 to coincide with BOTH R07_lattice_exact_law.csv and R10_lattice_exact_law.csv. R10's file carries 0 rows at H = 5000: its own campaign runs at H = 8000 (lambda_units 74/75/76) and validates its dynamic program on small-H enumerations, so it holds no cell at this horizon and no level at either threshold can be looked up in it. The control is therefore split: C2a compares the H = 5000 law against R07, which has it; C2b compares the path enumeration against both streams on the cells all three actually share.
+2026-08-22 08:33:20 | INFO | C2b ENUMERATION CONCORDANCE. R08 enumerates all 2^H sign paths at H in (8, 10, 12, 14) and lambda in (4, 5, 6, 7) lattice units at q = 0.5, and agrees with its own dynamic program to the last bit on all 16 cells. Against the other two streams: 8 cells are shared by all THREE (H in (10, 12)) and are the assertion; 4 more are shared with R07 alone (H = 8) and 4 with R10 alone (H = 14), reported beside them. Deterministic; trigger probability 0.
+2026-08-22 08:33:20 | INFO | C2b RESULT: bit-for-bit agreement on every cell any other stream carries -- 8 three-way, 4 with R07 only, 4 with R10 only.
+2026-08-22 08:33:20 | INFO | C3 BRACKETING ON THE EXACT LAW. Roles computed from the exact survival function: [('11.0', 'none'), ('11.2', 'above_nominal'), ('11.4', 'below_nominal'), ('11.6', 'none'), ('11.8', 'none'), ('12.0', 'none')]. The pair that straddles 0.05 is lambda = 11.200000000000001 at 5.1021% and lambda = 11.4 at 4.3428%, and no other adjacent pair of the grid does. Deterministic; trigger probability 0.
+2026-08-22 08:33:20 | INFO | C3 BRACKETING ON THE MEASURED STRICT LEVELS: the same roles, [('11.0', 'none'), ('11.2', 'above_nominal'), ('11.4', 'below_nominal'), ('11.6', 'none'), ('11.8', 'none'), ('12.0', 'none')]. The trigger probability of this leg under the exact law was computed before the streams were drawn and is 1.9017%.
+2026-08-22 08:33:20 | INFO | C4 THE SIX PROPORTION p-VALUES on the Ljung-Box arm, reported and not gated: [(0.0, 0.6449228388435186), (0.02, 0.10828295856723602), (0.05, 0.00026716158404238577), (0.075, 0.0017734684466137463), (0.1, 0.0003323256056320112), (0.15, 0.41064657021032636)]. 3 of 6 reject at 0.05: [(0.05, 0.00026716158404238577), (0.075, 0.0017734684466137463), (0.1, 0.0003323256056320112)]. The witness campaign had two rejections, 5.9e-05 at b = 0.075 and 0.0243 at b = 0.05. A difference in REJECTION COUNT between the two campaigns is not a finding on its own -- the family-wise arithmetic logged above gives 26.4908% for at least one rejection under equality itself -- and the Figure 8 caption's parenthetical, a |Cov(y_t, y_(t+k))| response, is a statement of MECHANISM which is symmetric by construction and is not contradicted by a difference in measured rate. Nothing here presents 'identical' as an established measurement.
+2026-08-22 08:33:20 | INFO | C4 KS CALIBRATION of the six p-values against Uniform(0,1): D = 0.5583837080994306, tabulated p = 0.027417888290213646. THE TABULATED p DOES NOT APPLY: the six p-values are dependent twice over -- the six b share the same 10000 trajectories, and at each b the two arms share the same innovation stream -- and the Kolmogorov distribution assumes neither. The null of D is therefore built by sign-flip resampling on the trajectory index, one Rademacher sign per trajectory shared across the six columns, 2000 replicates: its 95% quantile is 0.5359638576177561 and the observed D sits at a null exceedance probability of 0.038. MEASUREMENT, NOT A GATE (S4bis.8): nothing exits on this number.
+2026-08-22 08:33:20 | INFO | C4 SIGN-FLIP NULL OF THE MAXIMUM [max |delta_lb_pp| over the b grid]: observed 0.0221, 99.900% quantile of the null maximum 0.0223 on 10000 replicates, null exceedance probability 0.0011. The null carries the dependence between the six columns because one sign per trajectory is applied to all of them.
+2026-08-22 08:33:20 | INFO | C4 SIGN-FLIP NULL OF THE MAXIMUM [max |delta_fpr_pp| over the b grid]: observed 0.2005, 99.900% quantile of the null maximum 0.0151 on 10000 replicates, null exceedance probability 0.0. The null carries the dependence between the six columns because one sign per trajectory is applied to all of them.
+2026-08-22 08:33:20 | INFO | C4 THE THREE-POINT BOUND OF L311, asserted separately and against the extremum's own law (S4bis.4). 'The injected-bias arm and the naive arm at phi = b reject within three points of each other': the largest |delta_lb_pp| over the 6 values of b is 2.2100 points, attained at b = 0.075, against the 3 the sentence states. The bound is RESPECTED. The 95% bootstrap envelope of that MAXIMUM, over 2000 resamplings of the trajectory index, is [1.5600, 3.6100] points; the protocol makes a printed bound crossed at D3 only when that interval EXCLUDES the bound, and it does not.
+2026-08-22 08:33:20 | INFO | C5 [fpr_biased] over the b grid: [0.052  0.0429 0.0309 0.0238 0.0175 0.0095], required non-increasing in b. This is the qualitative content of L311 and of the Figure 8 panel B caption; both directions are read on the whole grid.
+2026-08-22 08:33:20 | INFO | C5 [fpr_naive_ref] over the b grid: [0.0516 0.0644 0.0854 0.1094 0.1377 0.21  ], required non-decreasing in b. This is the qualitative content of L311 and of the Figure 8 panel B caption; both directions are read on the whole grid.
+2026-08-22 08:33:20 | INFO | C5 RESULT: no local inversion on either arm, over the 10 consecutive steps of the grid.
+2026-08-22 08:33:20 | INFO | C6 CROSS-STREAM IDENTITY, DECLARED. Module A's pairing diagnostic keys on R07's namespace -- seed_sequence_for('trajectory', i) -- deliberately; every other draw in R08 keys on R08's own ('lattice_stream', index). An unexplained reuse would read as an entropy collision, so it is declared here and in docs/audits/AUDIT_R08.md. The identity is EXACT and its trigger probability is 0: `generate_dgp` draws z, h and eps without reference to phi, only r[t] = phi r[t-1] + eps[t] uses it, and control C7's normalized-AST leg establishes that R07's copy of `generate_dgp` and `compute_phi_hat_vectorized` compile the same instructions as the R08 witness's.
+2026-08-22 08:33:20 | INFO | C6 RESULT: R08's b = 0 arm against R07's OLS-250 at phi = 0 -- Ljung-Box 0.0478 vs 0.0478 (bit-identical True), FPR 0.052 vs 0.052 (bit-identical True). The pairing diagnostic against R07's NAIVE arm: 6/6 bit-identical on Ljung-Box and 6/6 on FPR.
+2026-08-22 08:33:20 | INFO | C6 THE LEVEL THE b = 0 CELL LANDS ON. Its false-alarm rate is 0.052 on 10000 trajectories. Against the two exact levels at lambda* = 11.4: strict M > lambda* = 4.3428% -> z = +4.21 (SE 0.002038); weak M >= lambda* = 5.1021% -> z = +0.45 (SE 0.002200). It lands on the weak M >= lambda* level. The prompt's C6 expected both witness values, 0.0546 and 0.0535, to cover the attainable 4.34% and observed that they do not; the reason is not a threshold error but an OPERATOR difference, and control C1 -- not this assertion -- is what settles it: module A compares the raw accumulated float against lambda* and therefore delivers the WEAK level, while the delivered module B rounds to six decimals before comparing and therefore reports the STRICT one. lambda* itself is 11.4 on both paths, and the witness log records lambda_star = 11.400000 for the delivered campaign as well.
+2026-08-22 08:33:20 | INFO | THE CONSTANT 2.5 OF L311 HAS A SOURCE, AND IT IS v87's OWN. L311 writes 'its bias leaves a residual momentum +2.5 phi/n > 0'; L308 of the same manuscript prints 'the classical small-sample AR bias E[phi_hat] - phi ~ -2.5 phi / n, stays under 2.9e-3'. The constant is therefore not orphaned: it is the coefficient of the standard first-order bias expansion of the AR(1) least-squares estimator, and the manuscript states it at L308. R07 owns that sentence: it carries the constant as V87_BIAS_BOUND, classifies it in `classify_bias_bound`, registers docs/DEVIATIONS.md `R07-bias-bound-not-a-bound` and files docs/camera_ready_candidates/R07_v87_bias_bound.md. R08 states the trace and emits NO macro for 2.5.
+2026-08-22 08:33:20 | INFO | 'SEVEN TIMES THE LARGEST WE MEASURE' HAS ITS DENOMINATOR IN R07, NOT HERE. The ratio is 0.02 over the largest residual momentum measured, and R07_estmean_diagnostics.csv is where that maximum lives: the largest |E[phi_hat] - phi| over R07's 28 diagnostic cells is 0.0031268677484383445, attained at phi = 0.15, n_ols = 125, giving a ratio of 6.40. Against the 2.9e-3 v87 itself prints as the bound, the ratio is 6.90. The largest eta_rmse_over_sigma over the same file is 0.11482335030427646. R08 emits NO macro for any of these three quantities: R07 holds the denominator and preamble S4's perimeter filter keeps one cell behind one published number.
+2026-08-22 08:33:20 | INFO | THE PENALTY AT A RESIDUAL MOMENTUM OF 0.02 IS ALSO R07's CELL. L311's 'the under-centering penalty is still only 1.1 points of false-alarm rate' is the difference between the naive arm at phi = 0.02 and at phi = 0 in R07_estmean_lb_fpr.csv: 0.0644 - 0.0516 = 1.2800 points. \REightPenaltyAtResidualMomentum is emitted from those two cells and says so in the .tex comment block; the movement of the cells themselves is already registered as `R07-campaign-redraw` and R08 opens no duplicate entry.
+2026-08-22 08:33:20 | INFO | D0-D3 CLASSIFICATION AGAINST v87, AT THE MANUSCRIPT'S OWN PRINTING PRECISION
+2026-08-22 08:33:20 | INFO |   D2 | Fig. 8 (B) FPR collapses to: v87 prints 0.0086, regenerated 0.0095 (rounds to 0.0095) | source cell: R08_adverse_bias.csv, b=0.15, fpr_biased
+2026-08-22 08:33:20 | INFO |   D2 | Fig. 8 (B) / L311 FPR inflates to: v87 prints 0.208, regenerated 0.21 (rounds to 0.21) | source cell: R07_estmean_lb_fpr.csv, NAIVE, phi=0.15, fpr_concept
+2026-08-22 08:33:20 | INFO |   D2 | L241 level above nominal (lambda=11.2): v87 prints 0.0503, regenerated 0.050815 (rounds to 0.0508) | source cell: R08_null_law_lattice.csv, lambda=11.2, P_exceed_strict
+2026-08-22 08:33:20 | INFO |   D2 | L241 level below nominal (lambda=11.4): v87 prints 0.0429, regenerated 0.04323 (rounds to 0.0432) | source cell: R08_null_law_lattice.csv, lambda=11.4, P_exceed_strict
+2026-08-22 08:33:20 | INFO |   D0 | L241 lambda*: v87 prints 11.4, regenerated 11.4 (rounds to 11.4) | source cell: R08_null_law_lattice.csv, bracket_role=below_nominal
+2026-08-22 08:33:20 | INFO |   D2 | L311 whiteness gap bound (points): v87 prints 3.0, regenerated 2.21 (rounds to 2.2) | source cell: R08_pairing_diagnostic.csv, whiteness_bound
+2026-08-22 08:33:20 | INFO |   D2 | L311 penalty at residual momentum 0.02 (points): v87 prints 1.1, regenerated 1.2799999999999998 (rounds to 1.3) | source cell: R07_estmean_lb_fpr.csv, NAIVE, phi in (0, 0.02), fpr_concept
+2026-08-22 08:33:20 | INFO |   D1 | L311 whiteness range, low end: v87 prints 0.05, regenerated 0.0478 (rounds to 0.05) | source cell: R08_adverse_bias.csv, min over both arms of the rejection rate
+2026-08-22 08:33:20 | INFO |   D1 | L311 whiteness range, high end: v87 prints 1.0, regenerated 0.9984 (rounds to 1.0) | source cell: R08_adverse_bias.csv, max over both arms of the rejection rate
+2026-08-22 08:33:20 | INFO | R08_adverse_bias.csv: 6 rows, 22 columns.
+2026-08-22 08:33:20 | INFO | R08_null_law_lattice.csv: 6 rows, 13 columns.
+2026-08-22 08:33:20 | INFO | R08_operator_levels.csv: 32 rows, 14 columns.
+2026-08-22 08:33:20 | INFO | R08_lattice_exact_law.csv: 32 rows, 15 columns.
+2026-08-22 08:33:20 | INFO | R08_pairing_diagnostic.csv: 10 rows, 27 columns.
+2026-08-22 08:33:20 | INFO | SHA-256 R08_adverse_bias.csv               : 167bc67f6913ebea6fe5023c62a9638259a1036028821d0fa051339ea772f675
+2026-08-22 08:33:20 | INFO | SHA-256 R08_null_law_lattice.csv           : 01abacb1f055f2006d4cf32f3f630003813180f0bdb3da5bb3b839c76e7df611
+2026-08-22 08:33:20 | INFO | SHA-256 R08_operator_levels.csv            : f80e06d2d24de02b0878a840e89acfd6aa622c633468a0032c0cce93141913d6
+2026-08-22 08:33:20 | INFO | SHA-256 R08_lattice_exact_law.csv          : 7134ae5e2cc683f18fbbf7efb0c32dbebd68cabbf36e06fc5b880d1710e00893
+2026-08-22 08:33:20 | INFO | SHA-256 R08_pairing_diagnostic.csv         : 0492b16f924e68779a22bfdb60820ef1c531483b09c211e425c06422f895b917
+2026-08-22 08:33:20 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
+2026-08-22 08:33:20 | INFO | results/R08_adverse_lattice/
+2026-08-22 08:33:20 | INFO | └── data/
+2026-08-22 08:33:20 | INFO |     ├── R08_adverse_bias.csv                [167bc67f6913ebea6fe5023c62a9638259a1036028821d0fa051339ea772f675]
+2026-08-22 08:33:20 | INFO |     ├── R08_null_law_lattice.csv            [01abacb1f055f2006d4cf32f3f630003813180f0bdb3da5bb3b839c76e7df611]
+2026-08-22 08:33:20 | INFO |     ├── R08_operator_levels.csv             [f80e06d2d24de02b0878a840e89acfd6aa622c633468a0032c0cce93141913d6]
+2026-08-22 08:33:20 | INFO |     ├── R08_lattice_exact_law.csv           [7134ae5e2cc683f18fbbf7efb0c32dbebd68cabbf36e06fc5b880d1710e00893]
+2026-08-22 08:33:20 | INFO |     └── R08_pairing_diagnostic.csv          [0492b16f924e68779a22bfdb60820ef1c531483b09c211e425c06422f895b917]
+2026-08-22 08:33:20 | INFO | =============================================================================
+2026-08-22 08:33:20 | INFO | Execution completed in 77.3s with 48 workers (module A 61.3s, module B 8.9s). Control C8's second axis is a rerun at a different worker count: every task is keyed on its role and index alone and the chunk boundaries are fixed constants, so the artefacts must be byte-identical.
+2026-08-22 08:33:21 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-08-22 08:33:21 | INFO | Python: 3.12.9
+2026-08-22 08:33:21 | INFO |   numpy: 1.26.4
+2026-08-22 08:33:21 | INFO |   pandas: 2.3.2
+2026-08-22 08:33:21 | INFO |   scipy: 1.16.2
+2026-08-22 08:33:21 | INFO |   statsmodels: 0.14.5
+2026-08-22 08:33:21 | INFO |   matplotlib: 3.10.6
+2026-08-22 08:33:21 | INFO |   pytest: 9.0.3
+2026-08-22 08:33:21 | INFO | R08 (b) renders v87 Figure 8 (fig:adverse) and emits the macros of L241 and L311. The campaign is RE-RUN in memory rather than reloaded from CSV: the protocol forbids a disk round trip as a memory bridge, which is precisely what the legacy plotting script did, and without float_precision='round_trip' at that. The figure and every macro below are computed from the objects exp_R08_adverse_lattice_a.run_campaign returns.
+2026-08-22 08:33:21 | INFO | C7 SOURCE IDENTITY: 6 primitives byte-identical to Priorite_21b_adverse_bias_and_null_law.py (wilson_ci, prop_test, lb_pvalue, compute_phi_hat_vectorized, cusum_concept_fast, generate_dgp) and 12 byte-identical to exp_R07_estimated_mean.py (exceeds, exceeds_units_strict, exceeds_units_weak, cusum_concept_lattice_units, lattice_exceedance_exact, lattice_exceedance_enumerated, lattice_survival, lambda_star_from_rule, get_deterministic_seed, seed_sequence_for, rng_for, sign_flip_null_max); 9086 characters compared, 0 differences. The protocol forbids hoisting any of them into experiments/common/, so the duplication is deliberate and it cannot drift. Deterministic; trigger probability 0 unless a copy has drifted.
+2026-08-22 08:33:21 | INFO | C7 CROSS-OWNER AST IDENTITY on generate_dgp: byte identity against exp_R07_estimated_mean.py is FALSE and is not asserted -- R07's copy carries 5 blank line(s) at positions [5, 10, 14, 18, 23] that the R08 witness does not, and every non-blank line is identical (True). `ast.dump(ast.parse(...))` of the two segments is EQUAL, so the two files compile the same instructions and control C6's cross-stream identity is a statement about entropy keys alone. SHA-256 witness 9772f0bc99705b56037dcdd863d1aa1d5c440f7420f7389e4d06fcc205ef7464, SHA-256 R07 8dda36b3707f8d9a152ec48e8c583b58eaaedb45b627ccca90d3d0c1412f6aec.
+2026-08-22 08:33:21 | INFO | C7 CROSS-OWNER AST IDENTITY on compute_phi_hat_vectorized: byte identity against exp_R07_estimated_mean.py is FALSE and is not asserted -- R07's copy carries 4 blank line(s) at positions [5, 10, 13, 16] that the R08 witness does not, and every non-blank line is identical (True). `ast.dump(ast.parse(...))` of the two segments is EQUAL, so the two files compile the same instructions and control C6's cross-stream identity is a statement about entropy keys alone. SHA-256 witness ae5cf1ceefdfa7d0845dc1f9262dd380536cac8a60ea296639f41fa03321d1b8, SHA-256 R07 d960886a69b4f09b21619f4bedc4381b2e822f8a18a09997d8f844c85f94a629.
+2026-08-22 08:33:21 | INFO | C7 ADAPTED ROUTINES. ['worker_mod_A', 'worker_mod_B', 'plot_adverse_and_lattice', 'main'] are restructured for the reasons stated in the module docstring -- keyed entropy, per-trajectory return values, the removal of the disk round trip, and the replacement of a certification block that gates on four literals the script itself produced -- so byte identity is not assertable on them. Each segment is passed through the S4.4 grep FIRST and quoted in full only if the grep is empty.
+2026-08-22 08:33:21 | INFO | C7 witness SHA-256 of worker_mod_A [Priorite_21b_adverse_bias_and_null_law.py]: d6af86161fa6fced4acac99a9a7e1780f34697e92d5749548869e3ec65f8fc7b
+2026-08-22 08:33:21 | INFO | C7 S4.4 grep on worker_mod_A: empty. Witness source of worker_mod_A:
+def worker_mod_A(seed_sq: np.random.SeedSequence, lambda_star: float, B_GRID: list) -> list:
+    phi = 0.00
+    r = generate_dgp(6001, phi, seed_sq)
+    r_prev = r[1000:6000]
+    r_curr = r[1001:6001]
+    
+    n_ols = 250
+    phi_hat = compute_phi_hat_vectorized(r, n_ols, 1001, 6001)
+    
+    res = []
+    for b in B_GRID:
+        phi_hat_biased = phi_hat + b
+        mu_hat_biased = phi_hat_biased * r_prev
+        y_ols_biased = (r_curr - mu_hat_biased > 0).astype(int)
+        
+        lb_pval = lb_pvalue(y_ols_biased, 20)
+        m_val = cusum_concept_fast(y_ols_biased, 0.1)
+        
+        res.append({
+            'b': b,
+            'lb_reject': lb_pval < 0.05,
+            'fpr_exceed': m_val > lambda_star
+        })
+    return res
+2026-08-22 08:33:21 | INFO | C7 witness SHA-256 of worker_mod_B [Priorite_21b_adverse_bias_and_null_law.py]: e8f2ab6ac01d7a63f377d1de4624de7c7cfba0f7f43b2cd07e9f58cf1c96d034
+2026-08-22 08:33:21 | INFO | C7 S4.4 grep on worker_mod_B: empty. Witness source of worker_mod_B:
+def worker_mod_B(seed: np.random.SeedSequence, H: int) -> float:
+    rng = np.random.default_rng(seed)
+    y = rng.integers(0, 2, size=H)
+    return cusum_concept_fast(y, 0.1)
+2026-08-22 08:33:21 | INFO | C7 witness SHA-256 of plot_adverse_and_lattice [Priorite_21c_plot_adverse_lattice.py]: 3bf316364da0d528f911487b1ff1f3ae2c65acf4ccb21da39d5ddbe1253c82e2
+2026-08-22 08:33:21 | INFO | C7 S4.4 grep on plot_adverse_and_lattice: empty. Witness source of plot_adverse_and_lattice:
+def plot_adverse_and_lattice():
+    import matplotlib.ticker as ticker
+    
+    csv_21c = FIGURES_DIR / 'protocol_21c_adverse_bias.csv'
+    csv_21d = FIGURES_DIR / 'protocol_21d_null_law_lattice.csv'
+    
+    logging.info(f"MD5 protocol_21c_adverse_bias.csv: {get_md5(csv_21c)}")
+    logging.info(f"MD5 protocol_21d_null_law_lattice.csv: {get_md5(csv_21d)}")
+
+    df_21c = pd.read_csv(csv_21c)
+    df_21d = pd.read_csv(csv_21d)
+
+    fig, axes = plt.subplots(1, 3, figsize=(18, 5), dpi=300)
+
+    # Panel A: Ljung-Box Rejection
+    ax = axes[0]
+    ax.grid(True, which='both', alpha=0.3)
+    ax.axhline(0.05, color='gray', linestyle=':', label='Target 0.05')
+
+    err_low_lb = np.maximum(0, df_21c['lb_reject_biased'] - df_21c['lb_ci_low'])
+    err_high_lb = np.maximum(0, df_21c['lb_ci_high'] - df_21c['lb_reject_biased'])
+
+    label_ols = r"Rolling OLS +" + "\n" + r"injected bias" + "\n" + r"(over-centering, $\phi=0$)"
+    label_naive = r"Naive sign" + "\n" + r"(under-centering," + "\n" + r"$\hat\mu_t=0$ at $\phi=b$)"
+
+    ax.errorbar(df_21c['b'], df_21c['lb_reject_biased'], yerr=[err_low_lb, err_high_lb],
+                fmt='-o', color='blue', capsize=4, label=label_ols)
+    ax.plot(df_21c['b'], df_21c['lb_reject_naive_ref'], '--s', color='red', alpha=0.7, label=label_naive)
+
+    ax.set_xlabel(r'Systematic mis-centering magnitude $b$')
+    ax.set_ylabel('Ljung-Box Rejection Rate')
+    ax.set_yscale('log')
+    ax.set_ylim(0.04, 1.2)
+    ax.set_xticks(df_21c['b'])
+    ax.set_yticks([0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0])
+    ax.get_yaxis().set_major_formatter(ticker.ScalarFormatter())
+    ax.get_yaxis().set_minor_formatter(ticker.NullFormatter())
+    ax.legend(loc='upper left', frameon=False)
+
+    # Panel B: FPR
+    ax = axes[1]
+    ax.grid(True, alpha=0.3)
+    ax.axhline(0.05, color='gray', linestyle=':', label='Target 0.05')
+    ax.axhspan(0.0429, 0.0503, color='gray', alpha=0.2)
+
+    err_low_fpr = np.maximum(0, df_21c['fpr_biased'] - df_21c['fpr_ci_low'])
+    err_high_fpr = np.maximum(0, df_21c['fpr_ci_high'] - df_21c['fpr_biased'])
+
+    ax.errorbar(df_21c['b'], df_21c['fpr_biased'], yerr=[err_low_fpr, err_high_fpr],
+                fmt='-o', color='blue', capsize=4, label=label_ols)
+    ax.plot(df_21c['b'], df_21c['fpr_naive_ref'], '--s', color='red', alpha=0.7, label=label_naive)
+
+    ax.set_xlabel(r'Systematic mis-centering magnitude $b$')
+    ax.set_ylabel('False Positive Rate (FPR)')
+    ax.set_ylim(0, 0.22)
+    ax.set_xticks(df_21c['b'])
+    ax.legend(loc='upper left', frameon=False)
+
+    # Panel C: Lattice
+    ax = axes[2]
+    ax.grid(True, alpha=0.3)
+    ax.axhline(0.05, color='gray', linestyle=':', label='Target 0.05')
+
+    ax.plot(df_21d['lambda'], df_21d['P_exceed'], drawstyle='steps-post', color='black', linewidth=1.5)
+    ax.plot(df_21d['lambda'], df_21d['P_exceed'], 'ko')
+
+    df_highlight = df_21d[df_21d['lambda'].isin([11.2, 11.4])]
+    ax.plot(df_highlight['lambda'], df_highlight['P_exceed'], 'ro', markersize=8, label='Quantile Brackets')
+
+    ax.set_xlabel(r'Critical Value ($\lambda$)')
+    ax.set_ylabel(r'Empirical Survival Probability $P(M > \lambda)$')
+    ax.set_xticks(df_21d['lambda'])
+    ax.legend(loc='upper right', frameon=False)
+
+    plt.tight_layout()
+    plt.savefig(FIGURES_DIR / 'Fig26_Adverse_Bias_and_Lattice.png')
+    plt.close()
+2026-08-22 08:33:21 | INFO | C7 witness SHA-256 of main [Priorite_21b_adverse_bias_and_null_law.py]: ba4a2bb353600e3ceb64fdd49fdba9a20b6ebb014f3cad73dcc1756b4299ee4d
+2026-08-22 08:33:21 | INFO | C7 main is NOT quoted: the S4.4 grep returns 1 line(s) carrying proscribed wording inside the segment, and the protocol makes the grep a precondition of the citation precisely so that a quotation cannot import that wording into this log. The routine is pinned by the SHA-256 above and its adaptation is described in the module docstring and in docs/audits/AUDIT_R08.md instead. Line numbers in Priorite_21b_adverse_bias_and_null_law.py: [123].
+2026-08-22 08:33:21 | INFO | C7 SUPERSEDED ROUTINES. ['setup_logging', 'get_sha256', 'dump_requirements', 'get_md5'] are NOT carried at all: the FAIR harness supplies `setup_logging`, `compute_sha256` and `save_fair_csv`, the version relevé goes through `importlib.metadata.version()` in `log_environment`, and `get_md5` is superseded by SHA-256 outright. The protocol pins a superseded routine by its digest and does not quote it.
+2026-08-22 08:33:21 | INFO | C7 superseded SHA-256 of setup_logging [Priorite_21b_adverse_bias_and_null_law.py]: b17e76eb0e5ea543f08fd31e2f83148242cb18afb0a26cdeb3ac4b8089d75cda
+2026-08-22 08:33:21 | INFO | C7 superseded SHA-256 of get_sha256 [Priorite_21b_adverse_bias_and_null_law.py]: 9e8dee911c4d2ddf2a406fc68fa13cf3ed9df36fbade580c715852c48ade5c83
+2026-08-22 08:33:21 | INFO | C7 superseded SHA-256 of dump_requirements [Priorite_21b_adverse_bias_and_null_law.py]: a4e83925eda906d84fec83bb14ab290454ebe98ff7b18adee24678234ab88cc4
+2026-08-22 08:33:21 | INFO | C7 superseded SHA-256 of get_md5 [Priorite_21c_plot_adverse_lattice.py]: 92465a5b7a879855c83bbbcffba899bd6b958d862a15ce4211af56c0a126e272
+2026-08-22 08:33:21 | INFO | C1 (i)-(iii) OPERATOR IDENTITY, by AST, over BOTH modules of this stream. `exceeds` is a single `Compare` carrying `ast.Gt`; of the 138 comparisons in exp_R08_adverse_lattice_a.py and exp_R08_adverse_lattice_b.py, the 3 inside ['exceeds', 'exceeds_units_strict', 'exceeds_units_weak'] are the only ones that may ORDER a threshold name against anything, and none of the others does. `worker_mod_A` calls `exceeds`; `operator_levels_at` calls all three helpers; `lattice_exceedance_enumerated` calls `exceeds_units_strict`. lambda* itself comes from `lambda_star_from_rule` on the EXACT law, so the selection path and the evaluation path test the same operator by construction. Deterministic; trigger probability 0.
+2026-08-22 08:33:21 | INFO | FAMILY-WISE ARITHMETIC, LOGGED BEFORE ANY RESULT IS INTERPRETED (S4bis.1). Control C4 compares the two arms at 6 values of b. Gating on 'no test rejects' at the 0.05 level would trigger with probability 1 - (1 - 0.05)^6 = 26.4908% under the hypothesis of equality itself -- far above the 5% ceiling S4bis fixes. 'No test rejects' is therefore NOT used as a gate, and neither is 'two tests reject' used as a refutation. The substitute is a KS calibration of the six p-values against Uniform(0,1), read against a null built by sign-flip resampling on the trajectory index, because the six p-values are dependent twice over and the tabulated Kolmogorov distribution assumes neither dependence.
+2026-08-22 08:33:21 | INFO | C1/C2 THE EXACT LATTICE LAW. With delta = 0.1 the two CUSUM branches move by +0.4 and -0.6, i.e. by +2 and -3 in units of 2delta = 0.2, so (S_pos, S_neg) is a Markov chain on the non-negative integer quadrant and M_H is an integer multiple of 0.2. An absorbing-chain dynamic program over that state space at H = 5000 gives P(M_H > lambda) exactly. No Monte-Carlo is involved and no entropy is consumed; the trigger probability of every assertion resting on it is 0.
+2026-08-22 08:33:23 | INFO | C1 lambda* BY L241's OWN RULE, evaluated on the exact law in 2.3s: 'we take the nearest attainable level at or below nominal' selects the SMALLEST lattice threshold whose exact level is at or below 0.05, which is 57 lattice units = 11.4. v87 prints lambda* = 11.4, and 57 * 0.2 == 11.4 is True bit-for-bit in float64. The delivered `float(np.quantile(Ms_cal, 0.95))` on 20,000 fair-coin streams (witness l.228-233) is a superseded estimator: it sits astride a lattice boundary and docs/DEVIATIONS.md `R07-lambda-star-estimator` already registers it with the exact probability that it returns 11.4. R08 cites that entry and opens no duplicate.
+2026-08-22 08:33:23 | INFO | IS_LATTICE_POINT IS COMPUTED, NOT WRITTEN (prompt section 2.6). The witness line 373 is the bare assignment `is_lattice = True` -- an `ast.Constant`, not a computation -- so the column carries no information in the delivered CSV. Here the verdict is taken in exact rational arithmetic on the decimal v87 prints: 5*lambda must be an integer. On the six grid points the verdict is [('11.0', 55, True), ('11.2', 56, True), ('11.4', 57, True), ('11.6', 58, True), ('11.8', 59, True), ('12.0', 60, True)]; on the probe 11.3, which is not a multiple of 2delta, it is False with units None. The probe is a negative control of the column and enters no artefact. Neither float route decides this: 11.2 / 0.2 = 55.99999999999999 and 56 * 0.2 = 11.200000000000001.
+2026-08-22 08:33:23 | INFO | C3, BEFORE ANY RESULT IS READ. The bracketing roles are computed on the EXACT law, where the trigger probability is 0. The SAME roles are then required of the MEASURED strict levels, and that leg has a computable trigger probability under its own null: the exact level at lambda = 11.2 is 5.1021%, which is only 2.07 binomial standard errors above the 0.05 nominal at 200000 streams, so a Monte-Carlo realisation on the wrong side of nominal is an ordinary event. Summed over the 6 grid points the probability that at least one lands on the wrong side of nominal is 1.9017%. S4bis forbids reading a gate whose trigger probability under its own null is of that size: the measured leg is a REPORTED control, it logs an error and the run continues, and only the exact leg exits.
+2026-08-22 08:33:23 | INFO | C4, BEFORE ANY RESULT IS READ. The three-point bound of L311 is a MAXIMUM over the 6 values of b of a paired difference measured on shared trajectories. S4bis's 4th corollary forbids reading it against the tolerance of one point: the sampling envelope of the maximum is built by resampling trajectories (2000 replicates) and the protocol fixes what it is for -- a printed bound is crossed at D3 only when the 95% interval of the regenerated value EXCLUDES it. The null law of the same maximum under exchangeability of the two arms is built separately by sign-flip resampling (10000 replicates), read at level 0.001, whose trigger probability under that null is exactly 0.001 by construction.
+2026-08-22 08:33:23 | INFO | MODULE A: 10000 trajectories, phi = 0.0, n_ols = 250, T = 6001, evaluation on [1001:6001], b in [0.0, 0.02, 0.05, 0.075, 0.1, 0.15]. Each trajectory carries BOTH arms: the injected-bias arm mu_hat = (phi_hat + b) r_prev at phi = 0, and the naive pairing diagnostic r_naive[t] > 0 at phi = b on the SAME key.
+2026-08-22 08:34:25 | INFO | Module A completed in 61.5s on 48 workers (200 chunks of 50).
+2026-08-22 08:34:25 | INFO | MODULE B: 200000 fair-coin streams at H = 5000, keyed ('lattice_stream', index). Each stream yields BOTH the float statistic and the exact integer one. Both are required: the integer form gives the two exact-operator levels, the float form gives the level the implemented test delivers and the boundary count. The delivered module B computed the float form alone and rounded it to six decimals before comparing, which reports the strict lattice level without saying so.
+2026-08-22 08:34:34 | INFO | Module B completed in 9.0s on 48 workers (100 chunks of 2000). The delivered module B computed the float statistic alone; computing both forms is the cost this stream pays to measure the operator instead of inferring it.
+2026-08-22 08:34:34 | INFO | NO DEGRADED PATH ON THE CARRIED lb_pvalue (S4.3): a constant sign stream would take its `np.std(series) < 1e-12` branch and return the non-rejection 1.0 without any test being run. Over the 120000 module-A streams the branch was taken 0 times. The other two fallbacks of the carried primitives -- `compute_phi_hat_vectorized`'s `sum_den >= 1e-12` mask and `generate_dgp`'s `h[t] = max(..., 1e-12)` floor -- are established unreachable on this DGP and these keys by control C7 of exp_R07_estimated_mean.py, which runs the same recursion on the same trajectory keys; R08 cites that measurement and does not re-run it.
+2026-08-22 08:34:39 | INFO | Figure 8 written to fig08_adverse_lattice.png. Panel (A) both arms' Ljung-Box rejection on a log ordinate with the gap annotated in points and the proportion-test rejections marked. Panel (B) both arms' false-alarm rate with the 5% rule REMOVED and the two operator levels drawn in its place -- strict 4.3230% and weak 5.0815% at lambda* = 11.4 -- with the band between them shaded and each line labelled by its operator. Panel (C) the survival function over the 16 scanned lattice points as a step function on multiples of 0.2, the two bracketing levels marked, and the 5% rule kept here only. Cosmetic divergence from the submitted Fig26_Adverse_Bias_and_Lattice.png, declared per the protocol: bold horizontally centred panel titles prefixed (A)-(C). The removal of the 5% rule from panels (A) and (B) is NOT cosmetic and is recorded in docs/audits/AUDIT_R08.md.
+2026-08-22 08:34:39 | INFO | Emitted 13 macros to R08_claims.tex, prefix \REight per the protocol's ordinal-in-English rule; \REighth appears nowhere. Every value is computed from an object in memory. Two of them -- \REightFprInflate and \REightPenaltyAtResidualMomentum -- are computed from R07 cells and the comment block says so. No macro names eta_rmse_over_sigma, the 'seven times' ratio or the constant 2.5.
+2026-08-22 08:34:39 | INFO | SHA-256 R08_adverse_bias.csv               : 167bc67f6913ebea6fe5023c62a9638259a1036028821d0fa051339ea772f675
+2026-08-22 08:34:39 | INFO | SHA-256 R08_null_law_lattice.csv           : 01abacb1f055f2006d4cf32f3f630003813180f0bdb3da5bb3b839c76e7df611
+2026-08-22 08:34:39 | INFO | SHA-256 R08_operator_levels.csv            : f80e06d2d24de02b0878a840e89acfd6aa622c633468a0032c0cce93141913d6
+2026-08-22 08:34:39 | INFO | SHA-256 R08_lattice_exact_law.csv          : 7134ae5e2cc683f18fbbf7efb0c32dbebd68cabbf36e06fc5b880d1710e00893
+2026-08-22 08:34:39 | INFO | SHA-256 R08_pairing_diagnostic.csv         : 0492b16f924e68779a22bfdb60820ef1c531483b09c211e425c06422f895b917
+2026-08-22 08:34:39 | INFO | Re-run reconciliation: all 5 CSVs re-serialise to the digests exp_R08_adverse_lattice_a wrote. The figure and the macros describe the persisted campaign.
+2026-08-22 08:34:39 | INFO | SHA-256 fig08_adverse_lattice.png          : 74966cbc8610970f25dc7597664002b7c34d4d2c75a1a5106689543b7fc277f5
+2026-08-22 08:34:39 | INFO | SHA-256 R08_claims.tex                     : 6a5f743e5920c8043358e20a3013026f994a94f5e019f186fca52e0a4c1dc9c6
+2026-08-22 08:34:39 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
+2026-08-22 08:34:39 | INFO | results/R08_adverse_lattice/
+2026-08-22 08:34:39 | INFO | ├── data/
+2026-08-22 08:34:39 | INFO | │   ├── R08_adverse_bias.csv                [167bc67f6913ebea6fe5023c62a9638259a1036028821d0fa051339ea772f675]
+2026-08-22 08:34:39 | INFO | │   ├── R08_null_law_lattice.csv            [01abacb1f055f2006d4cf32f3f630003813180f0bdb3da5bb3b839c76e7df611]
+2026-08-22 08:34:39 | INFO | │   ├── R08_operator_levels.csv             [f80e06d2d24de02b0878a840e89acfd6aa622c633468a0032c0cce93141913d6]
+2026-08-22 08:34:39 | INFO | │   ├── R08_lattice_exact_law.csv           [7134ae5e2cc683f18fbbf7efb0c32dbebd68cabbf36e06fc5b880d1710e00893]
+2026-08-22 08:34:39 | INFO | │   └── R08_pairing_diagnostic.csv          [0492b16f924e68779a22bfdb60820ef1c531483b09c211e425c06422f895b917]
+2026-08-22 08:34:39 | INFO | ├── figures/
+2026-08-22 08:34:39 | INFO | │   └── fig08_adverse_lattice.png           [74966cbc8610970f25dc7597664002b7c34d4d2c75a1a5106689543b7fc277f5]
+2026-08-22 08:34:39 | INFO | └── tables/
+2026-08-22 08:34:39 | INFO |     └── R08_claims.tex                      [6a5f743e5920c8043358e20a3013026f994a94f5e019f186fca52e0a4c1dc9c6]
+2026-08-22 08:34:39 | INFO | =============================================================================
+2026-08-22 08:34:39 | INFO | Execution completed in 78.4s.

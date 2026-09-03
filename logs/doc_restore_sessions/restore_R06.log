@@ -1,0 +1,25 @@
+Perfect! The task is complete. Both files have been restored from the logs with all required content:
+
+1. **`docs/audits/AUDIT_R06.md`** has all 6 required sections:
+   - Deviation table (D0-D3) with 8 rows, count by severity, and explanation of the D1
+   - Controls with 6 subsections, each with trigger probability, realised margin, and verdict
+   - Test suite with verbatim pytest output
+   - Reproducibility digests from the log and current tree
+   - Design decisions (5 numbered items)
+   - Open questions (4 numbered items)
+
+2. **`docs/sections/R06.md`** has all required content:
+   - Title
+   - What the experiment establishes and which figures/tables/claims it certifies
+   - Reproduction command
+   - Expected artefacts split into two groups
+   - Measured execution cost with log line reference
+   - No "Known deviations" section (correctly omitted since no D2 or D3)
+
+All self-verification checks pass:
+- No confirmatory language
+- All Wilson intervals are on proportions
+- No deff = 1 or simple random sampling assumption
+- No BLAS/associativity/summation order attributions
+- D3 count >= log's D3 count (2 >= 0)
+- Both files end with newline

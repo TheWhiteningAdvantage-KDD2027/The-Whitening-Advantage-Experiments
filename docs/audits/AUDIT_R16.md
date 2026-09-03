@@ -32,7 +32,9 @@
 
 Count by severity: D0: 14, D1: 5, D2: 5, D3: 1.
 
-The D3 row falsifies the qualitative claim in v87 L329 that a "retrospective multi-scale Pagan--Sossounov bull/bear dating of the four streams (2000--2025; 66 phases after duration censoring)" is reachable by a pure Pagan--Sossounov dating. Strict Pagan--Sossounov on all four streams yields 48 phases, not 66. The canonical census reproduces the 66 phases by substituting Lunde--Timmermann for SPY alone when check_sanity fails. The falsification touches the dating description only; it does NOT affect the 80% headline, which is computed from the canonical census that does reach 66 phases and 53 out of budget at gamma=20.
+The D3 row falsifies the qualitative claim in v87 L329 that a "retrospective multi-scale Pagan--Sossounov bull/bear dating of the four streams (2000--2025; 66 phases after duration censoring)" is reachable by a pure Pagan--Sossounov dating. Strict Pagan--Sossounov on all four streams yields 48 phases, not 66. The canonical census reproduces the 66 phases by substituting Lunde--Timmermann for SPY alone when check_sanity fails.
+
+**Scope:** The falsification touches the dating description only; it does NOT affect the 80% headline, which is computed from the canonical census that does reach 66 phases and 53 out of budget at gamma=20.
 
 ## 2. Controls
 

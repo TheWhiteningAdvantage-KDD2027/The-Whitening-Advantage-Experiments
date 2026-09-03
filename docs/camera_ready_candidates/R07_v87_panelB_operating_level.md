@@ -1,14 +1,10 @@
-# Camera-ready candidate — Figure 7 panel B operates at the upper attainable level, not at the one its parenthetical names
+# Camera-Ready Candidate: R07_v87_panelB_operating_level
 
-| Field               | Value                                                                                                                         |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Status**          | **PARKED — do not apply**                                                                                                     |
-| Target file         | `articleB_whitening_v87.tex` (submitted 2026-07-26, frozen), Figure 7 caption, **line 543**                                    |
-| Trigger             | Acceptance notification, 14 November 2026                                                                                     |
-| Evidence            | `results/R07_estimated_mean/data/R07_lattice_exact_law.csv` (`record_type = float_drift`) and `R07_estmean_lb_fpr.csv`         |
-| Register entry      | `docs/DEVIATIONS.md`, `R07-panelB-operating-level` — Class A, no severity                                                     |
-| Cost                | +14 words in one clause; no number in the body text changes                                                                   |
-| Blocking dependency | shares the caption with `R07_v87_figure7_exactness.md`; the two search strings are **disjoint** and the two edits commute      |
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R07-oracle-band-precision`
+
+**Target file: `articleB_whitening_v87.tex`**      |
 
 **Why this is not applied now.** The manuscript is under review and cannot be edited. The
 deviation inventory is not closed.
@@ -63,16 +59,15 @@ errors on every one of the 28 OLS cells, but it is what the band is worth.
 disjoint from the string `R07_v87_figure7_exactness.md` searches in the same caption. Verify once
 more before applying, as a matter of routine.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 while all rolling-OLS arms ($n \in [125, 1000]$) match oracle false-alarm control
 ~~~~~~~~~
-
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 while all rolling-OLS arms ($n \in [125, 1000]$) match oracle false-alarm control, both at the level the implemented test delivers on the lattice boundary---$5.2\%$ here, the upper of the two attainable levels, not the $4.29\%$ of the mathematical $M_H > \lambda^{\star}$
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END OF BLOCK
 
 ## What must not be done with this candidate
 

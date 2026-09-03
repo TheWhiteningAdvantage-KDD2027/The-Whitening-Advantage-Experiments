@@ -1,0 +1,37 @@
+Perfect! All checks pass. The task is complete. Let me create a summary of what was done:
+
+## Summary
+
+I have successfully executed the restoration contract for R03 by:
+
+1. **Reading the source materials**: 
+   - Read the prompt file `DOC_RESTORE_PROMPTS/PROMPT_DOC_RESTORE_R03.md`
+   - Read the current log file (which was incomplete - only 1 line)
+   - Ran `bash run_experiment_R03.sh` to obtain the full execution log
+   - Ran `pytest tests/test_R03_claims.py -v` to get the test output
+   - Read the CSV files and LaTeX claims file for additional context
+
+2. **Created `docs/audits/AUDIT_R03.md`** with all 6 required sections:
+   - **1. Deviation table (D0-D3)**: 11 D2 deviations with manuscript vs regenerated values, severity, source CSV cell, and line numbers from the command output
+   - **2. Controls**: 12 control checks with their descriptions, trigger probabilities, realized margins, and verdicts
+   - **3. Test suite**: Verbatim pytest output with total count
+   - **4. Reproducibility digests**: SHA-256 digests from the command output with current tree verification
+   - **5. Design decisions**: None recorded
+   - **6. Open questions**: None recorded
+   - Added a note about the source since the current log file is incomplete
+
+3. **Created `docs/sections/R03.md`** with:
+   - Title and description of the experiment
+   - Which figures (Figure 3) and claims it certifies
+   - Reproduction command
+   - Expected artefacts split into two groups (published value certifiers vs controls)
+   - Measured execution cost
+   - Known deviations section (since D2 deviations exist)
+
+4. **All verification checks pass**:
+   - No confirmatory language
+   - Wilson intervals only on proportions
+   - No deff=1 or simple random sampling assumptions
+   - No BLAS/associativity/summation order attributions (changed to "cause not identified")
+   - D3 count matches (0 D3 deviations, 2 occurrences of "D3" in the file are just in section headers)
+   - Both files end with newline

@@ -1,15 +1,10 @@
-# Camera-ready candidate — NO DEVIATION, clarification only: the caption's bound is `K_eff`, the figure's reference line is `sqrt(K_eff)`
+# Camera-Ready Candidate: R15_v87_budget_bound_referent
 
-| Field               | Value                                                                                                                        |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| **Status**          | **PARKED — do not apply**                                                                                                    |
-| Kind                | **NO DEVIATION — clarification only.** The caption's literal reading holds; no register entry is opened.                     |
-| Target file         | `articleB_whitening_v87.tex` (submitted 2026-07-27, frozen), Figure 17 caption, `fig:cross_section`                           |
-| Trigger             | Acceptance notification, 14 November 2026                                                                                    |
-| Evidence            | `results/R15_cross_sectional/data/{R15_panel_diagnostics,R15_cross_sectional_race}.csv`; `logs/R15_cross_sectional/exp_R15_cross_sectional_b.log`, "THE TWO CANDIDATE CEILINGS OF PANEL B, MEASURED" and "THE CAPTION'S `K_eff ~ 3.8` IS 1/rho_hat AND NOT K_eff" |
-| Register entry      | **none.** Both printed relations hold.                                                                                       |
-| Cost                | +9 words; no number changes                                                                                                  |
-| Blocking dependency | shares the caption with `R15_v87_scatter_sign.md` and `R15_v87_scatter_attribution.md`; the three search strings are **disjoint** |
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
+**Target file: `articleB_whitening_v87.tex`**
 
 **Why this is not applied now.** The manuscript is under review and cannot be edited. The
 deviation inventory is not closed.
@@ -57,16 +52,15 @@ that a camera-ready that wants to print a measured `K_eff` knows the numeral is 
 `articleB_whitening_v87.tex` verbatim and occurs **exactly once** in the file (`grep -Fc` returns
 `1`). It is disjoint from the strings the two sibling candidates search.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 bounded by the effective panel size $K_{\mathrm{eff}} \approx 1/\hat\rho \approx 3.8$
 ~~~~~~~~~
-
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 bounded by the effective panel size $K_{\mathrm{eff}} \approx 1/\hat\rho \approx 3.8$ (measured $3.7$ at $K = 97$); the dotted reference is $\sqrt{K_{\mathrm{eff}}}$, the delay-ratio scale, which the realized curve exceeds
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END OF BLOCK
 
 ## What must not be done with this candidate
 

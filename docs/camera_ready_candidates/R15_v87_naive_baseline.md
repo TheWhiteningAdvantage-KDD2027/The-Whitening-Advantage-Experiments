@@ -1,15 +1,10 @@
-# Camera-ready candidate — NO DEVIATION, clarification only: the independence calibration already over-fires at `K = 1`, where there is no sign correlation to ignore
+# Camera-Ready Candidate: R15_v87_naive_baseline
 
-| Field               | Value                                                                                                                          |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| **Status**          | **PARKED — do not apply**                                                                                                      |
-| Kind                | **NO DEVIATION — clarification only.** The caption's claim holds; no register entry is opened.                                 |
-| Target file         | `articleB_whitening_v87.tex` (submitted 2026-07-27, frozen), Figure 17 caption **(A)**, `fig:cross_section`                     |
-| Trigger             | Acceptance notification, 14 November 2026                                                                                      |
-| Evidence            | `results/R15_cross_sectional/data/R15_panel_diagnostics.csv` (`FPR_naive`, `rho_sign_meas`, `K_eff_meas`, `q_hat_*`); `logs/R15_cross_sectional/exp_R15_cross_sectional_b.log`, "THE FPR_naive DECOMPOSITION, AND WHERE IT STOPS BEING IDENTIFIABLE" |
-| Register entry      | **none.** The caption's mechanism is real and dominant; what is added is its baseline.                                          |
-| Cost                | +11 words; no printed number changes                                                                                           |
-| Blocking dependency | none; the search string is in panel A's sentence and is disjoint from the three panel-B candidates                             |
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
+**Target file: `articleB_whitening_v87.tex`**                             |
 
 **Why this is not applied now.** The manuscript is under review and cannot be edited. The
 deviation inventory is not closed.
@@ -71,16 +66,15 @@ arm does not.
 `articleB_whitening_v87.tex` verbatim and occurs **exactly once** in the file (`grep -Fc` returns
 `1`).
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 An independence calibration lets false alarms climb toward $100\%$ by ignoring sign correlation
 ~~~~~~~~~
-
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 An independence calibration already over-fires at $K = 1$, where no sign correlation exists, and then lets false alarms climb toward $100\%$ by ignoring it
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END OF BLOCK
 
 ## What must not be done with this candidate
 

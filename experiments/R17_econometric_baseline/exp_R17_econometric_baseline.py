@@ -1544,7 +1544,7 @@ def report_r04_coherence(log):
             return None
     calibration = pd.read_csv(calibration_path, float_precision='round_trip')
     efficiency = pd.read_csv(efficiency_path, float_precision='round_trip')
-    log.info(f"R04 COHERENCE -- read from {calibration_path.parent} with "
+    log.info(f"R04 COHERENCE -- read from results/R04_isofpr_race/data with "
              f"float_precision='round_trip' on both sides. THE R04 SIDE IS ALREADY CONTESTED: "
              f"`R04b-efficiency-crossing` and `R04b-oracle-ratio-offset` are registered D3, so "
              f"this comparison is written against R04's REGENERATED values and not against "

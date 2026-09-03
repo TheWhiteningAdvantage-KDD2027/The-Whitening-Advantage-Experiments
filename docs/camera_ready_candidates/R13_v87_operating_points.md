@@ -2,7 +2,7 @@
 
 - **Status:** PARKED — do not apply
 - **Trigger:** Acceptance notification of 14 November 2026
-- **Register entry:** none
+- **Register entries:** `R13-operating-points-unnamed`, `R13-negative-control-scope`
 
 **Target file:** `articleB_whitening_v87.tex`
 
@@ -55,9 +55,15 @@ The **caption is exact** because it names its settings; the body sentence is not
 **Verification of the search string.** The block below is quoted from
 `articleB_whitening_v87.tex` **line 331** verbatim and occurs **exactly once** in the file (`grep -Fc` returns `1`). It is disjoint from the strings the two sibling candidates search. Verify once more before applying, as a matter of routine.
 
-<<< SEARCH ~~~~~~~~~latex to $16$ days (standardized-mean CUSUM) ~~~~~~~~~
+<<< SEARCH
+~~~~~~~~~latex
+to $16$ days (standardized-mean CUSUM)
+~~~~~~~~~
 
-=== REPLACE WITH >>> ~~~~~~~~~latex to $16$ days (standardized-mean CUSUM), both read at the threshold whose bootstrap in-control average run length reaches $252$ trading days---one false alarm per year, the calibration used for the sign floor above ~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
+to $16$ days (standardized-mean CUSUM), both read at the threshold whose bootstrap in-control average run length reaches $252$ trading days---one false alarm per year, the calibration used for the sign floor above
+~~~~~~~~~
 >>> END OF BLOCK
 
 ## Edit 2 — `sec:real_world` L331, name the matched operating point and its two settings
@@ -65,9 +71,15 @@ The **caption is exact** because it names its settings; the body sentence is not
 **Verification of the search string.** Quoted from **line 331** verbatim, `grep -Fc` returns `1`,
 and disjoint from Edit 1.
 
-<<< SEARCH ~~~~~~~~~latex no alarm on the 2011 correction at the matched operating point ~~~~~~~~~
+<<< SEARCH
+~~~~~~~~~latex
+no alarm on the 2011 correction at the matched operating point
+~~~~~~~~~
 
-=== REPLACE WITH >>> ~~~~~~~~~latex no alarm on the 2011 correction at the matched iso-FPR operating point ($\mathrm{FPR}_H \le 5\%$), at the two dead bands of Figure~\ref{fig:oracle_frontier} ~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
+no alarm on the 2011 correction at the matched iso-FPR operating point ($\mathrm{FPR}_H \le 5\%$), at the two dead bands of Figure~\ref{fig:oracle_frontier}
+~~~~~~~~~
 >>> END OF BLOCK
 
 The second edit does two things at once: it names the operating point, which is *not* the one the first half of the sentence uses, and it restricts the claim to the settings under which it holds — which is what the figure caption already does and what the body sentence omits.

@@ -1,162 +1,138 @@
 #!/usr/bin/env python3
-"""Automated Deterministic Verification Harness for Camera-Ready Candidates.
+"""Gate 4 -- camera-ready candidate integrity.
 
-Distinguishes between Manuscript Prose Patches (validated against articleB_whitening_v87.tex)
-and Macro/Forensic Candidates (validated for header and structural integrity).
+Verifies, for every file in docs/camera_ready_candidates/:
+  1. the PARKED header, the trigger, and exactly one family marker;
+  2. that every prose search anchor occurs EXACTLY ONCE in the frozen manuscript;
+  3. that the family marker agrees with docs/DEVIATIONS.md -- a candidate marked
+     NO DEVIATION must have no register entry, and one that is not must have one.
+
+Read-only on the manuscript. Never writes anything. Exit 0 clean, 1 on any finding.
+
+Usage:
+    python experiments/common/verify_camera_ready.py [STREAM_ID ...]
 """
-
-from __future__ import annotations
-
 import re
 import sys
 from pathlib import Path
 
-SEARCH_BLOCK_REGEX = re.compile(
-    r"<<<\s*SEARCH\s*\n(?:~~~~~~~~~[a-z]*\n|```[a-z]*\n|%[^\n]*\n)?(.*?)[\n\r]+(?:~~~~~~~~~|```|===|% REPLACE)",
-    re.DOTALL,
-)
+ROOT = Path(__file__).resolve().parent.parent.parent
+CAND_DIR = ROOT / "docs" / "camera_ready_candidates"
+REGISTER = ROOT / "docs" / "DEVIATIONS.md"
+MANUSCRIPT = ROOT / "articleB_whitening_v87.tex"
 
-ALT_SEARCH_REGEX = re.compile(
-    r"%\s*SEARCH\s*\n(.*?)[\n\r]+%\s*REPLACE",
-    re.DOTALL,
-)
+TRIGGER = "14 November 2026"
+PARKED = "PARKED"
+NO_DEV = "NO DEVIATION"
 
+# A search block opens with nine tildes, optionally typed, and closes the same way.
+FENCE = re.compile(r"^~{9}[A-Za-z]*\s*$")
+SEARCH_TAG = re.compile(r"^<{3}\s*(SEARCH|RECHERCHER)\s*$")
+REPLACE_TAG = re.compile(r"^={3}\s*(REPLACE WITH|REMPLACER PAR)\s*>{3}\s*$")
+ID_RE = re.compile(r"R[0-9]{2}[a-z]?-[a-z0-9-]{3,}")
 
-def load_manuscript(repo_root: Path) -> str:
-    candidates = [
-        repo_root / "REFACTORING_COMMON" / "articleB_whitening_v87.tex",
-        repo_root / "articleB_whitening_v87.tex",
-    ]
-    for p in candidates:
-        if p.exists():
-            return p.read_text(encoding="utf-8")
-    raise FileNotFoundError("Could not locate articleB_whitening_v87.tex")
+# A block whose payload is a macro definition is not a manuscript anchor and is
+# not looked up in the .tex; it is verified only for structural well-formedness.
+MACRO_ONLY = re.compile(r"\\newcommand|\\renewcommand")
 
 
-def load_deviation_ids(deviations_path: Path) -> set[str]:
-    if not deviations_path.exists():
-        return set()
-    text = deviations_path.read_text(encoding="utf-8")
-    return set(re.findall(r"`(R\d{2}[a-z]?-[a-z0-9-]+)`", text))
+def extract_search_blocks(text):
+    """Return the payload of every SEARCH block, in order."""
+    lines = text.splitlines()
+    blocks, i = [], 0
+    while i < len(lines):
+        if SEARCH_TAG.match(lines[i].strip()):
+            j = i + 1
+            while j < len(lines) and not FENCE.match(lines[j]):
+                j += 1
+            if j >= len(lines):
+                break
+            k, payload = j + 1, []
+            while k < len(lines) and not FENCE.match(lines[k]):
+                payload.append(lines[k])
+                k += 1
+            if payload:
+                blocks.append("\n".join(payload))
+            i = k
+        elif REPLACE_TAG.match(lines[i].strip()):
+            i += 1
+        else:
+            i += 1
+    return blocks
 
 
-def main() -> int:
-    repo_root = Path(__file__).resolve().parents[2]
-    tex_content = load_manuscript(repo_root)
-    deviations_file = repo_root / "docs" / "DEVIATIONS.md"
-    valid_dev_ids = load_deviation_ids(deviations_file)
+def main():
+    wanted = set(sys.argv[1:])
+    findings = []
 
-    candidates_dir = repo_root / "docs" / "camera_ready_candidates"
-    candidate_files = sorted(candidates_dir.glob("*_v87_*.md"))
+    for path in (CAND_DIR, REGISTER, MANUSCRIPT):
+        if not path.exists():
+            print(f"[Gate 4] MISSING: {path}", file=sys.stderr)
+            return 1
 
-    if not candidate_files:
-        print("[!] No candidate files found in docs/camera_ready_candidates/")
+    tex = MANUSCRIPT.read_text(encoding="utf-8", errors="replace")
+    register = REGISTER.read_text(encoding="utf-8", errors="replace")
+    register_ids = set(ID_RE.findall(register))
+
+    files = sorted(CAND_DIR.glob("*_v87_*.md"))
+    if not files:
+        print("[Gate 4] no candidate files found", file=sys.stderr)
         return 1
 
-    errors: list[str] = []
-    verification_rows: list[str] = []
-    prose_anchors_total = 0
-    prose_anchors_passed = 0
-    macro_doc_count = 0
-
-    for cfile in candidate_files:
-        content = cfile.read_text(encoding="utf-8")
-
-        # 1. Header Validation
-        if "PARKED — do not apply" not in content and "PARKED" not in content:
-            errors.append(f"{cfile.name}: Missing 'PARKED — do not apply' in header")
-
-        has_clarification = "NO DEVIATION" in content
-        dev_match = re.search(r"\*\*Register entry:\*\*\s*`([^`]+)`", content)
-
-        if not has_clarification and not dev_match:
-            if "Register entry:" not in content and "STATUS:" not in content:
-                errors.append(f"{cfile.name}: Missing Two-Family header ('Register entry' or 'NO DEVIATION')")
-        elif dev_match:
-            dev_id = dev_match.group(1)
-            # Allow 'none' or valid deviation ID from DEVIATIONS.md
-            if dev_id != "none" and dev_id not in valid_dev_ids and not dev_id.startswith("entry"):
-                errors.append(f"{cfile.name}: Cited register entry `{dev_id}` not found in DEVIATIONS.md")
-
-        # 2. Identify Genre: Manuscript Prose Patch vs. Macro/Forensic Candidate
-        matches = SEARCH_BLOCK_REGEX.findall(content)
-        if not matches:
-            matches = ALT_SEARCH_REGEX.findall(content)
-
-        is_macro_or_doc = (
-            "\\newcommand" in content
-            or "macro" in cfile.name.lower()
-            or "claims.tex" in content
-            or not matches
-        )
-
-        if is_macro_or_doc and not matches:
-            macro_doc_count += 1
-            verification_rows.append(f"| `{cfile.name}` | *(Macro / Concordance note)* | N/A | PASS (Macro/Doc) ✅ |")
+    checked = 0
+    for f in files:
+        stream_tokens = f.name.split("_v87_")[0].split("_")
+        if wanted and not any(token in wanted for token in stream_tokens):
             continue
+        checked += 1
+        rel = f.relative_to(ROOT).as_posix()
+        text = f.read_text(encoding="utf-8", errors="replace")
+        head = "\n".join(text.splitlines()[:15])
 
-        # 3. Validate Prose Anchors against articleB_whitening_v87.tex
-        for idx, raw_search in enumerate(matches, 1):
-            prose_anchors_total += 1
-            search_str = raw_search.strip("\r\n")
+        if PARKED not in head:
+            findings.append(f"{rel}: no PARKED header in the first 15 lines")
+        if TRIGGER not in head:
+            findings.append(f"{rel}: no trigger '{TRIGGER}' in the first 15 lines")
 
-            # Ignore macro-block searches inside candidates
-            if "\\newcommand" in search_str or "\\R" in search_str:
-                macro_doc_count += 1
-                verification_rows.append(f"| `{cfile.name}` | *(Macro block search)* | N/A | PASS (Macro) ✅ |")
+        no_dev = NO_DEV in head
+        cited = set(ID_RE.findall(text))
+        in_register = {i for i in cited if i in register_ids}
+
+        if no_dev and in_register:
+            findings.append(
+                f"{rel}: marked NO DEVIATION but cites register entries "
+                f"{sorted(in_register)} -- a clarification carries no register entry")
+        if not no_dev and not in_register:
+            findings.append(
+                f"{rel}: not marked NO DEVIATION and cites no register entry present in "
+                f"docs/DEVIATIONS.md -- add the family marker or the register entry")
+        for i in sorted(cited - register_ids):
+            findings.append(f"{rel}: dangling register identifier '{i}'")
+
+        blocks = extract_search_blocks(text)
+        if not blocks:
+            findings.append(f"{rel}: no SEARCH block found")
+        for n, payload in enumerate(blocks, 1):
+            if MACRO_ONLY.search(payload):
                 continue
-
-            if not search_str:
-                errors.append(f"{cfile.name} (Anchor {idx}): Empty search block")
+            probe = payload.strip()
+            if not probe:
+                findings.append(f"{rel}: SEARCH block {n} is empty")
                 continue
+            count = tex.count(probe)
+            if count != 1:
+                first = probe.splitlines()[0][:70]
+                findings.append(
+                    f"{rel}: SEARCH block {n} occurs {count} times in the frozen manuscript "
+                    f"(must be exactly 1) -- starts: {first!r}")
 
-            count = tex_content.count(search_str)
-            short_preview = search_str.replace("\n", " ")[:50]
-
-            if count == 1:
-                prose_anchors_passed += 1
-                verification_rows.append(f"| `{cfile.name}` | `{short_preview}...` | 1 | PASS ✅ |")
-            elif count == 0:
-                errors.append(f"{cfile.name} (Anchor {idx}): String NOT FOUND in articleB. Preview: '{short_preview}'")
-                verification_rows.append(f"| `{cfile.name}` | `{short_preview}...` | 0 | FAIL ❌ |")
-            else:
-                errors.append(f"{cfile.name} (Anchor {idx}): AMBIGUOUS ({count} occurrences). Preview: '{short_preview}'")
-                verification_rows.append(f"| `{cfile.name}` | `{short_preview}...` | {count} | AMBIGUOUS ❌ |")
-
-        # 4. Check for undefined macro emissions in replacement
-        if re.search(r"\\R(?:Seven|Two|Four|Eight|Eleven)[A-Z][a-zA-Z0-9]*", content):
-            # Only flag if it's patching articleB, not if it's generating claims.tex
-            if "articleB_whitening_v87.tex" in content:
-                errors.append(f"{cfile.name}: Replacement emits unexpanded macros (e.g. \\RSeven...); must use literal numerals")
-
-    # Generate certified ANCHOR_VERIFICATION.md
-    report_path = candidates_dir / "ANCHOR_VERIFICATION.md"
-    report_content = [
-        "# Deterministic Camera-Ready Anchor Verification Report",
-        "",
-        f"- **Total candidate files evaluated:** {len(candidate_files)}",
-        f"- **Prose manuscript anchors checked:** {prose_anchors_total}",
-        f"- **Passed prose anchors (count == 1):** {prose_anchors_passed}",
-        f"- **Macro definitions / Concordance notes:** {macro_doc_count}",
-        f"- **Failed anchors / Header errors:** {len(errors)}",
-        f"- **Overall Status:** {'PASS ✅' if not errors else 'FAIL ❌'}",
-        "",
-        "## Verification Table",
-        "",
-        "| Candidate File | Search Preview | Count | Verdict |",
-        "| --- | --- | --- | --- |",
-    ] + verification_rows + [""]
-
-    report_path.write_text("\n".join(report_content), encoding="utf-8")
-    print(f"[*] Wrote certified report to {report_path.relative_to(repo_root)}")
-
-    if errors:
-        print(f"\n[!] ANCHOR VERIFICATION FAILED WITH {len(errors)} ERROR(S):")
-        for err in errors:
-            print(f"  - {err}")
+    print(f"[Gate 4] {checked} candidate file(s) checked.")
+    if findings:
+        print(f"[Gate 4] {len(findings)} finding(s):", file=sys.stderr)
+        for x in findings:
+            print(f"  - {x}", file=sys.stderr)
         return 1
-
-    print(f"\n[+] ALL CANDIDATE INVARIANTS DETERMINISTICALLY VERIFIED (Exit 0).")
+    print("[Gate 4] clean.")
     return 0
 
 

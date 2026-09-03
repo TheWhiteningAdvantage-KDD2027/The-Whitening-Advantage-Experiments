@@ -1,15 +1,10 @@
-# Camera-ready candidate — NO DEVIATION, clarification only: the caption's composition attribution is confounded with `K`
+# Camera-Ready Candidate: R15_v87_scatter_attribution
 
-| Field               | Value                                                                                                                                                                              |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Status**          | **PARKED — do not apply**                                                                                                                                                          |
-| Kind                | **NO DEVIATION — clarification only.** Nothing printed is contradicted and no register entry is opened.                                                                            |
-| Target file         | `articleB_whitening_v87.tex` (submitted 2026-07-27, frozen), Figure 17 caption, `fig:cross_section`                                                                                |
-| Trigger             | Acceptance notification, 14 November 2026                                                                                                                                          |
-| Evidence            | `results/R15_cross_sectional/data/R15_panel_composition.csv`; `logs/R15_cross_sectional/exp_R15_cross_sectional_b.log`, "THE CAPTION'S ATTRIBUTION IS NOT TESTABLE BY THIS DESIGN" |
-| Register entry      | **none.** The caption is not false: compositions do vary along the abscissa.                                                                                                       |
-| Cost                | +6 words, or nothing at all                                                                                                                                                        |
-| Blocking dependency | shares the caption with `R15_v87_scatter_sign.md` and `R15_v87_budget_bound_referent.md`; the three search strings are **disjoint**                                                |
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
+**Target file: `articleB_whitening_v87.tex`**                                                |
 
 **Why this is not applied now.** The manuscript is under review and cannot be edited. The
 deviation inventory is not closed.
@@ -48,16 +43,15 @@ with a figure that was drawn without it. The gap is reported instead.
 `articleB_whitening_v87.tex` verbatim and occurs **exactly once** in the file (`grep -Fc` returns
 `1`). It is disjoint from the strings the two sibling candidates search.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 Point-to-point scatter reflects threshold variations across panel compositions
 ~~~~~~~~~
-
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 Point-to-point scatter tracks threshold variation; panel size and composition change together along the abscissa, so the two are not separated here
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END OF BLOCK
 
 ## What must not be done with this candidate
 

@@ -125,10 +125,10 @@ Data inputs:
 1. The entropy migration replaces hardcoded seeds (100, 200, 201, 300) with role-and-index keys: ('R14', 'dither'), ('R14', 'synth', 'BTC'), ('R14', 'synth', 'ETH'), ('R14', 'qmle'). Every migrated draw is keyed by rng_for on its role and index alone, never on a process parameter, instituting common random numbers (log line 17).
 2. The `_legacy_seeds` arm is executed unconditionally by run_experiment_R14.sh after the default arm, to separate the effect of the entropy migration from a transcription error in this port (log line 1 in legacy_seeds log).
 3. The QMLE audit over pre-onset fits reports non-converged, frozen, and fallback counters even at zero (log lines 38, 147, 215).
-4. Control S4.2 forbids hoisting any primitives into experiments/common/: a machine diff shows _garch_nll, fit_garch_qmle, strict_cusum and wilson_ci all differ between this witness and the R01/R03/R04/R04b/R11/R13 copies (log line 15).
+4. Control S4.2 forbids hoisting any primitives into experiments/common/: a machine diff shows _garch_nll, fit_garch_qmle, strict_cusum and wilson_ci all differ between this witness and the R01/R03/R04/R04b/R11/R13 copies (log line 15). wilson_ci qualifies one statistic in this stream, the detection rate DetRate = n_detected / n_onsets and its design-corrected form on n_eff; those are the only binomial proportions R14 gives an interval to.
 
 ## 6. Open questions, left open
 
 1. The R14 prompt states 25 of 88 unreliable cells; witness 25 of 88, regenerated 28 of 88 (log line 306).
-2. Witness Synth_ETH: mean ratio 0.5418423397760349 over 8 pairwise-reliable magnitudes; regenerated 0.9189199350683375 over 7 magnitudes, 95% interval [0.7876523389282832, 0.9615749561648425] (log line 307).
+2. Witness Synth_ETH: mean ratio 0.5418423397760349 over 8 pairwise-reliable magnitudes; regenerated 0.9189199350683375 over 7 magnitudes, 95% percentile interval [0.7876523389282832, 0.9615749561648425] from a paired moving-block bootstrap over onsets, block length 24, B = 2000, one resampled index vector shared by both arms and all 7 magnitudes (log lines 258 and 307). The ADD ratio is a quotient of two conditional means and not a binomial proportion, so it carries a bootstrap envelope and no Wilson interval.
 3. The ETH synthetic control does not recover the light-tailed ordering at ETH's onsets, as stated in L345 (log line 307).

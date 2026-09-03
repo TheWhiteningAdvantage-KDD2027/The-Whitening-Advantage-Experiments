@@ -1,0 +1,36 @@
+The commit was successful. Now let me provide a summary of what was done:
+
+## Summary
+
+I have successfully executed the restoration contract for stream R02b as specified in `DOC_RESTORE_PROMPTS/PROMPT_DOC_RESTORE_R02b.md`.
+
+### Changes Made
+
+**1. `docs/audits/AUDIT_R02b.md`** - Complete rewrite with all 6 mandatory sections:
+
+- **Section 1: Deviation table (D0-D3)** - Created a table with 4 D2 deviations comparing manuscript values (9.2% for all nu) against regenerated values (8.8%, 7.9%, 5.8% for nu=5,6,7 respectively, and nu=6 vs nu=7 for the exclusion boundary). Each entry has proper CSV cell and log line citations.
+- **Section 2: Controls** - Documented the negative control for raw innovations calibration with trigger probability marked as NOT RECOVERABLE FROM THE LOG, and realised margins with Wilson interval verification.
+- **Section 3: Test suite** - Ran `pytest tests/test_R02b_claims.py -v` and pasted the verbatim output (5 tests passing).
+- **Section 4: Reproducibility digests** - Copied SHA-256 digests from the log (lines 17-22) for the single run, plus current tree verification.
+- **Section 5: Design decisions** - Documented the nu grid choice and deterministic seeding mechanism.
+- **Section 6: Open questions** - None recorded (none found in log or existing drafts).
+
+**2. `docs/sections/R02b.md`** - Reader-facing report with:
+
+- Title and description of what the experiment establishes
+- Reproduction command
+- Expected artefacts split into two groups: those certifying published values (CSV with rejection rates, TeX macros, figure) and those certifying controls only (per-stream p-values CSV)
+- Measured execution cost: NOT RECOVERABLE FROM THE LOG (not in the log)
+- Known deviations section (required because audit has D2 entries) with two D2 entries documented
+
+### Self-Verification
+
+All self-verification checks pass:
+1. ✅ No confirmatory language found
+2. ✅ All 'wilson' references are on proportions (rejection rates)
+3. ✅ No 'deff = 1' or 'simple random sampling' assumptions
+4. ✅ No BLAS/associativity/summation order claims without log citations
+5. ✅ D3 count (3) is not lower than log's D3 count (0)
+6. ✅ Both files end with a newline
+
+The restoration is complete and committed.

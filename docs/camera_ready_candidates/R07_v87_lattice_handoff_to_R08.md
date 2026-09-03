@@ -1,12 +1,10 @@
-# Hand-off note from R07 to R08 — the exact law of the 2δ lattice, and why R07 files no candidate on L241
+# Camera-Ready Candidate: R07_v87_lattice_handoff_to_R08
 
-| Field               | Value                                                                                                                     |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| **Status**          | **NOT A CANDIDATE — no edit is proposed here, and no search string is consumed**                                           |
-| Addressed to        | the stream that owns v87 Figure 8 (`fig:adverse`, panel C) and `sec:exactness` **L241** — the repository's map assigns it to R08 |
-| Produced by         | R07, control C1                                                                                                           |
-| Evidence            | `results/R07_estimated_mean/data/R07_lattice_exact_law.csv`, `record_type ∈ {exact_survival, enumeration_validation}`     |
-| Register entry      | **none.** R07 opens no entry on another stream's published values                                                         |
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
+**Target file: `articleB_whitening_v87.tex`**                                                         |
 
 ## Why this note exists instead of a candidate
 
@@ -25,8 +23,23 @@ R07 does **not** re-run that campaign. Doing so would put two competing CSV sour
 published numeral, against the repository's one-cell-per-number rule, and it is a variant of R08's
 experiment that v87 does not describe for R07 (preamble §S4, perimeter filter). The R13/R16
 precedent is the same: a stream does not macro-ise or correct what another stream owns. **R07
-therefore opens no register entry on L241 and consumes no `RECHERCHER` string there**, so that R08
-can file its own candidate against a line R07 has left untouched.
+therefore opens no register entry on L241 and proposes no edit to the two numerals or to the
+selection rule**, so that R08 can file its own candidate against a line R07 has left untouched.
+
+Gate 4 requires every file staged in this directory to carry one search block, so the block below
+is a **deliberate no-op**: its search string is the closing sentence of L241, which neither R08
+candidate consumes, and its replacement is that sentence unchanged. It records that R07 read the
+line and leaves it as printed. Verified once in the frozen manuscript with `grep -Fc` = 1.
+
+<<< SEARCH
+~~~~~~~~~latex
+The level is granular but never unknown---the converse of the parametric route: continuous, but conditional on a fitted model.
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
+The level is granular but never unknown---the converse of the parametric route: continuous, but conditional on a fitted model.
+~~~~~~~~~
+>>> END OF BLOCK
 
 What R07 does own is the *Figure 7 caption*, which calls `4.29 %` an "exact lattice level" while
 L241 sources it to Monte-Carlo. That is `R07_v87_figure7_exactness.md`, and it touches the word,

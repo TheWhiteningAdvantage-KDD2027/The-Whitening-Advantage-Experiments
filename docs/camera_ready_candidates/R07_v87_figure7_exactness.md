@@ -1,14 +1,10 @@
-# Camera-ready candidate — the Figure 7 caption calls "exact" a level L241 sources to Monte-Carlo
+# Camera-Ready Candidate: R07_v87_figure7_exactness
 
-| Field               | Value                                                                                                                              |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **Status**          | **PARKED — do not apply**                                                                                                          |
-| Target file         | `articleB_whitening_v87.tex` (submitted 2026-07-26, frozen), Figure 7 caption, **line 543**, inside `\caption{…\label{fig:estmean}}` |
-| Trigger             | Acceptance notification, 14 November 2026                                                                                          |
-| Evidence            | `results/R07_estimated_mean/data/R07_lattice_exact_law.csv`, `record_type = exact_survival`                                         |
-| Register entry      | **none in R07.** The two numerals belong to R08 — see "What this candidate does not do"                                            |
-| Cost                | one word in the caption; no number changes                                                                                         |
-| Blocking dependency | shares the caption with `R07_v87_panelB_operating_level.md`; the two search strings are **disjoint** and the two edits commute      |
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
+**Target file: `articleB_whitening_v87.tex`**      |
 
 **Why this is not applied now.** The manuscript is under review and cannot be edited. The
 deviation inventory is not closed: R08 owns the campaign behind the two numerals and may revise
@@ -51,16 +47,15 @@ inside `\caption{…}` of the float carrying `\label{fig:estmean}`. It is disjoi
 `R07_v87_panelB_operating_level.md` searches in the same caption, and from the L241 sentence that
 carries the same two numerals. Verify once more before applying, as a matter of routine.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 (exact lattice level $4.29\%$, $5.03\%$ at $\lambda = 11.2$; shaded band = the two attainable levels bracketing $5\%$)
 ~~~~~~~~~
-
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 (attainable lattice levels $4.29\%$ at $\lambda^{\star}$ and $5.03\%$ at $\lambda = 11.2$, as measured in Section~\ref{sec:exactness}; shaded band = the two levels bracketing $5\%$)
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END OF BLOCK
 
 The replacement removes the word "exact", keeps both numerals untouched, and points the reader at
 the place where their basis is stated.

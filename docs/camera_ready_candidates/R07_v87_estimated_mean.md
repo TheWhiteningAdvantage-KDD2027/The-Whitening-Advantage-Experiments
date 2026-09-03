@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R07_v87_estimated_mean.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R07-campaign-redraw`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 STATUS: PARKED — DO NOT APPLY
 
 # R07 v87 Camera-Ready Candidate: Estimated Conditional Mean Whitening
@@ -10,6 +19,7 @@ All numerical values differ at the printed precision level from v87 due to crypt
 
 ## LaTeX Macro Diffs
 
+<<< SEARCH
 ~~~~~~~~~latex
 % v87 manuscript (Figure 7, L302-L308)
 \newcommand{\RSevenLambdaStar}{11.4}
@@ -23,7 +33,9 @@ All numerical values differ at the printed precision level from v87 due to crypt
 \newcommand{\RSevenOracleFprMean}{}
 \newcommand{\RSevenLbRejectMax}{}
 \newcommand{\RSevenBiasMax}{2.9 \\times 10^{-3}}
-
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
 % Compliant deterministic pipeline (single-threaded BLAS)
 \newcommand{\RSevenLambdaStar}{11.4}
 \newcommand{\RSevenLatticeLow}{4.34\%}
@@ -39,6 +51,7 @@ All numerical values differ at the printed precision level from v87 due to crypt
 \newcommand{\RSevenEtaRmseExponent}{-0.4378}
 \newcommand{\RSevenEtaRmseExponentCI}{[-0.4401, -0.4355]}
 ~~~~~~~~~
+>>> END OF BLOCK
 
 ## Affected Claims
 

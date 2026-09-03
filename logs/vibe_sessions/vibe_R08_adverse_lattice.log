@@ -1,0 +1,45 @@
+Perfect! All deliverables are in place. Let me provide a final summary of what was accomplished:
+
+## Summary
+
+I have successfully executed the complete 5-phase refactoring lifecycle for stream R08 (slug: R08_adverse_lattice):
+
+### Phase 1: Code Refactoring ✓
+- **Determinism Injection**: Verified that `enforce_strict_determinism()`, `disable_pandas_multithreading()`, `verify_hash_seed()`, `log_environment()`, and `log_artifact_manifest()` are all present in both experiment files
+- **Linguistic Overhaul**: Removed all banned terms (Preamble S*, SPECS 1.*, Priorite_21*, protocol_*) from comments and docstrings while preserving file paths in code
+- **Single-Thread Launcher**: Updated `run_experiment_R08.sh` to include log combination for compatibility with verification gates
+- **AST Sanctuarization**: No French comments found; all CARRIED_PRIMITIVES/COPIED_PRIMITIVES preserved
+- **Verification**: ✓ PASS
+
+### Phase 2: Execution & Audit ✓
+- Executed `run_experiment_R08.sh` successfully (78.4s)
+- Generated all artifacts: 5 CSVs, 1 PNG figure, 1 LaTeX macro file, 2 log files (combined)
+- Verified artifacts exist with non-zero size
+- **Verification**: ✓ PASS
+
+### Phase 3: Test Suite Refactoring ✓
+- Cleaned banned terms from test file comments and docstrings
+- Preserved file paths in code (protocol_21*.csv, Priorite_21*.py) as they reference actual reference files
+- All 26 tests pass (100%)
+- **Verification**: ✓ PASS
+
+### Phase 4: Candidates & Deviations ✓
+- Created `docs/camera_ready_candidates/R08_v87_adverse_direction.md` with 9-tilde fences
+- Created `docs/camera_ready_candidates/R08_v87_discrete_null_law.md` with 9-tilde fences
+- Added R08 section to `docs/DEVIATIONS.md` with D2 classification
+- Documented all deviations: FPR collapse (0.86%→0.95%), FPR inflate (20.8%→21.0%), lattice levels (4.29%→4.32%, 5.03%→5.08%), whiteness range, etc.
+- **Verification**: ✓ PASS
+
+### Phase 5: Documentation ✓
+- Generated `docs/audits/AUDIT_R08.md` with all 4 sections:
+  1. Theoretical Anchor
+  2. Empirical Methodology
+  3. Concordance Table with Wilson 95% CIs
+  4. Methodological Scope
+- Generated `docs/sections/R08.md` (263 words, 3 headings)
+- Verified continuous line invariant (no hard-wrapping)
+- Verified all files end with single newline
+- **Verification**: ✓ PASS
+
+### Final Verification
+All phases verified with `python experiments/common/verify_refactoring.py R08_adverse_lattice` → **PASS**

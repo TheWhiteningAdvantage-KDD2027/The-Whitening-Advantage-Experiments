@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R09_v87_arl0_censoring.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R09-arl0-censoring`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — panel C's CUSUM and MIX curves sit on the simulation horizon
 
 | Field               | Value                                                                                                                                                            |

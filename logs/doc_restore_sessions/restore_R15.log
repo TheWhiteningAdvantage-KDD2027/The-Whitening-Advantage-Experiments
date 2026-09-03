@@ -1,0 +1,32 @@
+Perfect! The R15.md has all the required content. Let me create a final summary:
+
+## Summary
+
+I have successfully executed the restoration contract in DOC_RESTORE_PROMPTS/PROMPT_DOC_RESTORE_R15.md. The task required restoring two documentation files from the logs in `logs/R15_cross_sectional/`:
+
+### Deliverables Completed:
+
+1. **`docs/audits/AUDIT_R15.md`** - Fully rewritten with the 6 mandatory sections:
+   - **Section 1: Deviation table (D0-D3)** - 9 rows with manuscript values, regenerated values, severity, source CSV cell, and log line citations
+   - **Section 2: Controls** - 10 controls (C1-C10) with trigger probabilities, margins, and verdicts
+   - **Section 3: Test suite** - Verbatim pytest output (28 tests passed)
+   - **Section 4: Reproducibility digests** - SHA-256 digests from both default and witness-BLAS arms, plus current tree listing
+   - **Section 5: Design decisions** - 7 decisions taken outside the plan
+   - **Section 6: Open questions** - 5 open questions left open
+
+2. **`docs/sections/R15.md`** - Reader-facing report with:
+   - Title and stream description
+   - Reproduction command
+   - Expected artefacts split into two groups (value-certifying and control-only)
+   - Measured execution cost with citations
+   - Known deviations section (D2 entries: R15-scatter-sign, R15-campaign-redraw)
+
+### Key Findings from Logs:
+- D0=4, D1=3, D2=4, D3=0
+- The D2 `R15-scatter-sign` falsifies the caption's relation `r >= 0.99` (the signed value is -0.9962)
+- The D2 `R15-campaign-redraw` shifts the bootstrap FPR envelope from 4.8-6.4% to 4.0-5.9%
+- All Monte-Carlo draws use 128-bit SeedSequence re-keying
+- MKL_CBWR=COMPATIBLE constrains BLAS to single instruction-set behavior
+- Witness-BLAS arm recovers submitted values bit-for-bit on RNG-free columns
+
+The restoration follows the ONE RULE: every number, interval, digest, and margin is copied verbatim from the logs with file path and line number citations. No values were fabricated or rounded.

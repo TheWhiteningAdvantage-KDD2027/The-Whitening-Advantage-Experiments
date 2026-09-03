@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R08_v87_whiteness_identity.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — NO DEVIATION, clarification only: "identical whiteness loss" is a mechanism, and the caption states it as a measurement
 
 | Field               | Value                                                                                                                                                            |

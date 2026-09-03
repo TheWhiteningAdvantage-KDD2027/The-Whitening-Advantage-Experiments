@@ -1,4 +1,12 @@
-# Camera-ready candidate — StrictCUSUM nominal level, Section "FPR explosion"
+# Camera-Ready Candidate: R03_v87_cusum_nominal_level.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R03-cusum-nominal-level`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 
 | Field               | Value                                                           |
 | ------------------- | --------------------------------------------------------------- |
@@ -6,7 +14,7 @@
 | Target file         | `articleB_whitening_v87.tex` (submitted 2026-07-27, frozen)     |
 | Trigger             | Acceptance notification only                                    |
 | Evidence            | R03 i.i.d. calibration arm (300 streams at `Gamma = 1` exactly) |
-| Register entry      | `docs/DEVIATIONS.md`, entry 7                                   |
+| Register entry      | `docs/DEVIATIONS.md`, `R03-cusum-nominal-level` — Class A, no severity                                   |
 | Cost                | +0 words against the submitted sentence                         |
 | Blocking dependency | none — no figure, table or theorem depends on the descriptor    |
 

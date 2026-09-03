@@ -1,0 +1,50 @@
+Perfect! All 5 phases are complete. Let me now create a summary of what was accomplished:
+
+## Summary of R05 Stream Refactoring
+
+I have successfully completed the complete 5-phase refactoring lifecycle for stream R05 (R05_scale_law). Here's what was accomplished:
+
+### Phase 1: Code Refactoring ✓
+- **Determinism Injection:** Added explicit `assert os.environ.get("PYTHONHASHSEED") == "42"` after `disable_pandas_multithreading()` in all three experiment files (exp_R05_scale_law_a.py, exp_R05_scale_law_b.py, exp_R05_scale_law_c.py)
+- **Import Order:** Fixed import order in exp_R05_scale_law_c.py to ensure `os` is imported before the assert
+- **French Comments:** None found to translate
+- **CARRIED_PRIMITIVES:** None found to lock
+- **Verification Gate:** PASSED
+
+### Phase 2: Execution & Audit ✓
+- Executed `bash run_experiment_R05.sh` which ran the full experiment chain (step a: abrupt shift, step b: ramps at H=2e5 and H=3e6, step c: figure and macros)
+- Execution completed successfully in ~59 minutes
+- All artifacts generated: CSVs, figures, LaTeX macros, logs
+- **Verification Gate:** PASSED
+
+### Phase 3: Test Suite Refactoring ✓
+- Test file test_R05_claims.py already had no French comments
+- All 22 tests pass (including test_text_artefacts_end_with_a_newline after creating docs/sections/R05.md)
+- **Verification Gate:** PASSED (no French in git diff, all tests pass)
+
+### Phase 4: Candidates & Deviations ✓
+- Created `docs/camera_ready_candidates/R05_v87_scale_law.md` with 9-tilde latex fences containing comprehensive LaTeX macro diff blocks for all 27 metrics
+- Updated existing camera ready candidates (R05_v87_lambda_c_numeral.md, R05_v87_sixth_moment_gloss.md) to use 9-tilde fences
+- Updated `docs/DEVIATIONS.md` with comprehensive R05 section documenting D2 (with D1 components) classification for 27 metrics
+- **Verification Gate:** PASSED
+
+### Phase 5: Documentation & Certification ✓
+- Created `docs/audits/AUDIT_R05.md` with all 4 required sections:
+  1. Theoretical Anchor - explains Proposition prop:add_garch and prop:orthogonality
+  2. Empirical Methodology - describes the three campaigns and determinism enforcement
+  3. Concordance Table with Wilson 95% CIs - 27 metrics with published vs regenerated values
+  4. Methodological Scope and Limitations - discusses design, limitations, and verification
+- Created `docs/sections/R05.md` with 141 words and 3 mandatory headings (Design, Findings, Certification)
+- All documentation has continuous lines (no hard-wrapping)
+- All files end with trailing newline
+- **Final Verification Gate:** PASSED
+
+### Key Achievements:
+1. **AST Sanctuarization:** No French comments added, all carried primitives preserved
+2. **Determinism:** All three experiment files now have explicit PYTHONHASHSEED assertion
+3. **Reproducibility:** Full experiment execution generated all required artifacts
+4. **Test Compliance:** All 22 tests pass with zero discrepancies
+5. **Documentation:** All documentation meets formatting, word count, and content requirements
+6. **Ban List Compliance:** No prohibited terms, AI personas, or engineering traces in documentation
+
+The R05 stream refactoring is **COMPLETE AND CERTIFIED**.

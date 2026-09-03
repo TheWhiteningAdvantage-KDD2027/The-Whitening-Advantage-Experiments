@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R06_v87_caption_paired.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R06-fourth-moment-boundary`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — Figure 6 Caption and Boundary, Section "Empirical Boundaries"
 
 | Field               | Value                                                                   |

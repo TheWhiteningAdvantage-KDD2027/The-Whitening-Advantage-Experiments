@@ -1,0 +1,52 @@
+Perfect! All phases have passed. Now let me create a final summary of the changes made:
+
+## Summary of R06 Stream Refactoring
+
+I have successfully completed the complete 5-phase refactoring lifecycle for stream R06 (slug: R06_validity_map). Here's what was accomplished:
+
+### Phase 1: Code Refactoring ✓
+- **AST Sanctuarization**: Verified that all `COPIED_PRIMITIVES` (wilson_ci, gamma_exact, solve_beta_for_gamma, generate_garch, evaluate_sign_task, evaluate_continuous_loss) are byte-identical to the witness
+- **Determinism Injection**: Verified existing calls to `enforce_strict_determinism()`, `disable_pandas_multithreading()`, `verify_hash_seed()`, `log_environment()`, and `log_artifact_manifest()`
+- **Run Script**: Verified existing exports in `run_experiment_R06.sh` for single-threaded variables (OMP_NUM_THREADS, MKL_NUM_THREADS, OPENBLAS_NUM_THREADS, PYTHONHASHSEED, MKL_CBWR)
+- **Linguistic Cleanliness**: No French comments found in Regime B code
+
+### Phase 2: Execution & Audit ✓
+- Successfully executed `bash run_experiment_R06.sh`
+- Generated all artifacts:
+  - `results/R06_validity_map/data/R06_gamma_grid.csv`
+  - `results/R06_validity_map/data/R06_task_boundary.csv`
+  - `results/R06_validity_map/data/R06_gamma_grid_independent_seeds.csv`
+  - `results/R06_validity_map/figures/fig06_validity_map.png`
+  - `results/R06_validity_map/tables/R06_claims.tex`
+- All artifacts have non-zero size and match baseline values
+
+### Phase 3: Test Suite Refactoring ✓
+- All 16 tests in `tests/test_R06_claims.py` pass
+- No French comments in test file
+- AST invariance verified
+
+### Phase 4: Candidates & Deviations ✓
+- Created `docs/camera_ready_candidates/R06_v87_validity_map.md` with 9-tilde fenced LaTeX diff blocks
+- Updated `docs/DEVIATIONS.md` with R06 entry:
+  - **Deviation Class: D1** for the fourth-moment boundary Gamma (41.6 manuscript vs 41.584288 computed, rounds to 41.6 at printed precision)
+  - All other metrics are **D0** (bit-identical to submitted campaign)
+
+### Phase 5: Documentation ✓
+- Created `docs/audits/AUDIT_R06.md` with all 4 required sections:
+  1. Theoretical Anchor
+  2. Empirical Methodology
+  3. Concordance Table with Wilson 95% CIs
+  4. Methodological Scope & Limitations
+- Created `docs/sections/R06.md` with 303 words (within 200-350 limit) and 3 mandatory headings
+- All markdown files have continuous lines (no hard-wrapping)
+- All files end with exactly one trailing newline
+
+### Final Verification ✓
+All verification gates passed:
+- Phase 1: Determinism & AST - PASS
+- Phase 2: Artifacts exist - PASS
+- Phase 3: Tests pass & no French comments - PASS
+- Phase 4: Candidates & Deviations - PASS
+- Phase 5: Final Certification - PASS
+
+The R06 stream refactoring is **COMPLETE AND CERTIFIED**.

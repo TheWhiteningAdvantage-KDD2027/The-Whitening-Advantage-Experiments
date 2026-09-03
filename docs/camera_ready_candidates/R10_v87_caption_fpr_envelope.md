@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R10_v87_caption_fpr_envelope.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R10-campaign-redraw`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — the Figure 10 caption's measured FPR envelope moves from 1.0–1.8 % to 1.0–1.5 %
 
 | Field               | Value                                                                                                                              |

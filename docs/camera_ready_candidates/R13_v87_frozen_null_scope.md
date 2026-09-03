@@ -2,7 +2,7 @@
 
 - **Status:** PARKED — do not apply
 - **Trigger:** Acceptance notification of 14 November 2026
-- **Register entry:** none
+- **Register entry:** `R13-frozen-null-scope`
 
 **Target file:** `articleB_whitening_v87.tex`
 
@@ -44,9 +44,15 @@ Neither limit falsifies anything. The correction is one clause, and it makes the
 **Verification of the search string.** The block below is quoted from
 `articleB_whitening_v87.tex` **line 331** verbatim and occurs **exactly once** in the file (`grep -Fc` returns `1`). It is disjoint from the strings the two sibling candidates search. Verify once more before applying, as a matter of routine.
 
-<<< SEARCH ~~~~~~~~~latex against a bootstrap null freezing the same volatility path ~~~~~~~~~
+<<< SEARCH
+~~~~~~~~~latex
+against a bootstrap null freezing the same volatility path
+~~~~~~~~~
 
-=== REPLACE WITH >>> ~~~~~~~~~latex against a bootstrap null freezing the same volatility path, which binds on the likelihood-ratio increments and cancels on the standardized-mean ones; the threshold itself is calibrated on a parametric null regenerated from the fitted GARCH parameters ~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
+against a bootstrap null freezing the same volatility path, which binds on the likelihood-ratio increments and cancels on the standardized-mean ones; the threshold itself is calibrated on a parametric null regenerated from the fitted GARCH parameters
+~~~~~~~~~
 >>> END OF BLOCK
 
 ## What must not be done with this candidate

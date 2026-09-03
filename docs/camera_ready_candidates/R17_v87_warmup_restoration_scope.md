@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R17_v87_warmup_restoration_scope.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — NO DEVIATION, clarification only: "restored from n = 500 onward" is stated without conditioning on the leverage, and rests on an interval rather than on a point
 
 | Field               | Value                                                                                                                                                                                                           |
@@ -77,5 +86,6 @@ anywhere in v87. It is reported here because the sweep produced it, not because 
 it.
 
 **No revision may quote the regenerated numerals in place of the submitted ones without the register
-entry that carries them.** Their displacement is `R17-campaign-redraw`, Class A / D2, and the
+entry that carries them.** Their displacement is the R17 campaign-redraw entry of
+`docs/DEVIATIONS.md`, Class A / D2, and the
 numeral edits belong to that entry and not to this clarification.

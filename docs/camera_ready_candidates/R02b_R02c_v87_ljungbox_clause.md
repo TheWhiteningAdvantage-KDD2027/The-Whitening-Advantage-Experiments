@@ -1,23 +1,23 @@
-# Camera-Ready Candidate: R02b_R02c_v87_ljungbox_clause.md
+- **Register entry:** `R02b-iid-arm-rejection`, `R02b-iid-arm-over-rejection`
 
 - **Status:** PARKED — do not apply
 - **Trigger:** Acceptance notification of 14 November 2026
-- **Register entry:** none
+- **Register entry:** `R02b-iid-arm-rejection`
 
 **Target file:** `articleB_whitening_v87.tex`
 
 
 # Camera-ready candidate — Ljung-Box clause, Section "Empirical Boundaries"
 
-| Field               | Value                                                         |
-| ------------------- | ------------------------------------------------------------- |
-| **Status**          | **PARKED — do not apply**                                     |
-| Target file         | `articleB_whitening_v87.tex` (submitted 2026-07-27, frozen)   |
-| Trigger             | Acceptance notification only                                  |
-| Evidence            | R02b (n=1000 sweep over nu), R02c (horizon sweep to n=128000) |
-| Register entry      | `docs/DEVIATIONS.md`, entry 3                                 |
-| Cost                | +2 words against the submitted sentence                       |
-| Blocking dependency | none — R03..R17 do not touch this clause                      |
+| Field               | Value                                                            |
+| ------------------- | ---------------------------------------------------------------- |
+| **Status**          | **PARKED — do not apply**                                        |
+| Target file         | `articleB_whitening_v87.tex` (submitted 2026-07-27, frozen)      |
+| Trigger             | Acceptance notification only                                     |
+| Evidence            | R02b (n=1000 sweep over nu), R02c (horizon sweep to n=128000)    |
+| Register entry      | `docs/DEVIATIONS.md`, `R02b-iid-arm-rejection` — Class A, **D3** |
+| Cost                | +2 words against the submitted sentence                          |
+| Blocking dependency | none — R03..R17 do not touch this clause                         |
 
 **Why this is not applied now.** The manuscript is under review and cannot be edited. The
 KDD 2027 Research Track allocates one additional content page to accepted papers for exactly
@@ -35,6 +35,6 @@ and already over-reject on the i.i.d.\ arm ($9.2\%$), where $t_7$ innovations de
 
 === REPLACE WITH >>>
 ~~~~~~~~~latex
-and reject at $9.2\%$ on the i.i.d.\ arm, a rate that $120$ streams cannot separate from nominal; a dedicated sweep ($1{,}000$ streams per point, horizons to $n = 1.28\times10^5$) places $t_7$ at nominal and the over-rejection beyond the sixth-moment boundary ($7.7\%$ at $\nu \le 6$, excluding nominal at every horizon), where the autocovariance summand loses its third absolute moment;
+and reject at $9.2\%$ on the i.i.d.\ arm, a rate that $120$ streams cannot separate from nominal; a dedicated sweep ($1{,}000$ streams per point, horizons to $n = 1.28\times10^5$) places $t_7$ at nominal and the over-rejection beyond the sixth-moment boundary ($7.7\%$ at $\nu \le 6$, excluding nominal at every horizon), a boundary we locate without identifying its cause: $\varepsilon_t^2$ has a finite variance throughout ($\nu > 4$), which is what the limit requires, and an infinite fourth ($\nu \le 8$) at $\nu = 7$ as well;
 ~~~~~~~~~
 >>> END OF BLOCK

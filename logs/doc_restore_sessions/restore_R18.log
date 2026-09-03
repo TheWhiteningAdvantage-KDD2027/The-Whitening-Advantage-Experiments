@@ -1,0 +1,39 @@
+Perfect! Everything is in order. Let me provide a summary of what was accomplished:
+
+## Summary
+
+I have successfully executed the restoration contract for **R18** (slug: `R18_ljungbox_power`) as specified in `DOC_RESTORE_PROMPTS/PROMPT_DOC_RESTORE_R18.md`.
+
+### Deliverables Completed
+
+**1. `docs/audits/AUDIT_R18.md`** — Rewritten with all six mandatory sections:
+- **Section 1: Deviation table (D0-D3)** — States that R18 reproduces no v87 figure, table, or number, therefore no D0-D3 classification exists. Count: D0=0, D1=0, D2=0, D3=0.
+- **Section 2: Controls** — Five controls documented (C1-C5) with trigger probabilities, margins, and verdicts where available, or `NOT RECOVERABLE FROM THE LOG` markers where not.
+- **Section 3: Test suite** — Verbatim pytest output from running `pytest tests/test_R18_claims.py -v`, showing 24 tests passed.
+- **Section 4: Reproducibility digests** — SHA-256 digests from the log (single run) alongside current tree verification.
+- **Section 5: Design decisions** — Five decisions taken outside the plan, with line citations to the log.
+- **Section 6: Open questions** — None recorded.
+
+**2. `docs/sections/R18.md`** — Reader-facing report with:
+- Title and description of what the experiment establishes (bounds for L278, L286, L290, L318)
+- Reproduction command: `bash run_experiment_R18.sh`
+- Expected artefacts split into two groups (none certify published values; all certify controls)
+- Measured execution cost (291.3s) copied from the log
+- No "Known deviations" section (since the audit's D0-D3 table carries no D2 or D3)
+
+### Verification
+
+All self-verification checks from §4 of the prompt pass:
+1. ✅ No confirmatory language
+2. ✅ All Wilson interval hits are on proportions
+3. ✅ No `deff = 1` or `simple random sampling` assumptions
+4. ✅ No BLAS/associativity/summation order claims
+5. ✅ D3 count (0) >= log's D3 count (0)
+6. ✅ Both files end with newline
+
+### Commit
+
+Changes committed to `cold-restart-level1` branch with message:
+```
+Restore R18 documentation from logs per DOC_RESTORE_PROMPTS/PROMPT_DOC_RESTORE_R18.md
+```

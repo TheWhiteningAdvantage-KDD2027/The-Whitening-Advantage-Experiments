@@ -1,0 +1,50 @@
+Perfect! All verification gates pass. Now let me create a final summary of what was accomplished:
+
+## Summary of Complete 5-Phase Refactoring for R15_cross_sectional
+
+### Phase 1: Code Refactoring ✅
+- **Determinism Injection**: All required functions (`enforce_strict_determinism`, `disable_pandas_multithreading`, `verify_hash_seed`, `log_environment`, `log_artifact_manifest`) are already present in both experiment files
+- **Linguistic Overhaul**: No French comments found in Regime B
+- **Single-Thread Launcher**: `run_experiment_R15.sh` already has all required exports (OMP_NUM_THREADS, MKL_NUM_THREADS, OPENBLAS_NUM_THREADS, PYTHONHASHSEED, MKL_CBWR)
+- **Verification**: `python experiments/common/verify_refactoring.py R15_cross_sectional --phase 1` PASSED
+
+### Phase 2: Execution & Ephemeral Integrity Audit ✅
+- Executed `bash run_experiment_R15.sh --stage analyse` successfully
+- All artifacts generated:
+  - `results/R15_cross_sectional/data/` (6 CSV files)
+  - `results/R15_cross_sectional/figures/` (2 PNG files)
+  - `results/R15_cross_sectional/tables/` (2 TeX files including R15_claims.tex)
+  - `logs/R15_cross_sectional/` (3 log files)
+- **Verification**: Log files and claims.tex exist → PASSED
+
+### Phase 3: Test Suite Refactoring & Multi-Tier Verification ✅
+- Test file `tests/test_R15_claims.py` already clean (no French comments)
+- All 28 tests pass
+- **Verification**: `pytest -v ./tests/test_R15_claims.py` exits 0 with no AST discrepancies → PASSED
+
+### Phase 4: Candidates Overhaul & Deviations Synchronization ✅
+- Rewrote 4 camera-ready candidate files to use English markers (SEARCH/REPLACE) instead of French (RECHERCHER/REMPLACER PAR/FIN DU BLOC)
+- Updated `docs/DEVIATIONS.md` with comprehensive R15 entry including:
+  - Deviation Class: D0-D2
+  - All affected metrics with quantitative impacts
+  - Root cause analysis (entropy migration + MKL_CBWR)
+  - Mechanism explanation
+  - Wilson 95% CIs where applicable
+  - Verification status
+- **Verification**: `python experiments/common/verify_refactoring.py R15_cross_sectional --phase 4` PASSED
+
+### Phase 5: Documentation Generation & Final Academic Certification ✅
+- **Audit Report** (`docs/audits/AUDIT_R15.md`): Already has all 4 sections with Wilson 95% CIs
+- **Section README** (`docs/sections/R15.md`): 206 words, 3 mandatory headings, continuous lines
+- **Dewatermarking**: No banned terms found in documentation
+- **Verification**: `python experiments/common/verify_refactoring.py R15_cross_sectional` PASSED
+
+### Final Invariant Audit ✅
+- **AST Invariance (CRITICAL)**: ✅ All CARRIED_PRIMITIVES byte-identical
+- **Deterministic Execution (CRITICAL)**: ✅ Single-threaded environment enforced
+- **Linguistic Cleanliness (CRITICAL)**: ✅ Zero French comments, 100% Ban List compliance
+- **Continuous Line Invariant (CRITICAL)**: ✅ No hard-wrapping in .md files
+- **Zero Ephemeral Residue (CRITICAL)**: ✅ No temporary files
+- **Core Isolation**: ✅ Clean delivery
+
+The complete 5-phase refactoring lifecycle for stream R15 (R15_cross_sectional) has been successfully executed and certified.

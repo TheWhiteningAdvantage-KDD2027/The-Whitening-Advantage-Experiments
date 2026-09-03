@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R08_v87_delivered_level.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R08-delivered-level-above-nominal`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — the level L241's threshold actually delivers is above nominal, not below it
 
 | Field               | Value                                                                                                                                                          |

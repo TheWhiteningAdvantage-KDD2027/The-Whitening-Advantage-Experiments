@@ -1,0 +1,50 @@
+2026-08-23 08:45:52 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-08-23 08:45:52 | INFO | Python: 3.12.9
+2026-08-23 08:45:52 | INFO |   numpy: 1.26.4
+2026-08-23 08:45:52 | INFO |   pandas: 2.3.2
+2026-08-23 08:45:52 | INFO |   scipy: 1.16.2
+2026-08-23 08:45:52 | INFO |   matplotlib: 3.10.6
+2026-08-23 08:45:52 | INFO | Specification: n_streams = 10, stream_length = 5000, lambda_iid = 65.0, delta_P = 0.5, alpha = 0.08
+2026-08-23 08:45:52 | WARNING | DEGRADED PATH selected by --fast: certification gates are disabled and every artefact is stamped '_fast'. This path never certifies a manuscript number.
+2026-08-23 08:45:52 | INFO | Deterministic reduction: ProcessPoolExecutor with max_workers = 48, executor.map in submission order, chunksize = 10. No completion-order reduction, no worker-side logging. Outputs are invariant to the worker count because every task derives its own 128-bit seed.
+2026-08-23 08:45:52 | INFO | Certification rule fixed before measurement: v87 "close to 80% or above once Gamma > 20" -> mean FPR_raw over Gamma > 20 >= 0.76 (0.80 less 5% in relative terms)
+2026-08-23 08:45:52 | INFO | Certification rule fixed before measurement: v87 "residual plateau near 30%" -> mean FPR_sqrt over Gamma > 20 in [0.25, 0.35] (0.30 plus or minus 5 percentage points)
+2026-08-23 08:45:52 | INFO | Certification rule fixed before measurement: v87 "containing the FPR below 13%" -> mean FPR_recalib over the whole grid <= 0.13 (literal numeral, no operationalisation)
+2026-08-23 08:45:52 | INFO | Protocol 1A: StrictCUSUM false alarm rate under H_0.
+2026-08-23 08:45:55 | INFO | Protocol 1B: ADWIN-like false alarm rate under H_0.
+2026-08-23 08:45:59 | INFO | i.i.d. calibration arm: compute_gamma_exact(0, 0) = 1.0
+2026-08-23 08:46:00 | INFO | Protocol 2A: detection delay against Gamma (retained, not cited in v87).
+2026-08-23 08:46:03 | INFO | Protocol 2B: detection delay against drift width (retained, not cited in v87).
+2026-08-23 08:46:06 | INFO | Protocol 2C: speedup sensitivity (retained, not cited in v87).
+2026-08-23 08:46:07 | INFO | Protocol 2C reference arm: FPR_data = 0.0000, ADD_data = 817.80
+2026-08-23 08:46:11 | INFO | Cardinality check (b): both grid files carry 20 rows.
+2026-08-23 08:46:11 | INFO | Shared-realisation verdict: per-stream nesting violations, CUSUM = 0, ADWIN = 0 over 200 and 200 streams. Zero violations means each row's columns are one realisation read at several thresholds, so the column ordering below is a deterministic identity and not a hypothesis test.
+2026-08-23 08:46:11 | INFO | Consistency check (e): threshold ordering holds on all 20 rows of both files.
+2026-08-23 08:46:11 | INFO | Monotonicity check (e): 18 consecutive differences beyond Gamma = 6.0; mechanism-derived bound = -0.50118 (SE_diff = 0.15370, z_bonf = 3.261 at family-wise alpha = 0.01); most negative observed difference = +0.000000; Spearman rho = 0.6345 (p = 3.520e-03).
+2026-08-23 08:46:11 | WARNING | Certification (f) skipped on the degraded path; the gates are sized for 300 streams.
+2026-08-23 08:46:11 | INFO | i.i.d. calibration at Gamma = 1: StrictCUSUM FPR = 0.000000 (0/10), Wilson 95% [0.000000, 0.277533], contains the 5% nominal level: True
+2026-08-23 08:46:11 | INFO | i.i.d. calibration at Gamma = 1: ADWIN FPR = 0.200000 (2/10), Wilson 95% [0.056682, 0.509838], contains the 5% nominal level: False
+2026-08-23 08:46:11 | WARNING | Deviation classification withheld on the degraded path: ten streams compared against a three-hundred-stream witness would yield degrees that describe the sample size, not a deviation.
+2026-08-23 08:46:11 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
+2026-08-23 08:46:11 | INFO | ./
+2026-08-23 08:46:11 | INFO | ├── data/
+2026-08-23 08:46:11 | INFO | │   ├── R03_fpr_cusum_fast.csv              [122b3e9779f764b8c955341147d8db77fbfb61a230be20b1ed03350a6a2631a4]
+2026-08-23 08:46:11 | INFO | │   ├── R03_fpr_adwin_fast.csv              [ce0069520f6367db4de2dcfa8fde3b12d22466d99222c7d3bd74655bbe48d8b7]
+2026-08-23 08:46:11 | INFO | │   ├── R03_iid_calibration_check_fast.csv  [a34526c5c9c42b8265fa5683d2131583f26d91f5ce6036445f42cdb1013eb57e]
+2026-08-23 08:46:11 | INFO | │   ├── R03_add_vs_gamma_fast.csv           [169b514acd442eaa599fda090125236db24514f04e8bb65821eb6c8b6fa5a068]
+2026-08-23 08:46:11 | INFO | │   ├── R03_add_vs_width_fast.csv           [6aa2785c8ecd77397b72a51689076db584c3a0d78838a73c52b989a9a56c3b6e]
+2026-08-23 08:46:11 | INFO | │   └── R03_sensitivity_fast.csv            [0d144c017df8212e068bf2c0084c8ec88e340242975400d2ff691676d06f8309]
+2026-08-23 08:46:11 | INFO | ├── figures/
+2026-08-23 08:46:11 | INFO | │   └── fig03_fpr_explosion_fast.png        [2be4905e134852efd2fc86899bf025f9e88509498ff4d8b69844b69d92574a5b]
+2026-08-23 08:46:11 | INFO | └── tables/
+2026-08-23 08:46:11 | INFO |     └── R03_claims_fast.tex                 [a650edd98d03407d3b25a8c3eae3dc1922c0951f5e6ab45717d88c06be256fa4]
+2026-08-23 08:46:11 | INFO | =============================================================================
+2026-08-23 08:46:11 | INFO | SHA-256 R03_fpr_cusum_fast.csv : 122b3e9779f764b8c955341147d8db77fbfb61a230be20b1ed03350a6a2631a4
+2026-08-23 08:46:11 | INFO | SHA-256 R03_fpr_adwin_fast.csv : ce0069520f6367db4de2dcfa8fde3b12d22466d99222c7d3bd74655bbe48d8b7
+2026-08-23 08:46:11 | INFO | SHA-256 R03_iid_calibration_check_fast.csv : a34526c5c9c42b8265fa5683d2131583f26d91f5ce6036445f42cdb1013eb57e
+2026-08-23 08:46:11 | INFO | SHA-256 R03_add_vs_gamma_fast.csv : 169b514acd442eaa599fda090125236db24514f04e8bb65821eb6c8b6fa5a068
+2026-08-23 08:46:11 | INFO | SHA-256 R03_add_vs_width_fast.csv : 6aa2785c8ecd77397b72a51689076db584c3a0d78838a73c52b989a9a56c3b6e
+2026-08-23 08:46:11 | INFO | SHA-256 R03_sensitivity_fast.csv : 0d144c017df8212e068bf2c0084c8ec88e340242975400d2ff691676d06f8309
+2026-08-23 08:46:11 | INFO | SHA-256 fig03_fpr_explosion_fast.png : 2be4905e134852efd2fc86899bf025f9e88509498ff4d8b69844b69d92574a5b
+2026-08-23 08:46:11 | INFO | SHA-256 R03_claims_fast.tex : a650edd98d03407d3b25a8c3eae3dc1922c0951f5e6ab45717d88c06be256fa4
+2026-08-23 08:46:11 | INFO | Execution completed in 18.7s with 48 workers.

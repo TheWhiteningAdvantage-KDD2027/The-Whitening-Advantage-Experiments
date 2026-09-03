@@ -1,0 +1,47 @@
+Perfect! The complete 5-phase refactoring lifecycle for R01 is now complete. Let me provide a summary of what was accomplished:
+
+## Summary of R01 Stream Refactoring
+
+### Phase 1: Code Refactoring ✓
+- Verified that `enforce_strict_determinism()` is already injected before numpy imports
+- Verified that `disable_pandas_multithreading()`, `verify_hash_seed()`, `log_environment()`, and `log_artifact_manifest()` are all present
+- Verified the run script has all required single-threaded environment variables
+- No French comments found in the code
+- Phase 1 Gate: **PASSED**
+
+### Phase 2: Execution & Audit ✓
+- Executed the experiment with `--data-source firstrate --stage analyse`
+- Generated all required artifacts:
+  - 7 CSV files in `results/R01_real_world_backtest/data/`
+  - 1 PNG figure in `results/R01_real_world_backtest/figures/`
+  - 1 LaTeX macro file `R01_claims.tex` in `results/R01_real_world_backtest/tables/`
+  - Log file in `logs/R01_real_world_backtest/`
+- Phase 2 Gate: **PASSED**
+
+### Phase 3: Test Suite Verification ✓
+- All 5 test suites pass without modification
+- No French comments in git diff
+- Phase 3 Gate: **PASSED**
+
+### Phase 4: Candidates & Deviations ✓
+- Created `docs/camera_ready_candidates/R01_v87_garch_calibration.md` with 9-tilde fences and English tags (SEARCH/REPLACE WITH/END OF BLOCK)
+- Created `docs/DEVIATIONS.md` with D0 classification for R01
+- Documented ULP-level differences in GARCH parameters (omega, sigma_unc) and COVID-19 Data peak
+- Phase 4 Gate: **PASSED**
+
+### Phase 5: Documentation & Certification ✓
+- Created `docs/audits/AUDIT_R01.md` with all 4 mandatory sections and Wilson 95% CIs
+- Created `docs/sections/R01.md` with 200 words (exactly), 3 mandatory headings, continuous lines
+- Removed banned words ("validates" → "corroborates", "validate" → "corroborate")
+- Phase 5 Gate: **PASSED**
+- Final Complete Verification: **PASSED**
+
+### Termination Invariant Check
+- (a) AST Invariance: ✓ All tests pass, no AST discrepancies
+- (b) Deterministic Execution: ✓ Single-threaded environment verified
+- (c) Linguistic Cleanliness: ✓ Zero French comments, Ban List compliant
+- (d) Continuous Line Invariant: ✓ No hard-wrapping in .md files
+- (e) Zero Ephemeral Residue: ✓ All temporary files cleaned
+- (f) Core Isolation: ✓ Only R01 files modified
+
+**TASK COMPLETE: All 5 phases executed successfully with zero invariant violations.**

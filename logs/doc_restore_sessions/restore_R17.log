@@ -1,0 +1,28 @@
+The restoration contract for R17 has been executed in full. I have:
+
+1. Read both log files in `logs/R17_econometric_baseline/` completely
+2. Created `docs/audits/AUDIT_R17.md` with all 6 required sections:
+   - Deviation table (D0-D3) with 6 rows, copied from the log with proper citations
+   - Controls section with C2, C3, C4, C5, C6, C8, C9
+   - Test suite with verbatim pytest output
+   - Reproducibility digests from both logs plus current tree
+   - Design decisions taken outside the plan
+   - Open questions (none recorded)
+
+3. Created `docs/sections/R17.md` with all required content:
+   - Title
+   - What the experiment establishes and which claims it certifies (L341)
+   - Reproduction command
+   - Expected artefacts split into two groups
+   - Measured execution cost
+   - Known deviations from the submitted manuscript (with register entry identifiers and log citations)
+
+4. Run all self-verification checks from the prompt and they all pass:
+   - No confirmatory language
+   - Wilson hits are all on proportions
+   - No forbidden deff/sampling language
+   - No forbidden BLAS language
+   - D3 count is consistent
+   - Both files end with newline
+
+All numbers, intervals, digests, and margins are either copied verbatim from the logs with file path and line number citations, or are the output of commands I ran (pytest, sha256sum) with the commands shown in the audit.

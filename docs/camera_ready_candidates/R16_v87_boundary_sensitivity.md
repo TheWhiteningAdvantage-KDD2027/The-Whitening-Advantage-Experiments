@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R16_v87_boundary_sensitivity.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R16-boundary-sensitivity`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — the boundary convention is declared but its effect on the headline is never reported
 
 | Field               | Value                                                                                            |

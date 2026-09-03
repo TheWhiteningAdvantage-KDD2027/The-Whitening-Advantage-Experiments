@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R16_v87_dating_algorithm.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R16-dating-misdescription`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — the census is not the output of the dating algorithm the sentence names
 
 | Field               | Value                                                                                                          |

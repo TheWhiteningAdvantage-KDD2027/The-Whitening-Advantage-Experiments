@@ -2,11 +2,11 @@
 
 - **Status:** PARKED — do not apply
 - **Trigger:** Acceptance notification of 14 November 2026
-- **Register entry:** NO DEVIATION — clarification only
+- **Register entry:** `R02b-iid-arm-rejection`
 
 ## R02c Horizon Sweep and Eighth-Moment Account Falsification
 
-The R02c experiment conducts a horizon-scaling analysis of Ljung-Box test over-rejection rates across increasing stream lengths (2000, 8000, 32000, 128000) for Student t innovations with degrees of freedom nu = 5, 6, 7. The central result falsifies the eighth-moment explanation: the hypothesis that E[eps^8] = infinity for nu <= 8 causes over-rejection is refuted by its own witness arm. Pooled rejection rates at nu = 7 (control) remain calibrated at the nominal 5% level across all horizons, while nu = 5 and nu = 6 exhibit statistically significant over-rejection. This establishes that the mechanism of over-rejection is not the absence of the eighth moment per se, but rather the fourth-moment deficiency affecting the chi-square approximation of the Ljung-Box statistic on squared inputs.
+The R02c experiment conducts a horizon-scaling analysis of Ljung-Box test over-rejection rates across increasing stream lengths (2000, 8000, 32000, 128000) for Student t innovations with degrees of freedom nu = 5, 6, 7. The central result falsifies the eighth-moment explanation: the hypothesis that E[eps^8] = infinity for nu <= 8 causes over-rejection is refuted by its own witness arm. Pooled rejection rates at nu = 7 (control) remain calibrated at the nominal 5% level across all horizons, while nu = 5 and nu = 6 exhibit statistically significant over-rejection. This refutes the eighth-moment account. It does not identify the mechanism: the Ljung-Box limit on `Y = eps^2` requires only `E[eps^4] < infinity`, i.e. `nu > 4`, which nu = 5, 6 and 7 all satisfy, so the fourth moment is not the discriminating quantity either. The boundary the sweep locates sits between nu = 6 and nu = 7 and no candidate cause was tested against an alternative that would discriminate it; see `R02b-iid-arm-rejection` in `docs/DEVIATIONS.md`.
 
 <<< SEARCH
 ~~~~~~~~~latex
@@ -20,7 +20,7 @@ The squared inputs reject whiteness in $100\%$ of the clustered calibrations ($p
 
 ## R02c LaTeX Macro Definitions for Horizon Sweep
 
-The compliant pipeline generates precise slope estimates and pooled rejection rates across the nu-horizon grid. All slope confidence intervals contain zero, refuting the hypothesis of systematic decay with horizon. The eighth-moment explanation is invalidated: nu=7 (where E[eps^8] is infinite) holds the nominal level, while nu=5 and nu=6 (also infinite eighth moment) over-reject. This is a D2 deviation: the printed numerical values shift from any single-point manuscript estimate, but the qualitative falsification of the eighth-moment account is preserved.
+The compliant pipeline generates precise slope estimates and pooled rejection rates across the nu-horizon grid. All slope confidence intervals contain zero, refuting the hypothesis of systematic decay with horizon. The eighth-moment account is refuted by its own witness: nu=7 (where E[eps^8] is infinite) holds the nominal level, while nu=5 and nu=6 (also infinite eighth moment) over-reject. This is a D2 deviation: the printed numerical values shift from any single-point manuscript estimate, but the qualitative falsification of the eighth-moment account is preserved.
 
 <<< SEARCH
 ~~~~~~~~~latex
@@ -64,6 +64,6 @@ where $t_7$ innovations deprive $\varepsilon_t^2$ of a fourth moment and the $\c
 ~~~~~~~~~
 === REPLACE WITH >>>
 ~~~~~~~~~latex
-where Student's $t$ innovations with $\nu \le 6$ deprive $\varepsilon_t^2$ of a fourth moment causing $\chi^2$ approximation failure, yet $\nu = 7$ (also infinite eighth moment) remains calibrated, falsifying the eighth-moment account
+where the $\chi^2$ approximation fails for $\nu \le 6$ and holds at $\nu = 7$ at every horizon up to $n = 1.28\times10^5$; neither the fourth moment, which is finite throughout ($\nu > 4$), nor the eighth, which is infinite throughout ($\nu \le 8$), accounts for the boundary, and we do not identify what does
 ~~~~~~~~~
 >>> END OF BLOCK

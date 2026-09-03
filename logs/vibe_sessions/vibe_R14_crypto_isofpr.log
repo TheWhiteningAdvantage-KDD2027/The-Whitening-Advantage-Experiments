@@ -1,0 +1,44 @@
+Excellent! All 26 tests pass. Let me now provide a summary of what was accomplished:
+
+## Summary of Complete 5-Phase Refactoring Lifecycle for R14_crypto_isofpr
+
+### Phase 1: Code Refactoring ✓
+- **Verification:** `enforce_strict_determinism()`, `disable_pandas_multithreading()`, `verify_hash_seed()`, `log_environment()`, and `log_artifact_manifest()` are all present in the experiment file
+- **Run Script:** All required exports (OMP_NUM_THREADS, MKL_NUM_THREADS, OPENBLAS_NUM_THREADS, PYTHONHASHSEED, MKL_CBWR) are present in run_experiment_R14.sh
+- **Linguistic Cleanliness:** Zero French comments in Regime B
+- **Gate:** PASSED
+
+### Phase 2: Execution & Integrity Audit ✓
+- **Execution:** Experiment ran successfully, generating all artifacts
+- **Results:** results/R14_crypto_isofpr/ contains data/, figures/, tables/ with all expected files
+- **Logs:** logs/R14_crypto_isofpr/ contains exp_R14_crypto_isofpr.log and exp_R14_crypto_isofpr_legacy_seeds.log
+- **Gate:** PASSED (logs and tables verified)
+
+### Phase 3: Test Suite Refactoring & Multi-Tier Verification ✓
+- **Test Suite:** All 26 tests pass with zero failures
+- **French Grep Check:** No French comments detected in git diff
+- **Gate:** PASSED
+
+### Phase 4: Candidates Overhaul & Deviations Synchronization ✓
+- **Camera-Ready Candidates:** Created `docs/camera_ready_candidates/R14_v87_crypto_isofpr_ratios.md` with 9-tilde fences and English tags
+- **Deviations Registry:** Updated `docs/DEVIATIONS.md` with comprehensive D0-D2 classification for R14
+- **Classification:** D0 for all Real_BTC/ETH diagnostics and ratios, D2 for Synth_BTC ratio statistics due to entropy migration
+- **Gate:** PASSED
+
+### Phase 5: Documentation Generation & Final Academic Certification ✓
+- **Audit Report:** Created `docs/audits/AUDIT_R14.md` with all 4 required sections (Theoretical Anchor, Empirical Methodology, Concordance Table with Wilson 95% CIs, Methodological Scope & Limitations)
+- **Section README:** Created `docs/sections/R14.md` with 207 words (within 200-350 limit) and 3 mandatory headings (Stream Overview & Mathematical Target, Execution & Verification, Output Artifacts)
+- **Dewatermarking:** All files free of French tokens, Ban List compliance verified
+- **Continuous Lines:** All markdown paragraphs are single continuous lines without hard-wrapping
+- **File Termination:** All text files end with exactly one trailing newline
+- **Gate:** PASSED
+
+### Pre-Flight Termination Invariants ✓
+- (a) **AST Invariance (CRITICAL):** ✓ All 26 tests pass with zero AST discrepancies
+- (b) **Deterministic Execution (CRITICAL):** ✓ Single-threaded environment verified
+- (c) **Linguistic Cleanliness (CRITICAL):** ✓ Zero French comments, 100% Ban List compliance
+- (d) **Continuous Line Invariant (CRITICAL):** ✓ Zero hard-wrapping in .md documentation
+- (e) **Zero Ephemeral Residue (CRITICAL):** ✓ All temporary files purged
+- (f) **Core Isolation:** ✓ Clean output with zero conversational filler
+
+The complete 5-phase refactoring lifecycle for R14_crypto_isofpr has been successfully executed and certified.

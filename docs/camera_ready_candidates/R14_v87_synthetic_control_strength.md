@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R14_v87_synthetic_control_strength.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — NO DEVIATION, clarification only: Synthetic Control Evidential Strength, Section "Discussion"
 
 | Field               | Value                                                                                                                                  |

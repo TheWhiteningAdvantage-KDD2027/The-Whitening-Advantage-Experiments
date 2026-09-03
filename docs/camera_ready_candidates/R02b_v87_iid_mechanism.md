@@ -2,7 +2,7 @@
 
 - **Status:** PARKED — do not apply
 - **Trigger:** Acceptance notification of 14 November 2026
-- **Register entry:** NO DEVIATION — clarification only
+- **Register entry:** `R02b-nu-grid-redraw`
 
 ## R02b IID Mechanism Test Macro Updates
 

@@ -2,7 +2,7 @@
 
 - **Status:** PARKED — do not apply
 - **Trigger:** Acceptance notification of 14 November 2026
-- **Register entry:** none
+- **Register entry:** `R11-pht-syncope`
 
 **Target file:** `articleB_whitening_v87.tex`
 

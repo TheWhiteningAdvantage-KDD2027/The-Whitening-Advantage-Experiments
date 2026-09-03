@@ -1,0 +1,75 @@
+Perfect! The commit was successful. Let me now provide a summary of what was accomplished:
+
+## Summary
+
+I have successfully executed the restoration contract for **R05** (stream `R05_scale_law`) as specified in `DOC_RESTORE_PROMPTS/PROMPT_DOC_RESTORE_R05.md`.
+
+### Deliverables Completed:
+
+#### 1. `docs/audits/AUDIT_R05.md` (247 lines, +239 lines)
+Restored with all six mandatory sections in order:
+
+- **Section 1: Deviation table (D0-D3)**
+  - 27 rows from exp_R05_scale_law_c.log:54-83
+  - Full table with columns: quantity | manuscript value | regenerated value | severity | source CSV cell | log line
+  - Count: 20 D2, 7 D1, 0 D3, 0 D0
+
+- **Section 2: Controls**
+  - 13 control subsections (a, b, c, d, e, f, h, positive control)
+  - Each with: what it tests, trigger probability (or NOT RECOVERABLE), realised margin, verdict, source
+  - Includes Fisher exact, chi-square, Kolmogorov-Smirnov tests with proper probabilities
+
+- **Section 3: Test suite**
+  - Complete verbatim pytest output from `pytest tests/test_R05_claims.py -v`
+  - 22 tests, all passed
+  - Includes classification table and witness comparison
+
+- **Section 4: Reproducibility digests**
+  - NOT RECOVERABLE FROM THE LOG (no dual-run digests in logs)
+  - Current tree SHA-256 listing for all 7 artefacts
+
+- **Section 5: Design decisions taken outside the plan**
+  - 4 decisions with sources from logs:
+    1. Budget 2e5 cap (4.76x margin)
+    2. Budget 3e6 cap (4.42x margin)
+    3. In-memory frame passing (SPECS 1.6)
+    4. OLS fit choice (all-points vs excluding Gamma=1)
+
+- **Section 6: Open questions, left open**
+  - 2 questions from exp_R05_scale_law_c.log:35:
+    1. Moment mechanism attribution
+    2. Moment boundary coincidence causality
+
+#### 2. `docs/sections/R05.md` (37 lines, +27 lines)
+Reader-facing report with:
+
+- Title and description
+- What the experiment establishes (Proposition prop:add_garch, Proposition prop:orthogonality, Theorem thm:scaling)
+- Figures: 5A, 5B; Appendix B
+- Reproduction command: `bash run_experiment_R05.sh`
+- Expected artefacts split into **two named groups**:
+  - 6 artefacts certifying published values
+  - 2 artefacts certifying controls only
+- Measured execution cost: 7054.7s total
+- Known deviations section (required because audit has D2s)
+  - Summarizes key shifts with context
+  - Notes no qualitative claims falsified
+  - Corrects v87 misdescriptions (E[eps^6] moment order, lambda_C numeral)
+
+### Self-Verification Results:
+All checks from §4 of the prompt pass:
+1. ✅ No forbidden phrases (proves, proven, validates, confirms, etc.)
+2. ✅ All Wilson intervals on proportions only
+3. ✅ No `deff = 1` or `simple random sampling`
+4. ✅ No BLAS/associativity/summation order without log citation
+5. ✅ D3 count (0) not lower than log's D3 count (0)
+6. ✅ Both files end with newline
+
+### Key Properties:
+- All numbers copied verbatim from logs with line citations
+- pytest output included verbatim without truncation
+- No numbers invented or reformatted
+- No rounding or cleaning up of values
+- All D3 rows preserved (none in this case)
+- All open questions preserved
+- All controls documented with trigger probabilities where available

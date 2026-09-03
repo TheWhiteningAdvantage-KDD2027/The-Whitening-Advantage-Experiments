@@ -1,0 +1,74 @@
+── R01 (R01_real_world_backtest)
+   [OK]
+── R02 (R02_whitening_ljungbox)
+   [OK]
+── R02b (R02b_iid_arm_resolution)
+   [OK]
+── R02c (R02c_horizon_sweep)
+   [OK]
+── R03 (R03_fpr_explosion)
+   [OK]
+── R04 (R04_isofpr_race)
+   [G7b] D3 row present but no falsified-claim statement
+   [G7c] D3 row present but no scope clause
+── R04b (R04b_nu_refinement)
+   [G7] declared D3 count (6) does not match table rows (5)
+   [G7b] D3 row present but no falsified-claim statement
+   [G7c] D3 row present but no scope clause
+── R05 (R05_scale_law)
+   [OK]
+── R06 (R06_validity_map)
+   [G8] Wilson interval on what may not be a proportion -- inspect:
+33:Note: The Wilson interval that assumes 1300 independent streams would read [0.037381, 0.060669], half-width 0.011644, understating by sqrt(design effect) = 1.7913. The per-Gamma family of 13 simultaneous 95% intervals fires at least once with probability 1 - 0.95^13 = 0.4867 under its own null, which preamble S4bis forbids. The 13 per-Gamma gates of the submitted script were therefore demoted from a gate to a reported measurement.
+50:Realised margin: Wilson 95% [0.034319, 0.137495], half-width 5.2 percentage points = 1.0 times the nominal level.
+122:1. The median-task control (binary c = 0) has a Wilson interval [0.034319, 0.137495] with half-width 5.2 percentage points, which is 1.0 times the nominal level. This control excludes very little and is consistent with whiteness rather than confirmatory. Is this resolution limitation acceptable for the purposes of the manuscript, or should the design be strengthened?
+── R07 (R07_estimated_mean)
+   [G1] confirmatory language
+docs/audits/AUDIT_R07.md:32:The audit confirms that R07 achieves full empirical reproducibility under the S7 determinism protocol. Observed deviations are classified as D1: printed precision shifts due to cryptographic re-keying. Lattice bounding levels (4.34%-5.10% vs v87 4.29%-5.03%) and naive FPR at φ = 0.15 (21.0% vs 20.8%) differ at one-decimal-place precision. The bias bound (3.1×10⁻³ vs 2.9×10⁻³) exceeds the manuscript bound by 2 ULPs at three-decimal-place precision. All qualitative claims are preserved: the Whitening Proposition is corroborated, ORACLE arm remains φ-invariant, NAIVE arm shows monotonic degradation, OLS arms converge to ORACLE, and dispersion costs manifest as expected. Limitations: The analysis assumes the mandated re-keying framework; results under alternative seeding schemes may differ. Counterfactual arms confirm that volatility clustering and fourth-moment effects are properly isolated. Design effects are measured for all pooled quantities.
+   [G2] missing section: 1. Deviation table
+   [G2] missing section: 2. Controls
+   [G2] missing section: 3. Test suite
+   [G2] missing section: 4. Reproducibility digests
+   [G2] missing section: 5. Design decisions
+   [G2] missing section: 6. Open questions
+   [G3] no pytest outcome
+   [G4] no digest and no unrecoverable marker
+   [G6] causal attribution -- each hit must cite the log line that established it
+docs/sections/R07.md:7:The pipeline enforces strict S7 determinism with single-threaded BLAS, MKL_CBWR=COMPATIBLE, and PYTHONHASHSEED=42. All 28 tests pass: C5 source identity validates 7 carried primitives byte-for-byte against the witness, C1 operator identity confirms unified ast.Gt exceedance, and calibration checks verify non-anticipative OLS formulations. Naive FPR at φ = 0.15 measures 21.0% (v87: 20.8%, D1), lattice bounds 4.34%-5.10% (v87: 4.29%-5.03%, D1), bias 3.1×10⁻³ (v87 bound: 2.9×10⁻³, D1).
+   [G8] Wilson interval on what may not be a proportion -- inspect:
+11:## Metric Concordance Table with Wilson 95% CIs
+13:| Metric | Manuscript Value | Compliant Pipeline | Deviation Class | Wilson 95% CI (Compliant) | Notes |
+── R08 (R08_adverse_lattice)
+   [OK]
+── R09 (R09_eprocess_anytime)
+   [G8] Wilson interval on what may not be a proportion -- inspect:
+229:3. RESOLUTION THAT DECISION BUYS, PANEL BY PANEL: Panels A and C carry Wilson intervals at n = 20000; panel B carries SEMs at n = 2000, i.e. sqrt(20000/2000) = 3.16x wider for the same underlying dispersion. Panel B's axis is labelled with its own n so the figure is not read against the caption's single number (log line 11).
+── R10 (R10_skew_robustness)
+   [OK]
+── R11 (R11_multi_detector)
+   [OK]
+── R12 (R12_gjr_student)
+   [OK]
+── R13 (R13_oracle_ceiling)
+   [G5] assumed design effect
+── R14 (R14_crypto_isofpr)
+   [G8] Wilson interval on what may not be a proportion -- inspect:
+128:4. Control S4.2 forbids hoisting any primitives into experiments/common/: a machine diff shows _garch_nll, fit_garch_qmle, strict_cusum and wilson_ci all differ between this witness and the R01/R03/R04/R04b/R11/R13 copies (log line 15).
+── R15 (R15_cross_sectional)
+   [OK]
+── R16 (R16_regime_census)
+   [G7b] D3 row present but no falsified-claim statement
+   [G7c] D3 row present but no scope clause
+   [G8] Wilson interval on what may not be a proportion -- inspect:
+82:Realised margin: Reported with Wilson intervals, DESCRIPTIVE ONLY. The figures compare the two ALGORITHMS on SPY's prices and are informative in that sense only. Pooled across tickers for description only: the four streams are not exchangeable and the pooled interval assumes an independence the turning points of one price series do not have.
+96:Tests byte-identity of 7 primitives (the six dating and divergence routines against Priorite_16_regime_census.py, and the Wilson interval against exp_R02_whitening_ljungbox.py).
+── R17 (R17_econometric_baseline)
+   [OK]
+── R18 (R18_ljungbox_power)
+   [G8] Wilson interval on what may not be a proportion -- inspect:
+37:Verdict: NO INTERVAL POOLED OVER THE GRID IS PUBLISHED; the per-point Wilson intervals remain valid, each resting on 1000 independent streams.
+41:Trigger probability under a correct generator: the autocorrelation arm is a four-sigma band, so 6.3e-5 two-sided; the marginal arm is a 95% Wilson interval, so 5% (logs/R18_ljungbox_power/exp_R18_ljungbox_power.log line 18).
+43:Verdict: both arms pass; the autocorrelation deviation is 0.070 of its budget, and both Wilson intervals cover their targets.
+
+════════════════════════════════════════════
+Streams with findings: 9/21

@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R09_v87_delay_parity_scope.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R09-add-conditioning`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — the delay comparison of Figure 9B is conditional on detection
 
 | Field               | Value                                                                                                                                                             |

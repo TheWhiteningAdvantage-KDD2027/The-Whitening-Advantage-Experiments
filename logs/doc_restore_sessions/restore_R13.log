@@ -1,0 +1,38 @@
+Perfect! All checks pass. Now let me create a summary of what was done:
+
+## Summary
+
+I have successfully executed the restoration contract for R13 by:
+
+1. **Reading the log files** (`logs/R13_oracle_ceiling/*.log`) to extract all required information
+2. **Rewriting `docs/audits/AUDIT_R13.md`** with exactly the six required sections:
+   - **Section 1: Deviation table (D0-D3)** - Built from log entries with 7 rows (6 D0, 1 D2), with proper source CSV cells and log line citations
+   - **Section 2: Controls** - Extracted all 8 controls (C1-C8, S4bis) with trigger probabilities, realised margins, and verdicts
+   - **Section 3: Test suite** - Ran pytest and pasted verbatim output (24 tests passed in 1.55s)
+   - **Section 4: Reproducibility digests** - Extracted SHA-256 digests from log (4 workers) with current tree listing
+   - **Section 5: Design decisions** - 7 numbered design decisions from the log
+   - **Section 6: Open questions** - 5 open questions from the log
+
+3. **Rewriting `docs/sections/R13.md`** with:
+   - Title `# R13 — Oracle Ceiling and the Clairvoyant Frontier`
+   - Description of what the experiment establishes and which figures/tables/claims it certifies
+   - Reproduction command: `bash run_experiment_R13.sh`
+   - Expected artefacts split into two groups (certifying published values vs certifying controls only)
+   - Measured execution cost (72.5s with 4 workers)
+   - Known deviations section (because audit carries a D2)
+
+4. **All self-verification checks pass**:
+   - No confirmatory language found
+   - Wilson references are only for proportions (wilson_ci function, Wilson interval test)
+   - No `deff = 1` or `simple random sampling` found
+   - No BLAS/associativity/summation order found
+   - D3 count in audit (0 in deviation table) is not lower than log's D3 count (0)
+   - Both files end with newline
+
+5. **Key findings from the log**:
+   - One D2 deviation: COVID-19 LR CUSUM FPR_H shifts from 1.3% to 1.1% at OP2b_ARL0_252
+   - All other numerals are D0 (preserved at published precision)
+   - 24 tests pass
+   - 8 controls all pass
+   - Execution cost: 72.5s with 4 workers
+   - SHA-256 digests verified

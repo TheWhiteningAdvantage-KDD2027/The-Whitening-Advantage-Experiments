@@ -1,0 +1,55 @@
+Perfect! The commit has been made successfully. Let me create a final summary of what was accomplished:
+
+## Summary
+
+I have successfully completed the complete 5-phase refactoring lifecycle for target stream **R04 (R04_isofpr_race)**. Here's what was accomplished:
+
+### Phase 1: Code Refactoring ✅
+- **Determinism Injection:** The experiment file already had all required determinism calls (`enforce_strict_determinism()`, `disable_pandas_multithreading()`, `verify_hash_seed()`, `log_environment()`, `log_artifact_manifest()`)
+- **AST Sanctuarization:** No `CARRIED_PRIMITIVES` or `COPIED_PRIMITIVES` markers found, no French comments detected
+- **Runner Script:** `run_experiment_R04.sh` already had all required single-threaded environment variables
+- **Verification:** Gate passed with `python experiments/common/verify_refactoring.py R04_isofpr_race --phase 1`
+
+### Phase 2: Execution & Integrity Audit ✅
+- **Execution:** Ran `bash run_experiment_R04.sh` successfully (227 seconds with 48 workers)
+- **Artifacts Generated:**
+  - 5 CSV files in `results/R04_isofpr_race/data/`
+  - 1 PNG figure in `results/R04_isofpr_race/figures/`
+  - 2 LaTeX tables in `results/R04_isofpr_race/tables/` (including `R04_claims.tex`)
+  - Log file in `logs/R04_isofpr_race/exp_R04_isofpr_race.log`
+- **Verification:** Gate passed with file existence checks
+
+### Phase 3: Test Suite Refactoring & Verification ✅
+- **Test Suite:** All 27 tests in `tests/test_R04_claims.py` pass
+- **French Comments:** None detected
+- **AST Discrepancies:** None found via grep
+- **Verification:** Gate passed with `pytest -v ./tests/test_R04_claims.py`
+
+### Phase 4: Candidates Overhaul & Deviations Synchronization ✅
+- **Candidate Files Created:**
+  - `docs/camera_ready_candidates/R04_v87_table3_macros.md` - LaTeX macro diff blocks with 9-tilde fences
+  - `docs/camera_ready_candidates/R04_v87_table3_data.md` - Table cell diff blocks with 9-tilde fences
+- **Deviations Registry Updated:** `docs/DEVIATIONS.md` with comprehensive R04 entry
+- **Deviation Classification:**
+  - **D3 Falsifications (4):** Recalib slowdown range (2-19x → 7-81x), Eco-L1 nu* crossing (4.9 → 8.52), estimation cost (0.3 → 4.05 dof), family control FPRs (5% → 36.1% CUSUM, 10.7% ADWIN)
+  - **D2 Deviations (6):** Oracle nu* crossing (4.6 → 4.47), parametric gain (1.66x → 1.38x), Concept threshold band ([10.6, 10.7] → [10.5, 10.7]), constant-threshold FPRs (7.7-7.9%), Concept lambda* flatness, Table 3 ADD values
+  - **Confirmed (7):** Blind zone persistence, ratio max ≤ π/2, ratio monotonicity, blind-zone onset c* ~ 0.43, analytic crossing, Gaussian ceiling, Concept threshold homogeneity
+- **Root Cause:** Gamma grid collapse in submitted campaign due to parameter ordering bug in `solve_beta_for_gamma(gamma, alpha)` instead of `solve_beta_for_gamma(alpha, gamma)`
+- **Verification:** Gate passed with `python experiments/common/verify_refactoring.py R04_isofpr_race --phase 4`
+
+### Phase 5: Documentation Generation & Final Certification ✅
+- **Audit Report:** `docs/audits/AUDIT_R04.md` with all 4 mandatory sections:
+  - Theoretical Anchor
+  - Empirical Methodology
+  - Metric Concordance Table with Wilson 95% CIs (19 metrics)
+  - Methodological Scope & Limitations
+- **Section README:** `docs/sections/R04.md` with 218 words (within 200-350 limit) and 3 mandatory headings:
+  - Stream Overview & Mathematical Target
+  - Execution & Verification
+  - Output Artifacts
+- **Continuous Line Invariant:** All markdown files have no hard-wrapping
+- **Ban List Compliance:** No banned tokens, emotional words, or raw pytest dumps
+- **Verification:** Final gate passed with `python experiments/common/verify_refactoring.py R04_isofpr_race`
+
+### Commit
+All changes committed with message: "R04: Complete 5-phase refactoring lifecycle for ISO-FPR race stream"

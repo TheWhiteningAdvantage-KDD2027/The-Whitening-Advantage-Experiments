@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R14_v87_reliable_range_scope.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — NO DEVIATION, clarification only: "the reliable range" is never defined, and the mean is taken over seven grid points
 
 | Field               | Value                                                                                                                       |

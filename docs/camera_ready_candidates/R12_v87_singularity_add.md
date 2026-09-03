@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R12_v87_singularity_add.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R12-campaign-redraw`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 STATUS: PARKED — DO NOT APPLY
 
 # R12 Camera-Ready Candidate: Moment Singularity (Figure 13)
@@ -14,25 +23,27 @@ The reproduced measurements from `R12_singularity_add.csv` are:
 
 The censored delay range [2,610, 2,999] stays within the rounding bracket [2350, 3050) at the 95% level with bootstrap envelope [2432.3277, 3249.7077], satisfying S3's non-falsification criterion.
 
-~~~~~~~~~~~latex
-% Line 353: update detection rates
--\text{detection decays monotonically ($83\%$ at $\nu = 10$, $61\%$ at $\nu = 7$)}
-+\text{detection decays monotonically ($82\%$ at $\nu = 10$, $62\%$ at $\nu = 7$)}
+<<< SEARCH
+~~~~~~~~~latex
+detection decays monotonically ($83\%$ at $\nu = 10$, $61\%$ at $\nu = 7$)
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
+detection decays monotonically ($82\%$ at $\nu = 10$, $62\%$ at $\nu = 7$)
+~~~~~~~~~
+>>> END OF BLOCK
 
--\text{collapses below the $50\%$ censoring threshold for $\nu \le 5.5$}
-+\text{collapses below the $50\%$ censoring threshold for $\nu \le 5.5$}
-~~~~~~~~~~~
+<<< SEARCH
+~~~~~~~~~latex
+survivorship-biased delays of $2{,}400$--$3{,}000$ steps
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
+survivorship-biased delays of $2{,}610$--$2{,}999$ steps
+~~~~~~~~~
+>>> END OF BLOCK
 
-~~~~~~~~~~~latex
-% Line 353: update survivorship-biased delays
--\text{survivorship-biased delays of $2\,{}400$--$3\,{}000$ steps}
-+\text{survivorship-biased delays of $2\,{}610$--$2\,{}999$ steps}
-~~~~~~~~~~~
-
-~~~~~~~~~~~latex
-% Line 353: update Concept pipeline delays
--\text{stays flat at $34$--$38$ steps}
-+\text{stays flat at $34$--$38$ steps}
-~~~~~~~~~~~
+The \textsc{Concept} delay range `$34$--$38$ steps` reproduces unchanged and consumes no
+search string; the collapse threshold `$\nu \le 5.5$` likewise reproduces.
 
 Cross-reference: docs/DEVIATIONS.md entries R12-campaign-redraw, R12-detection-rate-d2, R12-censored-delay-d2, R12-concept-delay-d1.

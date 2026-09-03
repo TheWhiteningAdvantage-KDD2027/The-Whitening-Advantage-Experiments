@@ -1,0 +1,52 @@
+Excellent! The commit was successful. Now let me provide a final summary of the complete 5-phase refactoring lifecycle for R13:
+
+## Summary
+
+I have successfully executed the complete 5-phase refactoring lifecycle for target stream R13 (slug: R13_oracle_ceiling) as specified in the domain standard REFACTORING_PROMPTS/PROMPT_REFACTORING_MISTRAL.md.
+
+### Phase 1: Code Refactoring ✓
+- Verified determinism injection (enforce_strict_determinism, disable_pandas_multithreading, verify_hash_seed, log_environment, log_artifact_manifest) already present in both experiment files
+- Verified single-threaded environment in run_experiment_R13.sh
+- No French comments found in Regime B code
+- **Verification Gate:** PASSED via `python experiments/common/verify_refactoring.py R13_oracle_ceiling --phase 1`
+
+### Phase 2: Execution & Ephemeral Integrity Audit ✓
+- Executed `bash run_experiment_R13.sh` successfully
+- All output artifacts generated:
+  - 6 CSV files in results/R13_oracle_ceiling/data/
+  - Figure 14 PNG in results/R13_oracle_ceiling/figures/
+  - R13_claims.tex in results/R13_oracle_ceiling/tables/
+  - Log files in logs/R13_oracle_ceiling/
+- **Verification Gate:** PASSED via file existence checks
+
+### Phase 3: Test Suite Refactoring & Multi-Tier Verification ✓
+- No French comments found in test_R13_claims.py
+- All 24 tests pass
+- **Verification Gate:** PASSED via `pytest -v ./tests/test_R13_claims.py` and French grep
+
+### Phase 4: Candidates Overhaul & Deviations Synchronization ✓
+- Created `docs/camera_ready_candidates/R13_v87_oracle_ceiling.md` with 9-tilde (~~~~~~~~~latex) fences
+- Updated `docs/DEVIATIONS.md` with formal D2 deviation classification for R13
+- **Verification Gate:** PASSED via `python experiments/common/verify_refactoring.py R13_oracle_ceiling --phase 4`
+
+### Phase 5: Documentation Generation & Final Academic Certification ✓
+- Created `docs/audits/AUDIT_R13.md` with all 4 required sections and Wilson 95% CIs
+- Created `docs/sections/R13.md` with 281 words (within 200-350 limit) and 3 mandatory headings
+- Both files dewatermarked, unwrapped (continuous lines), and Ban List compliant
+- **Final Verification Gate:** PASSED via `python experiments/common/verify_refactoring.py R13_oracle_ceiling`
+
+### Key Results
+- **Deviation Classification:** D2
+  - COVID-19 LR CUSUM FPR_H at OP2b_ARL0_252: 1.3% (manuscript) → 1.1% (compliant)
+  - All other published numerals preserved at printed precision
+  - All qualitative claims corroborated (3-day detection, 16-day delay, 10.6x Jensen ratio, census verdicts)
+
+### All Pre-Flight Termination Invariants Satisfied
+- ✓ AST Invariance (24/24 tests pass)
+- ✓ Deterministic Execution (single-threaded, PYTHONHASHSEED=42)
+- ✓ Linguistic Cleanliness (zero French comments in Regime B)
+- ✓ Continuous Line Invariant (no hard-wrapping in .md files)
+- ✓ Zero Ephemeral Residue (no temp files)
+- ✓ Core Isolation (output delivered cleanly)
+
+The task is complete.

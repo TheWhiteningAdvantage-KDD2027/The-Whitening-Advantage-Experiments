@@ -1,14 +1,10 @@
-# Camera-ready candidate — the Figure 17 caption's `r \ge 0.99` holds under neither sign convention
+# Camera-Ready Candidate: R15_v87_scatter_sign
 
-| Field               | Value                                                                                                                                    |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| **Status**          | **PARKED — do not apply**                                                                                                                |
-| Target file         | `articleB_whitening_v87.tex` (submitted 2026-07-27, frozen), Figure 17 caption, `fig:cross_section`                                       |
-| Trigger             | Acceptance notification, 14 November 2026                                                                                                |
-| Evidence            | `results/R15_cross_sectional/data/R15_scatter_correlation.csv`; `logs/R15_cross_sectional/exp_R15_cross_sectional_b.log`, "THE CAPTION'S INEQUALITY, EVALUATED AS PRINTED" |
-| Register entry      | `docs/DEVIATIONS.md`, `R15-scatter-sign` — Class A, **D2**                                                                                |
-| Cost                | +14 words in one parenthetical; one printed relation changes                                                                             |
-| Blocking dependency | shares the caption with `R15_v87_scatter_attribution.md` and `R15_v87_budget_bound_referent.md`; the three search strings are **disjoint** and the three edits commute |
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R15-scatter-sign`
+
+**Target file: `articleB_whitening_v87.tex`**
 
 **Why this is not applied now.** The manuscript is under review and cannot be edited. The
 deviation inventory is not closed.
@@ -57,16 +53,15 @@ depends on the sign.
 `1`). It is disjoint from the strings the two sibling candidates search. Verify once more before
 applying, as a matter of routine.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 ($r \ge 0.99$ with bootstrap threshold)
 ~~~~~~~~~
-
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 ($|r| \approx 0.99$ against the bootstrap threshold; the sign is negative, a higher threshold lengthening the pooled delay and so shrinking the ratio)
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END OF BLOCK
 
 ## What must not be done with this candidate
 

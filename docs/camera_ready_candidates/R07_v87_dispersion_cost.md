@@ -1,14 +1,10 @@
-# Camera-ready candidate — L308's "0.4 points of rejection" matches no reading of the campaign that produced the figure
+# Camera-Ready Candidate: R07_v87_dispersion_cost
 
-| Field               | Value                                                                                                            |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| **Status**          | **PARKED — do not apply**                                                                                        |
-| Target file         | `articleB_whitening_v87.tex` (submitted 2026-07-26, frozen), `sec:ar_garch` **L308**                              |
-| Trigger             | Acceptance notification, 14 November 2026                                                                        |
-| Evidence            | `results/R07_estimated_mean/data/R07_estmean_lb_fpr.csv` and `data/reference/R07/protocol_21a_estmean_lb_fpr.csv` |
-| Register entry      | `docs/DEVIATIONS.md`, `R07-dispersion-cost-numeral` — Class A, no severity                                       |
-| Cost                | one clause; the sentence gains the quantity it was missing                                                       |
-| Blocking dependency | shares L308 with `R07_v87_bias_bound.md`; the two search strings are **disjoint** and the two edits commute      |
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R07-dispersion-cost`
+
+**Target file: `articleB_whitening_v87.tex`**      |
 
 **Why this is not applied now.** The manuscript is under review and cannot be edited. The
 deviation inventory is not closed.
@@ -47,16 +43,15 @@ definition, and a reader holding `R07_estmean_lb_fpr.csv` cannot reconstruct the
 disjoint from the string `R07_v87_bias_bound.md` searches in the same sentence. Verify once more
 before applying, as a matter of routine.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 costs at most $0.4$ points of rejection
 ~~~~~~~~~
-
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 costs at most $0.8$ points of Ljung--Box rejection, measured as the largest gap between a rolling-OLS arm and the oracle arm at the same $\phi$ on the same paths
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END OF BLOCK
 
 The replacement names the reading (the paired gap against the oracle at matched `φ`), which is the
 one the surrounding sentence's "matching the oracle bands on the same paths" already implies, and

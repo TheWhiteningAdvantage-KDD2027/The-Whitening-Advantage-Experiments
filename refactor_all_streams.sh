@@ -6,7 +6,6 @@
 
 set -euo pipefail
 
-# Resolve repository root directory
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [[ ! -d "${REPO_ROOT}/experiments" ]]; then
   REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -14,7 +13,7 @@ fi
 cd "${REPO_ROOT}"
 
 # ------------------------------------------------------------------------------
-# 1. Strict Execution Order Definition (Single Source of Truth - SSOT)
+# 1. Strict Execution Order Definition (SSOT)
 # ------------------------------------------------------------------------------
 ORDERED_STREAMS=(
   "R01"
@@ -48,12 +47,12 @@ export MKL_NUM_THREADS=1
 export OPENBLAS_NUM_THREADS=1
 export VECLIB_MAXIMUM_THREADS=1
 export NUMEXPR_NUM_THREADS=1
-export PYTHONHASHSEED=0
+export PYTHONHASHSEED=42
 export CUBLAS_WORKSPACE_CONFIG=:4096:8
 export PYTHONUNBUFFERED=1
 
 # ------------------------------------------------------------------------------
-# 3. Command-Line Interface (CLI) Options and Parsing
+# 3. CLI Parsing
 # ------------------------------------------------------------------------------
 TARGET_STREAM=""
 RESUME_FROM=""
@@ -64,6 +63,8 @@ DRY_RUN=false
 SKIP_EXPERIMENT=false
 SKIP_TESTS=false
 SKIP_GIT=false
+RESTORE_REF=false
+CLEAN_DOCS=false
 
 usage() {
   cat <<EOF
@@ -71,8 +72,10 @@ Usage: $(basename "$0") [OPTIONS]
 
 Options:
   -s, --stream <ID>          Execute exclusively the specified research stream (e.g., R13, R02b)
-  -r, --resume-from <ID>     Resume ordered sequence starting from specified stream (e.g., R09)
+  -r, --resume-from <ID>     Resume ordered sequence starting from specified stream (e.g., R01)
       --spawn-vibe           Launch Mistral Vibe agent in batch mode ('vibe -p') per stream before CI gates
+      --restore-ref          Restore stream reference docs and results from 'main' branch before spawning (priority over --clean-docs)
+      --clean-docs           Purge legacy stream markdown files before spawning agent (ignored if --restore-ref is active)
       --generate-tasks       Generate isolated stream task payloads in REFACTORING_PROMPTS/tasks/
       --no-fix               Disable automated self-healing/patching in verify_refactoring.py
       --skip-experiment      Bypass experimental execution stage; run verification audits and test suites only
@@ -118,6 +121,14 @@ while [[ $# -gt 0 ]]; do
       SKIP_GIT=true
       shift
       ;;
+    --restore-ref)
+      RESTORE_REF=true
+      shift
+      ;;
+    --clean-docs)
+      CLEAN_DOCS=true
+      shift
+      ;;
     --dry-run)
       DRY_RUN=true
       shift
@@ -133,10 +144,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 # ------------------------------------------------------------------------------
-# 4. Dynamic Resolution & Engine Functions
+# 4. Engine Functions
 # ------------------------------------------------------------------------------
-
-# Dynamically resolve stream directory slug on filesystem without heuristics
 resolve_stream_slug() {
   local stream_id="$1"
   local matched_dir
@@ -150,7 +159,6 @@ resolve_stream_slug() {
   fi
 }
 
-# Generate lightweight, isolated runtime task payload for Agent execution
 generate_stream_task_payload() {
   local stream_id="$1"
   local stream_slug="$2"
@@ -171,12 +179,11 @@ EOF
   echo "[+] [Task Generator] Emitted task payload: ${task_file}"
 }
 
-# Spawn Mistral Vibe agent in non-interactive batch mode with dual logging
 spawn_vibe_agent() {
   local stream_id="$1"
   local stream_slug="$2"
-  local log_dir="${REPO_ROOT}/logs/${stream_slug}"
-  local log_file="${log_dir}/vibe_refactor.log"
+  local log_dir="${REPO_ROOT}/logs/vibe_sessions"
+  local log_file="${log_dir}/vibe_${stream_slug}.log"
 
   if ! command -v vibe >/dev/null 2>&1; then
     echo "[!] [Agent Error] 'vibe' CLI executable not found in PATH." >&2
@@ -185,14 +192,13 @@ spawn_vibe_agent() {
 
   mkdir -p "${log_dir}"
 
-  local prompt_msg="Execute the complete 5-phase refactoring lifecycle for target stream ${stream_id} (slug: ${stream_slug}). Master domain standard: REFACTORING_PROMPTS/PROMPT_REFACTORING_MISTRAL.md."
+  local prompt_msg="Execute the complete 5-phase refactoring lifecycle for target stream ${stream_id} (slug: ${stream_slug}) adhering strictly to REFACTORING_PROMPTS/PROMPT_REFACTORING_MISTRAL.md and .vibe/prompts/ENG_VIBE_REFACTOR_STREAM.md. In Phase 4, preserve and reconcile all verified manuscript anchors in docs/camera_ready_candidates/${stream_id}_v87_*.md without destructively overwriting prose into macro stubs, enforce 9-tilde (~~~~~~~~~latex) fences with Two-Family headers, and synchronize docs/DEVIATIONS.md under the D0-D3 taxonomy. In Phase 5, ground AUDIT_${stream_id}.md and docs/sections/${stream_id}.md strictly in empirical logs and CSV counts."
 
   echo "[*] [Vibe Agent] Spawning autonomous batch refactoring agent for stream ${stream_id}..."
-  echo "[*] [Vibe Agent] Streaming live execution (Log: logs/${stream_slug}/vibe_refactor.log)..."
+  echo "[*] [Vibe Agent] Protected log: logs/vibe_sessions/vibe_${stream_slug}.log"
   vibe --agent refactor --auto-approve -p "${prompt_msg}" < /dev/null 2>&1 | tee "${log_file}"
 }
 
-# Gate 0: Non-English / French comment invariant verification
 check_french_invariants() {
   local stream_slug="$1"
   local stream_id="$2"
@@ -223,7 +229,6 @@ check_french_invariants() {
   return "${errors}"
 }
 
-# Gate 1: Experimental execution stage
 run_experiment_stage() {
   local stream_slug="$1"
   local stream_id="$2"
@@ -256,7 +261,6 @@ run_experiment_stage() {
   return 0
 }
 
-# Gate 2: Python and Markdown invariant audit & automated self-healing remediation
 run_python_invariants_gate() {
   local stream_slug="$1"
   echo "[*] [Gate Invariants] Auditing invariants via verify_refactoring.py: ${stream_slug}..."
@@ -268,7 +272,6 @@ run_python_invariants_gate() {
   python experiments/common/verify_refactoring.py "${stream_slug}"
 }
 
-# Gate 3: Pytest claim and contract validation
 run_pytest_gate() {
   local stream_id="$1"
   local stream_slug="$2"
@@ -292,7 +295,20 @@ run_pytest_gate() {
   return 0
 }
 
-# Non-blocking Version Control (VCS) Checkpoint (Soft Gate)
+run_camera_ready_gate() {
+  local stream_id="$1"
+  echo "[*] [Gate 4] Verifying camera-ready candidates for ${stream_id}..."
+
+  # The stream id is passed so the gate reports on this stream's own candidates.
+  # Without it the validator walks the whole corpus and attributes any finding to
+  # whichever stream happened to be running.
+  if ! python experiments/common/verify_camera_ready.py "${stream_id}"; then
+    return 1
+  fi
+
+  return 0
+}
+
 checkpoint_vcs() {
   local stream_id="$1"
   local stream_slug="$2"
@@ -308,6 +324,7 @@ checkpoint_vcs() {
   [[ -f "docs/audits/AUDIT_${stream_id}.md" ]] && files_to_add+=("docs/audits/AUDIT_${stream_id}.md")
   [[ -f "docs/sections/${stream_id}.md" ]] && files_to_add+=("docs/sections/${stream_id}.md")
   [[ -f "docs/DEVIATIONS.md" ]] && files_to_add+=("docs/DEVIATIONS.md")
+  [[ -d "docs/camera_ready_candidates" ]] && files_to_add+=("docs/camera_ready_candidates")
   [[ -d "tests" ]] && files_to_add+=("tests")
   [[ -d "results/${stream_slug}" ]] && files_to_add+=("results/${stream_slug}")
 
@@ -319,7 +336,7 @@ checkpoint_vcs() {
   fi
 
   if ! git diff --cached --quiet; then
-    if git commit -m "refactor(${stream_id}): verified invariants, claims tests, and documentation" 2>/dev/null; then
+    if git commit -m "refactor(${stream_id}): certified invariants, audit report, and section README" 2>/dev/null; then
       echo "[+] [VCS] Git checkpoint successfully committed for ${stream_id}."
     else
       echo "[!] [VCS WARNING] Non-blocking failure during 'git commit' for stream ${stream_id}." >&2
@@ -332,7 +349,7 @@ checkpoint_vcs() {
 }
 
 # ------------------------------------------------------------------------------
-# 5. Stream Sequence Filtering Preserving ORDERED_STREAMS Topology
+# 5. Sequence Filtering
 # ------------------------------------------------------------------------------
 STREAMS_TO_RUN=()
 RESUME_ACTIVE=true
@@ -363,9 +380,6 @@ if [[ ${#STREAMS_TO_RUN[@]} -eq 0 ]]; then
   exit 1
 fi
 
-# ------------------------------------------------------------------------------
-# 6. Dry-Run Inspection Dispatch
-# ------------------------------------------------------------------------------
 if [[ "${DRY_RUN}" == true ]]; then
   echo "========================================================================"
   echo "[*] DRY-RUN PIPELINE TOPOLOGY & RESOLUTION"
@@ -380,7 +394,7 @@ if [[ "${DRY_RUN}" == true ]]; then
 fi
 
 # ------------------------------------------------------------------------------
-# 7. Main Orchestration Execution Loop
+# 6. Main State Machine Loop
 # ------------------------------------------------------------------------------
 START_TOTAL_TIME=${SECONDS}
 SUCCESS_COUNT=0
@@ -392,9 +406,8 @@ echo "[*] REFACTORING HARNESS — STRICT SEQUENTIAL PIPELINE"
 echo "[*] Total Streams      : ${#STREAMS_TO_RUN[@]}"
 echo "[*] Sequence           : ${STREAMS_TO_RUN[*]}"
 echo "[*] Agent Spawning     : $([[ "${SPAWN_VIBE}" == true ]] && echo "Enabled (vibe -p batch mode)" || echo "Disabled")"
-echo "[*] Task Generation    : $([[ "${GENERATE_TASKS}" == true ]] && echo "Enabled (REFACTORING_PROMPTS/tasks/)" || echo "Disabled")"
-echo "[*] Automated Repair   : ${FIX_FLAG:-Disabled}"
-echo "[*] Experiments Stage  : $([[ "${SKIP_EXPERIMENT}" == true ]] && echo "Bypassed" || echo "Enabled")"
+echo "[*] Experiments Stage  : $([[ "${SKIP_EXPERIMENT}" == true ]] && echo "Bypassed (--skip-experiment)" || echo "Enabled")"
+echo "[*] Test Suites        : $([[ "${SKIP_TESTS}" == true ]] && echo "Bypassed (--skip-tests)" || echo "Enabled")"
 echo "========================================================================"
 
 for STREAM_ID in "${STREAMS_TO_RUN[@]}"; do
@@ -406,12 +419,17 @@ for STREAM_ID in "${STREAMS_TO_RUN[@]}"; do
   echo "[>>>] PROCESSING STREAM: ${STREAM_ID} (Directory: experiments/${STREAM_SLUG})"
   echo "------------------------------------------------------------------------"
 
-  # Optional: Emit lightweight task payload file
+  # Pre-spawn document state management (RESTORE_REF has strict precedence over CLEAN_DOCS)
+  if [[ "${RESTORE_REF}" == true ]]; then
+    git checkout main -- "docs/sections/${STREAM_ID}.md" "docs/audits/AUDIT_${STREAM_ID}.md" "docs/camera_ready_candidates/${STREAM_ID}_v87_*.md" "results/${STREAM_SLUG}" 2>/dev/null || true
+  elif [[ "${CLEAN_DOCS}" == true ]]; then
+    rm -f "docs/sections/${STREAM_ID}.md" "docs/audits/AUDIT_${STREAM_ID}.md"
+  fi
+
   if [[ "${GENERATE_TASKS}" == true ]]; then
     generate_stream_task_payload "${STREAM_ID}" "${STREAM_SLUG}"
   fi
 
-  # Optional: Spawn autonomous Vibe agent refactoring session
   if [[ "${SPAWN_VIBE}" == true ]]; then
     if ! spawn_vibe_agent "${STREAM_ID}" "${STREAM_SLUG}"; then
       echo "[!] [FATAL] Vibe agent execution failed for stream ${STREAM_ID}." >&2
@@ -449,7 +467,19 @@ for STREAM_ID in "${STREAMS_TO_RUN[@]}"; do
     exit 1
   fi
 
-  # VCS Checkpoint (Non-blocking)
+  if ! run_camera_ready_gate "${STREAM_ID}"; then
+    echo "[!] [FATAL] Camera-ready candidate verification failed for stream ${STREAM_ID}." >&2
+    FAILED_STREAMS+=("${STREAM_ID} (Camera-Ready Gate)")
+    exit 1
+  fi
+
+  echo "[*] [Gate 5] Verifying documentary invariants..."
+  if ! bash gate_docs.sh; then
+    echo "[!] [FATAL] Documentary gates failed for stream ${STREAM_ID}." >&2
+    FAILED_STREAMS+=("${STREAM_ID} (Docs Gate)")
+    exit 1
+  fi
+
   checkpoint_vcs "${STREAM_ID}" "${STREAM_SLUG}"
 
   STREAM_DURATION=$((SECONDS - STREAM_START_TIME))
@@ -458,9 +488,6 @@ for STREAM_ID in "${STREAMS_TO_RUN[@]}"; do
   echo "[+] [OK] Stream ${STREAM_ID} successfully validated in ${STREAM_DURATION}s."
 done
 
-# ------------------------------------------------------------------------------
-# 8. Execution Summary and Diagnostics Report
-# ------------------------------------------------------------------------------
 TOTAL_DURATION=$((SECONDS - START_TOTAL_TIME))
 
 echo ""

@@ -1,0 +1,58 @@
+Excellent! All phases pass. Now let me create a final summary of what was accomplished:
+
+## Summary of Complete 5-Phase Refactoring for R17 (R17_econometric_baseline)
+
+### Phase 1: Code Refactoring ✓
+- Verified determinism injection is already in place (enforce_strict_determinism, disable_pandas_multithreading, verify_hash_seed, log_environment, log_artifact_manifest)
+- Verified run_experiment_R17.sh has all required single-threaded exports
+- No French comments found in Regime B
+- Verification Gate: PASSED
+
+### Phase 2: Execution & Audit ✓
+- Executed both SPECS 1.10 arm and legacy-QMLE arm
+- All artifacts generated: 6 CSV files in data/, R17_claims.tex and R17_claims_legacy_qmle.tex in tables/
+- Logs generated for both arms
+- Verification Gate: PASSED
+
+### Phase 3: Test Suite & Verification ✓
+- All 30 tests in test_R17_claims.py pass
+- Zero French comments in diff
+- Zero AST discrepancies
+- Verification Gate: PASSED
+
+### Phase 4: Camera-Ready Candidates & Deviations ✓
+- Created `/docs/camera_ready_candidates/R17_v87_econometric_baseline.md` with:
+  - Manuscript vs regenerated LaTeX macro comparisons
+  - 9-tilde fenced diff blocks for all D2 deviations
+  - English tags and D0-D3 classifications
+- Updated `/docs/DEVIATIONS.md` with formal R17 entry:
+  - Deviation Class: D2
+  - Root Cause: Entropy migration (SPECS 1.2)
+  - All four L341 numerals classified as D2
+  - True persistence classified as D0
+  - All qualitative claims corroborated
+- Verification Gate: PASSED
+
+### Phase 5: Documentation & Final Certification ✓
+- Created `/docs/audits/AUDIT_R17.md` with all 4 sections:
+  1. Theoretical Anchor
+  2. Empirical Methodology
+  3. Concordance Table with Wilson 95% CIs
+  4. Methodological Scope and Limitations
+- Created `/docs/sections/R17.md`:
+  - 264 words (within 200-350 limit)
+  - 3 mandatory headings
+  - Continuous lines (no hard-wrapping)
+  - No French tokens
+  - No banned words
+- Verification Gate: PASSED
+
+### Pre-Flight Termination Invariants ✓
+(a) AST Invariance: Verified
+(b) Deterministic Execution: Verified
+(c) Linguistic Cleanliness: Verified
+(d) Continuous Line Invariant: Verified
+(e) Zero Ephemeral Residue: Verified
+(f) Core Isolation: Verified
+
+All deliverables are complete and certified for stream R17.

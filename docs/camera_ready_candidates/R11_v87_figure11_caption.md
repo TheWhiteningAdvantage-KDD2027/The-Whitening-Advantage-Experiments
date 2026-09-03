@@ -2,7 +2,7 @@
 
 - **Status:** PARKED — do not apply
 - **Trigger:** Acceptance notification of 14 November 2026
-- **Register entry:** none
+- **Register entry:** `R11-figure11-caption`
 
 **Target file:** `articleB_whitening_v87.tex`
 
@@ -15,7 +15,7 @@
 | Target file         | `articleB_whitening_v87.tex` (submitted 2026-07-27, frozen), caption of `fig:data_vs_concept` |
 | Trigger             | Acceptance notification, 14 November 2026                                                 |
 | Evidence            | `data/reference/R11/Priorite_12_multi_detector.py`, lines 604-613; R11 experiments B and D |
-| Register entry      | `docs/DEVIATIONS.md`, entry 19                                                             |
+| Register entry      | `docs/DEVIATIONS.md`, `R11-figure11-caption` — Class A, no severity                                                             |
 | Cost                | +6 words against the submitted caption                                                    |
 | Blocking dependency | none — no number in the body text changes                                                 |
 

@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R14_v87_synthetic_control_numerals.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R14-campaign-redraw`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — L345's three quasi-Gaussian control numerals move under the 128-bit re-keying
 
 | Field               | Value                                                                                              |

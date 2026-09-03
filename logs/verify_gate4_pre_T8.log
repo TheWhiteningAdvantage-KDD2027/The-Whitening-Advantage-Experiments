@@ -1,0 +1,124 @@
+[Gate 4] 122 finding(s):
+  - docs/camera_ready_candidates/R01_v87_garch_calibration.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R01_v87_garch_calibration.md: no SEARCH block found
+  - docs/camera_ready_candidates/R02_v87_binary_error_wilson.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R02_v87_ljungbox_whiteness.md: no SEARCH block found
+  - docs/camera_ready_candidates/R02b_R02c_v87_ljungbox_clause.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R02b_v87_iid_arm_rejection.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R03_v87_cusum_nominal_level.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R03_v87_fpr_explosion.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R03_v87_fpr_explosion.md: no SEARCH block found
+  - docs/camera_ready_candidates/R04_v87_table3_data.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R04b_v87_efficiency_crossing.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R04b_v87_estimation_cost.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R04b_v87_oracle_tracks_analytic.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R05_v87_lambda_c_numeral.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R05_v87_scale_law.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R05_v87_scale_law.md: no SEARCH block found
+  - docs/camera_ready_candidates/R05_v87_sixth_moment_gloss.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R06_v87_caption_paired.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R06_v87_caption_paired.md: dangling register identifier 'R06-fourth-moment-boundary'
+  - docs/camera_ready_candidates/R06_v87_validity_map.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R06_v87_validity_map.md: no SEARCH block found
+  - docs/camera_ready_candidates/R07_v87_bias_bound.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R07_v87_dispersion_cost.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R07_v87_estimated_mean.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R07_v87_estimated_mean.md: no SEARCH block found
+  - docs/camera_ready_candidates/R07_v87_figure7_exactness.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R07_v87_lattice_handoff_to_R08.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R07_v87_lattice_handoff_to_R08.md: no SEARCH block found
+  - docs/camera_ready_candidates/R07_v87_panelB_operating_level.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R07_v87_panelB_operating_level.md: dangling register identifier 'R07-oracle-band-precision'
+  - docs/camera_ready_candidates/R08_v87_adverse_direction.md: dangling register identifier 'R08-campaign-redraw'
+  - docs/camera_ready_candidates/R08_v87_adverse_direction.md: no SEARCH block found
+  - docs/camera_ready_candidates/R08_v87_adverse_numerals.md: dangling register identifier 'R08-campaign-redraw'
+  - docs/camera_ready_candidates/R08_v87_delivered_level.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R08_v87_delivered_level.md: dangling register identifier 'R08-delivered-level-above-nominal'
+  - docs/camera_ready_candidates/R08_v87_discrete_null_law.md: dangling register identifier 'R08-delivered-level-above-nominal'
+  - docs/camera_ready_candidates/R08_v87_discrete_null_law.md: no SEARCH block found
+  - docs/camera_ready_candidates/R08_v87_lattice_exact_basis.md: dangling register identifier 'R08-campaign-redraw'
+  - docs/camera_ready_candidates/R09_v87_add_parity.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R09_v87_add_parity.md: dangling register identifier 'R09-cusum-add-parity-d2'
+  - docs/camera_ready_candidates/R09_v87_add_parity.md: dangling register identifier 'R09-mix-add-parity-d1'
+  - docs/camera_ready_candidates/R09_v87_add_parity.md: no SEARCH block found
+  - docs/camera_ready_candidates/R09_v87_anytime_numerals.md: dangling register identifier 'R03-cusum-nominal-level'
+  - docs/camera_ready_candidates/R09_v87_anytime_numerals.md: dangling register identifier 'R05-campaign-redraw'
+  - docs/camera_ready_candidates/R09_v87_anytime_numerals.md: dangling register identifier 'R09-campaign-redraw'
+  - docs/camera_ready_candidates/R09_v87_anytime_numerals.md: dangling register identifier 'R11-regenerated'
+  - docs/camera_ready_candidates/R09_v87_arl0_censoring.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R09_v87_arl0_censoring.md: dangling register identifier 'R09-arl0-censoring'
+  - docs/camera_ready_candidates/R09_v87_cusum_peeking_fpr.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R09_v87_cusum_peeking_fpr.md: dangling register identifier 'R09-cusum-peeking-fpr-d2'
+  - docs/camera_ready_candidates/R09_v87_cusum_peeking_fpr.md: no SEARCH block found
+  - docs/camera_ready_candidates/R09_v87_delay_parity_scope.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R09_v87_delay_parity_scope.md: dangling register identifier 'R09-add-conditioning'
+  - docs/camera_ready_candidates/R09_v87_stream_counts.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R10_v87_L290_skewness_numeral.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R10_v87_L290_skewness_numeral.md: dangling register identifier 'R10-campaign-redraw'
+  - docs/camera_ready_candidates/R10_v87_caption_fpr_envelope.md: dangling register identifier 'R05-campaign-redraw'
+  - docs/camera_ready_candidates/R10_v87_caption_fpr_envelope.md: dangling register identifier 'R10-campaign-redraw'
+  - docs/camera_ready_candidates/R10_v87_caption_fpr_envelope.md: dangling register identifier 'R11-regenerated'
+  - docs/camera_ready_candidates/R10_v87_panelA_sign_arm_scope.md: dangling register identifier 'R18-ljungbox-power'
+  - docs/camera_ready_candidates/R11_v87_concept_add.md: no SEARCH block found
+  - docs/camera_ready_candidates/R11_v87_data_slopes.md: no SEARCH block found
+  - docs/camera_ready_candidates/R11_v87_detector_comparability.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R11_v87_detector_comparability.md: dangling register identifier 'R11-onset-convention'
+  - docs/camera_ready_candidates/R11_v87_detector_comparability.md: no SEARCH block found
+  - docs/camera_ready_candidates/R11_v87_eddm_fpr.md: no SEARCH block found
+  - docs/camera_ready_candidates/R11_v87_figure11_caption.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R11_v87_grid_metadata.md: no SEARCH block found
+  - docs/camera_ready_candidates/R11_v87_loglog_slopes.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R11_v87_loglog_slopes.md: dangling register identifier 'R11-pht-slope'
+  - docs/camera_ready_candidates/R11_v87_pht_gamma_rule.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R11_v87_pht_gamma_rule.md: dangling register identifier 'R11-pht-gamma-rule'
+  - docs/camera_ready_candidates/R11_v87_pht_macros.md: no SEARCH block found
+  - docs/camera_ready_candidates/R11_v87_pht_syncope_gamma.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R11_v87_pht_syncope_gamma.md: dangling register identifier 'R11-pht-syncope'
+  - docs/camera_ready_candidates/R12_v87_leverage_fpr.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R12_v87_leverage_fpr.md: dangling register identifier 'R12-campaign-redraw'
+  - docs/camera_ready_candidates/R12_v87_leverage_fpr.md: no SEARCH block found
+  - docs/camera_ready_candidates/R12_v87_singularity_add.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R12_v87_singularity_add.md: dangling register identifier 'R12-campaign-redraw'
+  - docs/camera_ready_candidates/R12_v87_singularity_add.md: dangling register identifier 'R12-censored-delay-d2'
+  - docs/camera_ready_candidates/R12_v87_singularity_add.md: dangling register identifier 'R12-concept-delay-d1'
+  - docs/camera_ready_candidates/R12_v87_singularity_add.md: dangling register identifier 'R12-detection-rate-d2'
+  - docs/camera_ready_candidates/R12_v87_singularity_add.md: no SEARCH block found
+  - docs/camera_ready_candidates/R13_v87_covid_delay_numerals.md: dangling register identifier 'R05-campaign-redraw'
+  - docs/camera_ready_candidates/R13_v87_covid_delay_numerals.md: dangling register identifier 'R11-regenerated'
+  - docs/camera_ready_candidates/R13_v87_covid_delay_numerals.md: no SEARCH block found
+  - docs/camera_ready_candidates/R13_v87_frozen_null_scope.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R13_v87_frozen_null_scope.md: dangling register identifier 'R13-frozen-null-scope'
+  - docs/camera_ready_candidates/R13_v87_frozen_null_scope.md: no SEARCH block found
+  - docs/camera_ready_candidates/R13_v87_operating_points.md: dangling register identifier 'R13-negative-control-scope'
+  - docs/camera_ready_candidates/R13_v87_operating_points.md: dangling register identifier 'R13-operating-points-unnamed'
+  - docs/camera_ready_candidates/R13_v87_operating_points.md: no SEARCH block found
+  - docs/camera_ready_candidates/R14_v87_crypto_isofpr_ratios.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R14_v87_crypto_isofpr_ratios.md: no SEARCH block found
+  - docs/camera_ready_candidates/R14_v87_synthetic_control_numerals.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R14_v87_synthetic_control_numerals.md: dangling register identifier 'R14-campaign-redraw'
+  - docs/camera_ready_candidates/R15_v87_budget_bound_referent.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R15_v87_naive_baseline.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R15_v87_scatter_attribution.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R15_v87_scatter_sign.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R16_v87_boundary_sensitivity.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R16_v87_boundary_sensitivity.md: dangling register identifier 'R16-boundary-sensitivity'
+  - docs/camera_ready_candidates/R16_v87_boundary_sensitivity.md: dangling register identifier 'R16-dating-misdescription'
+  - docs/camera_ready_candidates/R16_v87_boundary_sensitivity.md: dangling register identifier 'R16-substitution-scope'
+  - docs/camera_ready_candidates/R16_v87_dating_algorithm.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R16_v87_dating_algorithm.md: dangling register identifier 'R16-dating-misdescription'
+  - docs/camera_ready_candidates/R16_v87_regime_census.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R16_v87_regime_census.md: dangling register identifier 'R16-covid-floor-values'
+  - docs/camera_ready_candidates/R16_v87_regime_census.md: dangling register identifier 'R16-floor-frac-envelope'
+  - docs/camera_ready_candidates/R16_v87_regime_census.md: dangling register identifier 'R16-out-of-budget-frac'
+  - docs/camera_ready_candidates/R16_v87_regime_census.md: dangling register identifier 'R16-sharpe-one-cost'
+  - docs/camera_ready_candidates/R16_v87_regime_census.md: no SEARCH block found
+  - docs/camera_ready_candidates/R17_v87_econometric_baseline.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R17_v87_econometric_baseline.md: dangling register identifier 'R17-campaign-redraw'
+  - docs/camera_ready_candidates/R17_v87_econometric_baseline.md: no SEARCH block found
+  - docs/camera_ready_candidates/R17_v87_warmup_resolution.md: dangling register identifier 'R17-campaign-redraw'
+  - docs/camera_ready_candidates/R17_v87_warmup_restoration_scope.md: dangling register identifier 'R17-campaign-redraw'
+  - docs/camera_ready_candidates/R18_v87_ljungbox_power_bound.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R18_v87_ljungbox_power_bound.md: no SEARCH block found
+  - docs/camera_ready_candidates/R18_v87_whitening_evidence_strength.md: not marked NO DEVIATION and cites no register entry present in docs/DEVIATIONS.md -- add the family marker or the register entry
+  - docs/camera_ready_candidates/R18_v87_whitening_evidence_strength.md: dangling register identifier 'R18-ljungbox-power'
+[Gate 4] 73 candidate file(s) checked.

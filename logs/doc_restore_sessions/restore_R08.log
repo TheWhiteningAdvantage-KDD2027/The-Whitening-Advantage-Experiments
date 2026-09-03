@@ -1,0 +1,37 @@
+Perfect! The restoration contract for R08 has been executed in full. Let me provide a final summary:
+
+## Summary
+
+I have successfully executed the restoration contract for **R08 (R08_adverse_lattice)** by:
+
+### Deliverable 1: `docs/audits/AUDIT_R08.md` (27KB, 301 lines)
+Contains all 6 mandatory sections in the correct order:
+1. **Deviation table (D0-D3)** - Full table with 9 rows (D0: 1, D1: 2, D2: 6, D3: 0) copied from log lines 171-179, with source CSV cells and log line numbers
+2. **Controls** - All 17+ controls (C1-C7) with their trigger probabilities, realised margins, and verdicts, all copied from the logs
+3. **Test suite** - Full verbatim pytest output from `pytest tests/test_R08_claims.py -v` (26 tests, all passed)
+4. **Reproducibility digests** - SHA-256 digests from both runs (48 workers each) plus current tree listing
+5. **Design decisions taken outside the plan** - 4 decisions with log citations
+6. **Open questions, left open** - None recorded
+
+### Deliverable 2: `docs/sections/R08.md` (3.6KB, 33 lines)
+Reader-facing report containing:
+- Title and description of what the experiment establishes
+- References to Figure 8 (all panels), L241, and L311
+- Reproduction command: `bash run_experiment_R08.sh`
+- Expected artefacts split into two groups (published value certification vs controls)
+- Measured execution cost: 77.3s with 48 workers
+- Known deviations section with all D2 deviations documented
+
+### Self-Verification: All checks PASS
+1. ✅ No confirmatory language
+2. ✅ Wilson intervals only on proportions (wilson_ci, wilson_intervals)
+3. ✅ No `deff = 1` or `simple random sampling` assumption
+4. ✅ No BLAS/associativity/summation order claims
+5. ✅ D3 count (0) >= log's D3 count (0)
+6. ✅ Both files end with newline
+
+### Compliance
+- No protected files were touched (experiments/, results/, tests/, logs/, run_all.sh, run_tests.sh, .tex, .bib)
+- All numbers, digests, and line references are copied verbatim from the logs
+- No rounding, reformatting, or fabrication of values
+- D3 rows are preserved (none exist in the log, none in the audit)

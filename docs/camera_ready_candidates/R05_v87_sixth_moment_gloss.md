@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R05_v87_sixth_moment_gloss.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R05-sixth-moment-gloss`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate: Sixth moment gloss, Appendix B
 
 | Field | Value |
@@ -6,7 +15,7 @@
 | Target file | articleB_whitening_v87.tex (submitted 2026-07-27, frozen) |
 | Trigger | Acceptance notification only |
 | Evidence | R05 moment boundary analysis |
-| Register entry | docs/DEVIATIONS.md, entry 12 |
+| Register entry | `docs/DEVIATIONS.md`, `R05-sixth-moment-gloss` — Class A, no severity |
 | Cost | +0 words against the submitted sentence |
 | Blocking dependency | none: this is a descriptive error, not a numerical finding |
 

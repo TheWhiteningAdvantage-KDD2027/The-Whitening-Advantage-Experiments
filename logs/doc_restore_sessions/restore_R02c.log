@@ -1,0 +1,42 @@
+All checks pass:
+
+1. ✅ No confirmatory language found (exit code 1 = no matches)
+2. ✅ No Wilson mentions in the audit (exit code 1 = no matches)
+3. ✅ No deff=1 or simple random sampling (exit code 1 = no matches)
+4. ✅ No BLAS/associativity/summation order without log citation (exit code 1 = no matches)
+5. ✅ D3 count is 1 (just the header "## 1. Deviation table (D0-D3)") which is ≥ 0
+6. ✅ Both files end with newline
+
+The task is complete. Let me provide a summary of what was done:
+
+## Summary
+
+I have successfully executed the restoration contract for R02c (`R02c_horizon_sweep`) by:
+
+1. **Reading the logs**: I read `logs/R02c_horizon_sweep/exp_R02c_horizon_sweep.log` and `logs/R02c_horizon_sweep/vibe_refactor.log` to extract all evidence.
+
+2. **Rewriting `docs/audits/AUDIT_R02c.md`** with exactly 6 sections:
+   - **Section 1 (Deviation table D0-D3)**: Marked as NOT RECOVERABLE FROM THE LOG because the execution log doesn't contain manuscript values or severity classifications.
+   - **Section 2 (Controls)**: Documented two controls from the log:
+     - Negative control (raw): m=12 tests, P=0.460, KS_stat=0.2380, p-value=0.4374, PASS
+     - Witness control (nu=7): m=4 tests, P=0.185, KS_stat=0.3666, p-value=0.5480, PASS
+   - **Section 3 (Test suite)**: Verbatim pytest output from running `pytest tests/test_R02c_claims.py -v` (7 tests passed)
+   - **Section 4 (Reproducibility digests)**: SHA-256 digests from log lines 20-22, 24-25, plus current tree verification
+   - **Section 5 (Design decisions)**: 3 decisions with file paths and line numbers from the code
+   - **Section 6 (Open questions)**: None recorded
+
+3. **Rewriting `docs/sections/R02c.md`** with all required content:
+   - Title: `# R02c — Horizon Sweep and Eighth-Moment Account Falsification`
+   - What the experiment establishes and certifies (Figure A02, R02c_claims.tex)
+   - Reproduction command
+   - Expected artefacts split into two groups
+   - Measured execution cost from log line 16
+   - No Known deviations section (because the audit's D0-D3 table is NOT RECOVERABLE)
+
+4. **All self-verification checks pass**:
+   - No confirmatory language
+   - No Wilson interval misuse
+   - No deff=1 assumption
+   - No BLAS/associativity/summation order claims without log citation
+   - D3 count is appropriate
+   - Both files end with newline

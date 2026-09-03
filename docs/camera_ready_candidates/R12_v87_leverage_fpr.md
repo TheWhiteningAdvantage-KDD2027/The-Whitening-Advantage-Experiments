@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R12_v87_leverage_fpr.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R12-campaign-redraw`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 STATUS: PARKED — DO NOT APPLY
 
 # R12 Camera-Ready Candidate: Leverage Misspecification (Figure 12)
@@ -15,25 +24,44 @@ The reproduced measurements from `R12_leverage_fpr.csv` are:
 
 All range claims are D2 due to campaign redraw. The leverage-invariant claim is tested by control C9 slope test (p = 0.2477) and holds qualitatively.
 
-~~~~~~~~~~~latex
-% Line 349: update leverage misspecification values
--\text{Ljung--Box rejection rises from $5.1\%$ to $24.6\%$ at $\gamma_{\mathrm{lev}} = 0.28$}
-+\text{Ljung--Box rejection rises from $5.4\%$ to $24.2\%$ at $\gamma_{\mathrm{lev}} = 0.28$}
+<<< SEARCH
+~~~~~~~~~latex
+rises from $5.1\%$ to $24.6\%$ at $\gamma_{\mathrm{lev}} = 0.28$
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
+rises from $5.4\%$ to $24.2\%$ at $\gamma_{\mathrm{lev}} = 0.28$
+~~~~~~~~~
+>>> END OF BLOCK
 
--\text{driving its false-alarm rate from $3.2\%$ to $20.6\%$}
-+\text{driving its false-alarm rate from $3.5\%$ to $20.5\%$}
+<<< SEARCH
+~~~~~~~~~latex
+driving its false-alarm rate from $3.2\%$ to $20.6\%$
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
+driving its false-alarm rate from $3.5\%$ to $20.5\%$
+~~~~~~~~~
+>>> END OF BLOCK
 
--\text{climbs by a factor of six}
-+\text{climbs by a factor of 5.92}
-~~~~~~~~~~~
+<<< SEARCH
+~~~~~~~~~latex
+its Ljung--Box rejection stays within $4.6$--$5.4\%$ and its false-alarm rate within $7.6$--$8.4\%$
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
+its Ljung--Box rejection stays within $4.7$--$5.4\%$ and its false-alarm rate within $7.4$--$8.5\%$
+~~~~~~~~~
+>>> END OF BLOCK
 
-~~~~~~~~~~~latex
-% Line 349: update sign pipeline values
--\text{Ljung--Box rejection stays within $4.6$--$5.4\%$}
-+\text{Ljung--Box rejection stays within $4.7$--$5.4\%$}
-
--\text{false-alarm rate within $7.6$--$8.4\%$}
-+\text{false-alarm rate within $7.4$--$8.5\%$}
-~~~~~~~~~~~
+<<< SEARCH
+~~~~~~~~~latex
+climbs by a factor of six
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
+climbs by a factor of $5.92$
+~~~~~~~~~
+>>> END OF BLOCK
 
 Cross-reference: docs/DEVIATIONS.md entry R12-campaign-redraw.

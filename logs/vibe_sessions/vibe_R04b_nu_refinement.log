@@ -1,0 +1,72 @@
+Perfect! All the core files are unchanged. Now let me create a final summary of all the work done:
+
+## Summary of Complete 5-Phase Refactoring Lifecycle for R04b (R04b_nu_refinement)
+
+### Phase 1: Code Refactoring ✅
+- **Verification**: `python experiments/common/verify_refactoring.py R04b_nu_refinement --phase 1` → PASSED
+- The experiment file already had all required determinism injections:
+  - `enforce_strict_determinism()` called before numpy import
+  - `disable_pandas_multithreading()` called after pandas import
+  - `verify_hash_seed()` called in main
+  - `log_environment()` called in main
+  - `log_artifact_manifest()` called at end
+- Run script already had all required exports: OMP_NUM_THREADS, MKL_NUM_THREADS, OPENBLAS_NUM_THREADS, PYTHONHASHSEED, MKL_CBWR
+- No French comments detected in Regime B
+
+### Phase 2: Execution & Integrity Audit ✅
+- **Verification**: `test -f logs/R04b_nu_refinement/exp_R04b_nu_refinement.log && test -f results/R04b_nu_refinement/tables/R04b_claims.tex` → PASSED
+- Executed `bash run_experiment_R04b.sh` successfully
+- Generated all required artifacts:
+  - `results/R04b_nu_refinement/data/R04b_ratio_vs_nu.csv`
+  - `results/R04b_nu_refinement/data/R04b_continuity_with_R04.csv`
+  - `results/R04b_nu_refinement/figures/figA03_nu_star_refinement.png`
+  - `results/R04b_nu_refinement/tables/R04b_claims.tex` (55 LaTeX macros)
+  - Logs generated successfully
+
+### Phase 3: Test Suite Refactoring & Verification ✅
+- **Verification**: `pytest -v ./tests/test_R04b_claims.py` → 21 tests PASSED
+- **Verification**: `git diff experiments/R04b_nu_refinement/exp_R04b_nu_refinement.py | grep -iE '^\+[ ]*#.*(pour|avec|dans|sur|est|sont|calcul|détection|données|cette|tous|chaque|afin)'` → No French comments
+- All 21 test suites pass with zero failures
+- No French comments in test file
+
+### Phase 4: Candidates Overhaul & Deviations Synchronization ✅
+- **Verification**: `python experiments/common/verify_refactoring.py R04b_nu_refinement --phase 4` → PASSED
+- Ingested baseline camera_ready_candidates and rewrote them:
+  - `docs/camera_ready_candidates/R04b_v87_efficiency_crossing.md` - 9-tilde latex fences, English tags
+  - `docs/camera_ready_candidates/R04b_v87_estimation_cost.md` - 9-tilde latex fences, English tags
+  - `docs/camera_ready_candidates/R04b_v87_oracle_tracks_analytic.md` - 9-tilde latex fences, English tags
+- Updated `docs/DEVIATIONS.md` with formal D0-D3 deviation classification for R04b:
+  - **Deviation Class: D3 (with D2 components)**
+  - Eco-L1 crossing: Published 4.9 vs [7.0, 9.0] bracket, fit 8.10 (D3 falsification)
+  - Oracle crossing: Published 4.6 vs [4.0, 5.0] bracket, fit 4.47 (held)
+  - Estimation cost: Published 0.3 vs 3.62 (D3 falsification)
+  - Analytic crossing: Published 4.7 vs 4.6788 (held)
+  - Gaussian ceiling: Held (max 1.255 < 1.5708)
+
+### Phase 5: Documentation Generation & Final Academic Certification ✅
+- **Verification**: `python experiments/common/verify_refactoring.py R04b_nu_refinement` → PASSED
+- Created `docs/sections/R04b.md`:
+  - 286 words (within 200-350 limit)
+  - 3 mandatory headings: Stream Overview & Mathematical Target, Execution & Verification, Output Artifacts
+  - Continuous lines (no hard-wrapping)
+  - Ends with single newline
+- Created `docs/audits/AUDIT_R04b.md`:
+  - 4 sections: Theoretical Anchor, Empirical Methodology, Metric Concordance Table with Wilson 95% CIs, Methodological Scope & Limitations
+  - Wilson 95% CIs computed with z = 1.95996 and design effect sqrt(2)
+  - Continuous lines (no hard-wrapping)
+  - Ends with single newline
+- Dewatermarked and unwrapped continuous lines in all documentation
+- 100% Ban List compliance (no AI personas, no emotional vocabulary, no engineering traces, no French tokens)
+
+### Final State Verification ✅
+- All phase gates pass
+- All tests pass (21/21)
+- All artifacts generated with non-zero size
+- AST invariance maintained (no changes to CARRIED_PRIMITIVES/COPIED_PRIMITIVES)
+- Deterministic execution verified (single-threaded environment)
+- Linguistic cleanliness verified (zero French comments in Regime B)
+- Continuous line invariant maintained (no hard-wrapping in .md files)
+- Zero ephemeral residue (all temporary files purged)
+- Core isolation maintained (no changes to run_all.sh, run_tests.sh, or other shared orchestration)
+
+The complete 5-phase refactoring lifecycle for stream R04b (slug: R04b_nu_refinement) has been successfully executed and certified.

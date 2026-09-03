@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R08_v87_lattice_exact_basis.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — NO DEVIATION, clarification only: the lattice law L241 sources to Monte-Carlo is computable in closed form
 
 | Field               | Value                                                                                                                                                                              |
@@ -21,7 +30,9 @@ inventory is not closed.
 and sources both to a Monte-Carlo of a stated size. As Monte-Carlo estimates of that basis **they
 are correct**, and R08 does not propose replacing them. Under the 128-bit re-keying preamble §S6
 mandates, the same campaign returns `5.08 %` and `4.32 %`; the movement is registered as
-`R08-campaign-redraw` and the numeral edits live in `R08_v87_adverse_numerals.md`, not here.
+the R08 campaign-redraw entry of `docs/DEVIATIONS.md`, and the numeral edits live in
+`R08_v87_adverse_numerals.md`, not here. This file cites no register identifier because it opens
+none.
 
 **What is worth saying beside them is that the law is not a Monte-Carlo question at all.** With
 `δ = 0.1` the two CUSUM branches move by `+0.4` and `−0.6`, i.e. by `+2` and `−3` in units of

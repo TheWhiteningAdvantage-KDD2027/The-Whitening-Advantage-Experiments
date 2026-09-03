@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R10_v87_L290_skewness_numeral.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R10-campaign-redraw`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — L290's realized skewness moves from −1.44 to −1.43
 
 | Field               | Value                                                                                                                    |

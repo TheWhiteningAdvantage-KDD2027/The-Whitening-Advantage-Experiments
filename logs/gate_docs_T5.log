@@ -1,0 +1,48 @@
+── R01 (R01_real_world_backtest)
+   [OK]
+── R02 (R02_whitening_ljungbox)
+   [OK]
+── R02b (R02b_iid_arm_resolution)
+   [OK]
+── R02c (R02c_horizon_sweep)
+   [OK]
+── R03 (R03_fpr_explosion)
+   [OK]
+── R04 (R04_isofpr_race)
+   [OK]
+── R04b (R04b_nu_refinement)
+   [OK]
+── R05 (R05_scale_law)
+   [OK]
+── R06 (R06_validity_map)
+   [G8] Wilson interval on what may not be a proportion -- inspect:
+33:Note: The Wilson interval that assumes 1300 independent streams would read [0.037381, 0.060669], half-width 0.011644, understating by sqrt(design effect) = 1.7913. The per-Gamma family of 13 simultaneous 95% intervals fires at least once with probability 1 - 0.95^13 = 0.4867 under its own null, which preamble S4bis forbids. The 13 per-Gamma gates of the submitted script were therefore demoted from a gate to a reported measurement.
+50:Realised margin: Wilson 95% [0.034319, 0.137495], half-width 5.2 percentage points = 1.0 times the nominal level.
+122:1. The median-task control (binary c = 0) has a Wilson interval [0.034319, 0.137495] with half-width 5.2 percentage points, which is 1.0 times the nominal level. This control excludes very little and is consistent with whiteness rather than confirmatory. Is this resolution limitation acceptable for the purposes of the manuscript, or should the design be strengthened?
+── R07 (R07_estimated_mean)
+   [OK]
+── R08 (R08_adverse_lattice)
+   [OK]
+── R09 (R09_eprocess_anytime)
+   [OK]
+── R10 (R10_skew_robustness)
+   [OK]
+── R11 (R11_multi_detector)
+   [OK]
+── R12 (R12_gjr_student)
+   [OK]
+── R13 (R13_oracle_ceiling)
+   [G5] assumed design effect
+── R14 (R14_crypto_isofpr)
+   [OK]
+── R15 (R15_cross_sectional)
+   [OK]
+── R16 (R16_regime_census)
+   [G7b] D3 row present but no falsified-claim statement
+── R17 (R17_econometric_baseline)
+   [OK]
+── R18 (R18_ljungbox_power)
+   [OK]
+
+════════════════════════════════════════════
+Streams with findings: 3/21

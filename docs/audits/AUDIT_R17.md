@@ -5,20 +5,21 @@
 | quantity                                                     | manuscript value | regenerated value  | severity | source CSV cell                                         | log line                             |
 | ------------------------------------------------------------ | ---------------- | ------------------ | -------- | ------------------------------------------------------- | ------------------------------------ |
 | L341 persistence median at n_warmup = 250, median of the sum | 0.62             | 0.6257515          | D2       | R17_warmup_sensitivity.csv :: persistence_median_pooled | exp_R17_econometric_baseline.log:239 |
-| L341 FPR_Eco at n_warmup = 250, percent                      | 9.5%             | 10.5               | D3       | R17_warmup_sensitivity.csv :: FPR_Eco                   | exp_R17_econometric_baseline.log:240 |
-| L341 FPR_Eco at n_warmup = 500, percent                      | 3.0%             | 7.000000000000001  | D3       | R17_warmup_sensitivity.csv :: FPR_Eco                   | exp_R17_econometric_baseline.log:241 |
+| L341 FPR_Eco at n_warmup = 250, percent                      | 9.5%             | 10.5               | D2       | R17_warmup_sensitivity.csv :: FPR_Eco                   | exp_R17_econometric_baseline.log:240 |
+| L341 FPR_Eco at n_warmup = 500, percent                      | 3.0%             | 7.000000000000001  | D2       | R17_warmup_sensitivity.csv :: FPR_Eco                   | exp_R17_econometric_baseline.log:241 |
+| L341 arm identity for the 9.5% false-alarm figure            | Eco-L1 (level residual, Table 1 L117) | Eco_L2 (squared standardized residual, the arm the source script names) | D3       | R17_warmup_sensitivity.csv :: FPR_Eco, protocol 3d      | exp_R17_econometric_baseline.log:160 |
 | L341 sign FPR envelope minimum, percent                      | 3%               | 9.5                | D2       | R17_warmup_sensitivity.csv :: FPR_ML                    | exp_R17_econometric_baseline.log:242 |
 | L341 sign FPR envelope maximum, percent                      | 8%               | 11.0               | D2       | R17_warmup_sensitivity.csv :: FPR_ML                    | exp_R17_econometric_baseline.log:243 |
 | L341 true persistence, by design                             | 0.85             | 0.8500000000000001 | D0       | protocol 3d, by design                                  | exp_R17_econometric_baseline.log:244 |
 
-Count by severity: D0: 1, D2: 3, D3: 2.
+Count by severity: D0: 1, D2: 5, D3: 1.
 
-**Falsified qualitative claim (L341):** The manuscript attributes a false-alarm figure to the arm Table 1 defines as the level residual (Eco-L1).
-**Evidence (Three-step):**
-1. Table 1 defines the Eco-L1 arm as monitoring the level residual.
-2. L341 reports false-alarm figures attributed to this Eco-L1 arm.
-3. The producing cell actually monitors the squared standardized residual, an arm the source script itself names differently.
-**Scope:** The falsification applies to the false-alarm numerals only.
+**Falsified qualitative claim (L341):** L341 attributes its 9.5% false-alarm figure to `Eco-L1`, and the cell that produced the figure monitors a different arm. The contradiction is one of method attribution and it has no regenerated numerical value.
+**Evidence (three-step):**
+1. Table 1 at tex line 117 defines `Eco-L1` as the level residual `eps_t / sigma_hat_t`.
+2. The cell L341 quotes its figure from is `protocol_3d`, which monitors `(z_hat^2 - mu)/sigma` -- the arm the delivered script itself names `Eco_L2`, beside a separately thresholded L1 arm.
+3. `protocol_3b`'s L1 arm runs 100 seeds, so `9.5%` is unattainable there; `9.5% = 19/200` is exactly `protocol_3d`'s resolution.
+**Scope:** The false-alarm numerals only; the persistence median is arm-agnostic because the fit is shared.
 
 ## 2. Controls
 

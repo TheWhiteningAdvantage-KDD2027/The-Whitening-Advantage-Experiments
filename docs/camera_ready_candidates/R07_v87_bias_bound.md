@@ -1,14 +1,10 @@
-# Camera-ready candidate — L308 states a bound on the estimator bias that the campaign does not respect
+# Camera-Ready Candidate: R07_v87_bias_bound
 
-| Field               | Value                                                                                                            |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| **Status**          | **PARKED — do not apply**                                                                                        |
-| Target file         | `articleB_whitening_v87.tex` (submitted 2026-07-26, frozen), `sec:ar_garch` **L308**                             |
-| Trigger             | Acceptance notification, 14 November 2026                                                                        |
-| Evidence            | `results/R07_estimated_mean/data/R07_estmean_diagnostics.csv`, row `phi = 0.15, n_ols = 125`                     |
-| Register entry      | `docs/DEVIATIONS.md`, `R07-bias-bound-not-a-bound` — Class A, **D2**                                             |
-| Cost                | one numeral in one clause; no other number in the body text changes                                              |
-| Blocking dependency | shares L308 with `R07_v87_dispersion_cost.md`; the two search strings are **disjoint** and the two edits commute |
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R07-bias-bound-not-a-bound`
+
+**Target file: `articleB_whitening_v87.tex`**
 
 **Why this is not applied now.** The manuscript is under review and cannot be edited. The
 deviation inventory is not closed: streams after R07 may touch the same sentence, and applying a
@@ -54,16 +50,15 @@ panel B is unaffected, and every rolling-OLS arm still matches oracle false-alar
 disjoint from the string `R07_v87_dispersion_cost.md` searches in the same sentence. Verify once
 more before applying, as a matter of routine.
 
-<<< RECHERCHER
+<<< SEARCH
 ~~~~~~~~~latex
 stays under $2.9 \times 10^{-3}$
 ~~~~~~~~~
-
-=== REMPLACER PAR >>>
+=== REPLACE WITH >>>
 ~~~~~~~~~latex
 which predicts $3.0 \times 10^{-3}$ at the grid's worst corner ($\phi = 0.15$, $n = 125$), where we measure $3.1 \times 10^{-3}$
 ~~~~~~~~~
->>> FIN DU BLOC
+>>> END OF BLOCK
 
 The replacement does three things at once: it states a bound the campaign respects, it names the
 cell that attains it, and it ties the measured value to the approximation printed beside it rather

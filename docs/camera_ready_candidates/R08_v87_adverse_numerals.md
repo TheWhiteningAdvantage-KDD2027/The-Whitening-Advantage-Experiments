@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R08_v87_adverse_numerals.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R08-campaign-redraw`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — the four adverse-direction numerals of L311 and the Figure 8 caption
 
 | Field               | Value                                                                                                                                                          |

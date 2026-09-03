@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R05_v87_lambda_c_numeral.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R05-lambda-c-numeral`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate: the lambda_C numeral, Section "Scaling Validation"
 
 | Field | Value |
@@ -6,7 +15,7 @@
 | Target file | articleB_whitening_v87.tex (submitted 2026-07-27, frozen), sec:scaling_validation |
 | Trigger | Acceptance notification only |
 | Evidence | R05 steps a and b; the three vendored witnesses under data/reference/R05/ |
-| Register entry | docs/DEVIATIONS.md, entry 9 |
+| Register entry | `docs/DEVIATIONS.md`, `R05-lambda-c-numeral` — Class A, D2 |
 | Cost | +9 words against the submitted sentence |
 | Blocking dependency | none: no figure, table or theorem depends on the numeral |
 

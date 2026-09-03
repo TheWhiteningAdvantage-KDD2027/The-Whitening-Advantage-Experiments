@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R18_v87_whitening_evidence_strength.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R18-ljungbox-power`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — the two load-bearing non-rejections do not state the power of the test that produced them
 
 | Field               | Value                                                                                                     |

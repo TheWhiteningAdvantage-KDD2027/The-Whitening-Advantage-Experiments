@@ -1,0 +1,31 @@
+Perfect! 245 words, within the 200-350 limit. All phases complete successfully. Let me provide a final summary:
+
+## Complete 5-Phase Refactoring Lifecycle for R18 (R18_ljungbox_power) - CERTIFIED
+
+### Phase 1: Code Refactoring ✓
+- Determinism injection verified: `enforce_strict_determinism()`, `disable_pandas_multithreading()`, `verify_hash_seed()`, `log_environment()`, `log_artifact_manifest()` all present
+- Single-threaded launcher `run_experiment_R18.sh` exports all required variables
+- Zero French comments in Regime B
+- AST sanctuarization verified
+
+### Phase 2: Execution & Audit ✓
+- Experiment executed successfully, all artifacts generated
+- Logs, CSVs, figures, and LaTeX tables present with non-zero size
+
+### Phase 3: Test Suite & Verification ✓
+- All 24 tests in `test_R18_claims.py` pass
+- Zero French comments detected
+- Zero AST discrepancies
+
+### Phase 4: Candidates & Deviations ✓
+- Created `docs/camera_ready_candidates/R18_v87_ljungbox_power_bound.md` with 9-tilde LaTeX fences matching `R18_claims.tex` macros
+- Updated `docs/DEVIATIONS.md` with R18 entry (NO DEVIATION - R18 reproduces no v87 values)
+- Verification gate passed
+
+### Phase 5: Documentation & Certification ✓
+- Created `docs/sections/R18.md` (245 words, 3 headings, continuous lines)
+- Created `docs/audits/AUDIT_R18.md` (4 sections: Theoretical Anchor, Empirical Methodology, Concordance Table with Wilson 95% CIs, Methodological Scope)
+- All documentation dewatermarked, no French tokens, no hard-wrapping
+- Final verification gate passed
+
+All termination invariants satisfied. Task complete.

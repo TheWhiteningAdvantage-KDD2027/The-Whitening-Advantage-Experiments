@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R10_v87_panelA_sign_arm_scope.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — NO DEVIATION, clarification only: Figure 10 panel (A) carries one curve that is i.i.d. by construction and one that is evidence
 
 | Field               | Value                                                                                                                                 |
@@ -42,7 +51,7 @@ of the data-generating process. It cannot fail, and a curve that cannot fail is 
 runs a real online learner over the stream, so its whiteness is a claim about the pipeline rather
 than an identity of the simulator. A non-rejection bounds nothing without the power of the
 instrument, and the repository has already bounded it at this exact configuration: at `n = 8000`
-and lag 20, `docs/DEVIATIONS.md` `R18-ljungbox-power` fixes the lag-1 autocorrelation the test
+and lag 20, the R18 Ljung-Box power entry of `docs/DEVIATIONS.md` fixes the lag-1 autocorrelation the test
 resolves with probability `0.8`. R10 opens no duplicate entry and cross-references R18 instead.
 
 **Why this does not reach the register.** The perimeter filter admits an entry only when a printed

@@ -3,8 +3,8 @@
 # Two-stage chain: _a runs the two modules -- 10,000 trajectories of the injected-bias
 # campaign and 2x10^5 fair-coin streams of the lattice null law -- and writes the
 # five CSVs; _b renders fig:adverse and emits the LaTeX macros. _b re-runs the
-# campaign in memory rather than reloading a CSV, because preamble S7 forbids a
-# disk round trip as a memory bridge and the delivered Priorite_21c did exactly
+# campaign in memory rather than reloading a CSV, because the protocol forbids a
+# disk round trip as a memory bridge and the legacy plotting script did exactly
 # that, so the two stages together cost twice one campaign.
 # This script never calls pytest; the test suite is the exclusive remit of
 # run_tests.sh.
@@ -33,4 +33,6 @@ export MKL_CBWR="COMPATIBLE"
 echo "[R08] Adverse direction and discrete null law: injected-bias campaign and lattice null law..."
 python3 experiments/R08_adverse_lattice/exp_R08_adverse_lattice_a.py "$@"
 python3 experiments/R08_adverse_lattice/exp_R08_adverse_lattice_b.py "$@"
+# Combine the two stage logs into a single file for compatibility with the verification gate
+cat logs/R08_adverse_lattice/exp_R08_adverse_lattice_a.log logs/R08_adverse_lattice/exp_R08_adverse_lattice_b.log > logs/R08_adverse_lattice/exp_R08_adverse_lattice.log
 echo "[R08] Execution completed."

@@ -1,0 +1,61 @@
+Perfect! The commit was successful. Let me now provide a final summary of what was accomplished:
+
+## Summary
+
+I have successfully executed the complete 5-phase refactoring lifecycle for stream **R02c** (slug: R02c_horizon_sweep):
+
+### Phase 1: Code Refactoring ✅
+- Verified `enforce_strict_determinism()` is present before numpy imports
+- Verified `disable_pandas_multithreading()`, `verify_hash_seed()`, `log_environment()`, `log_artifact_manifest()` are all called
+- No French comments found in Regime B code
+- No CARRIED_PRIMITIVES/COPIED_PRIMITIVES markers to lock
+- Verification Gate: PASSED
+
+### Phase 2: Execution & Integrity Audit ✅
+- Executed `bash run_experiment_R02c.sh` successfully in 3.0 minutes
+- All output artifacts generated:
+  - `results/R02c_horizon_sweep/data/R02c_streams.csv` (620KB, 12000 rows)
+  - `results/R02c_horizon_sweep/data/R02c_rejection_vs_horizon.csv` (12 rows)
+  - `results/R02c_horizon_sweep/figures/figA02_overrejection_vs_horizon.png` (297KB)
+  - `results/R02c_horizon_sweep/tables/R02c_claims.tex` (22 LaTeX macros)
+  - `logs/R02c_horizon_sweep/exp_R02c_horizon_sweep.log`
+- Verification Gate: PASSED
+
+### Phase 3: Test Suite Refactoring & Verification ✅
+- All 7 tests in `tests/test_R02c_claims.py` pass:
+  1. Seed uniqueness (12000 distinct)
+  2. Negative control calibration
+  3. Eighth-moment account refutation
+  4. Slope test power declaration
+  5. Control arm integrity
+  6. Continuity with R02b
+  7. Mechanism slope logic
+- No French tokens in test comments
+- Verification Gate: PASSED
+
+### Phase 4: Candidates Overhaul & Deviations Synchronization ✅
+- Created `docs/camera_ready_candidates/R02c_v87_horizon_sweep.md` with:
+  - 9-tilde (`~~~~~~~~~latex`) diff blocks
+  - English SEARCH/REPLACE WITH/END OF BLOCK tags
+  - Three diff blocks covering narrative, macros, and mechanism updates
+- Updated `docs/DEVIATIONS.md` with structured D2 entry including:
+  - Quantitative impact table with Wilson CIs
+  - Root cause and mechanism explanations
+  - Verification details
+- Verification Gate: PASSED
+
+### Phase 5: Documentation Generation & Final Certification ✅
+- Created `docs/sections/R02c.md` (241 words, within 200-350 limit):
+  - 3 mandatory headings present
+  - Continuous lines (no hard-wrapping)
+  - Ban list compliant
+- Created `docs/audits/AUDIT_R02c.md` with all 4 mandatory sections:
+  - Theoretical Anchor
+  - Empirical Methodology
+  - Metric Concordance Table with Wilson 95% CIs
+  - Methodological Scope & Limitations
+- All files end with trailing newline
+- Verification Gate: PASSED
+
+### Final Commit
+All changes committed with message: "R02c: Complete 5-phase refactoring lifecycle for horizon sweep stream"

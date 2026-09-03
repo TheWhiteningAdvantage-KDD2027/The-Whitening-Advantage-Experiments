@@ -1,0 +1,88 @@
+ Execute CLAUDE_TASKS/T1_FIX_D3_R08_R17.md in full. Do not skip Step 0.
+
+[MCP Status: jCodeMunch (Avail) | Ponytail (Avail) | Superpowers (Avail) | Graphify (Avail)]
+
+  Searched for 2 patterns, read 1 file, listed 2 directories, ran 28 shell commands
+
+All facts verified. Applying the two corrections.
+
+  Ran 3 shell commands
+
+Verdict Step 0 — hypothèse de corruption des logs : FAUSSE
+
+git log --oneline -- tests/test_R08_claims.py tests/test_R17_claims.py ne rend que deux commits (5d07efe qui crée les deux fichiers, aab537f qui touche celui de R08), et git log -p --all -S 'D3' -- tests/test_R08_claims.py comme -S 'D3' -- tests/test_R17_claims.py ne rendent que 5d07efe : aucun commit n'a jamais modifié le nombre d'occurrences de D3 dans ces fichiers après leur création. La prémisse elle-même est fausse : la suite de tests n'écrit aucun log — grep -n "logs/\|logging\|FileHandler\|open(" tests/test_R08_claims.py tests/test_R17_claims.py ne rend rien ; les logs sont écrits par experiments/common/fair_harness.py:38 (logging.FileHandler(log_path, mode='w')) depuis les scripts d'expérience, et run_experiment_R08.sh:37 concatène _a et _b. Contrôle décisif sur le contenu : diff <(git show HEAD:$f | grep -E '\bD[0-3]\b' | strip_ts) <(grep -E '\bD[0-3]\b' $f | strip_ts) sur les quatre logs ne rend que des retouches de prose et de chemin (« preamble S3 » → « the protocol », chemin absolu → relatif) — zéro changement de jeton de sévérité ; D2 | L241 level above nominal (lambda=11.2) est D2 à l'identique dans HEAD et dans l'arbre de travail (l.173), et les lignes qui portent le D3 de R08 (l.147-149 : « the level the implemented operator delivers at lambda* is 5.0815% measured and 5.1021% exactly, against the 5.0% ») ainsi que les S3 D3 TEST (a)/(b)/(c) de R17 (l.247-249) sont présentes des deux côtés. L'explication simple tient : gate_docs.sh en-tête l'écrit lui-même — le G7 de restore_all_docs.sh était aveugle parce que D3 figure dans le titre ## 1. Deviation table (D0-D3). Les audits ont perdu la ligne ; les logs sont une source de vérité intacte.
+
+Arithmétique R08 vérifiée avant écriture (float_precision='round_trip') : 11.2 = 56 unités, 11.4 = 57 unités sur le pas 2δ = 0.2, donc {M >= 11.4} == {M > 11.2} ; R08_operator_levels.csv donne exact M_units >= lambda @57u = 0.05102071721468256 = exact M_units > lambda @56u, bit pour bit, et R08_null_law_lattice.csv donne P_exceed_weak @11.4 = P_exceed_strict @11.2 = 0.050815 sur 200 000 flux.
+
+Table corrigée — docs/audits/AUDIT_R08.md §1
+
+┌──────────────────────────────────────────────────────────────────┬─────────────────────────┬──────────────────────────────────────────┬──────────┬───────────────────────────────────────────────────────────────────────────────────────────┬──────────┐
+│                             quantity                             │    manuscript value     │            regenerated value             │ severity │                                      source CSV cell                                      │ log line │
+├──────────────────────────────────────────────────────────────────┼─────────────────────────┼──────────────────────────────────────────┼──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼──────────┤
+│ Fig. 8 (B) FPR collapses to                                      │ 0.0086                  │ 0.0095                                   │ D2       │ R08_adverse_bias.csv :: fpr_biased, b=0.15                                                │ L171     │
+├──────────────────────────────────────────────────────────────────┼─────────────────────────┼──────────────────────────────────────────┼──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼──────────┤
+│ Fig. 8 (B) / L311 FPR inflates to                                │ 0.208                   │ 0.21                                     │ D2       │ R07_estmean_lb_fpr.csv :: fpr_concept, NAIVE, phi=0.15                                    │ L172     │
+├──────────────────────────────────────────────────────────────────┼─────────────────────────┼──────────────────────────────────────────┼──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼──────────┤
+│ L241 level above nominal (lambda=11.2)                           │ 0.0503                  │ 0.050815                                 │ D2       │ R08_null_law_lattice.csv :: P_exceed_strict, lambda=11.2                                  │ L173     │
+├──────────────────────────────────────────────────────────────────┼─────────────────────────┼──────────────────────────────────────────┼──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼──────────┤
+│ L241 level below nominal (lambda=11.4)                           │ 0.0429                  │ 0.04323                                  │ D2       │ R08_null_law_lattice.csv :: P_exceed_strict, lambda=11.4                                  │ L174     │
+├──────────────────────────────────────────────────────────────────┼─────────────────────────┼──────────────────────────────────────────┼──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼──────────┤
+│ L241 lambda*                                                     │ 11.4                    │ 11.4                                     │ D0       │ R08_null_law_lattice.csv :: bracket_role=below_nominal                                    │ L175     │
+├──────────────────────────────────────────────────────────────────┼─────────────────────────┼──────────────────────────────────────────┼──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼──────────┤
+│ L241 level delivered at lambda* = 11.4 under the implemented     │ <= 0.05 by the stated   │ 0.050815 measured, 0.051020717214682557  │ D3       │ R08_operator_levels.csv :: realised_level and exact_level, lambda=11.4, operator exact    │ L147-149 │
+│ (weak) operator                                                  │ rule                    │ exact                                    │          │ M_units >= lambda                                                                         │          │
+├──────────────────────────────────────────────────────────────────┼─────────────────────────┼──────────────────────────────────────────┼──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼──────────┤
+│ L311 whiteness gap bound (points)                                │ 3.0                     │ 2.21                                     │ D2       │ R08_pairing_diagnostic.csv :: whiteness_bound                                             │ L176     │
+├──────────────────────────────────────────────────────────────────┼─────────────────────────┼──────────────────────────────────────────┼──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼──────────┤
+│ L311 penalty at residual momentum 0.02 (points)                  │ 1.1                     │ 1.2799999999999998                       │ D2       │ R07_estmean_lb_fpr.csv :: fpr_concept, NAIVE, phi in (0, 0.02)                            │ L177     │
+├──────────────────────────────────────────────────────────────────┼─────────────────────────┼──────────────────────────────────────────┼──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼──────────┤
+│ L311 whiteness range, low end                                    │ 0.05                    │ 0.0478                                   │ D1       │ R08_adverse_bias.csv :: min over both arms of the rejection rate                          │ L178     │
+├──────────────────────────────────────────────────────────────────┼─────────────────────────┼──────────────────────────────────────────┼──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼──────────┤
+│ L311 whiteness range, high end                                   │ 1.0                     │ 0.9984                                   │ D1       │ R08_adverse_bias.csv :: max over both arms of the rejection rate                          │ L179     │
+└──────────────────────────────────────────────────────────────────┴─────────────────────────┴──────────────────────────────────────────┴──────────┴───────────────────────────────────────────────────────────────────────────────────────────┴──────────┘
+
+Count by severity: D0: 1, D1: 2, D2: 6, D3: 1.
+
+Falsified qualitative claim (L241): The manuscript states it selects "the nearest attainable level at or below nominal", and its own footnote makes the implemented test the weak comparison operator. The weak level at the selected threshold (11.4) is above the nominal level (0.050815 > 0.05). On the lattice of step 2delta = 0.2 the threshold 11.4 is 57 units and 11.2 is 56, so {M >= 11.4} and {M > 11.2} are the same event and the weak level at lambda* is the strict level at 11.2 bit for bit -- 0.051020717214682557 on the exact law, 0.050815 measured on 200000 streams. The row at lambda = 11.2 is the Monte-Carlo redraw of that strict level and carries D2; the D3 is the level the selection rule delivers at lambda*, which the exact law fixes with no sampling error.
+Scope: The null law itself remains exact and free of nuisance parameters; what is contradicted is the selection rule and the level reported, not the exactness result.
+
+Table corrigée — docs/audits/AUDIT_R17.md §1
+
+┌───────────────────────────────────────────────────┬─────────────────────────────────┬─────────────────────────────────────────────────────────────┬──────────┬──────────────────────────────────────────────────┬──────────────────────────────────────┐
+│                     quantity                      │        manuscript value         │                      regenerated value                      │ severity │                 source CSV cell                  │               log line               │
+├───────────────────────────────────────────────────┼─────────────────────────────────┼─────────────────────────────────────────────────────────────┼──────────┼──────────────────────────────────────────────────┼──────────────────────────────────────┤
+│ L341 persistence median at n_warmup = 250, median │ 0.62                            │ 0.6257515                                                   │ D2       │ R17_warmup_sensitivity.csv ::                    │ exp_R17_econometric_baseline.log:239 │
+│  of the sum                                       │                                 │                                                             │          │ persistence_median_pooled                        │                                      │
+├───────────────────────────────────────────────────┼─────────────────────────────────┼─────────────────────────────────────────────────────────────┼──────────┼──────────────────────────────────────────────────┼──────────────────────────────────────┤
+│ L341 FPR_Eco at n_warmup = 250, percent           │ 9.5%                            │ 10.5                                                        │ D2       │ R17_warmup_sensitivity.csv :: FPR_Eco            │ exp_R17_econometric_baseline.log:240 │
+├───────────────────────────────────────────────────┼─────────────────────────────────┼─────────────────────────────────────────────────────────────┼──────────┼──────────────────────────────────────────────────┼──────────────────────────────────────┤
+│ L341 FPR_Eco at n_warmup = 500, percent           │ 3.0%                            │ 7.000000000000001                                           │ D2       │ R17_warmup_sensitivity.csv :: FPR_Eco            │ exp_R17_econometric_baseline.log:241 │
+├───────────────────────────────────────────────────┼─────────────────────────────────┼─────────────────────────────────────────────────────────────┼──────────┼──────────────────────────────────────────────────┼──────────────────────────────────────┤
+│ L341 arm identity for the 9.5% false-alarm figure │ Eco-L1 (level residual, Table 1 │ Eco_L2 (squared standardized residual, the arm the source   │ D3       │ R17_warmup_sensitivity.csv :: FPR_Eco, protocol  │ exp_R17_econometric_baseline.log:160 │
+│                                                   │  L117)                          │ script names)                                               │          │ 3d                                               │                                      │
+├───────────────────────────────────────────────────┼─────────────────────────────────┼─────────────────────────────────────────────────────────────┼──────────┼──────────────────────────────────────────────────┼──────────────────────────────────────┤
+│ L341 sign FPR envelope minimum, percent           │ 3%                              │ 9.5                                                         │ D2       │ R17_warmup_sensitivity.csv :: FPR_ML             │ exp_R17_econometric_baseline.log:242 │
+├───────────────────────────────────────────────────┼─────────────────────────────────┼─────────────────────────────────────────────────────────────┼──────────┼──────────────────────────────────────────────────┼──────────────────────────────────────┤
+│ L341 sign FPR envelope maximum, percent           │ 8%                              │ 11.0                                                        │ D2       │ R17_warmup_sensitivity.csv :: FPR_ML             │ exp_R17_econometric_baseline.log:243 │
+├───────────────────────────────────────────────────┼─────────────────────────────────┼─────────────────────────────────────────────────────────────┼──────────┼──────────────────────────────────────────────────┼──────────────────────────────────────┤
+│ L341 true persistence, by design                  │ 0.85                            │ 0.8500000000000001                                          │ D0       │ protocol 3d, by design                           │ exp_R17_econometric_baseline.log:244 │
+└───────────────────────────────────────────────────┴─────────────────────────────────┴─────────────────────────────────────────────────────────────┴──────────┴──────────────────────────────────────────────────┴──────────────────────────────────────┘
+
+Count by severity: D0: 1, D2: 5, D3: 1.
+
+Falsified qualitative claim (L341): L341 attributes its 9.5% false-alarm figure to Eco-L1, and the cell that produced the figure monitors a different arm. The contradiction is one of method attribution and it has no regenerated numerical value.
+Evidence (three-step):
+1. Table 1 at tex line 117 defines Eco-L1 as the level residual eps_t / sigma_hat_t.
+2. The cell L341 quotes its figure from is protocol_3d, which monitors (z_hat^2 - mu)/sigma -- the arm the delivered script itself names Eco_L2, beside a separately thresholded L1 arm.
+3. protocol_3b's L1 arm runs 100 seeds, so 9.5% is unattainable there; 9.5% = 19/200 is exactly protocol_3d's resolution.
+
+Scope: The false-alarm numerals only; the persistence median is arm-agnostic because the fit is shared.
+
+Step 3
+
+$ bash gate_docs.sh R08 R17
+── R08 (R08_adverse_lattice)
+   [OK]
+── R17 (R17_econometric_baseline)
+   [OK]
+Streams with findings: 0/2   (exit=0)

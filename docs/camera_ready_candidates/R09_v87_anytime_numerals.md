@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R09_v87_anytime_numerals.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** `R09-campaign-redraw`
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — the three Monte-Carlo numerals of L243 and Figure 9A move under the re-keying
 
 | Field               | Value                                                                                                                                                     |

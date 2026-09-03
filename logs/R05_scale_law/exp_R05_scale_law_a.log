@@ -1,1 +1,37 @@
-2026-08-21 15:18:26 | WARNING | PYTHONHASHSEED is '0', expected '42'. String hashing is randomised: run this script through run_experiment_RXX.sh.
+2026-08-23 08:54:01 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-08-23 08:54:01 | INFO | Python: 3.12.9
+2026-08-23 08:54:01 | INFO |   numpy: 1.26.4
+2026-08-23 08:54:01 | INFO |   pandas: 2.3.2
+2026-08-23 08:54:01 | INFO |   scipy: 1.16.2
+2026-08-23 08:54:01 | INFO | Deterministic reduction: ProcessPoolExecutor with max_workers = 48, executor.map in submission order; as_completed is not used (SPECS 1.5).
+2026-08-23 08:54:01 | INFO | [Gamma=  1.00] beta=0.000000 s=2.229 lambda*_Data=   52.386 lambda*_Concept= 11.40 FPR_Data=0.0575 ADD_Data=   37.660 DetRate_Data=1.0000 DetRate_Concept=0.0550
+2026-08-23 08:54:02 | INFO | [Gamma=  2.00] beta=0.732861 s=2.263 lambda*_Data=   79.253 lambda*_Concept= 11.40 FPR_Data=0.0700 ADD_Data=   60.260 DetRate_Data=1.0000 DetRate_Concept=0.0550
+2026-08-23 08:54:02 | INFO | [Gamma=  4.00] beta=0.843292 s=2.311 lambda*_Data=  159.048 lambda*_Concept= 11.40 FPR_Data=0.0500 ADD_Data=  124.532 DetRate_Data=1.0000 DetRate_Concept=0.0550
+2026-08-23 08:54:02 | INFO | [Gamma=  6.00] beta=0.867543 s=2.347 lambda*_Data=  222.728 lambda*_Concept= 11.40 FPR_Data=0.0500 ADD_Data=  181.287 DetRate_Data=1.0000 DetRate_Concept=0.0550
+2026-08-23 08:54:03 | INFO | [Gamma=  8.00] beta=0.878726 s=2.377 lambda*_Data=  285.099 lambda*_Concept= 11.40 FPR_Data=0.0500 ADD_Data=  239.752 DetRate_Data=1.0000 DetRate_Concept=0.0550
+2026-08-23 08:54:03 | INFO | [Gamma= 10.00] beta=0.885330 s=2.402 lambda*_Data=  347.548 lambda*_Concept= 11.40 FPR_Data=0.0450 ADD_Data=  310.207 DetRate_Data=1.0000 DetRate_Concept=0.0550
+2026-08-23 08:54:03 | INFO | [Gamma= 12.00] beta=0.889759 s=2.424 lambda*_Data=  404.650 lambda*_Concept= 11.40 FPR_Data=0.0450 ADD_Data=  367.257 DetRate_Data=1.0000 DetRate_Concept=0.0550
+2026-08-23 08:54:03 | INFO | [Gamma= 15.00] beta=0.894275 s=2.454 lambda*_Data=  515.727 lambda*_Concept= 11.40 FPR_Data=0.0400 ADD_Data=  463.373 DetRate_Data=1.0000 DetRate_Concept=0.0550
+2026-08-23 08:54:04 | INFO | [Gamma= 18.00] beta=0.897375 s=2.479 lambda*_Data=  607.345 lambda*_Concept= 11.40 FPR_Data=0.0400 ADD_Data=  533.648 DetRate_Data=0.9950 DetRate_Concept=0.0550
+2026-08-23 08:54:04 | INFO | [Gamma= 21.00] beta=0.899661 s=2.501 lambda*_Data=  664.089 lambda*_Concept= 11.40 FPR_Data=0.0500 ADD_Data=  592.519 DetRate_Data=0.9925 DetRate_Concept=0.0550
+2026-08-23 08:54:04 | INFO | [Gamma= 24.00] beta=0.901430 s=2.521 lambda*_Data=  739.139 lambda*_Concept= 11.40 FPR_Data=0.0525 ADD_Data=  633.594 DetRate_Data=0.9850 DetRate_Concept=0.0550
+2026-08-23 08:54:05 | INFO | [Gamma= 27.00] beta=0.902847 s=2.538 lambda*_Data=  867.375 lambda*_Concept= 11.40 FPR_Data=0.0375 ADD_Data=  720.926 DetRate_Data=0.9825 DetRate_Concept=0.0550
+2026-08-23 08:54:05 | INFO | [Gamma= 30.00] beta=0.904014 s=2.555 lambda*_Data=  943.319 lambda*_Concept= 11.40 FPR_Data=0.0375 ADD_Data=  781.847 DetRate_Data=0.9825 DetRate_Concept=0.0550
+2026-08-23 08:54:05 | INFO | [control a] alpha=0.08 nu=7.0 Delta_mu_max=2.0 delta_C=0.1 target FPR=0.05 seeds/config=400 Gamma grid n=13 in [1.00, 30.00]
+2026-08-23 08:54:05 | INFO | [control a] lambda_star_Concept constant across Gamma at 11.4000 while lambda_star_Data runs 52.3860 to 943.3187 (ratio 18.0x)
+2026-08-23 08:54:05 | INFO | [control c] Concept under scale drift 22/400 streams vs 22/400 under H_0: difference +0 streams, Fisher exact p = 1.0000
+2026-08-23 08:54:05 | INFO | [control c] the thirteen Gamma rows carry ONE measurement, not thirteen: the sign stream is a function of z alone, independent of beta and of the scale factor, so constancy across Gamma is an identity of the design and not an empirical finding. The comparison above is between disjoint seed blocks and does carry information.
+2026-08-23 08:54:05 | INFO | [control d] all points: ADD = 26.0016 Gamma + 32.1980, R^2 = 0.991299, max relative residual 54.5% at Gamma = 1.00
+2026-08-23 08:54:05 | INFO | [control d] excluding Gamma = 1: ADD = 25.7038 Gamma + 38.3027, R^2 = 0.990324, max relative residual 48.9%
+2026-08-23 08:54:05 | INFO | [control d] the slope moves 1.1% and the intercept 19.0% between the two fits. v87 prints the all-points fit; the alternative is reported, not adopted.
+2026-08-23 08:54:05 | INFO | [positive control] location shift c = 1.0 at Gamma = 11.58: Concept detects 400/400 (1.0000, Wilson [0.9905, 1.0000]) against 22/400 under H_0, +378 streams, Fisher p = 3.1e-203, conditional delay 42.9 steps
+2026-08-23 08:54:05 | INFO | [diagnostic] literal lambda_C = 10.0: hold-out FPR 0.1700 and detection 0.1500 under the scale pathology, against 0.0550 / 0.0550 on the calibrated reference arm. The numeral 10 of v87 sec:scaling_validation matches no campaign of the study; this row prices the difference.
+2026-08-23 08:54:05 | INFO | Wrote results/R05_scale_law/data/R05_abrupt_add_vs_gamma.csv (13 rows)
+2026-08-23 08:54:05 | INFO | Wrote results/R05_scale_law/data/R05_concept_positive_control.csv (1 rows)
+2026-08-23 08:54:05 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
+2026-08-23 08:54:05 | INFO | results/R05_scale_law/data/
+2026-08-23 08:54:05 | INFO | └── /
+2026-08-23 08:54:05 | INFO |     ├── R05_abrupt_add_vs_gamma.csv         [9e4a09c4a28b66478a965fbb6a026f50d1aceacc18a1b5cb77100cec124294fd]
+2026-08-23 08:54:05 | INFO |     └── R05_concept_positive_control.csv    [c29bdc53638287a38f34adf4431c433ae30f775e0644273a6c80ad94525c2808]
+2026-08-23 08:54:05 | INFO | =============================================================================
+2026-08-23 08:54:05 | INFO | Step a elapsed: 3.9 s

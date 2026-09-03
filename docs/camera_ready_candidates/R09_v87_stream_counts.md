@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R09_v87_stream_counts.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — Figure 9's "$2\times10^4$ streams per cell" describes one arm of three
 
 | Field               | Value                                                                                                                                                           |

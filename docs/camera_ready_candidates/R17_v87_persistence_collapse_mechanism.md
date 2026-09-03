@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R17_v87_persistence_collapse_mechanism.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — NO DEVIATION, clarification only: a third of the persistence collapse is a corner solution at the optimiser's bound
 
 | Field               | Value                                                                                                                                    |

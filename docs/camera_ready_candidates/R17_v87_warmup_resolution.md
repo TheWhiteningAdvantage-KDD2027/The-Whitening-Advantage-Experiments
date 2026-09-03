@@ -1,3 +1,12 @@
+# Camera-Ready Candidate: R17_v87_warmup_resolution.md
+
+- **Status:** PARKED — do not apply
+- **Trigger:** Acceptance notification of 14 November 2026
+- **Register entry:** NO DEVIATION — clarification only
+
+**Target file:** `articleB_whitening_v87.tex`
+
+
 # Camera-ready candidate — NO DEVIATION, clarification only: the two numerals of L341 are read at 200 streams, and the sign envelope is a min–max over four cells
 
 | Field               | Value                                                                                                                                                                                                                                      |
@@ -84,8 +93,8 @@ and disjoint from Edit 1.
 **This candidate opens no register entry and must not acquire one.** The resolution statement
 contradicts nothing printed: it names the sample behind two numerals the sentence gives without one.
 Preamble §S8 admits exactly this kind of clarification on the condition that it carries no register
-row, and the displacement of the numerals themselves is a separate matter carried by
-`R17-campaign-redraw`.
+row, and the displacement of the numerals themselves is a separate matter carried by the R17
+campaign-redraw entry of `docs/DEVIATIONS.md`.
 
 **The envelope must not be re-presented as an interval.** A min–max over four cells is not a
 confidence statement, and substituting a bootstrap envelope for the printed range would replace one

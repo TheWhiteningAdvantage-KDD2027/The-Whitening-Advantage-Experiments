@@ -2,7 +2,7 @@
 
 - **Status:** PARKED — do not apply
 - **Trigger:** Acceptance notification of 14 November 2026
-- **Register entry:** NO DEVIATION — clarification only
+- **Register entry:** `R11-regenerated`
 
 STATUS: PARKED — DO NOT APPLY
 
@@ -10,14 +10,16 @@ STATUS: PARKED — DO NOT APPLY
 
 Grid metadata values including realized Gamma range differ slightly from manuscript values due to the entropy re-keying and solver precision. These are classified as D1 deviations.
 
+<<< SEARCH
 ~~~~~~~~~latex
-% SEARCH
 \newcommand{\RElevenGridPoints}{20}
 \newcommand{\RElevenStreamsPerPoint}{5000}
 \newcommand{\RElevenGammaRange}{170}
-% REPLACE WITH
+~~~~~~~~~
+=== REPLACE WITH >>>
+~~~~~~~~~latex
 \newcommand{\RElevenGridPoints}{20}
 \newcommand{\RElevenStreamsPerPoint}{5000}
 \newcommand{\RElevenGammaRange}{170.4}
-% END OF BLOCK
 ~~~~~~~~~
+>>> END OF BLOCK
