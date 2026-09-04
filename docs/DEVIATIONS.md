@@ -6,18 +6,9 @@ This document records all numerical deviations between the deterministic complia
 
 ## Register index
 
-Every deviation this repository carries has an identifier of the form `R[XX]-<subject>`. The
-identifier is what a camera-ready candidate cites, what `README.md` section 6.1 lists for the
-formal contradictions, and what `experiments/common/verify_camera_ready.py` resolves when it checks
-that a staged candidate declares the right family. A candidate that carries no identifier is a
-clarification and is marked `NO DEVIATION` in its header; a candidate that carries one is a
-correction and must cite an identifier that appears in this index.
+Every deviation this repository carries has an identifier of the form `R[XX]-<subject>`. The identifier is what a camera-ready candidate cites, what `README.md` section 6.1 lists for the formal contradictions, and what `experiments/common/verify_camera_ready.py` resolves when it checks that a staged candidate declares the right family. A candidate that carries no identifier is a clarification and is marked `NO DEVIATION` in its header; a candidate that carries one is a correction and must cite an identifier that appears in this index.
 
-Class A means the deviation is a consequence of the compliant pipeline's own specification — the
-128-bit re-keying, the single-threaded BLAS pinning, or a defect found in the submitted apparatus —
-rather than of a choice made during regeneration. Severity is the D0-D3 scale of section 4.1 of
-`AGENTS.md`; entries that contradict no printed value carry no severity and record a scope or
-precision statement instead. The stream section below each identifier's row documents it in full.
+Class A means the deviation is a consequence of the compliant pipeline's own specification — the 128-bit re-keying, the single-threaded BLAS pinning, or a defect found in the submitted apparatus — rather than of a choice made during regeneration. Severity is the D0-D3 scale of section 4.1 of `AGENTS.md`; entries that contradict no printed value carry no severity and record a scope or precision statement instead. The stream section below each identifier's row documents it in full.
 
 | identifier                          | stream | class | severity    | what it names                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | ----------------------------------- | ------ | ----- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -142,29 +133,17 @@ precision statement instead. The stream section below each identifier's row docu
 
 **Deviation Class: D3 (one row) and D2 (four rows)**
 
-**Register entries:** `R02b-iid-arm-rejection` (Class A, **D3**) and `R02b-nu-grid-redraw`
-(Class A, D2).
+**Register entries:** `R02b-iid-arm-rejection` (Class A, **D3**) and `R02b-nu-grid-redraw` (Class A, D2).
 
-**Affected Metrics:** the moment condition L278 states for the validity of the chi-square
-approximation to the Ljung-Box statistic on squared innovations; IID arm rejection rates on squared
-innovations across the degrees of freedom grid (nu = 5, 6, 7, 8.5, 12, 30); Wilson 95% confidence
-interval bounds.
+**Affected Metrics:** the moment condition L278 states for the validity of the chi-square approximation to the Ljung-Box statistic on squared innovations; IID arm rejection rates on squared innovations across the degrees of freedom grid (nu = 5, 6, 7, 8.5, 12, 30); Wilson 95% confidence interval bounds.
 
 ---
 
 ### `R02b-iid-arm-rejection` — Class A, severity **D3**
 
-**Manuscript site:** L278, the subordinate clause "where $t_7$ innovations deprive
-$\varepsilon_t^2$ of a fourth moment and the $\chi^2$ approximation fails".
+**Manuscript site:** L278, the subordinate clause "where $t_7$ innovations deprive $\varepsilon_t^2$ of a fourth moment and the $\chi^2$ approximation fails".
 
-**What is contradicted.** The stated condition. For an i.i.d. tested series the sample
-autocorrelations are asymptotically normal with covariance I/n under the single requirement that
-the tested series have a finite variance [Anderson and Walker, 1964; Brockwell and Davis, 1991,
-Theorem 7.2.1]. The tested series on this arm is eps_t^2, so the requirement is
-E[eps^4] < infinity, i.e. nu > 4 for Student-t innovations. t_7 satisfies it. The moment absent at
-nu <= 8 is E[eps^8]; it governs the tail quantile of the sample autocorrelations, not the validity
-of the limit. A false statement of the condition under which an asymptotic approximation holds is a
-qualitative claim, not a numeral, and its falsification is D3.
+**What is contradicted.** The stated condition. For an i.i.d. tested series the sample autocorrelations are asymptotically normal with covariance I/n under the single requirement that the tested series have a finite variance [Anderson and Walker, 1964; Brockwell and Davis, 1991, Theorem 7.2.1]. The tested series on this arm is eps_t^2, so the requirement is E[eps^4] < infinity, i.e. nu > 4 for Student-t innovations. t_7 satisfies it. The moment absent at nu <= 8 is E[eps^8]; it governs the tail quantile of the sample autocorrelations, not the validity of the limit. A false statement of the condition under which an asymptotic approximation holds is a qualitative claim, not a numeral, and its falsification is D3.
 
 **Source cells** (all read with `float_precision='round_trip'`):
 - `results/R02b_iid_arm_resolution/data/R02b_rejection_vs_nu.csv` :: `contains_nominal_squared`, row nu=7 = `True`; `wilson_low_squared` = 0.045132906395672477, `wilson_high_squared` = 0.074249845843437106 (log line 10)
@@ -173,21 +152,11 @@ qualitative claim, not a numeral, and its falsification is D3.
 - `results/R02c_horizon_sweep/data/R02c_streams.csv` :: pooled over the four horizons, rejection rate 7.75% [6.96, 8.62]% at nu=5, 7.72% [6.94, 8.59]% at nu=6, 5.60% [4.93, 6.36]% at nu=7
 - R02c witness control at nu=7: KS statistic 0.3666 against Uniform(0,1), p-value 0.5480 (R02c log lines 14-15)
 
-**The eighth-moment account is refuted by its own control.** E[eps^8] is infinite for every nu <= 8,
-nu = 7 included. If that absence were the operative cause the nu = 7 arm would over-reject with
-nu = 5 and nu = 6. It does not, at any of the four horizons.
+**The eighth-moment account is refuted by its own control.** E[eps^8] is infinite for every nu <= 8, nu = 7 included. If that absence were the operative cause the nu = 7 arm would over-reject with nu = 5 and nu = 6. It does not, at any of the four horizons.
 
-**Scope.** What is contradicted is the stated reason the chi-square approximation fails on the
-i.i.d. arm. Not contradicted: that the squared inputs over-reject there (they do — 8.8% at nu = 5
-and 7.9% at nu = 6, both excluding the nominal level); the whitening property; the exactness of the
-Concept threshold; the binary-error arm's nominal level; and any proposition of v87. The printed
-rate 9.2% and its movement under redraw are `R02b-nu-grid-redraw`, not this entry.
+**Scope.** What is contradicted is the stated reason the chi-square approximation fails on the i.i.d. arm. Not contradicted: that the squared inputs over-reject there (they do — 8.8% at nu = 5 and 7.9% at nu = 6, both excluding the nominal level); the whitening property; the exactness of the Concept threshold; the binary-error arm's nominal level; and any proposition of v87. The printed rate 9.2% and its movement under redraw are `R02b-nu-grid-redraw`, not this entry.
 
-**The true mechanism is not identified.** The over-rejection is present at nu <= 6 and absent at
-nu >= 7 at every horizon up to n = 128000, and that boundary coincides with the loss of the sixth
-moment (E[eps^6] < infinity iff nu > 6). Locating a boundary is not establishing a cause; no
-discriminating test against a candidate mechanism was run, and neither this register nor
-`docs/audits/AUDIT_R02b.md` supplies one.
+**The true mechanism is not identified.** The over-rejection is present at nu <= 6 and absent at nu >= 7 at every horizon up to n = 128000, and that boundary coincides with the loss of the sixth moment (E[eps^6] < infinity iff nu > 6). Locating a boundary is not establishing a cause; no discriminating test against a candidate mechanism was run, and neither this register nor `docs/audits/AUDIT_R02b.md` supplies one.
 
 ---
 
@@ -224,13 +193,9 @@ discriminating test against a candidate mechanism was run, and neither this regi
 
 **Verification:** All R02b tests pass. The heavy-tail arms (nu = 5, 6) exclude the nominal 5% level as required by test_heavy_tail_arms_exclude_nominal. The nu = 7 arm contains the nominal level as required by test_nu_seven_is_indistinguishable_from_nominal. Negative control (raw innovations) holds the nominal level across all nu values. Rate ordering shows heavier tails produce higher rejection rates.
 
-**Candidate Files:** `docs/camera_ready_candidates/R02b_v87_iid_arm_rejection.md` and
-`docs/camera_ready_candidates/R02b_R02c_v87_ljungbox_clause.md` carry the L278 clause correction for
-`R02b-iid-arm-rejection`. `docs/camera_ready_candidates/R02b_v87_iid_mechanism.md` carries the
-macro diff blocks for `R02b-nu-grid-redraw`.
+**Candidate Files:** `docs/camera_ready_candidates/R02b_v87_iid_arm_rejection.md` and `docs/camera_ready_candidates/R02b_R02c_v87_ljungbox_clause.md` carry the L278 clause correction for `R02b-iid-arm-rejection`. `docs/camera_ready_candidates/R02b_v87_iid_mechanism.md` carries the macro diff blocks for `R02b-nu-grid-redraw`.
 
-**Status:** REGISTERED — one D3 row and four D2 rows documented. The printed mechanism of L278 is
-falsified; the over-rejection it describes is not. Camera-ready correction staged, not applied.
+**Status:** REGISTERED — one D3 row and four D2 rows documented. The printed mechanism of L278 is falsified; the over-rejection it describes is not. Camera-ready correction staged, not applied.
 
 ---
 

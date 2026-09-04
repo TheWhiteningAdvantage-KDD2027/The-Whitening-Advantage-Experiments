@@ -25,65 +25,34 @@ The D3 falsifications concern three qualitative claims in v87: (1) Eco-L1 effici
 ## 2. Controls
 
 ### Pre-registered control design (S4bis)
-Per-arm gates are excluded because 36 simultaneous 95% tests fire at least once with probability 1 - 0.95^36 = 0.8422 under the null, and 5 continuity tests fire with probability 0.2262 under the null (log line 13).
-Trigger probability under null: 0.8422 for the 36-arm family, 0.2262 for the 5-test continuity family.
-Both families are therefore judged by one omnibus statistic each, gated at p > 0.01.
-Realised margin: NOT RECOVERABLE FROM THE LOG (omnibus tests passed).
-Verdict: passed.
+Per-arm gates are excluded because 36 simultaneous 95% tests fire at least once with probability 1 - 0.95^36 = 0.8422 under the null, and 5 continuity tests fire with probability 0.2262 under the null (log line 13). Trigger probability under null: 0.8422 for the 36-arm family, 0.2262 for the 5-test continuity family. Both families are therefore judged by one omnibus statistic each, gated at p > 0.01. Realised margin: NOT RECOVERABLE FROM THE LOG (omnibus tests passed). Verdict: passed.
 
 ### Pre-registered variance factor
-Verified distribution-free over 20000 replicates of calibrate-on-40, read-on-40: held-out rate has standard deviation 0.056265 against 0.034460 for a binomial at a KNOWN threshold, a ratio of 1.6328 against the sqrt(2) = 1.4142 a doubled variance predicts (log line 14).
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: ratio 1.6328 vs sqrt(2) = 1.4142.
-Verdict: passed. The inflation survives pooling because each arm carries its own independent calibration error.
+Verified distribution-free over 20000 replicates of calibrate-on-40, read-on-40: held-out rate has standard deviation 0.056265 against 0.034460 for a binomial at a KNOWN threshold, a ratio of 1.6328 against the sqrt(2) = 1.4142 a doubled variance predicts (log line 14). Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: ratio 1.6328 vs sqrt(2) = 1.4142. Verdict: passed. The inflation survives pooling because each arm carries its own independent calibration error.
 
 ### Pre-registered control (c), HALF 1: per-arm instability
-The 36 held-out counts are compared to their own calibration counts by a conditional two-sample test, which removes the unknown true level of each threshold from the analysis; the KS statistic of those p-values against Uniform(0,1) gates at p > 0.01 (log line 15).
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: KS statistic D = 0.222222, p = 0.048320 (log line 74).
-Verdict: GATING at p > 0.01: passed.
+The 36 held-out counts are compared to their own calibration counts by a conditional two-sample test, which removes the unknown true level of each threshold from the analysis; the KS statistic of those p-values against Uniform(0,1) gates at p > 0.01 (log line 15). Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: KS statistic D = 0.222222, p = 0.048320 (log line 74). Verdict: GATING at p > 0.01: passed.
 
 ### Pre-registered control (c), HALF 2: common bias
-The pooled held-out level must intersect [0.047000, 0.053000], the band the procedure promises, its half-width being the bisection tolerance 0.003 (log line 15).
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: pooled held-out level 0.063194 (91/1440), 95% interval [0.045422, 0.080967] intersects [0.047000, 0.053000] = True (log line 73).
-Verdict: GATING: passed.
+The pooled held-out level must intersect [0.047000, 0.053000], the band the procedure promises, its half-width being the bisection tolerance 0.003 (log line 15). Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: pooled held-out level 0.063194 (91/1440), 95% interval [0.045422, 0.080967] intersects [0.047000, 0.053000] = True (log line 73). Verdict: GATING: passed.
 
 ### Pre-registered control (c), REPORTED and not gating: pooled interval contains 0.05
-The literal predicate of the prompt: the pooled interval contains 0.05 (log line 16).
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: the pooled interval [0.045422, 0.080967] contains 0.05 = True (log line 73).
-Verdict: reported and NOT gating. This test omits half the variance of its own statistic and therefore fires by construction rather than by accident of the draw. It is kept as a diagnostic.
+The literal predicate of the prompt: the pooled interval contains 0.05 (log line 16). Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: the pooled interval [0.045422, 0.080967] contains 0.05 = True (log line 73). Verdict: reported and NOT gating. This test omits half the variance of its own statistic and therefore fires by construction rather than by accident of the draw. It is kept as a diagnostic.
 
 ### Pre-registered control (c), REPORTED and not gating: KS of one-sample binomial p-values
-KS statistic of the 36 one-sample binomial p-values against Uniform(0,1) (log line 16).
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: D = 0.277979, p = 0.005955 (log line 75).
-Verdict: reported and NOT gating. The null tests that every arm sits at exactly 0.05, which the bisection never promises and the factor above shows it cannot deliver; that test omits half the variance of its own statistic and therefore fires by construction.
+KS statistic of the 36 one-sample binomial p-values against Uniform(0,1) (log line 16). Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: D = 0.277979, p = 0.005955 (log line 75). Verdict: reported and NOT gating. The null tests that every arm sits at exactly 0.05, which the bisection never promises and the factor above shows it cannot deliver; that test omits half the variance of its own statistic and therefore fires by construction.
 
 ### Continuity check (b) [Eco_L1]
-Omnibus sum of z-scores at common points with R04 (nu = 4.0, 4.5, 5.0, 7.0, 30.0) tests continuity (log line 83).
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: z at nu = 4.0: +0.631, 4.5: +1.037, 5.0: +0.026, 7.0: +1.036, 30.0: +0.499; omnibus sum z^2 = 2.7980 on 5 degrees of freedom, p = 0.7311 (log line 83).
-Verdict: GATING at p > 0.01: passed.
+Omnibus sum of z-scores at common points with R04 (nu = 4.0, 4.5, 5.0, 7.0, 30.0) tests continuity (log line 83). Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: z at nu = 4.0: +0.631, 4.5: +1.037, 5.0: +0.026, 7.0: +1.036, 30.0: +0.499; omnibus sum z^2 = 2.7980 on 5 degrees of freedom, p = 0.7311 (log line 83). Verdict: GATING at p > 0.01: passed.
 
 ### Continuity check (b) [Oracle_Eco]
-Omnibus sum of z-scores at common points with R04 (log line 84).
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: z at nu = 4.0: -0.397, 4.5: -0.263, 5.0: +0.623, 7.0: +0.502, 30.0: +0.356; omnibus sum z^2 = 0.9948 on 5 degrees of freedom, p = 0.9630 (log line 84).
-Verdict: GATING at p > 0.01: passed.
+Omnibus sum of z-scores at common points with R04 (log line 84). Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: z at nu = 4.0: -0.397, 4.5: -0.263, 5.0: +0.623, 7.0: +0.502, 30.0: +0.356; omnibus sum z^2 = 0.9948 on 5 degrees of freedom, p = 0.9630 (log line 84). Verdict: GATING at p > 0.01: passed.
 
 ### Monotonicity check (d) [Eco_L1]
-Tests that the ratio is monotone increasing in nu over 12 points (log line 85).
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: Spearman rho = 0.7622 (p = 3.950e-03) over 12 points; most negative consecutive difference -0.217709 (log line 85).
-Verdict: reported, not gated.
+Tests that the ratio is monotone increasing in nu over 12 points (log line 85). Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: Spearman rho = 0.7622 (p = 3.950e-03) over 12 points; most negative consecutive difference -0.217709 (log line 85). Verdict: reported, not gated.
 
 ### Monotonicity check (d) [Oracle_Eco]
-Tests that the ratio is monotone increasing in nu over 12 points (log line 86).
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: Spearman rho = 0.7972 (p = 1.900e-03) over 12 points; most negative consecutive difference -0.188529 (log line 86).
-Verdict: reported, not gated.
+Tests that the ratio is monotone increasing in nu over 12 points (log line 86). Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: Spearman rho = 0.7972 (p = 1.900e-03) over 12 points; most negative consecutive difference -0.188529 (log line 86). Verdict: reported, not gated.
 
 ## 3. Test suite
 

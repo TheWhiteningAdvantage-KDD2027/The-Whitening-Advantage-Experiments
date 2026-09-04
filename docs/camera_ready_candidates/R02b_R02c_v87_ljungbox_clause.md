@@ -19,14 +19,9 @@
 | Cost                | +2 words against the submitted sentence                          |
 | Blocking dependency | none — R03..R17 do not touch this clause                         |
 
-**Why this is not applied now.** The manuscript is under review and cannot be edited. The
-KDD 2027 Research Track allocates one additional content page to accepted papers for exactly
-this kind of revision, so budget is not the constraint; timing is. Applying a correction
-before the deviation inventory is complete guarantees reapplying it later.
+**Why this is not applied now.** The manuscript is under review and cannot be edited. The KDD 2027 Research Track allocates one additional content page to accepted papers for exactly this kind of revision, so budget is not the constraint; timing is. Applying a correction before the deviation inventory is complete guarantees reapplying it later.
 
-**What is being corrected.** Not the published number: 11 rejections out of 120 is an
-ordinary draw under a true rate of 5.8% (probability 8.9%). What is corrected is the
-subordinate clause asserting a mechanism that is wrong independently of any sample.
+**What is being corrected.** Not the published number: 11 rejections out of 120 is an ordinary draw under a true rate of 5.8% (probability 8.9%). What is corrected is the subordinate clause asserting a mechanism that is wrong independently of any sample.
 
 <<< SEARCH
 ~~~~~~~~~latex

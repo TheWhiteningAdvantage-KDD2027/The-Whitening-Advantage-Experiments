@@ -21,15 +21,13 @@
 
 **Why this is not applied now.** The manuscript is under review and cannot be edited.
 
-**What is being clarified — and what is *not* being corrected.**
-The text currently claims the quasi-Gaussian synthetic control "inverts the ordering to Eco-L1-faster". This claim is factually true of the point estimate (the regenerated mean is `1.04`). However, the 95% paired bootstrap interval of this mean is `[0.9793, 1.0688]`. Because this interval contains `1` (parity), the evidential weight supporting the inversion is weaker than the categorical formulation implies.
+**What is being clarified — and what is *not* being corrected.** The text currently claims the quasi-Gaussian synthetic control "inverts the ordering to Eco-L1-faster". This claim is factually true of the point estimate (the regenerated mean is `1.04`). However, the 95% paired bootstrap interval of this mean is `[0.9793, 1.0688]`. Because this interval contains `1` (parity), the evidential weight supporting the inversion is weaker than the categorical formulation implies.
 
 This candidate appends a clarification to acknowledge the overlap with parity without retracting the point estimate finding.
 
 ## Edit — `sec:discussion` line 345
 
-**Verification of the search string.** The block below is quoted from `articleB_whitening_v87.tex`
-verbatim.
+**Verification of the search string.** The block below is quoted from `articleB_whitening_v87.tex` verbatim.
 
 <<< SEARCH
 ~~~~~~~~~latex

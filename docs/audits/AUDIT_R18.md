@@ -2,45 +2,26 @@
 
 ## 1. Deviation table (D0-D3)
 
-R18 reproduces no figure, table or number of v87 (logs/R18_ljungbox_power/exp_R18_ljungbox_power.log line 11).
-Therefore no manuscript values are available for comparison, and no D0-D3 classification exists.
+R18 reproduces no figure, table or number of v87 (logs/R18_ljungbox_power/exp_R18_ljungbox_power.log line 11). Therefore no manuscript values are available for comparison, and no D0-D3 classification exists.
 
 Count by severity: D0 = 0, D1 = 0, D2 = 0, D3 = 0.
 
 ## 2. Controls
 
 ### C1 — multiplicity across the four horizons
-Tests that the four simultaneous 95% rejection-rate statements do not jointly violate the 5% family-wise error threshold.
-Trigger probability under its own null hypothesis: 1 - 0.95^4 = 0.1855 (logs/R18_ljungbox_power/exp_R18_ljungbox_power.log line 24).
-This control was demoted from a binary gate to a reported measurement because its trigger probability 0.1855 exceeds the 5% threshold proscribed by preamble S4bis.
-Replaced by: a Kolmogorov-Smirnov calibration test of the 1000 p-values against Uniform(0,1) at each horizon, with the four rates and their Wilson intervals reported as description.
-Verdict: all four KS p-values exceed 0.05 (0.6919 at n = 2000, 0.2140 at n = 8000, 0.3790 at n = 32000, 0.7745 at n = 128000 — logs/R18_ljungbox_power/exp_R18_ljungbox_power.log lines 25-28), and the pooled KS over stream indices yields bootstrap p = 0.5665 (line 29).
+Tests that the four simultaneous 95% rejection-rate statements do not jointly violate the 5% family-wise error threshold. Trigger probability under its own null hypothesis: 1 - 0.95^4 = 0.1855 (logs/R18_ljungbox_power/exp_R18_ljungbox_power.log line 24). This control was demoted from a binary gate to a reported measurement because its trigger probability 0.1855 exceeds the 5% threshold proscribed by preamble S4bis. Replaced by: a Kolmogorov-Smirnov calibration test of the 1000 p-values against Uniform(0,1) at each horizon, with the four rates and their Wilson intervals reported as description. Verdict: all four KS p-values exceed 0.05 (0.6919 at n = 2000, 0.2140 at n = 8000, 0.3790 at n = 32000, 0.7745 at n = 128000 — logs/R18_ljungbox_power/exp_R18_ljungbox_power.log lines 25-28), and the pooled KS over stream indices yields bootstrap p = 0.5665 (line 29).
 
 ### C2 — monotonicity of the empirical power curve in theta at fixed n and in n at fixed theta
-Tests that the rejection rate is non-decreasing in both the amplitude theta and the horizon n.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: largest inversion in theta measured in paired standard errors is 1.50 against a margin of 2.0; largest inversion in n is 0.63 against 2.0 (logs/R18_ljungbox_power/exp_R18_ljungbox_power.log lines 30-33).
-Number of local inversions: 3 in theta, 2 in n, of which 0 exceed 2.0 paired standard errors.
-Verdict: all inversions are below the 2.0 paired-SE margin and are attributed to sampling noise; the curve is treated as monotone (line 31 and 33).
+Tests that the rejection rate is non-decreasing in both the amplitude theta and the horizon n. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: largest inversion in theta measured in paired standard errors is 1.50 against a margin of 2.0; largest inversion in n is 0.63 against 2.0 (logs/R18_ljungbox_power/exp_R18_ljungbox_power.log lines 30-33). Number of local inversions: 3 in theta, 2 in n, of which 0 exceed 2.0 paired standard errors. Verdict: all inversions are below the 2.0 paired-SE margin and are attributed to sampling noise; the curve is treated as monotone (line 31 and 33).
 
 ### C3 — sign pattern of empirical minus analytic power on the local domain
-Tests the direction and magnitude of the departure between the empirical rejection rate and the analytic power prediction where the local chi-square limit is justified (power_analytic < 0.95).
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: maximum |empirical - analytic| is 0.0421 on the domain against a tolerance of 0.0474 = 3 * 0.5/sqrt(1000), i.e. three standard errors of a proportion at its worst variance (logs/R18_ljungbox_power/exp_R18_ljungbox_power.log lines 34-35).
-The empirical rate exceeds the analytic prediction at 48 of 67 amplitudes inside the domain; sign-test p = 5.216e-04 under independence, which the C4 pairing violates so the p-value understates.
-Verdict: the maximum deviation 0.0421 is within the tolerance 0.0474; the direction is reported and no term is added to the prediction.
+Tests the direction and magnitude of the departure between the empirical rejection rate and the analytic power prediction where the local chi-square limit is justified (power_analytic < 0.95). Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: maximum |empirical - analytic| is 0.0421 on the domain against a tolerance of 0.0474 = 3 * 0.5/sqrt(1000), i.e. three standard errors of a proportion at its worst variance (logs/R18_ljungbox_power/exp_R18_ljungbox_power.log lines 34-35). The empirical rate exceeds the analytic prediction at 48 of 67 amplitudes inside the domain; sign-test p = 5.216e-04 under independence, which the C4 pairing violates so the p-value understates. Verdict: the maximum deviation 0.0421 is within the tolerance 0.0474; the direction is reported and no term is added to the prediction.
 
 ### C4 — design effect of the paired Monte-Carlo draws
-Tests the intra-cluster correlation induced by the C4 pairing (one uniform vector shared across all amplitudes at each stream index).
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: Kish design effect 1.962 measured at n = 8000 on 36000 readings, effective sample size 18351, cluster standard error 0.00362 against 0.00258 for a simple random sample, ratio 1.401; mean correlation of the rejection indicator between two of the 21 amplitudes whose indicator varies is 0.350, max 0.868 (logs/R18_ljungbox_power/exp_R18_ljungbox_power.log line 36).
-Verdict: NO INTERVAL POOLED OVER THE GRID IS PUBLISHED; the per-point Wilson intervals remain valid, each resting on 1000 independent streams.
+Tests the intra-cluster correlation induced by the C4 pairing (one uniform vector shared across all amplitudes at each stream index). Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: Kish design effect 1.962 measured at n = 8000 on 36000 readings, effective sample size 18351, cluster standard error 0.00362 against 0.00258 for a simple random sample, ratio 1.401; mean correlation of the rejection indicator between two of the 21 amplitudes whose indicator varies is 0.350, max 0.868 (logs/R18_ljungbox_power/exp_R18_ljungbox_power.log line 36). Verdict: NO INTERVAL POOLED OVER THE GRID IS PUBLISHED; the per-point Wilson intervals remain valid, each resting on 1000 independent streams.
 
 ### C5 — generator fidelity
-Tests that the symmetric two-state Markov chain generator produces the exact autocorrelation rho(k) = (2*theta)^k and the exact marginal Bernoulli(0.5) law.
-Trigger probability under a correct generator: the autocorrelation arm is a four-sigma band, so 6.3e-5 two-sided; the marginal arm is a 95% Wilson interval, so 5% (logs/R18_ljungbox_power/exp_R18_ljungbox_power.log line 18).
-Realised margin: pooled lag-1 autocorrelation 0.19996860625004817 against the exact 0.2, deviation -3.139e-05 for a tolerance of 4.472e-04 = 4/sqrt(10000*8000), i.e. 0.070 of the budget; marginal rate 0.49992356, Wilson [0.49981400, 0.50003313] on 80000000 observations, and [0.49978937, 0.50005775] after the sqrt((1+rho)/(1-rho)) = 1.2247 inflation (lines 17-18).
-Verdict: both arms pass; the autocorrelation deviation is 0.070 of its budget, and both Wilson intervals cover their targets.
+Tests that the symmetric two-state Markov chain generator produces the exact autocorrelation rho(k) = (2*theta)^k and the exact marginal Bernoulli(0.5) law. Trigger probability under a correct generator: the autocorrelation arm is a four-sigma band, so 6.3e-5 two-sided; the marginal arm is a 95% Wilson interval, so 5% (logs/R18_ljungbox_power/exp_R18_ljungbox_power.log line 18). Realised margin: pooled lag-1 autocorrelation 0.19996860625004817 against the exact 0.2, deviation -3.139e-05 for a tolerance of 4.472e-04 = 4/sqrt(10000*8000), i.e. 0.070 of the budget; marginal rate 0.49992356, Wilson [0.49981400, 0.50003313] on 80000000 observations, and [0.49978937, 0.50005775] after the sqrt((1+rho)/(1-rho)) = 1.2247 inflation (lines 17-18). Verdict: both arms pass; the autocorrelation deviation is 0.070 of its budget, and both Wilson intervals cover their targets.
 
 ## 3. Test suite
 

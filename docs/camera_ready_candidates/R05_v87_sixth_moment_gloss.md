@@ -28,8 +28,7 @@
 loss of $\mathbb{E}[\varepsilon_t^6]$---the second moment of the \emph{monitored} statistic $\varepsilon_t^2$---which
 ~~~~~~~~~
 
-===
-REPLACE WITH
+=== REPLACE WITH
 ~~~~~~~~~latex
 loss of $\mathbb{E}[\varepsilon_t^6]$---the third moment of the \emph{monitored} statistic $\varepsilon_t^2$---which
 ~~~~~~~~~

@@ -43,7 +43,6 @@ survivorship-biased delays of $2{,}610$--$2{,}999$ steps
 ~~~~~~~~~
 >>> END OF BLOCK
 
-The \textsc{Concept} delay range `$34$--$38$ steps` reproduces unchanged and consumes no
-search string; the collapse threshold `$\nu \le 5.5$` likewise reproduces.
+The \textsc{Concept} delay range `$34$--$38$ steps` reproduces unchanged and consumes no search string; the collapse threshold `$\nu \le 5.5$` likewise reproduces.
 
 Cross-reference: docs/DEVIATIONS.md entries R12-campaign-redraw, R12-detection-rate-d2, R12-censored-delay-d2, R12-concept-delay-d1.

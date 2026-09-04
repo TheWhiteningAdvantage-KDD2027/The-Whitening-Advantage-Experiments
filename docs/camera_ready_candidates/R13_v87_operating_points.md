@@ -19,12 +19,9 @@
 | Cost                | +32 words in one sentence; no number in the body text changes                                    |
 | Blocking dependency | shares L331 with `R13_v87_covid_delay_numerals.md` and `R13_v87_frozen_null_scope.md`; the three search strings are **disjoint** and the three edits commute |
 
-**Why this is not applied now.** The manuscript is under review and cannot be edited. The
-deviation inventory is not closed: streams after R13 may touch the same sentence, and applying a correction before the inventory closes guarantees reapplying it later.
+**Why this is not applied now.** The manuscript is under review and cannot be edited. The deviation inventory is not closed: streams after R13 may touch the same sentence, and applying a correction before the inventory closes guarantees reapplying it later.
 
-**What is being corrected.** No number is wrong. One sentence of L331 reports quantities from
-**two different operating points** and names neither, so a reader holding the artefacts cannot
-locate either.
+**What is being corrected.** No number is wrong. One sentence of L331 reports quantities from **two different operating points** and names neither, so a reader holding the artefacts cannot locate either.
 
 The oracle frontier is a curve, not a point: `R13_oracle_frontier.csv` sweeps 200 thresholds per cell and `R13_oracle_operating_points.csv` reads four calibrations off each sweep. L331 uses two of them in one sentence.
 
@@ -38,8 +35,7 @@ The consequence is concrete. At the iso-FPR point the same COVID row gives a **6
 
 `ARL₀ ≥ 252` is moreover not an arbitrary choice: it is *one false alarm per trading year*, which is the calibration the two sentences immediately preceding L331 already use for the sign floor ("a floor of `≈34` trading days at one false alarm per year"). Naming it costs a clause and ties the oracle paragraph to the budget the census paragraph already fixed.
 
-**A second, narrower point about the same sentence.** "no alarm on the 2011 correction at the
-matched operating point" is true of the two dead-band settings Figure 14's caption names — `δ = 0` and `δ_opt` — and of no others. Inside the *same* iso-FPR band, four larger dead bands alarm at 69 days of a 108-day phase:
+**A second, narrower point about the same sentence.** "no alarm on the 2011 correction at the matched operating point" is true of the two dead-band settings Figure 14's caption names — `δ = 0` and `δ_opt` — and of no others. Inside the *same* iso-FPR band, four larger dead bands alarm at 69 days of a 108-day phase:
 
 | `δ`    | `FPR_H`   | `τ`  | `T`  |
 | ------ | --------- | ---- | ---- |
@@ -52,8 +48,7 @@ The **caption is exact** because it names its settings; the body sentence is not
 
 ## Edit 1 — `sec:real_world` L331, name the calibration of the two delays
 
-**Verification of the search string.** The block below is quoted from
-`articleB_whitening_v87.tex` **line 331** verbatim and occurs **exactly once** in the file (`grep -Fc` returns `1`). It is disjoint from the strings the two sibling candidates search. Verify once more before applying, as a matter of routine.
+**Verification of the search string.** The block below is quoted from `articleB_whitening_v87.tex` **line 331** verbatim and occurs **exactly once** in the file (`grep -Fc` returns `1`). It is disjoint from the strings the two sibling candidates search. Verify once more before applying, as a matter of routine.
 
 <<< SEARCH
 ~~~~~~~~~latex
@@ -68,8 +63,7 @@ to $16$ days (standardized-mean CUSUM), both read at the threshold whose bootstr
 
 ## Edit 2 — `sec:real_world` L331, name the matched operating point and its two settings
 
-**Verification of the search string.** Quoted from **line 331** verbatim, `grep -Fc` returns `1`,
-and disjoint from Edit 1.
+**Verification of the search string.** Quoted from **line 331** verbatim, `grep -Fc` returns `1`, and disjoint from Edit 1.
 
 <<< SEARCH
 ~~~~~~~~~latex
@@ -86,11 +80,8 @@ The second edit does two things at once: it names the operating point, which is 
 
 ## What must not be done with this candidate
 
-**This is not a correction of a value.** Every quantity L331 prints reproduces except the
-false-alarm probability, which is the separate deviation `R13-campaign-redraw` and has its own candidate. Merging the two edits would attach a numerical correction to a clarification and make the reason for each unreadable.
+**This is not a correction of a value.** Every quantity L331 prints reproduces except the false-alarm probability, which is the separate deviation `R13-campaign-redraw` and has its own candidate. Merging the two edits would attach a numerical correction to a clarification and make the reason for each unreadable.
 
-**The `69`-day alarm on the 2011 correction must not be attributed to `OP2b`.** It is an iso-FPR
-alarm, at `FPR_H` between `0.035` and `0.045`. The alarms `OP2b` produces on the same episode sit at `FPR_H` between `0.23` and `0.34`, which is not an iso-FPR point at all, and writing the 69 days there would be refuted by one `pandas` filter on `results/R13_oracle_ceiling/data/R13_oracle_operating_points.csv`.
+**The `69`-day alarm on the 2011 correction must not be attributed to `OP2b`.** It is an iso-FPR alarm, at `FPR_H` between `0.035` and `0.045`. The alarms `OP2b` produces on the same episode sit at `FPR_H` between `0.23` and `0.34`, which is not an iso-FPR point at all, and writing the 69 days there would be refuted by one `pandas` filter on `results/R13_oracle_ceiling/data/R13_oracle_operating_points.csv`.
 
-**Neither edit licenses a claim about `δ_opt` being the right dead band.** `δ_opt = |Δ_std| / 2`
-is the delivered protocol's own choice and R13 measures it; nothing in this stream establishes that it is optimal for anything, and no camera-ready text derived from this file may say so.
+**Neither edit licenses a claim about `δ_opt` being the right dead band.** `δ_opt = |Δ_std| / 2` is the delivered protocol's own choice and R13 measures it; nothing in this stream establishes that it is optimal for anything, and no camera-ready text derived from this file may say so.

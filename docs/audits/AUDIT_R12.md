@@ -112,20 +112,9 @@ Total: 26 passed in 0.48s.
 
 log-captured run (n_jobs = -1, 316000 monitored streams):
 
-SHA-256 R12_leverage_fpr.csv               : 8a0326eff4444d99b4769781ae2d22ae1091ed8a89479a895a58ee4c4bb49a4b (log l.348)
-SHA-256 R12_singularity_add.csv            : 2fc012cd0508cc71ae1ad7da64590478984b28a81ea6aad6af26225577aa005b (log l.349)
-SHA-256 R12_concept_crn_witness.csv        : 6630674065604db80a313114daf8b1f266c144fd7b5829c7ab35f9f6a6804a8f (log l.350)
-SHA-256 R12_diagnostics.csv                : f6f994a73e1a4421e66352bebad7ba07ce2b74d0dcdc3b2c23b4733839884b60 (log l.351)
-SHA-256 fig12_leverage.png                 : a5f4100ce0b7c413460925884f132cd1878f89540388ada522f36effdb7170bd (log l.352)
-SHA-256 fig13_fat_tails.png                : 5fa39b4ccac47bfb421840ae907153b5eba970565b897b8912d884f7062cff83 (log l.353)
-SHA-256 R12_claims.tex                     : 47df982b6543ff1a38298b5edb71a3562181259feef0a269f85db5ef2018f569 (log l.354)
+SHA-256 R12_leverage_fpr.csv               : 8a0326eff4444d99b4769781ae2d22ae1091ed8a89479a895a58ee4c4bb49a4b (log l.348) SHA-256 R12_singularity_add.csv            : 2fc012cd0508cc71ae1ad7da64590478984b28a81ea6aad6af26225577aa005b (log l.349) SHA-256 R12_concept_crn_witness.csv        : 6630674065604db80a313114daf8b1f266c144fd7b5829c7ab35f9f6a6804a8f (log l.350) SHA-256 R12_diagnostics.csv                : f6f994a73e1a4421e66352bebad7ba07ce2b74d0dcdc3b2c23b4733839884b60 (log l.351) SHA-256 fig12_leverage.png                 : a5f4100ce0b7c413460925884f132cd1878f89540388ada522f36effdb7170bd (log l.352) SHA-256 fig13_fat_tails.png                : 5fa39b4ccac47bfb421840ae907153b5eba970565b897b8912d884f7062cff83 (log l.353) SHA-256 R12_claims.tex                     : 47df982b6543ff1a38298b5edb71a3562181259feef0a269f85db5ef2018f569 (log l.354)
 
-current tree, single run:
-SHA-256 R12_concept_crn_witness.csv        : 6630674065604db80a313114daf8b1f266c144fd7b5829c7ab35f9f6a6804a8f
-SHA-256 R12_diagnostics.csv                : f6f994a73e1a4421e66352bebad7ba07ce2b74d0dcdc3b2c23b4733839884b60
-SHA-256 R12_leverage_fpr.csv               : 8a0326eff4444d99b4769781ae2d22ae1091ed8a89479a895a58ee4c4bb49a4b
-SHA-256 R12_singularity_add.csv            : 2fc012cd0508cc71ae1ad7da64590478984b28a81ea6aad6af26225577aa005b
-SHA-256 R12_claims.tex                     : 47df982b6543ff1a38298b5edb71a3562181259feef0a269f85db5ef2018f569
+current tree, single run: SHA-256 R12_concept_crn_witness.csv        : 6630674065604db80a313114daf8b1f266c144fd7b5829c7ab35f9f6a6804a8f SHA-256 R12_diagnostics.csv                : f6f994a73e1a4421e66352bebad7ba07ce2b74d0dcdc3b2c23b4733839884b60 SHA-256 R12_leverage_fpr.csv               : 8a0326eff4444d99b4769781ae2d22ae1091ed8a89479a895a58ee4c4bb49a4b SHA-256 R12_singularity_add.csv            : 2fc012cd0508cc71ae1ad7da64590478984b28a81ea6aad6af26225577aa005b SHA-256 R12_claims.tex                     : 47df982b6543ff1a38298b5edb71a3562181259feef0a269f85db5ef2018f569
 
 ## 5. Design decisions taken outside the plan
 

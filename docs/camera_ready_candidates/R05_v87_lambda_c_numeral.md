@@ -43,8 +43,7 @@ The threshold was calibrated per horizon, exactly as the Data arm's lambda_iid_H
 the \textsc{Concept} CUSUM fixed once and for all, $\lambda_C = 10$, $\delta_C = 0.1$
 ~~~~~~~~~
 
-===
-REPLACE WITH
+=== REPLACE WITH
 ~~~~~~~~~latex
 the \textsc{Concept} CUSUM threshold fixed with respect to $\Gamma$ and calibrated once per horizon ($\lambda_C = 11.4$ at $H = 5{,}000$, $\delta_C = 0.1$)
 ~~~~~~~~~

@@ -14,8 +14,7 @@
 
 Count by severity: D0: 1, D2: 5, D3: 1.
 
-**Falsified qualitative claim (L341):** L341 attributes its 9.5% false-alarm figure to `Eco-L1`, and the cell that produced the figure monitors a different arm. The contradiction is one of method attribution and it has no regenerated numerical value.
-**Evidence (three-step):**
+**Falsified qualitative claim (L341):** L341 attributes its 9.5% false-alarm figure to `Eco-L1`, and the cell that produced the figure monitors a different arm. The contradiction is one of method attribution and it has no regenerated numerical value. **Evidence (three-step):**
 1. Table 1 at tex line 117 defines `Eco-L1` as the level residual `eps_t / sigma_hat_t`.
 2. The cell L341 quotes its figure from is `protocol_3d`, which monitors `(z_hat^2 - mu)/sigma` -- the arm the delivered script itself names `Eco_L2`, beside a separately thresholded L1 arm.
 3. `protocol_3b`'s L1 arm runs 100 seeds, so `9.5%` is unattainable there; `9.5% = 19/200` is exactly `protocol_3d`'s resolution.
@@ -24,46 +23,25 @@ Count by severity: D0: 1, D2: 5, D3: 1.
 ## 2. Controls
 
 ### C2 — sign stream bit-identity across grid points
-What it tests: the monitored sign stream is bit-identical across grid points where the key omits the grid coordinate.
-Trigger probability: 0 under its own null hypothesis (deterministic; the sign stream depends only on key, nu and n, exp_R17_econometric_baseline.log:102,152,159,177-180).
-Realised margin: exact identity (SHA-256 match).
-Verdict: pass.
+What it tests: the monitored sign stream is bit-identical across grid points where the key omits the grid coordinate. Trigger probability: 0 under its own null hypothesis (deterministic; the sign stream depends only on key, nu and n, exp_R17_econometric_baseline.log:102,152,159,177-180). Realised margin: exact identity (SHA-256 match). Verdict: pass.
 
 ### C3 — penalty exactness
-What it tests: the realized penalty matches its target to machine precision.
-Trigger probability: 0 under its own null hypothesis (deterministic; the bisection is exact, exp_R17_econometric_baseline.log:92).
-Realised margin: max relative error 2.554e-14 (exp_R17_econometric_baseline.log:91).
-Verdict: pass.
+What it tests: the realized penalty matches its target to machine precision. Trigger probability: 0 under its own null hypothesis (deterministic; the bisection is exact, exp_R17_econometric_baseline.log:92). Realised margin: max relative error 2.554e-14 (exp_R17_econometric_baseline.log:91). Verdict: pass.
 
 ### C4 — argument order of solve_beta_for_gamma
-What it tests: the argument order of solve_beta_for_gamma matches the witness signature.
-Trigger probability: 0 under its own null hypothesis (deterministic; all call sites carry identical argument expressions, exp_R17_econometric_baseline.log:83).
-Realised margin: exact match.
-Verdict: pass.
+What it tests: the argument order of solve_beta_for_gamma matches the witness signature. Trigger probability: 0 under its own null hypothesis (deterministic; all call sites carry identical argument expressions, exp_R17_econometric_baseline.log:83). Realised margin: exact match. Verdict: pass.
 
 ### C5 — monotone restoration of FPR_Eco in n_warmup
-What it tests: monotone restoration of FPR_Eco in n_warmup, at each gamma_lev.
-Trigger probability: 0.2438 under its own null hypothesis (1 - (1 - 0.0455)^6 under a null of exact equality at every step, exp_R17_econometric_baseline.log:191).
-Realised margin: 0 steps of FPR_Eco invert beyond two paired standard errors on either gamma_lev (exp_R17_econometric_baseline.log:205).
-Verdict: pass.
+What it tests: monotone restoration of FPR_Eco in n_warmup, at each gamma_lev. Trigger probability: 0.2438 under its own null hypothesis (1 - (1 - 0.0455)^6 under a null of exact equality at every step, exp_R17_econometric_baseline.log:191). Realised margin: 0 steps of FPR_Eco invert beyond two paired standard errors on either gamma_lev (exp_R17_econometric_baseline.log:205). Verdict: pass.
 
 ### C6 — exact identity at Gamma = 1.00
-What it tests: at Gamma = 1.00, the two thresholds are the same float and the Uncal and Recalib counts coincide.
-Trigger probability: 0 under its own null hypothesis (exact identity, exp_R17_econometric_baseline.log:94).
-Realised margin: exact identity.
-Verdict: pass.
+What it tests: at Gamma = 1.00, the two thresholds are the same float and the Uncal and Recalib counts coincide. Trigger probability: 0 under its own null hypothesis (exact identity, exp_R17_econometric_baseline.log:94). Realised margin: exact identity. Verdict: pass.
 
 ### C8 — source identity of 9 routines
-What it tests: 9 routines are byte-identical to the files that own them.
-Trigger probability: 0 under its own null hypothesis (deterministic; trigger probability 0 unless a copy has drifted, exp_R17_econometric_baseline.log:12).
-Realised margin: exact match.
-Verdict: pass.
+What it tests: 9 routines are byte-identical to the files that own them. Trigger probability: 0 under its own null hypothesis (deterministic; trigger probability 0 unless a copy has drifted, exp_R17_econometric_baseline.log:12). Realised margin: exact match. Verdict: pass.
 
 ### C9 — reproducibility at different worker counts
-What it tests: two executions at different worker counts.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: NON-APPLICABLE (the script is serial: it creates no process pool, no thread pool and no worker, exp_R17_econometric_baseline.log:259).
-Verdict: NON-APPLICABLE.
+What it tests: two executions at different worker counts. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: NON-APPLICABLE (the script is serial: it creates no process pool, no thread pool and no worker, exp_R17_econometric_baseline.log:259). Verdict: NON-APPLICABLE.
 
 ## 3. Test suite
 

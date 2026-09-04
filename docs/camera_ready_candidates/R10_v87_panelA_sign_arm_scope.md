@@ -19,53 +19,29 @@
 | Cost                | one clause in one caption; no numeral changes                                                                                         |
 | Blocking dependency | shares line 567 with `R10_v87_caption_fpr_envelope.md`; the two search strings are **disjoint** and the two edits commute             |
 
-**Why this is not applied now.** The manuscript is under review and cannot be edited. The
-deviation inventory is not closed.
+**Why this is not applied now.** The manuscript is under review and cannot be edited. The deviation inventory is not closed.
 
 **What is being clarified — and what is *not* being corrected.** The caption reads
 
 > \textbf{(A)} Conditional whiteness is preserved across extreme skewness.
 
-and the statement is **true**: both curves of panel A sit at the nominal level across the whole
-`xi` grid. What the caption does not say is that its two curves carry evidence of two different
-strengths.
+and the statement is **true**: both curves of panel A sit at the nominal level across the whole `xi` grid. What the caption does not say is that its two curves carry evidence of two different strengths.
 
-**The raw-sign curve is i.i.d. `Bernoulli(q)` by construction of the delivered code.** In
-`Priorite_9_skew_robustness.py` the innovations are built as `eps_t = sqrt(h_t) · z_t` with
-`h_t = max(ω + α eps_{t-1}² + β h_{t-1}, 1e-12) > 0` and the `z_t` drawn independently by
-`fs_skew_t_standardized`, which the GARCH recursion never enters. Multiplying by a strictly
-positive float cannot change a sign, so
+**The raw-sign curve is i.i.d. `Bernoulli(q)` by construction of the delivered code.** In `Priorite_9_skew_robustness.py` the innovations are built as `eps_t = sqrt(h_t) · z_t` with `h_t = max(ω + α eps_{t-1}² + β h_{t-1}, 1e-12) > 0` and the `z_t` drawn independently by `fs_skew_t_standardized`, which the GARCH recursion never enters. Multiplying by a strictly positive float cannot change a sign, so
 
 ```
 1{eps_t > 0} == 1{z_t > 0}    bit-exactly
 ```
 
-Control C4 asserts that identity on all **4 000** streams of the regenerated campaign: **0
-disagreements**, with the smallest conditional variance observed at `7.27 × 10⁻³`, nine orders of
-magnitude above the `1e-12` floor and `9.09` times the derived bound `ω = 8 × 10⁻⁴`. The raw sign
-stream is therefore a sequence of independent Bernoulli draws whatever the volatility path does,
-and its Ljung–Box rejection rate measures the **calibration of the Ljung–Box test**, not a property
-of the data-generating process. It cannot fail, and a curve that cannot fail is not a stress test.
+Control C4 asserts that identity on all **4 000** streams of the regenerated campaign: **0 disagreements**, with the smallest conditional variance observed at `7.27 × 10⁻³`, nine orders of magnitude above the `1e-12` floor and `9.09` times the derived bound `ω = 8 × 10⁻⁴`. The raw sign stream is therefore a sequence of independent Bernoulli draws whatever the volatility path does, and its Ljung–Box rejection rate measures the **calibration of the Ljung–Box test**, not a property of the data-generating process. It cannot fail, and a curve that cannot fail is not a stress test.
 
-**The HoeffdingTree error curve is the proposition, and its evidence is a non-rejection.** That arm
-runs a real online learner over the stream, so its whiteness is a claim about the pipeline rather
-than an identity of the simulator. A non-rejection bounds nothing without the power of the
-instrument, and the repository has already bounded it at this exact configuration: at `n = 8000`
-and lag 20, the R18 Ljung-Box power entry of `docs/DEVIATIONS.md` fixes the lag-1 autocorrelation the test
-resolves with probability `0.8`. R10 opens no duplicate entry and cross-references R18 instead.
+**The HoeffdingTree error curve is the proposition, and its evidence is a non-rejection.** That arm runs a real online learner over the stream, so its whiteness is a claim about the pipeline rather than an identity of the simulator. A non-rejection bounds nothing without the power of the instrument, and the repository has already bounded it at this exact configuration: at `n = 8000` and lag 20, the R18 Ljung-Box power entry of `docs/DEVIATIONS.md` fixes the lag-1 autocorrelation the test resolves with probability `0.8`. R10 opens no duplicate entry and cross-references R18 instead.
 
-**Why this does not reach the register.** The perimeter filter admits an entry only when a printed
-statement is **formally contradicted**. Panel A's sentence is not contradicted: whiteness *is*
-preserved, on both arms, at every grid point. What is incomplete is the strength attributed to the
-figure, and an incomplete-but-true formulation is a camera-ready matter, not a register matter.
-The measurement is reported in `docs/sections/R10.md` and in `docs/audits/AUDIT_R10.md`.
+**Why this does not reach the register.** The perimeter filter admits an entry only when a printed statement is **formally contradicted**. Panel A's sentence is not contradicted: whiteness *is* preserved, on both arms, at every grid point. What is incomplete is the strength attributed to the figure, and an incomplete-but-true formulation is a camera-ready matter, not a register matter. The measurement is reported in `docs/sections/R10.md` and in `docs/audits/AUDIT_R10.md`.
 
 ## Edit — Figure 10 caption, line 567
 
-**Verification of the search string.** The block below is quoted from `articleB_whitening_v87.tex`
-**line 567** verbatim and occurs **exactly once** in the file (`grep -Fc` returns `1`). It is
-disjoint from the string `R10_v87_caption_fpr_envelope.md` searches in the same caption. Verify
-once more before applying, as a matter of routine.
+**Verification of the search string.** The block below is quoted from `articleB_whitening_v87.tex` **line 567** verbatim and occurs **exactly once** in the file (`grep -Fc` returns `1`). It is disjoint from the string `R10_v87_caption_fpr_envelope.md` searches in the same caption. Verify once more before applying, as a matter of routine.
 
 <<< RECHERCHER
 ~~~~~~~~~latex
@@ -80,14 +56,8 @@ once more before applying, as a matter of routine.
 
 ## What must not be done with this candidate
 
-**This is not a claim that panel A is wrong.** Both curves are correctly measured and correctly
-plotted, and the sentence the caption prints is true. The clause added above names which of the two
-carries the stress test.
+**This is not a claim that panel A is wrong.** Both curves are correctly measured and correctly plotted, and the sentence the caption prints is true. The clause added above names which of the two carries the stress test.
 
-**This is not a claim about the theorem.** The identity `1{eps_t > 0} = 1{z_t > 0}` is a property
-of the *simulator*, which implements exactly the scale model the proposition assumes. It says
-nothing about whether the proposition holds on data, and no text derived from this candidate may
-say that it does.
+**This is not a claim about the theorem.** The identity `1{eps_t > 0} = 1{z_t > 0}` is a property of the *simulator*, which implements exactly the scale model the proposition assumes. It says nothing about whether the proposition holds on data, and no text derived from this candidate may say that it does.
 
-**The clause must not be applied together with a weakening of panel A.** The panel stays as it is:
-removing the raw-sign curve would remove the calibration check that makes the other curve readable.
+**The clause must not be applied together with a weakening of panel A.** The panel stays as it is: removing the raw-sign curve would remove the calibration check that makes the other curve readable.

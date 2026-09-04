@@ -1,17 +1,12 @@
 # RECONCILIATION — `docs/camera_ready_candidates/`
 
-**Produced by** T4 (`CLAUDE_TASKS/T4_CAMERA_READY_RECONCILIATION.md`). **Read-only** with respect to
-the manuscript and to every pre-existing candidate: no file was restored and no file was deleted.
-The single write is the STEP 5 creation recorded in §5.
+**Produced by** T4 (`CLAUDE_TASKS/T4_CAMERA_READY_RECONCILIATION.md`). **Read-only** with respect to the manuscript and to every pre-existing candidate: no file was restored and no file was deleted. The single write is the STEP 5 creation recorded in §5.
 
 ---
 
 ## 0. What git says, and where the manuscript is
 
-**The documentation refactoring was never committed.** `git log --diff-filter=D --all` and
-`git log --diff-filter=R --all` on this directory both return **empty**: no deletion and no rename
-has ever entered a commit. The entire divergence lives in the working tree against `HEAD`
-(`ac5f849`), so `HEAD` *is* the last commit before the refactoring and no ancestor search is needed.
+**The documentation refactoring was never committed.** `git log --diff-filter=D --all` and `git log --diff-filter=R --all` on this directory both return **empty**: no deletion and no rename has ever entered a commit. The entire divergence lives in the working tree against `HEAD` (`ac5f849`), so `HEAD` *is* the last commit before the refactoring and no ancestor search is needed.
 
 |                                                  | count  |
 | ------------------------------------------------ | ------ |
@@ -22,17 +17,9 @@ has ever entered a commit. The entire divergence lives in the working tree again
 | present in `HEAD`, absent on disk                | **30** |
 | present on disk, absent from `HEAD`              | **13** |
 
-**Every one of the 30 absent files is recoverable**, verified individually:
-`git show HEAD:docs/camera_ready_candidates/<name>` succeeds for 30 / 30. None was relocated
-elsewhere in the tree. Nothing is destroyed; the loss is *staged*, and committing the working tree
-as it stands is what would make it permanent.
+**Every one of the 30 absent files is recoverable**, verified individually: `git show HEAD:docs/camera_ready_candidates/<name>` succeeds for 30 / 30. None was relocated elsewhere in the tree. Nothing is destroyed; the loss is *staged*, and committing the working tree as it stands is what would make it permanent.
 
-**The frozen manuscript.** `articleB_whitening_v87.tex` does **not** exist at the repository root,
-which is the path T4 STEP 3 names. It is reachable at `REFACTORING_COMMON/articleB_whitening_v87.tex`
-— `REFACTORING_COMMON` is a symlink (`120000` blob in `HEAD`) to
-`/home/m53/Article_B_Whitening_effect/REFACTORING_COMMON`. 646 lines, SHA-256
-`98c20e3bd1ec6de5985b6f664a1f154bcfd40491369c38de126b769ddebafb80`. Every `grep -Fc` below was run
-against that file. It was read and never written.
+**The frozen manuscript.** `articleB_whitening_v87.tex` does **not** exist at the repository root, which is the path T4 STEP 3 names. It is reachable at `REFACTORING_COMMON/articleB_whitening_v87.tex` — `REFACTORING_COMMON` is a symlink (`120000` blob in `HEAD`) to `/home/m53/Article_B_Whitening_effect/REFACTORING_COMMON`. 646 lines, SHA-256 `98c20e3bd1ec6de5985b6f664a1f154bcfd40491369c38de126b769ddebafb80`. Every `grep -Fc` below was run against that file. It was read and never written.
 
 **Rename detection: negative, twice.** No candidate is a rename.
 
@@ -53,10 +40,7 @@ The `RENAMED` class of STEP 2 is therefore **empty**. Every difference is a rewr
 
 ### 1.2 REWRITTEN — same subject, different content
 
-Two sub-populations. **(a) Same name, rewritten in place** — 17 files. **(b) Name dropped, subject
-carried by another file** — 19 files. The *successor* column names the file that now carries the
-subject; `(pre-existing)` means the successor was already in `HEAD` and is not a product of the
-refactoring.
+Two sub-populations. **(a) Same name, rewritten in place** — 17 files. **(b) Name dropped, subject carried by another file** — 19 files. The *successor* column names the file that now carries the subject; `(pre-existing)` means the successor was already in `HEAD` and is not a product of the refactoring.
 
 #### (a) Rewritten in place — 17 files
 
@@ -85,16 +69,7 @@ Two consequences carry beyond cosmetics.
 1. **The four R15 blocks have no terminator.** The replacement side now runs to the next `##`
    heading with nothing marking its end. Any tool that reads these blocks reads the wrong extent.
 2. **Three R07 replacements now emit `\RSeven…` macros** — `R07_v87_bias_bound` (`\RSevenBiasMax`),
-   `R07_v87_dispersion_cost` (`\RSevenOlsFprMax`, `\RSevenOlsFprMin`) and
-   `R07_v87_panelB_operating_level` (`\RSevenOracleFprMean`, `\RSevenLatticeHigh`). The frozen
-   manuscript contains **zero** `\newcommand` definitions and **zero**
-   `\RSeven`/`\RFour`/`\REight`/`\REleven` tokens (`grep -c` = 0 for each), so each of those three
-   edits compiles to `Undefined control sequence`. Their `HEAD` replacements were literal numerals
-   and compiled; the refactoring introduced the defect. `R07_v87_figure7_exactness`'s replacement is
-   unchanged and macro-free, and `R07_v87_lattice_handoff_to_R08` carries no block at all — only
-   their body tables were gutted. A machine scan of every replacement body in both trees finds no
-   other case in the working tree, and exactly one in `HEAD`: the deleted
-   `R02_v87_binary_error_wilson.md`, whose replacement emits six undefined `\RTwo…` macros.
+   `R07_v87_dispersion_cost` (`\RSevenOlsFprMax`, `\RSevenOlsFprMin`) and `R07_v87_panelB_operating_level` (`\RSevenOracleFprMean`, `\RSevenLatticeHigh`). The frozen manuscript contains **zero** `\newcommand` definitions and **zero** `\RSeven`/`\RFour`/`\REight`/`\REleven` tokens (`grep -c` = 0 for each), so each of those three edits compiles to `Undefined control sequence`. Their `HEAD` replacements were literal numerals and compiled; the refactoring introduced the defect. `R07_v87_figure7_exactness`'s replacement is unchanged and macro-free, and `R07_v87_lattice_handoff_to_R08` carries no block at all — only their body tables were gutted. A machine scan of every replacement body in both trees finds no other case in the working tree, and exactly one in `HEAD`: the deleted `R02_v87_binary_error_wilson.md`, whose replacement emits six undefined `\RTwo…` macros.
 
 #### (b) Name dropped, subject carried elsewhere — 19 files
 
@@ -120,14 +95,11 @@ Two consequences carry beyond cosmetics.
 | `R17_v87_warmup_restoration_scope.md`    | L341                 | `R17_v87_econometric_baseline.md` *(new)*                                 | **the clarification is inverted into a corroboration** — see §4.5                                                  |
 | `R18_v87_whitening_evidence_strength.md` | L290, L318           | `R18_v87_ljungbox_power_bound.md` *(new)*                                 | the two anchors; the edits at L290 and L318                                                                        |
 
-Five of the 13 new arrivals have **no** deleted counterpart and are additions, not successors:
-`R01_v87_garch_calibration.md`, `R05_v87_scale_law.md`, `R11_v87_eddm_fpr.md`,
-`R11_v87_grid_metadata.md`, `R16_v87_regime_census.md`.
+Five of the 13 new arrivals have **no** deleted counterpart and are additions, not successors: `R01_v87_garch_calibration.md`, `R05_v87_scale_law.md`, `R11_v87_eddm_fpr.md`, `R11_v87_grid_metadata.md`, `R16_v87_regime_census.md`.
 
 ### 1.3 LOST — no successor
 
-Eleven files. Each carried at least one anchor verified at `grep -Fc` = 1 against the frozen `.tex`
-(§2.3). No file in the working tree addresses the subject.
+Eleven files. Each carried at least one anchor verified at `grep -Fc` = 1 against the frozen `.tex` (§2.3). No file in the working tree addresses the subject.
 
 | deleted file                                | subject, from the deleted file                                                                                                                       | register status                                           |
 | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
@@ -154,12 +126,9 @@ The corpus mixes two kinds of `SEARCH` block, and STEP 3's test applies to one o
 - **Prose anchors** — the search string is a verbatim fragment of `articleB_whitening_v87.tex`.
   These are the blocks STEP 3 governs.
 - **Macro blocks** — the search string is a run of `\newcommand{\R…}` definitions. These target a
-  stream's `results/R[XX]_*/tables/R[XX]_claims.tex`, **not** the manuscript. The frozen `.tex`
-  contains **zero** `\newcommand` and zero `\R{Four,Seven,Eight,Eleven}…` tokens, so a `grep -Fc`
-  of a macro block against it returns `0` by construction and is not evidence of a defect.
+  stream's `results/R[XX]_*/tables/R[XX]_claims.tex`, **not** the manuscript. The frozen `.tex` contains **zero** `\newcommand` and zero `\R{Four,Seven,Eight,Eleven}…` tokens, so a `grep -Fc` of a macro block against it returns `0` by construction and is not evidence of a defect.
 
-Counts on the working tree at the start of T4 (43 files, 65 blocks): **26 prose anchors**,
-**39 macro blocks**. After the STEP 5 creation: 27 prose anchors, 39 macro blocks.
+Counts on the working tree at the start of T4 (43 files, 65 blocks): **26 prose anchors**, **39 macro blocks**. After the STEP 5 creation: 27 prose anchors, 39 macro blocks.
 
 ### 2.2 Prose-anchor results — working tree
 
@@ -169,10 +138,7 @@ Counts on the working tree at the start of T4 (43 files, 65 blocks): **26 prose 
 | `grep -Fc` = 0 (**does not exist in the manuscript**) | **9**                                      |
 | `grep -Fc` > 1 (ambiguous)                            | 0                                          |
 
-**The nine anchors that do not exist.** All nine fail for the same reason: the search string is a
-**de-LaTeX-ified transcription** of real manuscript text — math delimiters, `\varepsilon`, `\nu`,
-`\chi`, `\emph{}` and escaped percent signs stripped — or, in one case, a paraphrase. Every one has
-a unique repaired form, verified below at `grep -Fc` = 1.
+**The nine anchors that do not exist.** All nine fail for the same reason: the search string is a **de-LaTeX-ified transcription** of real manuscript text — math delimiters, `\varepsilon`, `\nu`, `\chi`, `\emph{}` and escaped percent signs stripped — or, in one case, a paraphrase. Every one has a unique repaired form, verified below at `grep -Fc` = 1.
 
 | file                                 | #   | as written (count 0)                                                                           | repaired form (count 1)                                                                                                                                                                                                                                               |
 | ------------------------------------ | --- | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -186,10 +152,7 @@ a unique repaired form, verified below at `grep -Fc` = 1.
 | `R04b_v87_estimation_cost.md`        | 2   | `0.3 degrees of freedom`                                                                       | `$0.3$ degrees of freedom` (unique; note bare `degrees of freedom` occurs **4** times)                                                                                                                                                                                |
 | `R04b_v87_oracle_tracks_analytic.md` | 1   | `an oracle arm standardized by … crosses at 4.6, on the analytic prediction, so the extra`     | `an \emph{oracle} arm standardized by the true GARCH parameters crosses at $4.6$, on the analytic prediction, so the extra`                                                                                                                                           |
 
-**Eight of these nine were already broken in `HEAD`.** Only `R04b_v87_oracle_tracks_analytic.md`
-was degraded by the refactoring, which stripped `\emph{}` from an anchor that was already failing on
-`$4.6$` alone. The R02b/R02c pair are among the 13 byte-identical files: their anchors predate the
-refactoring entirely.
+**Eight of these nine were already broken in `HEAD`.** Only `R04b_v87_oracle_tracks_analytic.md` was degraded by the refactoring, which stripped `\emph{}` from an anchor that was already failing on `$4.6$` alone. The R02b/R02c pair are among the 13 byte-identical files: their anchors predate the refactoring entirely.
 
 ### 2.3 Prose-anchor results — the 30 deleted files
 
@@ -199,21 +162,13 @@ refactoring entirely.
 | `grep -Fc` = 0 | 1            |
 | `grep -Fc` > 1 | 0            |
 
-The single failure is `R02b_v87_iid_arm_rejection.md`, which writes `(9.2\%)` where the manuscript
-has `($9.2\%$)`; repaired, it is unique.
+The single failure is `R02b_v87_iid_arm_rejection.md`, which writes `(9.2\%)` where the manuscript has `($9.2\%$)`; repaired, it is unique.
 
-**This is the reconciliation's central asymmetry.** The deleted population carried 43 anchors and
-42 of them applied cleanly. The surviving population carries 27, of which 18 apply. **Every file
-the refactoring removed was anchor-verified; not one anchored candidate was added to replace one.**
-Of the 13 new arrivals, **none carries a manuscript prose anchor**: seven carry macro blocks only
-and six (`R05_v87_scale_law`, `R08_v87_adverse_direction`, `R08_v87_discrete_null_law`,
-`R16_v87_regime_census`, `R17_v87_econometric_baseline`, `R18_v87_ljungbox_power_bound`) carry no
-block of any kind. The additions are entirely macro-genre.
+**This is the reconciliation's central asymmetry.** The deleted population carried 43 anchors and 42 of them applied cleanly. The surviving population carries 27, of which 18 apply. **Every file the refactoring removed was anchor-verified; not one anchored candidate was added to replace one.** Of the 13 new arrivals, **none carries a manuscript prose anchor**: seven carry macro blocks only and six (`R05_v87_scale_law`, `R08_v87_adverse_direction`, `R08_v87_discrete_null_law`, `R16_v87_regime_census`, `R17_v87_econometric_baseline`, `R18_v87_ljungbox_power_bound`) carry no block of any kind. The additions are entirely macro-genre.
 
 ### 2.4 Marker dialects
 
-Six incompatible block syntaxes are now in use. Any tool that applies these blocks must implement
-all six or silently skip files.
+Six incompatible block syntaxes are now in use. Any tool that applies these blocks must implement all six or silently skip files.
 
 | dialect                                                                                                                             | worktree files                   |
 | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
@@ -228,10 +183,7 @@ all six or silently skip files.
 
 ## 3. The two-family header (STEP 4)
 
-Required in every candidate's header: `PARKED — do not apply`; the trigger *acceptance
-notification, 14 November 2026*; and exactly one family — nothing extra when the candidate corrects
-a contradiction carried by `docs/DEVIATIONS.md`, or `NO DEVIATION — clarification only` when it does
-not and therefore has no register entry.
+Required in every candidate's header: `PARKED — do not apply`; the trigger *acceptance notification, 14 November 2026*; and exactly one family — nothing extra when the candidate corrects a contradiction carried by `docs/DEVIATIONS.md`, or `NO DEVIATION — clarification only` when it does not and therefore has no register entry.
 
 ### 3.1 Conformance, 43 files as found
 
@@ -243,62 +195,34 @@ not and therefore has no register entry.
 | `Register entry` field present at all | 17         | **26**  |
 | family determinable                   | **15**     | **28**  |
 
-"Family determinable" counts the 11 files citing a register entry plus the 4 carrying
-`NO DEVIATION — clarification only`. The 2 files of §3.2(b) declare no entry without the marker and
-the 26 of §3.2(a) declare nothing at all; neither can be sorted.
+"Family determinable" counts the 11 files citing a register entry plus the 4 carrying `NO DEVIATION — clarification only`. The 2 files of §3.2(b) declare no entry without the marker and the 26 of §3.2(a) declare nothing at all; neither can be sorted.
 
 ### 3.2 Candidates that lack a family marker
 
-**(a) 26 files carry no `Register entry` field at all.** They therefore assert neither family. None
-carries `NO DEVIATION`, so each reads by default as a deviation-correcting candidate while
-declaring no register entry — the "reverse" inconsistency of STEP 4, on more than half the corpus:
+**(a) 26 files carry no `Register entry` field at all.** They therefore assert neither family. None carries `NO DEVIATION`, so each reads by default as a deviation-correcting candidate while declaring no register entry — the "reverse" inconsistency of STEP 4, on more than half the corpus:
 
-`R01_v87_garch_calibration`, `R02_v87_ljungbox_whiteness`, `R02b_v87_iid_mechanism`,
-`R02c_v87_horizon_sweep`, `R03_v87_fpr_explosion`, `R04_v87_table3_data`, `R04_v87_table3_macros`,
-`R05_v87_scale_law`, `R06_v87_validity_map`, `R07_v87_estimated_mean`, `R08_v87_adverse_direction`,
-`R08_v87_discrete_null_law`, `R09_v87_add_parity`, `R09_v87_cusum_peeking_fpr`,
-`R11_v87_concept_add`, `R11_v87_data_slopes`, `R11_v87_eddm_fpr`, `R11_v87_grid_metadata`,
-`R11_v87_pht_macros`, `R12_v87_leverage_fpr`, `R12_v87_singularity_add`, `R13_v87_oracle_ceiling`,
-`R14_v87_crypto_isofpr_ratios`, `R16_v87_regime_census`, `R17_v87_econometric_baseline`,
-`R18_v87_ljungbox_power_bound`.
+`R01_v87_garch_calibration`, `R02_v87_ljungbox_whiteness`, `R02b_v87_iid_mechanism`, `R02c_v87_horizon_sweep`, `R03_v87_fpr_explosion`, `R04_v87_table3_data`, `R04_v87_table3_macros`, `R05_v87_scale_law`, `R06_v87_validity_map`, `R07_v87_estimated_mean`, `R08_v87_adverse_direction`, `R08_v87_discrete_null_law`, `R09_v87_add_parity`, `R09_v87_cusum_peeking_fpr`, `R11_v87_concept_add`, `R11_v87_data_slopes`, `R11_v87_eddm_fpr`, `R11_v87_grid_metadata`, `R11_v87_pht_macros`, `R12_v87_leverage_fpr`, `R12_v87_singularity_add`, `R13_v87_oracle_ceiling`, `R14_v87_crypto_isofpr_ratios`, `R16_v87_regime_census`, `R17_v87_econometric_baseline`, `R18_v87_ljungbox_power_bound`.
 
-**(b) 2 files declare `Register entry: none` without the `NO DEVIATION — clarification only`
-marker** — the declaration and the marker must travel together:
+**(b) 2 files declare `Register entry: none` without the `NO DEVIATION — clarification only` marker** — the declaration and the marker must travel together:
 
 - `R07_v87_figure7_exactness.md` — "**none in R07.** The two numerals belong to R08"
 - `R07_v87_lattice_handoff_to_R08.md` — "**none.** R07 opens no entry on another stream's published values"
 
-`R07_v87_lattice_handoff_to_R08.md` is also the one file with **no `PARKED` marker**. It is a
-hand-off note rather than a candidate; if it is to stay in this directory it needs the header, and
-if it is not, it belongs in `docs/audits/`.
+`R07_v87_lattice_handoff_to_R08.md` is also the one file with **no `PARKED` marker**. It is a hand-off note rather than a candidate; if it is to stay in this directory it needs the header, and if it is not, it belongs in `docs/audits/`.
 
 ### 3.3 `NO DEVIATION` carried alongside a register entry
 
-**None.** The four files carrying the marker — `R10_v87_panelA_sign_arm_scope`,
-`R15_v87_budget_bound_referent`, `R15_v87_naive_baseline`, `R15_v87_scatter_attribution` — each
-declare `Register entry: **none**`, and `docs/DEVIATIONS.md` carries no entry for any of their
-subjects. Consistent. The STEP 5 file added in §5 is the fifth and is likewise consistent.
+**None.** The four files carrying the marker — `R10_v87_panelA_sign_arm_scope`, `R15_v87_budget_bound_referent`, `R15_v87_naive_baseline`, `R15_v87_scatter_attribution` — each declare `Register entry: **none**`, and `docs/DEVIATIONS.md` carries no entry for any of their subjects. Consistent. The STEP 5 file added in §5 is the fifth and is likewise consistent.
 
-**Seven of the deleted files carried the marker** and are the ones whose loss removes the
-clarification family from R08, R14 and R17 entirely: `R08_v87_lattice_exact_basis`,
-`R08_v87_whiteness_identity`, `R14_v87_reliable_range_scope`, `R14_v87_synthetic_control_strength`,
-`R17_v87_persistence_collapse_mechanism`, `R17_v87_warmup_resolution`,
-`R17_v87_warmup_restoration_scope`.
+**Seven of the deleted files carried the marker** and are the ones whose loss removes the clarification family from R08, R14 and R17 entirely: `R08_v87_lattice_exact_basis`, `R08_v87_whiteness_identity`, `R14_v87_reliable_range_scope`, `R14_v87_synthetic_control_strength`, `R17_v87_persistence_collapse_mechanism`, `R17_v87_warmup_resolution`, `R17_v87_warmup_restoration_scope`.
 
 ### 3.4 Register references that do not resolve
 
-**Worktree → register: clean.** Every backticked register id declared by a surviving candidate
-exists in `docs/DEVIATIONS.md`.
+**Worktree → register: clean.** Every backticked register id declared by a surviving candidate exists in `docs/DEVIATIONS.md`.
 
-**Deleted → register: 7 dangling ids**, absent from `docs/DEVIATIONS.md` both at `HEAD` and in the
-working tree. These candidates cite entries that the register has never carried:
-the R02 binary-error-rate entry as it was then named, `R09-arl0-censoring`, `R11-onset-convention`, `R11-pht-slope`,
-`R11-pht-gamma-rule`, `R11-pht-syncope`, `R13-frozen-null-scope`. Three further deleted files cite
-the legacy numeric scheme (`entry 3`, `entry 7`, `entry 19`) that the register no longer uses; the
-surviving `R05` pair cite `entry 9` and `entry 12` in the same dead scheme.
+**Deleted → register: 7 dangling ids**, absent from `docs/DEVIATIONS.md` both at `HEAD` and in the working tree. These candidates cite entries that the register has never carried: the R02 binary-error-rate entry as it was then named, `R09-arl0-censoring`, `R11-onset-convention`, `R11-pht-slope`, `R11-pht-gamma-rule`, `R11-pht-syncope`, `R13-frozen-null-scope`. Three further deleted files cite the legacy numeric scheme (`entry 3`, `entry 7`, `entry 19`) that the register no longer uses; the surviving `R05` pair cite `entry 9` and `entry 12` in the same dead scheme.
 
-**Register → candidates: 39 of 63 entries are unreferenced.** `docs/DEVIATIONS.md` carries 63
-register ids; 39 are named by no candidate in the working tree. Three of them are **D3**:
+**Register → candidates: 39 of 63 entries are unreferenced.** `docs/DEVIATIONS.md` carries 63 register ids; 39 are named by no candidate in the working tree. Three of them are **D3**:
 
 | entry                               | class  | candidate that carried it                        |
 | ----------------------------------- | ------ | ------------------------------------------------ |
@@ -306,133 +230,71 @@ register ids; 39 are named by no candidate in the working tree. Three of them ar
 | `R16-dating-misdescription`         | **D3** | `R16_v87_dating_algorithm.md` — deleted          |
 | `R17-eco-l1-arm-identity`           | **D3** | never had one — a genuine gap, not a T4 casualty |
 
-A live D3 with no camera-ready candidate is a contradiction the register admits and the directory
-cannot fix at acceptance.
+A live D3 with no camera-ready candidate is a contradiction the register admits and the directory cannot fix at acceptance.
 
 ---
 
 ## 4. Recommendation, per LOST or REWRITTEN candidate
 
-**Global recommendation.** Do not commit the working tree as it stands. The refactoring is a net
-subtraction: it removed 43 verified manuscript anchors and 30 arguments, added 13 macro-only files,
-and left the corpus unable to satisfy STEP 4 on 26 of 43 files. `git show HEAD:…` reverses any part
-of it at zero cost for as long as the change stays uncommitted.
+**Global recommendation.** Do not commit the working tree as it stands. The refactoring is a net subtraction: it removed 43 verified manuscript anchors and 30 arguments, added 13 macro-only files, and left the corpus unable to satisfy STEP 4 on 26 of 43 files. `git show HEAD:…` reverses any part of it at zero cost for as long as the change stays uncommitted.
 
-The six numbered items below are the ones where a *finding* — not merely a numeral — was inverted,
-dropped, or is inconsistent with a live register entry. They are ordered by severity.
+The six numbered items below are the ones where a *finding* — not merely a numeral — was inverted, dropped, or is inconsistent with a live register entry. They are ordered by severity.
 
 ### 4.1 R02b / R02c — the Ljung–Box i.i.d.-arm clause: **the correction was reversed**
 
-Two deleted candidates, `R02b_R02c_v87_ljungbox_clause.md` (register entry 3) and
-`R02b_v87_iid_arm_rejection.md` (D3), both target the L278 clause
+Two deleted candidates, `R02b_R02c_v87_ljungbox_clause.md` (register entry 3) and `R02b_v87_iid_arm_rejection.md` (D3), both target the L278 clause
 
 > already over-reject on the i.i.d.\ arm ($9.2\%$), where $t_7$ innovations deprive
 > $\varepsilon_t^2$ of a fourth moment and the $\chi^2$ approximation fails
 
-and both correct the same thing: **the mechanism is wrong independently of any sample.** Ljung–Box
-on `Y = eps_t^2` needs `E[eps^4] < inf`, hence `nu > 4`, which holds at `t_7`. The moment that
-fails below `nu = 8` is `E[eps^8]`. `R02b_v87_iid_arm_rejection.md` states this in terms; the joint
-candidate places the over-rejection "beyond the sixth-moment boundary … where the autocovariance
-summand loses its third absolute moment".
+and both correct the same thing: **the mechanism is wrong independently of any sample.** Ljung–Box on `Y = eps_t^2` needs `E[eps^4] < inf`, hence `nu > 4`, which holds at `t_7`. The moment that fails below `nu = 8` is `E[eps^8]`. `R02b_v87_iid_arm_rejection.md` states this in terms; the joint candidate places the over-rejection "beyond the sixth-moment boundary … where the autocovariance summand loses its third absolute moment".
 
-The two surviving files, `R02b_v87_iid_mechanism.md` and `R02c_v87_horizon_sweep.md`, propose a
-replacement that reads
+The two surviving files, `R02b_v87_iid_mechanism.md` and `R02c_v87_horizon_sweep.md`, propose a replacement that reads
 
 > `already over-reject on the i.i.d. arm (5.8% at nu=7), where Student's t innovations with nu <= 6
 > deprive eps_t^2 of a fourth moment and the chi^2 approximation fails`
 
-which **restates the falsified fourth-moment mechanism** and merely moves the threshold to
-`nu <= 6`. Their anchors do not exist in the manuscript (§2.2), so neither could be applied in any
-case. Both files are byte-identical to `HEAD`: the defect predates the refactoring, and deleting the
-two candidates that corrected it is what makes it load-bearing.
+which **restates the falsified fourth-moment mechanism** and merely moves the threshold to `nu <= 6`. Their anchors do not exist in the manuscript (§2.2), so neither could be applied in any case. Both files are byte-identical to `HEAD`: the defect predates the refactoring, and deleting the two candidates that corrected it is what makes it load-bearing.
 
-**Recommendation.** Restore `R02b_v87_iid_arm_rejection.md` and `R02b_R02c_v87_ljungbox_clause.md`
-from `HEAD`; repair the one anchor of the former (`(9.2\%)` → `($9.2\%$)`, then unique). Repair or
-withdraw the mechanism sentence in `R02b_v87_iid_mechanism.md` and `R02c_v87_horizon_sweep.md`;
-their `nu <= 6` fourth-moment claim must not reach the camera-ready.
+**Recommendation.** Restore `R02b_v87_iid_arm_rejection.md` and `R02b_R02c_v87_ljungbox_clause.md` from `HEAD`; repair the one anchor of the former (`(9.2\%)` → `($9.2\%$)`, then unique). Repair or withdraw the mechanism sentence in `R02b_v87_iid_mechanism.md` and `R02c_v87_horizon_sweep.md`; their `nu <= 6` fourth-moment claim must not reach the camera-ready.
 
-**Status: executed.** Both files are present in the working tree with `grep -Fc` = 1 anchors. The
-finding is now registered as `R02b-iid-arm-rejection`, Class A, **D3**, in `docs/DEVIATIONS.md`, and
-carried as a D3 row in `docs/audits/AUDIT_R02b.md`. The two files, and `R02c_v87_horizon_sweep.md`,
-cite that identifier and are no longer marked `NO DEVIATION`. The `nu <= 6` fourth-moment
-replacement in `R02c_v87_horizon_sweep.md` has been withdrawn: the fourth moment is finite for every
-`nu > 4`, so it discriminates nothing, and the replacement now states the boundary without naming a
-cause. Neither the audit nor any candidate identifies the mechanism.
+**Status: executed.** Both files are present in the working tree with `grep -Fc` = 1 anchors. The finding is now registered as `R02b-iid-arm-rejection`, Class A, **D3**, in `docs/DEVIATIONS.md`, and carried as a D3 row in `docs/audits/AUDIT_R02b.md`. The two files, and `R02c_v87_horizon_sweep.md`, cite that identifier and are no longer marked `NO DEVIATION`. The `nu <= 6` fourth-moment replacement in `R02c_v87_horizon_sweep.md` has been withdrawn: the fourth moment is finite for every `nu > 4`, so it discriminates nothing, and the replacement now states the boundary without naming a cause. Neither the audit nor any candidate identifies the mechanism.
 
 ### 4.2 R03 — the StrictCUSUM nominal-level descriptor: **the edit is gone, the register entry is live**
 
-`R03_v87_cusum_nominal_level.md` carried a verified anchor at L171 and the finding that
-`lambda_iid = 65` delivers **2.0 %** under exact i.i.d. noise (Wilson `[0.9, 4.3] %`, excluding 5 %),
-so the manuscript's descriptor "calibrated to a nominal $5\%$ under IID noise" is inaccurate for the
-CUSUM while remaining accurate for ADWIN (5.0 %, `[3.1, 8.1] %`).
+`R03_v87_cusum_nominal_level.md` carried a verified anchor at L171 and the finding that `lambda_iid = 65` delivers **2.0 %** under exact i.i.d. noise (Wilson `[0.9, 4.3] %`, excluding 5 %), so the manuscript's descriptor "calibrated to a nominal $5\%$ under IID noise" is inaccurate for the CUSUM while remaining accurate for ADWIN (5.0 %, `[3.1, 8.1] %`).
 
-`R03_v87_fpr_explosion.md` carries the *same numbers* as macros — `\RThreeCusumFprIid{2.0\%}`,
-`\RThreeCusumFprIidWilsonLow{0.9\%}`, `\RThreeCusumFprIidWilsonHigh{4.3\%}` — and then states
-"**Manuscript Changes Required: None** at published precision" and "All qualitative claims
-preserved". `docs/DEVIATIONS.md` carries `R03-cusum-nominal-level`. The register says the descriptor
-is a deviation; the only surviving R03 candidate says no manuscript change is needed.
+`R03_v87_fpr_explosion.md` carries the *same numbers* as macros — `\RThreeCusumFprIid{2.0\%}`, `\RThreeCusumFprIidWilsonLow{0.9\%}`, `\RThreeCusumFprIidWilsonHigh{4.3\%}` — and then states "**Manuscript Changes Required: None** at published precision" and "All qualitative claims preserved". `docs/DEVIATIONS.md` carries `R03-cusum-nominal-level`. The register says the descriptor is a deviation; the only surviving R03 candidate says no manuscript change is needed.
 
-**Recommendation.** Restore `R03_v87_cusum_nominal_level.md` from `HEAD` (anchor verified, no
-repair needed). Amend `R03_v87_fpr_explosion.md`'s "Manuscript Changes Required: None", or scope it
-explicitly to the macro layer.
+**Recommendation.** Restore `R03_v87_cusum_nominal_level.md` from `HEAD` (anchor verified, no repair needed). Amend `R03_v87_fpr_explosion.md`'s "Manuscript Changes Required: None", or scope it explicitly to the macro layer.
 
 ### 4.3 R08 — the operator and the delivered level: **a D3 correction replaced by a D2 restatement**
 
-`R08_v87_delivered_level.md` carried two verified anchors (L241 and its footnote) and the finding
-that the weak comparison the footnote declares delivers `5.1021 %` at `lambda* = 11.4` — **above**
-the nominal level the selection rule promises to stay at or below — established by an
-absorbing-chain dynamic program that consumes no entropy and carries no sampling interval. The
-register carries this as `R08-delivered-level-above-nominal`, Class A, **D3**, with the same exact
-value.
+`R08_v87_delivered_level.md` carried two verified anchors (L241 and its footnote) and the finding that the weak comparison the footnote declares delivers `5.1021 %` at `lambda* = 11.4` — **above** the nominal level the selection rule promises to stay at or below — established by an absorbing-chain dynamic program that consumes no entropy and carries no sampling interval. The register carries this as `R08-delivered-level-above-nominal`, Class A, **D3**, with the same exact value.
 
-`R08_v87_discrete_null_law.md` proposes no manuscript edit, classifies the L241 levels as **D2**,
-and introduces `\REightOperatorDelta{0.76}` — the strict-minus-weak gap — while stating that "both
-regenerated levels still bracket 5%, preserving the qualitative claim". The D3 the register still
-carries is not mentioned.
+`R08_v87_discrete_null_law.md` proposes no manuscript edit, classifies the L241 levels as **D2**, and introduces `\REightOperatorDelta{0.76}` — the strict-minus-weak gap — while stating that "both regenerated levels still bracket 5%, preserving the qualitative claim". The D3 the register still carries is not mentioned.
 
-`R08_v87_lattice_exact_basis.md` and `R08_v87_whiteness_identity.md`, both `NO DEVIATION`
-clarifications on the same two sites, are gone with their anchors.
+`R08_v87_lattice_exact_basis.md` and `R08_v87_whiteness_identity.md`, both `NO DEVIATION` clarifications on the same two sites, are gone with their anchors.
 
-**Recommendation.** Restore `R08_v87_delivered_level.md`, `R08_v87_lattice_exact_basis.md`,
-`R08_v87_whiteness_identity.md` and `R08_v87_adverse_numerals.md` from `HEAD` — all nine of their
-anchors verify at 1. Keep `R08_v87_discrete_null_law.md`
-and `R08_v87_adverse_direction.md` as the macro layer and give them the STEP 4 header; they do not
-substitute for a D3 correction and must not be read as closing it.
+**Recommendation.** Restore `R08_v87_delivered_level.md`, `R08_v87_lattice_exact_basis.md`, `R08_v87_whiteness_identity.md` and `R08_v87_adverse_numerals.md` from `HEAD` — all nine of their anchors verify at 1. Keep `R08_v87_discrete_null_law.md` and `R08_v87_adverse_direction.md` as the macro layer and give them the STEP 4 header; they do not substitute for a D3 correction and must not be read as closing it.
 
 ### 4.4 R13 — the operating points
 
-`R13_v87_operating_points.md` carried two verified anchors and the finding that L331 prints three
-numerals without naming their calibration while calling a *different* calibration "the matched
-operating point". `R13_v87_oracle_ceiling.md` quotes the same clause, produces verdict macros for
-it, and concludes "the qualitative claims are fully preserved" at D0.
+`R13_v87_operating_points.md` carried two verified anchors and the finding that L331 prints three numerals without naming their calibration while calling a *different* calibration "the matched operating point". `R13_v87_oracle_ceiling.md` quotes the same clause, produces verdict macros for it, and concludes "the qualitative claims are fully preserved" at D0.
 
-**Recommendation.** Restore `R13_v87_operating_points.md` and `R13_v87_frozen_null_scope.md` (LOST)
-from `HEAD`. The verdict macros in `R13_v87_oracle_ceiling.md` are compatible with both and need no
-change.
+**Recommendation.** Restore `R13_v87_operating_points.md` and `R13_v87_frozen_null_scope.md` (LOST) from `HEAD`. The verdict macros in `R13_v87_oracle_ceiling.md` are compatible with both and need no change.
 
 ### 4.5 R17 — the warm-up restoration scope: **a clarification inverted into a corroboration**
 
-`R17_v87_warmup_restoration_scope.md` was a `NO DEVIATION` clarification: "the level is restored
-from $n = 500$ onward" is stated without conditioning on the leverage and rests on an interval
-rather than on a point. `R17_v87_econometric_baseline.md` addresses the same sentence and concludes
-the opposite — "**corroborating** 'the level is restored from n = 500 onward'. The Wilson 95% CI at
-n=500 [4.2%, 11.4%] contains the nominal 5% level" — which is the same interval argument used to
-support the claim instead of to qualify it, at a regenerated `7.0 %` against the printed `3.0 %`.
+`R17_v87_warmup_restoration_scope.md` was a `NO DEVIATION` clarification: "the level is restored from $n = 500$ onward" is stated without conditioning on the leverage and rests on an interval rather than on a point. `R17_v87_econometric_baseline.md` addresses the same sentence and concludes the opposite — "**corroborating** 'the level is restored from n = 500 onward'. The Wilson 95% CI at n=500 [4.2%, 11.4%] contains the nominal 5% level" — which is the same interval argument used to support the claim instead of to qualify it, at a regenerated `7.0 %` against the printed `3.0 %`.
 
-`R17_v87_persistence_collapse_mechanism.md` (corner solution at the optimiser's bound) and
-`R17_v87_warmup_resolution.md` (200 streams; min–max over four cells) are LOST outright.
+`R17_v87_persistence_collapse_mechanism.md` (corner solution at the optimiser's bound) and `R17_v87_warmup_resolution.md` (200 streams; min–max over four cells) are LOST outright.
 
-**Recommendation.** Restore all three R17 candidates from `HEAD`. Reconcile
-`R17_v87_econometric_baseline.md`'s corroboration paragraph against them before either is applied.
+**Recommendation.** Restore all three R17 candidates from `HEAD`. Reconcile `R17_v87_econometric_baseline.md`'s corroboration paragraph against them before either is applied.
 
 ### 4.6 R16 — the dating algorithm: **a live D3 with no candidate**
 
-`R16_v87_dating_algorithm.md` (LOST) carried a verified 250-character anchor at L329 and the
-finding behind `R16-dating-misdescription` — Class A, **D3**: strict Pagan–Sossounov yields 48
-phases, not the 66 the sentence claims; the 66 come from a Lunde–Timmermann substitution on SPY
-alone. `R16_v87_regime_census.md` addresses L329 only through the floor-fraction envelope (D2) and
-never mentions the dating algorithm. `R16_v87_boundary_sensitivity.md` (LOST, `R16-boundary-sensitivity`
-live) is likewise unaddressed.
+`R16_v87_dating_algorithm.md` (LOST) carried a verified 250-character anchor at L329 and the finding behind `R16-dating-misdescription` — Class A, **D3**: strict Pagan–Sossounov yields 48 phases, not the 66 the sentence claims; the 66 come from a Lunde–Timmermann substitution on SPY alone. `R16_v87_regime_census.md` addresses L329 only through the floor-fraction envelope (D2) and never mentions the dating algorithm. `R16_v87_boundary_sensitivity.md` (LOST, `R16-boundary-sensitivity` live) is likewise unaddressed.
 
 **Recommendation.** Restore both R16 candidates from `HEAD`.
 
@@ -454,11 +316,9 @@ live) is likewise unaddressed.
 ### 4.8 Two structural recommendations
 
 1. **Fix one marker dialect.** Six are in use. `<<< SEARCH` / `=== REPLACE WITH >>>` /
-   `>>> END BLOCK` is the only one that survives the refactoring intact and is machine-parseable;
-   adopt it and convert the rest.
+   `>>> END BLOCK` is the only one that survives the refactoring intact and is machine-parseable; adopt it and convert the rest.
 2. **Add the STEP 4 header to the 26 macro-genre files.** They are legitimate camera-ready
-   artefacts, but without `Trigger` and `Register entry` they cannot be sorted into either family
-   and cannot be audited at acceptance.
+   artefacts, but without `Trigger` and `Register entry` they cannot be sorted into either family and cannot be audited at acceptance.
 
 ---
 
@@ -466,41 +326,14 @@ live) is likewise unaddressed.
 
 **Created.** Family `NO DEVIATION — clarification only`, no register entry.
 
-**Correction to the task's premise.** The file was **not** "decided and never written": a 34-line
-version exists in `HEAD` and is one of the 30 deleted files (§1.3). It was authored fresh here
-rather than restored, per T4's "restore no file", and the `HEAD` version is available for comparison
-at `git show HEAD:docs/camera_ready_candidates/R14_v87_synthetic_control_strength.md`.
-Because the path exists in `HEAD`, the new file registers in `git status` as `M`, not as an
-untracked add: `git diff HEAD` shows the `HEAD` body replaced in full, which is what
-distinguishes an authored file from a restored one.
+**Correction to the task's premise.** The file was **not** "decided and never written": a 34-line version exists in `HEAD` and is one of the 30 deleted files (§1.3). It was authored fresh here rather than restored, per T4's "restore no file", and the `HEAD` version is available for comparison at `git show HEAD:docs/camera_ready_candidates/R14_v87_synthetic_control_strength.md`. Because the path exists in `HEAD`, the new file registers in `git status` as `M`, not as an untracked add: `git diff HEAD` shows the `HEAD` body replaced in full, which is what distinguishes an authored file from a restored one.
 
-**Figures.** Taken from `docs/audits/AUDIT_R14.md` §1: Synth_BTC mean ratio, printed `1.06`,
-regenerated `1.041041514153539`, class **D2**; minimum `0.98` → `0.9544910179640719`; maximum
-`1.14` → `1.2384142067139186`. §6.2 supplies the bootstrap design (paired moving-block over onsets,
-block length `24`, `B = 2000`, one resampled index vector shared by both arms and all seven
-magnitudes) and the reason the statistic carries a bootstrap envelope and no Wilson interval.
+**Figures.** Taken from `docs/audits/AUDIT_R14.md` §1: Synth_BTC mean ratio, printed `1.06`, regenerated `1.041041514153539`, class **D2**; minimum `0.98` → `0.9544910179640719`; maximum `1.14` → `1.2384142067139186`. §6.2 supplies the bootstrap design (paired moving-block over onsets, block length `24`, `B = 2000`, one resampled index vector shared by both arms and all seven magnitudes) and the reason the statistic carries a bootstrap envelope and no Wilson interval.
 
-**One figure is not in the audit.** `AUDIT_R14.md` prints the bootstrap interval for **Synth_ETH**
-only. The **Synth_BTC** interval — `[0.9792954429533721, 1.068777876438032]`, three of seven
-magnitudes below parity — is in `logs/R14_crypto_isofpr/exp_R14_crypto_isofpr.log` lines 257, 261
-and 263, which `AUDIT_R14.md` §1 cites for the adjacent rows. The candidate sources it there
-explicitly. **`AUDIT_R14.md` §1 should gain that row**; it is the quantity on which the whole
-clarification turns.
+**One figure is not in the audit.** `AUDIT_R14.md` prints the bootstrap interval for **Synth_ETH** only. The **Synth_BTC** interval — `[0.9792954429533721, 1.068777876438032]`, three of seven magnitudes below parity — is in `logs/R14_crypto_isofpr/exp_R14_crypto_isofpr.log` lines 257, 261 and 263, which `AUDIT_R14.md` §1 cites for the adjacent rows. The candidate sources it there explicitly. **`AUDIT_R14.md` §1 should gain that row**; it is the quantity on which the whole clarification turns.
 
-**Anchor.** `reproducing the light-tailed Pitman penalty on real machinery` — `grep -Fc` = **1**
-against `REFACTORING_COMMON/articleB_whitening_v87.tex`. Chosen in preference to the `HEAD`
-version's `inverts the ordering to \textsc{Eco-L1}-faster`, which is also unique but is a **strict
-substring** of the string `R14_v87_synthetic_control_numerals.md` searches — the two would not
-commute, and that file's own header claims disjointness it does not have. The anchor used here is
-disjoint from both sibling candidates and the three edits commute.
+**Anchor.** `reproducing the light-tailed Pitman penalty on real machinery` — `grep -Fc` = **1** against `REFACTORING_COMMON/articleB_whitening_v87.tex`. Chosen in preference to the `HEAD` version's `inverts the ordering to \textsc{Eco-L1}-faster`, which is also unique but is a **strict substring** of the string `R14_v87_synthetic_control_numerals.md` searches — the two would not commute, and that file's own header claims disjointness it does not have. The anchor used here is disjoint from both sibling candidates and the three edits commute.
 
-**Proposed clause.** The replacement keeps the claim and every printed numeral and appends:
-"though a paired moving-block bootstrap over onsets puts the mean's $95\%$ interval at
-$[0.98, 1.07]$, so the inversion is a point-estimate ordering and not an interval that excludes
-parity."
+**Proposed clause.** The replacement keeps the claim and every printed numeral and appends: "though a paired moving-block bootstrap over onsets puts the mean's $95\%$ interval at $[0.98, 1.07]$, so the inversion is a point-estimate ordering and not an interval that excludes parity."
 
-**Why no register entry.** The falsification condition was fixed before the run — the interval of
-the regenerated mean would have to lie entirely below `1` (`exp_R14_crypto_isofpr.log:259`) — and
-is not met (`:261`). The interval also covers the published `1.06` (`:263`), so the two campaigns do
-not disagree. Nothing printed at L345 is false; the formulation is true and incomplete, which is
-the clarification family by definition.
+**Why no register entry.** The falsification condition was fixed before the run — the interval of the regenerated mean would have to lie entirely below `1` (`exp_R14_crypto_isofpr.log:259`) — and is not met (`:261`). The interval also covers the published `1.06` (`:263`), so the two campaigns do not disagree. Nothing printed at L345 is false; the formulation is true and incomplete, which is the clarification family by definition.

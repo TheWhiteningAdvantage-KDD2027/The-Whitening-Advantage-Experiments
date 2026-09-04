@@ -25,76 +25,40 @@ All deviations are D2-class: numerical shifts at printed precision. No qualitati
 ## 2. Controls
 
 ### Shared-realisation premise
-Tests that each row's columns are one realisation read at several thresholds (no nesting violations).
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: CUSUM = 0, ADWIN = 0 over 6000 and 6000 streams (line 22).
-Verdict: PASS. Zero violations means the column ordering is a deterministic identity.
+Tests that each row's columns are one realisation read at several thresholds (no nesting violations). Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: CUSUM = 0, ADWIN = 0 over 6000 and 6000 streams (line 22). Verdict: PASS. Zero violations means the column ordering is a deterministic identity.
 
 ### Cardinality check
-Tests that both grid files carry 20 rows.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: both grid files carry 20 rows (line 21).
-Verdict: PASS.
+Tests that both grid files carry 20 rows. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: both grid files carry 20 rows (line 21). Verdict: PASS.
 
 ### Consistency check (threshold ordering)
-Tests that threshold ordering holds on all 20 rows of both files.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: holds on all 20 rows (line 23).
-Verdict: PASS.
+Tests that threshold ordering holds on all 20 rows of both files. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: holds on all 20 rows (line 23). Verdict: PASS.
 
 ### Monotonicity check beyond Gamma = 6.0
-Tests monotonicity of FPR_raw beyond Gamma = 6.0.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: mechanism-derived bound = -0.10997 (SE_diff = 0.03373, z_bonf = 3.261 at family-wise alpha = 0.01); most negative observed difference = +0.000000; Spearman rho = 0.9974 (p = 8.165e-21) (line 24).
-Verdict: PASS.
+Tests monotonicity of FPR_raw beyond Gamma = 6.0. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: mechanism-derived bound = -0.10997 (SE_diff = 0.03373, z_bonf = 3.261 at family-wise alpha = 0.01); most negative observed difference = +0.000000; Spearman rho = 0.9974 (p = 8.165e-21) (line 24). Verdict: PASS.
 
 ### Extremal criterion [min FPR_raw over Gamma > 20]
-Tests that min FPR_raw over Gamma > 20 does not breach threshold 0.76.
-Trigger probability under its own null hypothesis: 0.255 for 16 independent grid points (upper bound under CRN) at observed aggregate rate 0.807083 (line 28).
-Realised margin: observed 0.743333 at Gamma = 22.7778 against threshold 0.76.
-Verdict: BREACHED, non-blocking.
+Tests that min FPR_raw over Gamma > 20 does not breach threshold 0.76. Trigger probability under its own null hypothesis: 0.255 for 16 independent grid points (upper bound under CRN) at observed aggregate rate 0.807083 (line 28). Realised margin: observed 0.743333 at Gamma = 22.7778 against threshold 0.76. Verdict: BREACHED, non-blocking.
 
 ### Extremal criterion [max FPR_sqrt over Gamma > 20]
-Tests that max FPR_sqrt over Gamma > 20 does not breach threshold 0.35.
-Trigger probability under its own null hypothesis: 0.301 for 16 independent grid points (upper bound under CRN) at observed aggregate rate 0.297917 (line 29).
-Realised margin: observed 0.310000 at Gamma = 75.5556 against threshold 0.35.
-Verdict: not breached.
+Tests that max FPR_sqrt over Gamma > 20 does not breach threshold 0.35. Trigger probability under its own null hypothesis: 0.301 for 16 independent grid points (upper bound under CRN) at observed aggregate rate 0.297917 (line 29). Realised margin: observed 0.310000 at Gamma = 75.5556 against threshold 0.35. Verdict: not breached.
 
 ### Extremal criterion [max FPR_recalib over the whole grid]
-Tests that max FPR_recalib over the whole grid does not breach threshold 0.13.
-Trigger probability under its own null hypothesis: 0.333 for 20 independent grid points (upper bound under CRN) at observed aggregate rate 0.095500 (line 30).
-Realised margin: observed 0.110000 at Gamma = 91.1111 against threshold 0.13.
-Verdict: not breached.
+Tests that max FPR_recalib over the whole grid does not breach threshold 0.13. Trigger probability under its own null hypothesis: 0.333 for 20 independent grid points (upper bound under CRN) at observed aggregate rate 0.095500 (line 30). Realised margin: observed 0.110000 at Gamma = 91.1111 against threshold 0.13. Verdict: not breached.
 
 ### Aggregate certification gate [mean FPR_raw over Gamma > 20]
-Tests that mean FPR_raw over Gamma > 20 >= 0.76.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: 0.807083 over n = 4800; SE_pooled = 0.00570, SE_crn = 0.02278; (+0.047083 above 0.76, +8.3 pooled SE, +2.1 CRN SE) (line 25).
-Verdict: PASS.
+Tests that mean FPR_raw over Gamma > 20 >= 0.76. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: 0.807083 over n = 4800; SE_pooled = 0.00570, SE_crn = 0.02278; (+0.047083 above 0.76, +8.3 pooled SE, +2.1 CRN SE) (line 25). Verdict: PASS.
 
 ### Aggregate certification gate [mean FPR_sqrt over Gamma > 20]
-Tests that mean FPR_sqrt over Gamma > 20 is in [0.25, 0.35].
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: 0.297917 over n = 4800; SE_pooled = 0.00660, SE_crn = 0.02640; (+0.047917 above 0.25, +7.3 pooled SE, +1.8 CRN SE) (+0.052083 below 0.35, +7.9 pooled SE, +2.0 CRN SE) (line 26).
-Verdict: PASS.
+Tests that mean FPR_sqrt over Gamma > 20 is in [0.25, 0.35]. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: 0.297917 over n = 4800; SE_pooled = 0.00660, SE_crn = 0.02640; (+0.047917 above 0.25, +7.3 pooled SE, +1.8 CRN SE) (+0.052083 below 0.35, +7.9 pooled SE, +2.0 CRN SE) (line 26). Verdict: PASS.
 
 ### Aggregate certification gate [mean FPR_recalib over the whole grid]
-Tests that mean FPR_recalib over the whole grid <= 0.13.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: 0.095500 over n = 6000; SE_pooled = 0.00379, SE_crn = 0.01697; (+0.034500 below 0.13, +9.1 pooled SE, +2.0 CRN SE) (line 27).
-Verdict: PASS.
+Tests that mean FPR_recalib over the whole grid <= 0.13. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: 0.095500 over n = 6000; SE_pooled = 0.00379, SE_crn = 0.01697; (+0.034500 below 0.13, +9.1 pooled SE, +2.0 CRN SE) (line 27). Verdict: PASS.
 
 ### i.i.d. calibration at Gamma = 1: StrictCUSUM
-Tests that StrictCUSUM FPR at Gamma = 1 contains the 5% nominal level.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: FPR = 0.020000 (6/300), Wilson 95% [0.009198, 0.042940], contains the 5% nominal level: False (line 32).
-Verdict: FAIL (does not contain nominal level).
+Tests that StrictCUSUM FPR at Gamma = 1 contains the 5% nominal level. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: FPR = 0.020000 (6/300), Wilson 95% [0.009198, 0.042940], contains the 5% nominal level: False (line 32). Verdict: FAIL (does not contain nominal level).
 
 ### i.i.d. calibration at Gamma = 1: ADWIN
-Tests that ADWIN FPR at Gamma = 1 contains the 5% nominal level.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: FPR = 0.050000 (15/300), Wilson 95% [0.030532, 0.080847], contains the 5% nominal level: True (line 33).
-Verdict: PASS.
+Tests that ADWIN FPR at Gamma = 1 contains the 5% nominal level. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: FPR = 0.050000 (15/300), Wilson 95% [0.030532, 0.080847], contains the 5% nominal level: True (line 33). Verdict: PASS.
 
 ## 3. Test suite
 

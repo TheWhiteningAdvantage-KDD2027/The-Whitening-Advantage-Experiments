@@ -19,15 +19,11 @@
 | Cost                | +11 words against the submitted caption                                                   |
 | Blocking dependency | none — the claim the caption makes is flatness, and flatness holds                        |
 
-**Why this is not applied now.** The manuscript is under review and cannot be edited. The
-deviation inventory is not closed.
+**Why this is not applied now.** The manuscript is under review and cannot be edited. The deviation inventory is not closed.
 
-**What is being corrected.** Not a value — all four reproduce — but the fact that the four
-values printed side by side are not mutually comparable, because the submitted script gave the
-CUSUM one onset convention and the other four detectors another.
+**What is being corrected.** Not a value — all four reproduce — but the fact that the four values printed side by side are not mutually comparable, because the submitted script gave the CUSUM one onset convention and the other four detectors another.
 
-`worker_exp_b_h1` builds two streams. The CUSUM receives the post-onset stream alone, with its
-statistic at zero:
+`worker_exp_b_h1` builds two streams. The CUSUM receives the post-onset stream alone, with its statistic at zero:
 
 ```python
 eps_shifted_only = eps[2000:].copy() + Delta                     # l.308
@@ -44,16 +40,9 @@ al_ddm   = run_river_detector("DDM",   e_bin_full, onset=2000)               # l
 al_eddm  = run_river_detector("EDDM",  e_bin_full, onset=2000)               # l.321
 ```
 
-The difference is not cosmetic. Under `warmstart` the detector carries 2,000 steps of
-pre-onset statistic into the monitored window: `strict_pht` tests
-`if m - M > threshold and t >= onset`, so a threshold crossing during warm-up is **not
-returned and does not reset the statistic**, and the detector can cross again at `t = onset`
-and return a delay of zero. R11 measures how often that happens — the `n_preonset_leak` column,
-counted per detector and per grid point — and it is not rare.
+The difference is not cosmetic. Under `warmstart` the detector carries 2,000 steps of pre-onset statistic into the monitored window: `strict_pht` tests `if m - M > threshold and t >= onset`, so a threshold crossing during warm-up is **not returned and does not reset the statistic**, and the detector can cross again at `t = onset` and return a delay of zero. R11 measures how often that happens — the `n_preonset_leak` column, counted per detector and per grid point — and it is not rare.
 
-**R11 runs all three arms and the finding is the contrast between them.** `reset` and
-`warmstart` put every detector on one convention; `as_submitted` reproduces the per-detector
-mixture above, and it is the only arm that reproduces the caption's four numerals.
+**R11 runs all three arms and the finding is the contrast between them.** `reset` and `warmstart` put every detector on one convention; `as_submitted` reproduces the per-detector mixture above, and it is the only arm that reproduces the caption's four numerals.
 
 | detector | published | `as_submitted` | its convention there | `reset` | `warmstart` |
 | -------- | --------- | -------------- | -------------------- | ------- | ----------- |
@@ -62,19 +51,11 @@ mixture above, and it is the only arm that reproduces the caption's four numeral
 | ADWIN    | ≈ 61      | idem           | `warmstart`          | —       | —           |
 | DDM      | ≈ 250     | idem           | `warmstart`          | —       | —           |
 
-*(the measured cells are in `docs/sections/R11.md`, which carries the same table filled; this
-file states the design fact, not the campaign's numbers)*
+*(the measured cells are in `docs/sections/R11.md`, which carries the same table filled; this file states the design fact, not the campaign's numbers)*
 
-**The consequence is quantified.** Placing the CUSUM and the PHT on the *same* convention
-reverses their published order, at a separation of many standard errors of the paired,
-seed-clustered difference. That does not falsify anything the manuscript says: the caption
-asserts flat delays, and the delays are flat; neither the caption nor the body asserts in words
-an ordering between detectors. What it establishes is that **a reader who compares the four
-numerals is comparing across two conventions**, and nothing in the caption says so.
+**The consequence is quantified.** Placing the CUSUM and the PHT on the *same* convention reverses their published order, at a separation of many standard errors of the paired, seed-clustered difference. That does not falsify anything the manuscript says: the caption asserts flat delays, and the delays are flat; neither the caption nor the body asserts in words an ordering between detectors. What it establishes is that **a reader who compares the four numerals is comparing across two conventions**, and nothing in the caption says so.
 
-**Verification of the search string.** The block below is quoted from
-`articleB_whitening_v87.tex` line 627 verbatim and occurs exactly once in the file. Verify once
-more before applying.
+**Verification of the search string.** The block below is quoted from `articleB_whitening_v87.tex` line 627 verbatim and occurs exactly once in the file. Verify once more before applying.
 
 <<< RECHERCHER
 ~~~~~~~~~latex
@@ -87,8 +68,4 @@ flat delays across CUSUM ($\approx 28.3$; monitored from the onset), PHT ($\appr
 ~~~~~~~~~
 >>> FIN DU BLOC
 
-**The alternative is to unify the convention rather than to declare it**, which would change all
-four numerals and require re-running the campaign. That is a larger edit than a camera-ready
-revision usually absorbs, and it is not what this candidate proposes; it is recorded here as the
-option the authors may prefer, with `R11_concept_add_vs_gamma.csv` supplying the numbers either
-unification would produce.
+**The alternative is to unify the convention rather than to declare it**, which would change all four numerals and require re-running the campaign. That is a larger edit than a camera-ready revision usually absorbs, and it is not what this candidate proposes; it is recorded here as the option the authors may prefer, with `R11_concept_add_vs_gamma.csv` supplying the numbers either unification would produce.

@@ -20,41 +20,24 @@ The single D1 deviation is the fourth-moment boundary Gamma: manuscript value 41
 ## 2. Controls
 
 ### Control (a): Specification check
-Tests that the Gamma grid, number of streams, nu parameter, c grid, task types, n steps, Ljung-Box lag, and nominal level match the specification in v87.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Verdict: Passed (line 11).
+Tests that the Gamma grid, number of streams, nu parameter, c grid, task types, n steps, Ljung-Box lag, and nominal level match the specification in v87. Trigger probability: NOT RECOVERABLE FROM THE LOG. Verdict: Passed (line 11).
 
 ### Control (b): Calibration of the pooled binary rejection with cluster-robust interval
-Tests that the pooled binary rejection rate covers the nominal level when the design variance (pairing) is accounted for. The cluster bootstrap interval resamples SEEDS, not streams.
-Trigger probability: 0.05 (nominal level).
-Realised margin: 0.020000 standard errors (half-width of cluster bootstrap interval [0.029231, 0.069231]).
-Verdict: Contains 0.05: True (GATING) — line 23.
+Tests that the pooled binary rejection rate covers the nominal level when the design variance (pairing) is accounted for. The cluster bootstrap interval resamples SEEDS, not streams. Trigger probability: 0.05 (nominal level). Realised margin: 0.020000 standard errors (half-width of cluster bootstrap interval [0.029231, 0.069231]). Verdict: Contains 0.05: True (GATING) — line 23.
 
 Note: The Wilson interval that assumes 1300 independent streams would read [0.037381, 0.060669], half-width 0.011644, understating by sqrt(design effect) = 1.7913. The per-Gamma family of 13 simultaneous 95% intervals fires at least once with probability 1 - 0.95^13 = 0.4867 under its own null, which preamble S4bis forbids. The 13 per-Gamma gates of the submitted script were therefore demoted from a gate to a reported measurement.
 
 ### Control (c): Squared-stream check
-Tests that the squared stream (p_data) rejects massively across the grid.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: Pooled rejection 0.927692 (1206/1300), with all Gamma >= 2.0 at 100% rejection.
-Verdict: Reported, with no assertion on any extremum (line 25).
+Tests that the squared stream (p_data) rejects massively across the grid. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: Pooled rejection 0.927692 (1206/1300), with all Gamma >= 2.0 at 100% rejection. Verdict: Reported, with no assertion on any extremum (line 25).
 
 ### Control (d): Task-boundary check
-Tests that saturated cells reach 100% rejection and the intermediate threshold is reported.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: binary c=0.0: 0.07, binary c=0.25: 0.44, binary c=0.5: 1.00, binary c=1.0: 1.00, continuous c=0.0: 1.00.
-Verdict: The three saturated cells [('binary', 0.5), ('binary', 1.0), ('continuous', 0.0)] all reach 1.0 (lines 27-28). The intermediate cell binary c = 0.25 at 0.44 is NOT CITED IN v87 and is kept as the only measurement of the transition.
+Tests that saturated cells reach 100% rejection and the intermediate threshold is reported. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: binary c=0.0: 0.07, binary c=0.25: 0.44, binary c=0.5: 1.00, binary c=1.0: 1.00, continuous c=0.0: 1.00. Verdict: The three saturated cells [('binary', 0.5), ('binary', 1.0), ('continuous', 0.0)] all reach 1.0 (lines 27-28). The intermediate cell binary c = 0.25 at 0.44 is NOT CITED IN v87 and is kept as the only measurement of the transition.
 
 ### Control (e): Median-task control
-Tests that the median task (binary c = 0) control covers the nominal level and documents its resolution limitation.
-Trigger probability: 0.05 (nominal level).
-Realised margin: Wilson 95% [0.034319, 0.137495], half-width 5.2 percentage points = 1.0 times the nominal level.
-Verdict: Contains 0.05: True. At N = 100 the half-width is 5.2 percentage points, so the control is consistent with whiteness rather than confirmatory. Every true rate from 3.4% to 13.7% is compatible with what was observed (lines 29-30).
+Tests that the median task (binary c = 0) control covers the nominal level and documents its resolution limitation. Trigger probability: 0.05 (nominal level). Realised margin: Wilson 95% [0.034319, 0.137495], half-width 5.2 percentage points = 1.0 times the nominal level. Verdict: Contains 0.05: True. At N = 100 the half-width is 5.2 percentage points, so the control is consistent with whiteness rather than confirmatory. Every true rate from 3.4% to 13.7% is compatible with what was observed (lines 29-30).
 
 ### Control (a): Cardinality check
-Tests that the cardinalities of the generated dataframes match the specification.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: R06_gamma_grid = 1300, R06_task_boundary = 500, R06_gamma_grid_independent_seeds = 1300.
-Verdict: Passed (line 31).
+Tests that the cardinalities of the generated dataframes match the specification. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: R06_gamma_grid = 1300, R06_task_boundary = 500, R06_gamma_grid_independent_seeds = 1300. Verdict: Passed (line 31).
 
 ## 3. Test suite
 

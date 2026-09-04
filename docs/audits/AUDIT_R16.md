@@ -39,66 +39,42 @@ The D3 row falsifies the qualitative claim in v87 L329 that a "retrospective mul
 ## 2. Controls
 
 ### C1 partition of the return series
-Tests that per ticker: phases are contiguous (end_date[k] == start_date[k+1]), sum(T_days) == idx(last end) - idx(first start), and no phase is dropped between the dating and the census.
-Trigger probability under its own null hypothesis: 0 under a correct implementation (deterministic).
-Realised margin: 0 trading days for all tickers on all arms.
-Verdict: PASS. Failure means the double counting survives, which is classified as a D3 on the 80% headline.
+Tests that per ticker: phases are contiguous (end_date[k] == start_date[k+1]), sum(T_days) == idx(last end) - idx(first start), and no phase is dropped between the dating and the census. Trigger probability under its own null hypothesis: 0 under a correct implementation (deterministic). Realised margin: 0 trading days for all tickers on all arms. Verdict: PASS. Failure means the double counting survives, which is classified as a D3 on the 80% headline.
 
 Source: logs/R16_regime_census/exp_R16_regime_census_a.log:61-73.
 
 ### C2 reconstruction of the published counts on the canonical arm
-Tests that the out-of-budget counts (53 for gamma=20 unconditional, 52 for gamma=20 sign, 64 for gamma=252 unconditional) reproduce against the witness.
-Trigger probability under its own null hypothesis: 0 under a correct port (deterministic).
-Realised margin: +0 phases for all three counts.
-Verdict: PASS. Portage checks, not targets: a displaced count is a deviation to classify, never a parameter to adjust.
+Tests that the out-of-budget counts (53 for gamma=20 unconditional, 52 for gamma=20 sign, 64 for gamma=252 unconditional) reproduce against the witness. Trigger probability under its own null hypothesis: 0 under a correct port (deterministic). Realised margin: +0 phases for all three counts. Verdict: PASS. Portage checks, not targets: a displaced count is a deviation to classify, never a parameter to adjust.
 
 Source: logs/R16_regime_census/exp_R16_regime_census_b.log:18-21.
 
 ### C3 the step of one
-Tests that sum(detectable_sign_g20) - sum(detectable_unc_g20) = 1, as v87 L329 describes.
-Trigger probability under its own null hypothesis: 0 (deterministic).
-Realised margin: the difference is exactly 1.
-Verdict: PASS on the count; the set behind the step spans 19 phases (10 detectable on the SIGN arm only and 9 on the UNCONDITIONAL arm only), not a single flipping phase. v87's sentence is true of the count and false of the set.
+Tests that sum(detectable_sign_g20) - sum(detectable_unc_g20) = 1, as v87 L329 describes. Trigger probability under its own null hypothesis: 0 (deterministic). Realised margin: the difference is exactly 1. Verdict: PASS on the count; the set behind the step spans 19 phases (10 detectable on the SIGN arm only and 9 on the UNCONDITIONAL arm only), not a single flipping phase. v87's sentence is true of the count and false of the set.
 
 Source: logs/R16_regime_census/exp_R16_regime_census_b.log:22-23,42-46.
 
 ### C4 boundary convention sensitivity
-Tests the number of phases that change detectability with the boundary convention.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: 3 of 66 phases change detectability, all 3 GAINING detectability under the post-onset convention; 0 lose it.
-Verdict: Not a gate; three flips in sixty-six is a measurement, not a failure. All boundary convention flips run in one direction only (gaining detectability under post-onset).
+Tests the number of phases that change detectability with the boundary convention. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: 3 of 66 phases change detectability, all 3 GAINING detectability under the post-onset convention; 0 lose it. Verdict: Not a gate; three flips in sixty-six is a measurement, not a failure. All boundary convention flips run in one direction only (gaining detectability under post-onset).
 
 Source: logs/R16_regime_census/exp_R16_regime_census_b.log:43-47.
 
 ### C5 degeneracy handling
-Tests that degeneracies on all arms are counted even at zero and handled correctly.
-Trigger probability under its own null hypothesis: 0 (deterministic).
-Realised margin: all degeneracy counts are 0 on canonical and strict_ps arms; on symmetric arm, q_phase_degenerate = 7, which are clipped to [1e-6, 1-1e-6] by compute_kl_sign before the Bernoulli divergence.
-Verdict: PASS. A non-finite sharpe or kl reaching a detectability flag counts the phase out of budget WITHOUT measurement, because NaN < T_days is False, and stops the run.
+Tests that degeneracies on all arms are counted even at zero and handled correctly. Trigger probability under its own null hypothesis: 0 (deterministic). Realised margin: all degeneracy counts are 0 on canonical and strict_ps arms; on symmetric arm, q_phase_degenerate = 7, which are clipped to [1e-6, 1-1e-6] by compute_kl_sign before the Bernoulli divergence. Verdict: PASS. A non-finite sharpe or kl reaching a detectability flag counts the phase out of budget WITHOUT measurement, because NaN < T_days is False, and stops the run.
 
 Source: logs/R16_regime_census/exp_R16_regime_census_a.log:45-46,52-53,59-60; logs/R16_regime_census/exp_R16_regime_census_b.log:14-17.
 
 ### C6 concordance of the two datings
-Tests turning-point agreement between Pagan-Sossounov and Lunde-Timmermann per ticker at tolerance ladder (0, 42, 84) trading days.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: Reported with Wilson intervals, DESCRIPTIVE ONLY. The figures compare the two ALGORITHMS on SPY's prices and are informative in that sense only. Pooled across tickers for description only: the four streams are not exchangeable and the pooled interval assumes an independence the turning points of one price series do not have.
-Verdict: Not a gate; two dating algorithms do not coincide, and a gate on their agreement would ring empty.
+Tests turning-point agreement between Pagan-Sossounov and Lunde-Timmermann per ticker at tolerance ladder (0, 42, 84) trading days. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: Reported with Wilson intervals, DESCRIPTIVE ONLY. The figures compare the two ALGORITHMS on SPY's prices and are informative in that sense only. Pooled across tickers for description only: the four streams are not exchangeable and the pooled interval assumes an independence the turning points of one price series do not have. Verdict: Not a gate; two dating algorithms do not coincide, and a gate on their agreement would ring empty.
 
 Source: logs/R16_regime_census/exp_R16_regime_census_a.log:22-37.
 
 ### C7 the example v87 L392 cites
-Tests that PFF 2020-03-18 log return = -0.18583434620279932 -> -18.6% at the manuscript's printed precision, and that it CLOSES phase 3 and is EXCLUDED from phase 4.
-Trigger probability under its own null hypothesis: 0 (deterministic).
-Realised margin: excluding it moves that phase's Sharpe 0.913 -> 1.905 and its floor 1810.7 -> 416.2 trading days, i.e. the outlier biases the floor UPWARD, exactly as L392 states.
-Verdict: PASS.
+Tests that PFF 2020-03-18 log return = -0.18583434620279932 -> -18.6% at the manuscript's printed precision, and that it CLOSES phase 3 and is EXCLUDED from phase 4. Trigger probability under its own null hypothesis: 0 (deterministic). Realised margin: excluding it moves that phase's Sharpe 0.913 -> 1.905 and its floor 1810.7 -> 416.2 trading days, i.e. the outlier biases the floor UPWARD, exactly as L392 states. Verdict: PASS.
 
 Source: logs/R16_regime_census/exp_R16_regime_census_a.log:74.
 
 ### C8 source identity
-Tests byte-identity of 7 primitives (the six dating and divergence routines against Priorite_16_regime_census.py, and the Wilson interval against exp_R02_whitening_ljungbox.py).
-Trigger probability under its own null hypothesis: 0 unless a copy has drifted.
-Realised margin: 7 primitives byte-identical (5696 characters compared).
-Verdict: PASS.
+Tests byte-identity of 7 primitives (the six dating and divergence routines against Priorite_16_regime_census.py, and the Wilson interval against exp_R02_whitening_ljungbox.py). Trigger probability under its own null hypothesis: 0 unless a copy has drifted. Realised margin: 7 primitives byte-identical (5696 characters compared). Verdict: PASS.
 
 Source: logs/R16_regime_census/exp_R16_regime_census_a.log:11.
 

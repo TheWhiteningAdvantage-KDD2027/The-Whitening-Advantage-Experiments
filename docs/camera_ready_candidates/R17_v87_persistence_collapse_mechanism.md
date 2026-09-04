@@ -22,9 +22,7 @@
 
 **Why this is not applied now.** The manuscript is under review and cannot be edited.
 
-**Nothing here is false.** The persistence does collapse from 0.85 to 0.62 at $n=250$, exactly as L341 states. However, the text attributes the collapse entirely 
-to finite-sample estimation variance. The per-fit measurement shows that 29% of the fits at that cell sit exactly on the optimiser's lower bound (`1e-6`, essentially 
-zero persistence, no GARCH at all). The collapse is therefore significantly driven by a corner solution of the optimiser.
+**Nothing here is false.** The persistence does collapse from 0.85 to 0.62 at $n=250$, exactly as L341 states. However, the text attributes the collapse entirely to finite-sample estimation variance. The per-fit measurement shows that 29% of the fits at that cell sit exactly on the optimiser's lower bound (`1e-6`, essentially zero persistence, no GARCH at all). The collapse is therefore significantly driven by a corner solution of the optimiser.
 
 ## Edit — `sec:misspecification` L341, specify the mechanism
 

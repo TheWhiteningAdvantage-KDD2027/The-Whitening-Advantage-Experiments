@@ -21,44 +21,28 @@ Count by severity: D0: 8, D2: 3, D3: 0.
 ## 2. Controls
 
 ### C1 — Pairwise-reliable grids re-derivation
-Tests that the pairwise-reliable grids re-derive identically from R14_crypto_isofpr_race.csv, and every aggregate above was taken over them.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Verdict: Passed (log line 288).
+Tests that the pairwise-reliable grids re-derive identically from R14_crypto_isofpr_race.csv, and every aggregate above was taken over them. Trigger probability: NOT RECOVERABLE FROM THE LOG. Verdict: Passed (log line 288).
 
 ### C2 — iso-FPR
-Tests that both arms realize one false-alarm rate on every published source. The realized FPR on Real_BTC is 5/106 = 0.04716981132075472; on Real_ETH, Concept lambda* = 7.799994544332583 realizes 4/72 = 0.05555555555555555, Eco lambda* = 39.81696944588852 realizes 3/72 = 0.041666666666666664. 
-Trigger probability: For BTC, the bisection tolerance admits exactly one count (5) at 106 onsets, so the two arms are forced onto the same rate (0). For ETH, no integer count satisfies the tolerance, so agreement is an outcome of dynamics (NOT RECOVERABLE FROM THE LOG).
-Verdict: Passed for Real_BTC and Synth_BTC (exact match); Real_ETH arms differ by 0.0138889 (log lines 28, 146, 169).
+Tests that both arms realize one false-alarm rate on every published source. The realized FPR on Real_BTC is 5/106 = 0.04716981132075472; on Real_ETH, Concept lambda* = 7.799994544332583 realizes 4/72 = 0.05555555555555555, Eco lambda* = 39.81696944588852 realizes 3/72 = 0.041666666666666664. Trigger probability: For BTC, the bisection tolerance admits exactly one count (5) at 106 onsets, so the two arms are forced onto the same rate (0). For ETH, no integer count satisfies the tolerance, so agreement is an outcome of dynamics (NOT RECOVERABLE FROM THE LOG). Verdict: Passed for Real_BTC and Synth_BTC (exact match); Real_ETH arms differ by 0.0138889 (log lines 28, 146, 169).
 
 ### C3 — QMLE recovery
-20 GARCH(1,1) streams of 2000 steps at (alpha, beta) = (0.05, 0.9), unconditional variance 0.0001, standard-normal innovations. Median bias = 0.0228, fallback fraction = 0.0000, frozen fraction = 0.0000, 20/20 converged.
-Trigger probability: NOT RECOVERABLE FROM THE LOG (the null distribution of a median over 20 simulations has no closed form).
-Verdict: Passed (log line 24). The delivered admissibility band is median bias < 0.05 and fallback fraction < 0.1.
+20 GARCH(1,1) streams of 2000 steps at (alpha, beta) = (0.05, 0.9), unconditional variance 0.0001, standard-normal innovations. Median bias = 0.0228, fallback fraction = 0.0000, frozen fraction = 0.0000, 20/20 converged. Trigger probability: NOT RECOVERABLE FROM THE LOG (the null distribution of a median over 20 simulations has no closed form). Verdict: Passed (log line 24). The delivered admissibility band is median bias < 0.05 and fallback fraction < 0.1.
 
 ### C4 — Moment condition
-Derived at run time: for a standardized Student-t, E|z|^p < inf iff p < nu, so the variance exists iff nu > 2 and the fourth moment iff nu > 4. At nu_hat = 2.779114 for BTC and 3.249791 for ETH, the variance exists and the fourth moment DOES NOT exist.
-Trigger probability: 0 (static derivation).
-Verdict: Recorded (log lines 26-27, 29-30).
+Derived at run time: for a standardized Student-t, E|z|^p < inf iff p < nu, so the variance exists iff nu > 2 and the fourth moment iff nu > 4. At nu_hat = 2.779114 for BTC and 3.249791 for ETH, the variance exists and the fourth moment DOES NOT exist. Trigger probability: 0 (static derivation). Verdict: Recorded (log lines 26-27, 29-30).
 
 ### C6 — Source identity
-10 primitives byte-identical to the files that own them (3670 characters compared) — _garch_nll, fit_garch_qmle, strict_cusum, bilateral_delay, bisect_fpr, wilson_ci and compute_onsets against Priorite_24d_crypto_isofpr_race.py, and get_deterministic_seed, seed_sequence_for and rng_for against exp_R13_oracle_ceiling_a.py.
-Trigger probability: 0 unless a copy has drifted.
-Verdict: Deterministic (log line 15).
+10 primitives byte-identical to the files that own them (3670 characters compared) — _garch_nll, fit_garch_qmle, strict_cusum, bilateral_delay, bisect_fpr, wilson_ci and compute_onsets against Priorite_24d_crypto_isofpr_race.py, and get_deterministic_seed, seed_sequence_for and rng_for against exp_R13_oracle_ceiling_a.py. Trigger probability: 0 unless a copy has drifted. Verdict: Deterministic (log line 15).
 
 ### C8 — Non-anticipativity
-First onset verification: the full pre-onset vector ['alpha', 'beta', 'eps_last', 'med_hat', 'mu_hat', 'omega', 'q_hat_ref', 's2_last'] is bit-identical after r[onset:] += 100. The identity is tautological by slicing.
-Trigger probability: 0 (structural assertion, not evidence).
-Verdict: Recorded for Real_BTC (onset 516, log line 37), Real_ETH (onset 507, log line 143), Synth_BTC (onset 516, log line 212).
+First onset verification: the full pre-onset vector ['alpha', 'beta', 'eps_last', 'med_hat', 'mu_hat', 'omega', 'q_hat_ref', 's2_last'] is bit-identical after r[onset:] += 100. The identity is tautological by slicing. Trigger probability: 0 (structural assertion, not evidence). Verdict: Recorded for Real_BTC (onset 516, log line 37), Real_ETH (onset 507, log line 143), Synth_BTC (onset 516, log line 212).
 
 ### C9 — Design effect
-Design effect computed from the mechanism over 24 mechanism-fixed lags. Multiple clamped and unclamped values reported throughout the race. Clamped when the estimate would claim more independent readings than the observations contain.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Verdict: Recorded for all sources and magnitudes (log lines 41-46, 53-57, 64-68, 72-76, 80-84, 88-92, 96-100, 104-108, 112-116, 120-124, 128-132, 136-140, 151-155, 161-165, 174-178, 184-188, 198-202, 206-210).
+Design effect computed from the mechanism over 24 mechanism-fixed lags. Multiple clamped and unclamped values reported throughout the race. Clamped when the estimate would claim more independent readings than the observations contain. Trigger probability: NOT RECOVERABLE FROM THE LOG. Verdict: Recorded for all sources and magnitudes (log lines 41-46, 53-57, 64-68, 72-76, 80-84, 88-92, 96-100, 104-108, 112-116, 120-124, 128-132, 136-140, 151-155, 161-165, 174-178, 184-188, 198-202, 206-210).
 
 ### C10 — Entropy migration
-On Priorite_24d_crypto_isofpr_race.py: no np.random.<distribution> call exists anywhere in the witness — the only np.random members it touches are ['RandomState', 'seed'] — and it constructs 3 RandomState instances. On this script: no draw touches the global NumPy stream, and np.random.RandomState appears only inside ['dither_vector', 'synth_generator', 'qmle_innovation_streams'].
-Trigger probability: 0 (static).
-Verdict: Recorded (log lines 16-17).
+On Priorite_24d_crypto_isofpr_race.py: no np.random.<distribution> call exists anywhere in the witness — the only np.random members it touches are ['RandomState', 'seed'] — and it constructs 3 RandomState instances. On this script: no draw touches the global NumPy stream, and np.random.RandomState appears only inside ['dither_vector', 'synth_generator', 'qmle_innovation_streams']. Trigger probability: 0 (static). Verdict: Recorded (log lines 16-17).
 
 ## 3. Test suite
 

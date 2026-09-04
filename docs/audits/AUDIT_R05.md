@@ -37,102 +37,46 @@ Count: 20 D2, 7 D1, 0 D3, 0 D0.
 ## 2. Controls
 
 ### control a — abrupt shift protocol constants
-Tests the configuration of the abrupt shift campaign: protocol constants alpha, nu, Delta_mu_max, delta_C, target FPR, seeds per config, Gamma grid.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised: alpha=0.08 nu=7.0 Delta_mu_max=2.0 delta_C=0.1 target FPR=0.05 seeds/config=400 Gamma grid n=13 in [1.00, 30.00].
-Verdict: pass, constants match v87.
-Source: exp_R05_scale_law_a.log:20
+Tests the configuration of the abrupt shift campaign: protocol constants alpha, nu, Delta_mu_max, delta_C, target FPR, seeds per config, Gamma grid. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised: alpha=0.08 nu=7.0 Delta_mu_max=2.0 delta_C=0.1 target FPR=0.05 seeds/config=400 Gamma grid n=13 in [1.00, 30.00]. Verdict: pass, constants match v87. Source: exp_R05_scale_law_a.log:20
 
 ### control a — Concept threshold constancy
-Tests that lambda_star_Concept is constant across Gamma under the sign-stream identity.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised: lambda_star_Concept constant across Gamma at 11.4000 while lambda_star_Data runs 52.3860 to 943.3187 (ratio 18.0x).
-Verdict: pass, constancy is an identity of the design.
-Source: exp_R05_scale_law_a.log:21
+Tests that lambda_star_Concept is constant across Gamma under the sign-stream identity. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised: lambda_star_Concept constant across Gamma at 11.4000 while lambda_star_Data runs 52.3860 to 943.3187 (ratio 18.0x). Verdict: pass, constancy is an identity of the design. Source: exp_R05_scale_law_a.log:21
 
 ### control c — Concept orthogonality (abrupt)
-Tests that Concept detection under scale pathology equals its own false-alarm rate (orthogonality).
-Trigger probability under null: Fisher exact test, two-sided. With 22/400 alarms under both H_0 and pathology, the exact p-value is 1.0000.
-Realised margin: +0 streams difference.
-Verdict: pass. The sign stream is a function of z alone, independent of beta and the scale factor, so constancy across Gamma is an identity of the design. The comparison uses disjoint seed blocks and carries information.
-Source: exp_R05_scale_law_a.log:22-23
+Tests that Concept detection under scale pathology equals its own false-alarm rate (orthogonality). Trigger probability under null: Fisher exact test, two-sided. With 22/400 alarms under both H_0 and pathology, the exact p-value is 1.0000. Realised margin: +0 streams difference. Verdict: pass. The sign stream is a function of z alone, independent of beta and the scale factor, so constancy across Gamma is an identity of the design. The comparison uses disjoint seed blocks and carries information. Source: exp_R05_scale_law_a.log:22-23
 
 ### control c — Concept orthogonality (ramp 2e5)
-Tests that Concept hold-out FPR equals detection under the ramp across all 60 cells.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised: Concept hold-out FPR 0.0425, detection under the ramp in [0.0350, 0.0350] across all 60 cells.
-Verdict: pass. The sign stream does not see the pathology, so this equality is an identity of the design; the positive control of step a shows the instrument responsive.
-Source: exp_R05_scale_law_b_2e5.log:26
+Tests that Concept hold-out FPR equals detection under the ramp across all 60 cells. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised: Concept hold-out FPR 0.0425, detection under the ramp in [0.0350, 0.0350] across all 60 cells. Verdict: pass. The sign stream does not see the pathology, so this equality is an identity of the design; the positive control of step a shows the instrument responsive. Source: exp_R05_scale_law_b_2e5.log:26
 
 ### control c — Concept orthogonality (ramp 3e6)
-Tests that Concept hold-out FPR equals detection under the ramp across all 85 cells.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised: Concept hold-out FPR 0.0850, detection under the ramp in [0.0525, 0.0525] across all 85 cells.
-Verdict: pass. The sign stream does not see the pathology, so this equality is an identity of the design; the positive control of step a shows the instrument responsive.
-Source: exp_R05_scale_law_b_3e6.log:31
+Tests that Concept hold-out FPR equals detection under the ramp across all 85 cells. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised: Concept hold-out FPR 0.0850, detection under the ramp in [0.0525, 0.0525] across all 85 cells. Verdict: pass. The sign stream does not see the pathology, so this equality is an identity of the design; the positive control of step a shows the instrument responsive. Source: exp_R05_scale_law_b_3e6.log:31
 
 ### control d — OLS fit robustness (abrupt)
-Tests the robustness of the ADD vs Gamma linear fit by comparing all-points fit to the fit excluding Gamma=1.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: slope moves 1.1% and intercept 19.0% between the two fits. All points: ADD = 26.0016 Gamma + 32.1980, R^2 = 0.991299, max relative residual 54.5% at Gamma = 1.00. Excluding Gamma = 1: ADD = 25.7038 Gamma + 38.3027, R^2 = 0.990324, max relative residual 48.9%.
-Verdict: pass. v87 prints the all-points fit; the alternative is reported, not adopted.
-Source: exp_R05_scale_law_a.log:24-26
+Tests the robustness of the ADD vs Gamma linear fit by comparing all-points fit to the fit excluding Gamma=1. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: slope moves 1.1% and intercept 19.0% between the two fits. All points: ADD = 26.0016 Gamma + 32.1980, R^2 = 0.991299, max relative residual 54.5% at Gamma = 1.00. Excluding Gamma = 1: ADD = 25.7038 Gamma + 38.3027, R^2 = 0.990324, max relative residual 48.9%. Verdict: pass. v87 prints the all-points fit; the alternative is reported, not adopted. Source: exp_R05_scale_law_a.log:24-26
 
 ### positive control — location shift detection
-Tests that the Concept monitor is responsive to a pure location shift.
-Trigger probability under null: Fisher exact test, two-sided. With 400/400 detections vs 22/400 under H_0, the exact p-value is 3.1e-203.
-Realised margin: +378 streams, conditional delay 42.9 steps.
-Verdict: pass. Concept detects 400/400 (1.0000, Wilson [0.9905, 1.0000]) against 22/400 under H_0.
-Source: exp_R05_scale_law_a.log:27
+Tests that the Concept monitor is responsive to a pure location shift. Trigger probability under null: Fisher exact test, two-sided. With 400/400 detections vs 22/400 under H_0, the exact p-value is 3.1e-203. Realised margin: +378 streams, conditional delay 42.9 steps. Verdict: pass. Concept detects 400/400 (1.0000, Wilson [0.9905, 1.0000]) against 22/400 under H_0. Source: exp_R05_scale_law_a.log:27
 
 ### control b — common horizon homogeneity (ramp 2e5)
-Tests that the common monitoring horizon H = 200000 produces homogeneous null crossing probabilities across the 5 penalties.
-Trigger probability under null: chi-square test on 4 dof. The probability of at least one rejection under the null of correct calibration is 1 - (1 - 0.05)^5 = 0.226.
-Realised margin: chi-square = 1.11, p = 0.893.
-Verdict: pass. Realised null levels [0.045, 0.055, 0.0575, 0.0575, 0.0475] ([18, 22, 23, 23, 19] alarms of 400); pooled realised level 0.0525, Wilson [0.0436, 0.0632], against the 0.05 v87 states for every Data arm. Target inside the interval.
-Source: exp_R05_scale_law_b_2e5.log:20-23
+Tests that the common monitoring horizon H = 200000 produces homogeneous null crossing probabilities across the 5 penalties. Trigger probability under null: chi-square test on 4 dof. The probability of at least one rejection under the null of correct calibration is 1 - (1 - 0.05)^5 = 0.226. Realised margin: chi-square = 1.11, p = 0.893. Verdict: pass. Realised null levels [0.045, 0.055, 0.0575, 0.0575, 0.0475] ([18, 22, 23, 23, 19] alarms of 400); pooled realised level 0.0525, Wilson [0.0436, 0.0632], against the 0.05 v87 states for every Data arm. Target inside the interval. Source: exp_R05_scale_law_b_2e5.log:20-23
 
 ### control h — family-wise error rate guard (ramp 2e5)
-Tests that the 5 simultaneous cells at a 0.05 level do not use a per-cell binary gate.
-Trigger probability under null: 1 - (1 - 0.05)^5 = 0.226. Above 5%, so no per-cell binary gate is used; the levels are tested as a distribution instead.
-Realised margin: per-cell two-sided binomial p-values [0.7312, 0.6452, 0.4898, 0.4898, 0.9089]; Kolmogorov-Smirnov against Uniform(0,1): D = 0.4898, p = 0.1261.
-Verdict: pass. Descriptive, retained in the CSV, and not an acceptance criterion.
-Source: exp_R05_scale_law_b_2e5.log:23-24
+Tests that the 5 simultaneous cells at a 0.05 level do not use a per-cell binary gate. Trigger probability under null: 1 - (1 - 0.05)^5 = 0.226. Above 5%, so no per-cell binary gate is used; the levels are tested as a distribution instead. Realised margin: per-cell two-sided binomial p-values [0.7312, 0.6452, 0.4898, 0.4898, 0.9089]; Kolmogorov-Smirnov against Uniform(0,1): D = 0.4898, p = 0.1261. Verdict: pass. Descriptive, retained in the CSV, and not an acceptance criterion. Source: exp_R05_scale_law_b_2e5.log:23-24
 
 ### control b — common horizon homogeneity (ramp 3e6)
-Tests that the common monitoring horizon H = 3000000 produces homogeneous null crossing probabilities across the 5 penalties.
-Trigger probability under null: chi-square test on 4 dof. The probability of at least one rejection under the null of correct calibration is 1 - (1 - 0.05)^5 = 0.226.
-Realised margin: chi-square = 3.07, p = 0.546.
-Verdict: pass. Realised null levels [0.025, 0.035, 0.035, 0.04, 0.0475] ([10, 14, 14, 16, 19] alarms of 400); pooled realised level 0.0365, Wilson [0.0291, 0.0456], against the 0.05 v87 states for every Data arm. Target OUTSIDE the interval.
-Source: exp_R05_scale_law_b_3e6.log:25-27
+Tests that the common monitoring horizon H = 3000000 produces homogeneous null crossing probabilities across the 5 penalties. Trigger probability under null: chi-square test on 4 dof. The probability of at least one rejection under the null of correct calibration is 1 - (1 - 0.05)^5 = 0.226. Realised margin: chi-square = 3.07, p = 0.546. Verdict: pass. Realised null levels [0.025, 0.035, 0.035, 0.04, 0.0475] ([10, 14, 14, 16, 19] alarms of 400); pooled realised level 0.0365, Wilson [0.0291, 0.0456], against the 0.05 v87 states for every Data arm. Target OUTSIDE the interval. Source: exp_R05_scale_law_b_3e6.log:25-27
 
 ### control h — family-wise error rate guard (ramp 3e6)
-Tests that the 5 simultaneous cells at a 0.05 level do not use a per-cell binary gate.
-Trigger probability under null: 1 - (1 - 0.05)^5 = 0.226. Above 5%, so no per-cell binary gate is used; the levels are tested as a distribution instead.
-Realised margin: per-cell two-sided binomial p-values [0.0208, 0.2054, 0.2054, 0.4218, 0.9089]; Kolmogorov-Smirnov against Uniform(0,1): D = 0.3946, p = 0.3235.
-Verdict: pass. Descriptive, retained in the CSV, and not an acceptance criterion.
-Source: exp_R05_scale_law_b_3e6.log:28-29
+Tests that the 5 simultaneous cells at a 0.05 level do not use a per-cell binary gate. Trigger probability under null: 1 - (1 - 0.05)^5 = 0.226. Above 5%, so no per-cell binary gate is used; the levels are tested as a distribution instead. Realised margin: per-cell two-sided binomial p-values [0.0208, 0.2054, 0.2054, 0.4218, 0.9089]; Kolmogorov-Smirnov against Uniform(0,1): D = 0.3946, p = 0.3235. Verdict: pass. Descriptive, retained in the CSV, and not an acceptance criterion. Source: exp_R05_scale_law_b_3e6.log:28-29
 
 ### control f — recalibration rule margins (ramp 2e5)
-Tests the departure from the lambda_iid x Gamma rule at H = 200000.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: lambda*(Gamma)/Gamma = [132.1, 126.8, 135.0, 150.7, 179.2] against lambda_iid_H = 128.63; departure from the rule -1.4% to +39.3%.
-Verdict: pass. Margins by Gamma: [2.7, -1.4, 4.9, 17.2, 39.3].
-Source: exp_R05_scale_law_b_2e5.log:25
+Tests the departure from the lambda_iid x Gamma rule at H = 200000. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: lambda*(Gamma)/Gamma = [132.1, 126.8, 135.0, 150.7, 179.2] against lambda_iid_H = 128.63; departure from the rule -1.4% to +39.3%. Verdict: pass. Margins by Gamma: [2.7, -1.4, 4.9, 17.2, 39.3]. Source: exp_R05_scale_law_b_2e5.log:25
 
 ### control f — recalibration rule margins (ramp 3e6)
-Tests the departure from the lambda_iid x Gamma rule at H = 3000000.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised margin: lambda*(Gamma)/Gamma = [326.5, 327.6, 379.0, 436.5, 555.0] against lambda_iid_H = 282.54; departure from the rule +15.6% to +96.4%.
-Verdict: pass. Margins by Gamma: [15.6, 15.9, 34.2, 54.5, 96.4]. The span widens from [-1.4, +39.3]% at H = 200000 to [+15.6, +96.4]% at H = 3000000. The degradation with the horizon that v87 asserts is visible in these two budgets.
-Source: exp_R05_scale_law_b_3e6.log:30, exp_R05_scale_law_c.log:38-40
+Tests the departure from the lambda_iid x Gamma rule at H = 3000000. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised margin: lambda*(Gamma)/Gamma = [326.5, 327.6, 379.0, 436.5, 555.0] against lambda_iid_H = 282.54; departure from the rule +15.6% to +96.4%. Verdict: pass. Margins by Gamma: [15.6, 15.9, 34.2, 54.5, 96.4]. The span widens from [-1.4, +39.3]% at H = 200000 to [+15.6, +96.4]% at H = 3000000. The degradation with the horizon that v87 asserts is visible in these two budgets. Source: exp_R05_scale_law_b_3e6.log:30, exp_R05_scale_law_c.log:38-40
 
 ### control e — moment boundary
-Tests the closed-form sixth-moment boundary for standardized t_7.
-Trigger probability: NOT RECOVERABLE FROM THE LOG.
-Realised: E[eps^6] is finite up to beta = 0.874405, i.e. Gamma = 7.0793. E[eps^4] survives much further, to beta = 0.907117, Gamma = 41.5843. Largest finite moment order at Gamma = 20 is 4 + 0.7931.
-Verdict: pass. THIS EXPERIMENT SWEEPS NO nu. Every campaign runs standardized t_7, so no output of R05 can attribute the degradation of the recalibration rule to the loss of a moment: what R05 measures is that the departure from lambda_iid x Gamma grows with Gamma and with the horizon, and what the closed form above supplies is a boundary that happens to fall inside the same range of Gamma. The coincidence is an association. Establishing the mechanism would need an arm varying nu at fixed Gamma, and this experiment has none. v87 app:scaling glosses E[eps^6] as 'the second moment of the monitored statistic eps^2'. E[eps^6] is the THIRD moment of eps^2; the second is E[eps^4], whose boundary sits at Gamma = 41.6, far outside the grid. The numeral 7.1 is reproduced; the description attached to it is not.
-Source: exp_R05_scale_law_c.log:33-36
+Tests the closed-form sixth-moment boundary for standardized t_7. Trigger probability: NOT RECOVERABLE FROM THE LOG. Realised: E[eps^6] is finite up to beta = 0.874405, i.e. Gamma = 7.0793. E[eps^4] survives much further, to beta = 0.907117, Gamma = 41.5843. Largest finite moment order at Gamma = 20 is 4 + 0.7931. Verdict: pass. THIS EXPERIMENT SWEEPS NO nu. Every campaign runs standardized t_7, so no output of R05 can attribute the degradation of the recalibration rule to the loss of a moment: what R05 measures is that the departure from lambda_iid x Gamma grows with Gamma and with the horizon, and what the closed form above supplies is a boundary that happens to fall inside the same range of Gamma. The coincidence is an association. Establishing the mechanism would need an arm varying nu at fixed Gamma, and this experiment has none. v87 app:scaling glosses E[eps^6] as 'the second moment of the monitored statistic eps^2'. E[eps^6] is the THIRD moment of eps^2; the second is E[eps^4], whose boundary sits at Gamma = 41.6, far outside the grid. The numeral 7.1 is reproduced; the description attached to it is not. Source: exp_R05_scale_law_c.log:33-36
 
 ## 3. Test suite
 

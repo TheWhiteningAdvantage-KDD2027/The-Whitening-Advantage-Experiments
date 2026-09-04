@@ -27,70 +27,37 @@ Two falsified qualitative claims remain at D3 in v87 Section 4: (1) the Recalib 
 ## 2. Controls
 
 ### Seed uniqueness (A2)
-Tests that every task derives a unique 128-bit seed.
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: 84000 distinct seeds over 84000 tasks, zero collisions (log line 80).
-Verdict: passed.
+Tests that every task derives a unique 128-bit seed. Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: 84000 distinct seeds over 84000 tasks, zero collisions (log line 80). Verdict: passed.
 
 ### QMLE non-convergence
-Tests the rate of QMLE fits that fail on all 3 starts of the multistart ladder.
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: 0 of 64000 (0.0000%), budget 0.5% (log line 81).
-Verdict: passed.
+Tests the rate of QMLE fits that fail on all 3 starts of the multistart ladder. Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: 0 of 64000 (0.0000%), budget 0.5% (log line 81). Verdict: passed.
 
 ### QMLE stationarity guard
-Tests the rate of fits hitting the alpha + beta >= 0.999 boundary.
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: 0 of 64000 (0.0000%), budget 0% (log line 82).
-Verdict: passed. The guard is unreachable once an infeasible pair is projected back onto alpha + beta = 0.999, so any firing is structural.
+Tests the rate of fits hitting the alpha + beta >= 0.999 boundary. Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: 0 of 64000 (0.0000%), budget 0% (log line 82). Verdict: passed. The guard is unreachable once an infeasible pair is projected back onto alpha + beta = 0.999, so any firing is structural.
 
 ### QMLE constraint boundary
-Tests the rate of fits at the feasibility boundary.
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: 699 of 64000 (1.0922%) returned alpha + beta >= 0.999 (log line 83).
-Verdict: reported, not gated. Those fits are stationary and are KEPT. The submitted script guarded on that same predicate and reverted every one of them to (0.05, 0.9) without counting them.
+Tests the rate of fits at the feasibility boundary. Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: 699 of 64000 (1.0922%) returned alpha + beta >= 0.999 (log line 83). Verdict: reported, not gated. Those fits are stationary and are KEPT. The submitted script guarded on that same predicate and reverted every one of them to (0.05, 0.9) without counting them.
 
 ### Cardinality (b)
-Tests that row counts match the design.
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: R04_isofpr_calibration = 16, R04_isofpr_race = 64, R04_relative_efficiency = 6, R04_cusum_vs_adwin = 8, all exact (log line 84).
-Verdict: passed.
+Tests that row counts match the design. Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: R04_isofpr_calibration = 16, R04_isofpr_race = 64, R04_relative_efficiency = 6, R04_cusum_vs_adwin = 8, all exact (log line 84). Verdict: passed.
 
 ### Calibration (c)
-Tests that all 16 arms achieve FPR within 0.003 of 0.05.
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: all 16 arms within 0.003 of 0.05; achieved rates span [0.0480, 0.0530] (log line 85).
-Verdict: passed.
+Tests that all 16 arms achieve FPR within 0.003 of 0.05. Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: all 16 arms within 0.003 of 0.05; achieved rates span [0.0480, 0.0530] (log line 85). Verdict: passed.
 
 ### Concept threshold invariance (d)
-Tests that Concept lambda_star is flat across Gamma and that false-alarm counts are homogeneous.
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: lambda_C* in [10.499036, 10.743177] over Gamma, spanning 2.0 bisection lattice steps; chi-square homogeneity = 4.0125, p = 0.2601 (log lines 86-88).
-Verdict: reported, not gated. The span leaves the admissible band (10.5, 10.8) by 0.000964, less than one lattice step.
+Tests that Concept lambda_star is flat across Gamma and that false-alarm counts are homogeneous. Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: lambda_C* in [10.499036, 10.743177] over Gamma, spanning 2.0 bisection lattice steps; chi-square homogeneity = 4.0125, p = 0.2601 (log lines 86-88). Verdict: reported, not gated. The span leaves the admissible band (10.5, 10.8) by 0.000964, less than one lattice step.
 
 ### Blind-zone persistence (e)
-Tests that Recalib detection rate is below 1 at c < 0.5 for the lowest Gamma.
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: DetRate below c = 0.5 at Gamma=1.0: 0.1790 (log lines 89-90).
-Verdict: passed. The collapse is present at Gamma = 1, so it is not a GARCH effect.
+Tests that Recalib detection rate is below 1 at c < 0.5 for the lowest Gamma. Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: DetRate below c = 0.5 at Gamma=1.0: 0.1790 (log lines 89-90). Verdict: passed. The collapse is present at Gamma = 1, so it is not a GARCH effect.
 
 ### Monotonicity (f)
-Tests that the efficiency ratio is monotone increasing in nu.
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: 5 consecutive differences of the ratio in nu, most negative = +0.072364, Spearman rho = 1.0000 (p = 0.000e+00) (log line 91).
-Verdict: passed.
+Tests that the efficiency ratio is monotone increasing in nu. Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: 5 consecutive differences of the ratio in nu, most negative = +0.072364, Spearman rho = 1.0000 (p = 0.000e+00) (log line 91). Verdict: passed.
 
 ### Family control (g)
-Tests that CUSUM and ADWIN FPR are flat across Gamma.
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: CUSUM FPR over Gamma grid = [0.067, 0.3305, 0.4885, 0.5575], spread = 0.490500; ADWIN FPR = [0.005, 0.044, 0.136, 0.244], spread = 0.239000 (log lines 92-93).
-Verdict: reported, not gated. On a Gamma grid that is genuinely spanned, the level of a CUSUM monitoring the RAW return stream is not flat. This is a deviation, not reconciled.
+Tests that CUSUM and ADWIN FPR are flat across Gamma. Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: CUSUM FPR over Gamma grid = [0.067, 0.3305, 0.4885, 0.5575], spread = 0.490500; ADWIN FPR = [0.005, 0.044, 0.136, 0.244], spread = 0.239000 (log lines 92-93). Verdict: reported, not gated. On a Gamma grid that is genuinely spanned, the level of a CUSUM monitoring the RAW return stream is not flat. This is a deviation, not reconciled.
 
 ### ADWIN ceiling
-Tests the maximum attainable FPR for ADWIN.
-Trigger probability under null: NOT RECOVERABLE FROM THE LOG.
-Realised margin: the loosest admissible delta 0.794328 attains only 0.007000 on i.i.d. Gaussian streams; no delta in (0, 1) brings ADWIN to nominal level (log lines 62-74).
-Verdict: reported, not gated. The ADWIN column is NOT iso-FPR with the CUSUM column.
+Tests the maximum attainable FPR for ADWIN. Trigger probability under null: NOT RECOVERABLE FROM THE LOG. Realised margin: the loosest admissible delta 0.794328 attains only 0.007000 on i.i.d. Gaussian streams; no delta in (0, 1) brings ADWIN to nominal level (log lines 62-74). Verdict: reported, not gated. The ADWIN column is NOT iso-FPR with the CUSUM column.
 
 ## 3. Test suite
 
