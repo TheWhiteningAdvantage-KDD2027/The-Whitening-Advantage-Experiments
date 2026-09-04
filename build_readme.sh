@@ -33,8 +33,13 @@ The campaign is locked to the following environment to guarantee IEEE 754 float 
 * **Determinism:** MKL and OpenBLAS are strictly pinned to single-threading (`OMP_NUM_THREADS=1`, `MKL_CBWR=COMPATIBLE`) before NumPy imports. `PYTHONHASHSEED` is exported as `42` by each runner and verified by each script.
 
 ## 4. Reproduction Commands
+The pipeline relies on specific package versions to guarantee numeric determinism. Create a virtual environment and install the root requirements before executing.
+
 ```bash
-# Execute the entire pipeline and the test suite
+# 1. Install dependencies
+pip install -r requirements.txt
+
+# 2. Execute the entire pipeline and the test suite
 bash run_all.sh
 ```
 

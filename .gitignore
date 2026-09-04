@@ -1,4 +1,4 @@
-# Environnements et Caches (Fuite de chemins système)
+# Execution Environments and Bytecode Artifacts
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -6,21 +6,63 @@ __pycache__/
 venv/
 env/
 
-# IDEs (Fuite d'identité)
+# Integrated Development Environments
 .vscode/
 .idea/
 *.swp
 .DS_Store
 
-# Jupyter
+# Jupyter Notebook Runtime Checkpoints
 .ipynb_checkpoints/
 
-# Fichiers de configuration locale et dump d'arborescence (Ne pas pusher)
+# Local Configuration Files and Directory Dumps
 ARBORESCENCE_REPO_LOCAL*.txt
 
-# Traces d'assistants IA (Fuite d'identité)
+# AI Coding Assistants and Autonomous Agent Workspaces
 .claude/
+.roo/
+.vibe/
+CLAUDE.md
+AGENTS.md
+.mcp.json
 
-# Verrouillage Licence FirstRate (Interdiction de redistribution)
+# Graphify Structural and Semantic Indexing Artifacts
+graphify-out/
+.graphify*
+GRAPH_REPORT.md
+graph.json
+manifest.json
+
+# Transient Working Directories and Task Scaffolding
+CLAUDE_TASKS/
+DOC_RESTORE_PROMPTS/
+REFACTORING_COMMON/
+REFACTORING_PROMPTS/
+
+# Ephemeral Session Logs & Root Logs
+logs/doc_restore_sessions/
+logs/vibe_sessions/
+/logs/*.log
+restore_all_docs.log
+
+# Proprietary License Enforcement: FirstRate Data
 data/firstrate_etf/*.txt
 !data/firstrate_etf/.gitkeep
+
+# Manuscript and Internal Tooling (Excluded from Reviewer Package)
+articleB_whitening_v87.tex
+build_mapping.py
+build_readme.sh
+gate_docs.sh
+generate_all_prompts.sh
+generate_doc_prompts.sh
+refactor_all_streams.sh
+restore_all_docs.sh
+unwrap_docs.py
+verify_reproducibility.sh
+
+# Internal Auditing Scripts & Candidate Checkpoints
+/docs/camera_ready_candidates/ANCHOR_VERIFICATION.md
+/docs/camera_ready_candidates/RECONCILIATION.md
+/experiments/common/verify_camera_ready.py
+/experiments/common/verify_refactoring.py

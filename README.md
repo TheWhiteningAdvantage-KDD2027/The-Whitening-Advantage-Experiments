@@ -23,8 +23,13 @@ The campaign is locked to the following environment to guarantee IEEE 754 float 
 * **Determinism:** MKL and OpenBLAS are strictly pinned to single-threading (`OMP_NUM_THREADS=1`, `MKL_CBWR=COMPATIBLE`) before NumPy imports. `PYTHONHASHSEED` is exported as `42` by each runner and verified by each script.
 
 ## 4. Reproduction Commands
+The pipeline relies on specific package versions to guarantee numeric determinism. Create a virtual environment and install the root requirements before executing.
+
 ```bash
-# Execute the entire pipeline and the test suite
+# 1. Install dependencies
+pip install -r requirements.txt
+
+# 2. Execute the entire pipeline and the test suite
 bash run_all.sh
 ```
 
@@ -45,7 +50,7 @@ Every non-redistributable input has a public fetcher and a versioned derived ser
 
 ## 6. What This Repository Found Against Its Own Manuscript
 
-The campaign regenerated all 21 streams under a stricter reproducibility standard than the submitted campaign used. What it found falls into three groups, and the proportions matter more than any single entry: about twenty defects in the experimental apparatus, eight formal contradictions of the manuscript, and no falsified proposition. Every one was found by the authors, and every one is documented here.
+The campaign regenerated all 21 streams under a stricter reproducibility standard than the submitted campaign used. What it found falls into three groups, and the proportions matter more than any single entry: about twenty defects in the experimental apparatus, nine formal contradictions of the manuscript, and no falsified proposition. Every one was found by the authors, and every one is documented here.
 
 ### 6.1 Formal contradictions of the submitted manuscript
 
@@ -53,7 +58,8 @@ Claims the regenerated pipeline does not produce. Full detail, with the source C
 
 | Register entry | Manuscript site | What does not hold |
 |---|---|---|
-| `R02b-iid-arm-rejection` | L278 | The manuscript attributes the i.i.d. arm Ljung-Box over-rejection at $t_7$ to the loss of the fourth moment of $\varepsilon_t^2$. For an i.i.d. tested series the limit requires only that the tested series have a finite variance, i.e. $\mathbb{E}[\varepsilon_t^4] < \infty$, i.e. $\nu > 4$, which $t_7$ satisfies (`R02b_rejection_vs_nu.csv` :: `contains_nominal_squared`, row nu=7 = True). The moment absent at $\nu \le 8$ is $\mathbb{E}[\varepsilon_t^8]$, and that account is refuted by its own control: it is absent at $\nu=7$ too, where the rate is calibrated at every horizon to $n = 1.28\times10^5$. What is contradicted is the stated reason the $\chi^2$ approximation fails, and not the whitening property, not the exactness of the Concept threshold, and no proposition of v87. Two things are reported here rather than resolved. At the manuscript's own $t_7$ the regenerated rate is 5.8% with Wilson $[4.51, 7.43]\%$, which contains the nominal level, so the over-rejection is not corroborated at that arm; it is corroborated at $\nu=5$ (8.8%) and $\nu=6$ (7.9%), neither of which v87 runs. And the true mechanism is not identified: the boundary is located between $\nu=6$ and $\nu=7$, and locating it is not establishing it. |
+| `R02b-iid-arm-over-rejection`       | L278                                                             | The manuscript states the squared inputs "already over-reject on the i.i.d. arm ($9.2\%$)" with $t_7$ innovations. At $\nu = 7$ the regenerated rate is 5.8%, Wilson $[4.51, 7.43]\%$: the interval excludes the printed 9.2% and contains the 5% nominal level. At 1000 streams the standard error of a rate near 5% is 0.0069, so 9.2% lies six standard errors from nominal and the experiment has the resolution to exclude it. Over-rejection is found at $\nu = 5$ (8.8%) and $\nu = 6$ (7.9%), neither of which v87 runs. What is contradicted is the over-rejection at the arm the text defines, and not the whitening property, not the exactness of the Concept threshold, and no proposition of v87. |
+| `R02b-iid-arm-rejection`            | L278                                                             | The manuscript attributes the i.i.d. arm Ljung-Box over-rejection at $t_7$ to the loss of the fourth moment of $\varepsilon_t^2$. For an i.i.d. tested series the limit requires only that the tested series have a finite variance, i.e. $\mathbb{E}[\varepsilon_t^4] < \infty$, i.e. $\nu > 4$, which $t_7$ satisfies (`R02b_rejection_vs_nu.csv` :: `contains_nominal_squared`, row nu=7 = True). The moment absent at $\nu \le 8$ is $\mathbb{E}[\varepsilon_t^8]$, and that account is refuted by its own control: it is absent at $\nu=7$ too, where the rate is calibrated at every horizon to $n = 1.28\times10^5$. What is contradicted is the stated reason the $\chi^2$ approximation fails, and not the whitening property, not the exactness of the Concept threshold, and no proposition of v87. The true mechanism is not identified: the boundary is located between $\nu=6$ and $\nu=7$, and locating it is not establishing it. |
 | `R04-gamma-grid-defect` | Section 4 (Table 3 and family control) | The submitted campaign's Gamma grid had collapsed to a single point through a parameter-order defect. Consequently, the Recalib arm is published as running 2 to 19x behind the first-order arms (it runs 7 to 81x behind across the genuinely spanned grid), and the family-control false-alarm levels are published as flat across Gamma (they spread over 49 points for CUSUM and 24 points for ADWIN). The contradiction touches the magnitude of the Recalib penalty and the flatness of the family controls; it does not touch the Recalib blind zone, the Gaussian ceiling pi/2, the location of the efficiency crossing or the cost of the parametric route, which R04b owns, or any proposition of v87. |
 | `R04b-efficiency-crossing` | L57 (abstract), L253, L372 (conclusion), L519 (Figure 4 caption) | The Eco-L1 efficiency crossing is published at one location, nu* ~ 4.9. Every regenerated estimator on the refined twelve-point grid places it higher and the inferential bracket excludes it entirely: bracket [7.0, 9.0], shape fit 8.10 [7.78, 8.37], grid bracket [7.0, 8.0] (`R04b_ratio_vs_nu.csv` :: `ratio`). The `8.52` this repository's own earlier R04 audit reported is not a competing measurement and is not counted here: it was a two-point interpolation across an unsampled interval, is carried at D2, and contradicts no printed numeral. What is contradicted is the location of the crossing, and not the whitening property, not the exactness of the Concept threshold, not the analytic crossing at 4.6788, not the absence of a second crossing above nu = 7, and no proposition of v87, whose asymptotic statement rests on the analytic root reproduced here at D0. |
 | `R04b-estimation-cost` | L253 | The finite warm-up is published as costing 0.3 degrees of freedom. Three independent routes over the refined grid put it an order of magnitude higher and no interval among them reaches 0.3: 3.62 [3.31, 3.92] by the shape fit, 3.22 [2.52, 3.82] model-free, and the outer bound [2.0, 5.0]. They are three D3 rows of one audit and one contradiction, not three. What is contradicted is the cost of the parametric route, and not the whitening property, not the exactness of the Concept threshold, and no proposition. |
@@ -290,8 +296,7 @@ Reproduction command: `bash run_experiment_R05.sh`.
 
 ## Measured execution cost
 
-Total wall-clock time: 7054.7 s (3.9 s for step a, 173.0 s for step b 2e5, 3350.0 s for step b 3e6, 3527.8 s for step c).
-Worker configuration: ProcessPoolExecutor with max_workers = 48, executor.map in submission order.
+Total wall-clock time: 7054.7 s (3.9 s for step a, 173.0 s for step b 2e5, 3350.0 s for step b 3e6, 3527.8 s for step c). Worker configuration: ProcessPoolExecutor with max_workers = 48, executor.map in submission order.
 
 ## Known deviations from the submitted manuscript
 
@@ -325,22 +330,9 @@ Reproduction command: `bash run_experiment_R06.sh`.
 Measured execution cost: Execution completed in 33.5s over 3100 monitored streams, of which 1300 are the counterfactual arm (log line 60).
 # R07 — Whitening Under an Estimated Conditional Mean
 
-R07 asks what survives of the whitening property when the conditional mean is estimated instead of
-known. On an AR(1)-GARCH(1,1) DGP with standardized Student-t7 innovations it runs six arms over a
-7 x 4 grid — NAIVE (no centring), ORACLE (the true conditional mean) and rolling OLS at window
-lengths n in {125, 250, 500, 1000}, at phi in {0, 0.02, 0.05, 0.075, 0.1, 0.125, 0.15} — with 10000
-trajectories per cell. It certifies Figure 7 (`fig:estmean`, both panels, caption at L543), the
-numerals of **L308** — Ljung-Box rejection at phi = 0 and phi = 0.15, the Concept FPR at phi = 0.15,
-the two OLS envelopes, the eta RMSE at n = 125, the fourth-moment product, the bias bound and the
-dispersion cost — and, for **L241**, only lambda* = 11.4: the two bracketing levels L241 prints come
-from a 2 x 10^5-stream campaign that belongs to R08, which R07 does not re-run.
+R07 asks what survives of the whitening property when the conditional mean is estimated instead of known. On an AR(1)-GARCH(1,1) DGP with standardized Student-t7 innovations it runs six arms over a 7 x 4 grid — NAIVE (no centring), ORACLE (the true conditional mean) and rolling OLS at window lengths n in {125, 250, 500, 1000}, at phi in {0, 0.02, 0.05, 0.075, 0.1, 0.125, 0.15} — with 10000 trajectories per cell. It certifies Figure 7 (`fig:estmean`, both panels, caption at L543), the numerals of **L308** — Ljung-Box rejection at phi = 0 and phi = 0.15, the Concept FPR at phi = 0.15, the two OLS envelopes, the eta RMSE at n = 125, the fourth-moment product, the bias bound and the dispersion cost — and, for **L241**, only lambda* = 11.4: the two bracketing levels L241 prints come from a 2 x 10^5-stream campaign that belongs to R08, which R07 does not re-run.
 
-Two results are R07's own rather than v87's. The exact absorbing-chain law of the 2delta = 0.2
-lattice at H = 5000 replaces a Monte-Carlo estimate of the same quantity and fixes lambda* by L241's
-own stated rule; it is handed to R08 in
-`docs/camera_ready_candidates/R07_v87_lattice_handoff_to_R08.md`, and `docs/audits/AUDIT_R08.md`
-control C2a reproduces all 16 of its scanned lattice points bit for bit. And the largest estimator
-bias over the 28 diagnostic cells exceeds the bound L308 prints — see the deviations below.
+Two results are R07's own rather than v87's. The exact absorbing-chain law of the 2delta = 0.2 lattice at H = 5000 replaces a Monte-Carlo estimate of the same quantity and fixes lambda* by L241's own stated rule; it is handed to R08 in `docs/camera_ready_candidates/R07_v87_lattice_handoff_to_R08.md`, and `docs/audits/AUDIT_R08.md` control C2a reproduces all 16 of its scanned lattice points bit for bit. And the largest estimator bias over the 28 diagnostic cells exceeds the bound L308 prints — see the deviations below.
 
 Reproduction command: `bash run_experiment_R07.sh`
 
@@ -348,14 +340,11 @@ Reproduction command: `bash run_experiment_R07.sh`
 
 ### Artefacts that certify a published value
 - `results/R07_estimated_mean/data/R07_estmean_lb_fpr.csv` — Ljung-Box rejection rate and Concept
-  false-positive rate with their Wilson score intervals and binomial p-values, 42 cells, certifying
-  Figure 7 panels A and B and the L308 rate numerals
+  false-positive rate with their Wilson score intervals and binomial p-values, 42 cells, certifying Figure 7 panels A and B and the L308 rate numerals
 - `results/R07_estimated_mean/data/R07_estmean_diagnostics.csv` — eta = RMSE(mu_hat - mu_oracle) over
-  sigma_unc, mean and dispersion of phi_hat and its bias with standard error, 28 cells, certifying
-  the dispersion and bias clauses of L308
+  sigma_unc, mean and dispersion of phi_hat and its bias with standard error, 28 cells, certifying the dispersion and bias clauses of L308
 - `results/R07_estimated_mean/data/R07_lattice_exact_law.csv` — the exact survival law of the lattice
-  at H = 5000 and its validation against exhaustive enumeration, certifying lambda* = 11.4 at L241
-  and the threshold named in the Figure 7 caption
+  at H = 5000 and its validation against exhaustive enumeration, certifying lambda* = 11.4 at L241 and the threshold named in the Figure 7 caption
 - `results/R07_estimated_mean/figures/fig07_estimated_mean.png` — rendered Figure 7, both panels
 - `results/R07_estimated_mean/tables/R07_claims.tex` — 13 LaTeX macros (prefix `\RSeven`)
 
@@ -365,68 +354,30 @@ Reproduction command: `bash run_experiment_R07.sh`
 - `results/R07_estimated_mean/data/R07_eta_scaling.csv` — per-phi and pooled log-log decay exponents
   of eta and of the phi_hat dispersion, with their intervals (control C8); v87 prints no exponent
 - `results/R07_estimated_mean/data/R07_eta_scaling_counterfactual.csv` — the three counterfactual DGP
-  arms (t7_garch, gauss_garch, gauss_iid) that attempt to isolate the mechanism behind that exponent
-  (control C8 ladder)
+  arms (t7_garch, gauss_garch, gauss_iid) that attempt to isolate the mechanism behind that exponent (control C8 ladder)
 - the `float_drift` records inside `R07_lattice_exact_law.csv` — the realised level of each
   comparison operator on the oracle, calibration and validation stream sets (control C1 (iv))
 
 ## Measured execution cost
 
-154 seconds wall-clock, from 2026-08-22 04:40:08 to 04:42:42
-(`logs/R07_estimated_mean/exp_R07_estimated_mean.log` L1 and L367). The source and operator controls
-and the exact lattice law complete in the first 2 seconds; the 420000-stream trajectory campaign and
-the C7 guards take the next 141; the design effect, the counterfactual ladder, the figure and the
-artefacts take the remaining 11. The number of workers is not recorded in the log: the script takes
-`--n-jobs` and defaults it to `os.cpu_count()` without writing the resolved value.
+154 seconds wall-clock, from 2026-08-22 04:40:08 to 04:42:42 (`logs/R07_estimated_mean/exp_R07_estimated_mean.log` L1 and L367). The source and operator controls and the exact lattice law complete in the first 2 seconds; the 420000-stream trajectory campaign and the C7 guards take the next 141; the design effect, the counterfactual ladder, the figure and the artefacts take the remaining 11. The number of workers is not recorded in the log: the script takes `--n-jobs` and defaults it to `os.cpu_count()` without writing the resolved value.
 
 ## Known deviations from the submitted manuscript
 
-- **R07-bias-bound-not-a-bound** (D3). L308 states that the systematic AR bias "stays under
-  2.9 x 10^-3" across the full 7 x 4 grid. The largest absolute bias over the 28 diagnostic cells is
-  3.1268677 x 10^-3 with a standard error of 0.15754883 x 10^-3, at phi = 0.15 and n_ols = 125:
-  1.44 standard errors past the printed bound, and 0.81 past the 3.0 x 10^-3 that L308's own
-  -2.5 phi/n approximation predicts at that same corner. The maximising cell is the grid corner the
-  printed formula designates, so the extremum is structurally located rather than drawn. The bound
-  as printed does not hold. What the finding does not touch is set out under **Scope** in
-  `docs/audits/AUDIT_R07.md`; the parked correction is
-  `docs/camera_ready_candidates/R07_v87_bias_bound.md`.
-- **R07-campaign-redraw** (D2). The re-keyed campaign moves the L308 rate numerals at printed
-  precision: Ljung-Box rejection at phi = 0 from 5.1% to 4.92%, the Concept FPR at phi = 0.15 from
-  20.8% to 21.0%, the OLS Ljung-Box envelope from 4.6%-5.6% to 4.70%-5.63%, the OLS Concept FPR
-  envelope from 4.3%-5.9% to 4.84%-5.61%, and the eta RMSE at n = 125 from 11.4% to 11.48%. Each
-  moves within its own sampling error — the three numerals the test suite scores sit at -0.82, +0.49
-  and +2.24 standard errors — and both OLS envelopes remain inside the bands L308 prints. Ljung-Box
-  rejection at phi = 0.15 rounds to the printed 99.8% (D1).
-- **R07-dispersion-cost-numeral** (D2). L308 says the dispersion channel "costs at most 0.4 points
-  of rejection" without naming the quantity measured. Six readings were enumerated before the run
-  and each is reported: 0.71, 0.71, 0.71, 0.89, 0.63 and 0.93 points. None rounds to 0.4, in this
-  campaign or in the submitted witness, so the register entry is opened against the manuscript
-  rather than against the redraw. Parked correction:
-  `docs/camera_ready_candidates/R07_v87_dispersion_cost.md`.
-- **R07-lambda-star-estimator** (D0 on the value). lambda* is selected by applying L241's own rule —
-  the nearest attainable level at or below nominal — to the exact lattice law rather than to a
-  delivered sample quantile, which sits astride the lattice boundary. The threshold does not move:
-  11.4, bit-identical in float64 to the literal v87 prints.
-- **R07-panelB-operating-level** (no severity; no numeral is wrong). Control C1 (iv) measures, on
-  35000 fair-coin streams, that the implemented float test `M > lambda*` coincides with the
-  mathematical `M >= lambda*` on every one of them and differs from `M > lambda*` on 267. The level
-  the panel therefore operates at is the upper attainable one, 5.10% exact, not the 4.29% the
-  caption names beside lambda*. The delivered level on the 25000 independent calibration and
-  validation streams is 5.064%, and the ORACLE arm sits at 5.16%. `docs/audits/AUDIT_R08.md` carries
-  the falsification this implies for L241's selection rule, which is R08's to register. Parked
-  correction: `docs/camera_ready_candidates/R07_v87_panelB_operating_level.md`.
-- **R07-oracle-band-precision** (no severity). Under the mandated common-random-number plan the
-  seven ORACLE cells are bit-identical — the DGP never references phi when it draws the innovations
-  — so the reference band against which the rolling-OLS arms are compared is carried by 10000
-  effective trajectories, not 70000. The design effect is 7.0000 exactly on both statistics
-  (`R07_design_effect.csv`). The comparison itself is unaffected: the widest OLS-versus-ORACLE gap
-  over the 28 cells is 1.41 paired standard errors against a band of 4.0.
-- **Lattice levels at L241, no register entry in R07.** The exact law returns 4.3428% at
-  lambda = 11.4 and 5.1021% at lambda = 11.2, against the 4.29% and 5.03% L241 prints from a
-  2 x 10^5-stream Monte-Carlo — 1.16 and 1.46 Monte-Carlo standard errors of that stated basis. R07
-  opens no register entry on those two numerals and consumes no search string at L241, because the
-  campaign behind them belongs to R08. The word "exact" in the Figure 7 caption, which R07 does own,
-  is the separate parked candidate `docs/camera_ready_candidates/R07_v87_figure7_exactness.md`.
+- **R07-bias-bound-not-a-bound** (D3). L308 states that the systematic AR bias "stays under 2.9 x 10^-3" across the full 7 x 4 grid. 
+  The largest absolute bias over the 28 diagnostic cells is 3.1268677 x 10^-3 with a standard error of 0.15754883 x 10^-3, at phi = 0.15 and n_ols = 125: 1.44 standard errors past the printed bound, and 0.81 past the 3.0 x 10^-3 that L308's own -2.5 phi/n approximation predicts at that same corner. The maximising cell is the grid corner the printed formula designates, so the extremum is structurally located rather than drawn. The bound as printed does not hold. What the finding does not touch is set out under **Scope** in `docs/audits/AUDIT_R07.md`; the parked correction is `docs/camera_ready_candidates/R07_v87_bias_bound.md`.
+- **R07-campaign-redraw** (D2). The re-keyed campaign moves the L308 rate numerals at printed precision: 
+  Ljung-Box rejection at phi = 0 from 5.1% to 4.92%, the Concept FPR at phi = 0.15 from 20.8% to 21.0%, the OLS Ljung-Box envelope from 4.6%-5.6% to 4.70%-5.63%, the OLS Concept FPR envelope from 4.3%-5.9% to 4.84%-5.61%, and the eta RMSE at n = 125 from 11.4% to 11.48%. Each moves within its own sampling error — the three numerals the test suite scores sit at -0.82, +0.49 and +2.24 standard errors — and both OLS envelopes remain inside the bands L308 prints. Ljung-Box rejection at phi = 0.15 rounds to the printed 99.8% (D1).
+- **R07-dispersion-cost-numeral** (D2). L308 says the dispersion channel "costs at most 0.4 points of rejection" without naming the quantity measured.
+  Six readings were enumerated before the run and each is reported: 0.71, 0.71, 0.71, 0.89, 0.63 and 0.93 points. None rounds to 0.4, in this campaign or in the submitted witness, so the register entry is opened against the manuscript rather than against the redraw. Parked correction: `docs/camera_ready_candidates/R07_v87_dispersion_cost.md`.
+- **R07-lambda-star-estimator** (D0 on the value). lambda* is selected by applying L241's own rule — the nearest attainable level at or below nominal — to the exact lattice law rather than to a delivered sample quantile, which sits astride the lattice boundary.
+  The threshold does not move: 11.4, bit-identical in float64 to the literal v87 prints.
+- **R07-panelB-operating-level** (no severity; no numeral is wrong). Control C1 (iv) measures, on 35000 fair-coin streams, that the implemented float test `M > lambda*` coincides with the mathematical `M >= lambda*` on every one of them and differs from `M > lambda*` on 267.
+  The level the panel therefore operates at is the upper attainable one, 5.10% exact, not the 4.29% the caption names beside lambda*. The delivered level on the 25000 independent calibration and validation streams is 5.064%, and the ORACLE arm sits at 5.16%. `docs/audits/AUDIT_R08.md` carries the falsification this implies for L241's selection rule, which is R08's to register. Parked correction: `docs/camera_ready_candidates/R07_v87_panelB_operating_level.md`.
+- **R07-oracle-band-precision** (no severity). Under the mandated common-random-number plan the seven ORACLE cells are bit-identical — the DGP never references phi when it draws the innovations — so the reference band against which the rolling-OLS arms are compared is carried by 10000 effective trajectories, not 70000.
+  The design effect is 7.0000 exactly on both statistics (`R07_design_effect.csv`). The comparison itself is unaffected: the widest OLS-versus-ORACLE gap over the 28 cells is 1.41 paired standard errors against a band of 4.0.
+- **Lattice levels at L241, no register entry in R07.** The exact law returns 4.3428% at lambda = 11.4 and 5.1021% at lambda = 11.2, against the 4.29% and 5.03% L241 prints from a 2 x 10^5-stream Monte-Carlo — 1.16 and 1.46 Monte-Carlo standard errors of that stated basis.
+  R07 opens no register entry on those two numerals and consumes no search string at L241, because the campaign behind them belongs to R08. The word "exact" in the Figure 7 caption, which R07 does own, is the separate parked candidate `docs/camera_ready_candidates/R07_v87_figure7_exactness.md`.
 # R08 — The Adverse Direction and the Discrete Null Law
 
 R08 establishes the two qualifications of the manuscript's claim that the Concept threshold is exact. First, injected centring bias moves the false-alarm rate in both directions according to its sign at identical whiteness loss (L311, Figure 8 Panels A–B). Second, the attainable levels under the CUSUM dead band are discrete: with delta = 0.1, the two-sided increments move by +2delta and -3delta, placing M_H on a 2delta = 0.2 lattice (L241, Figure 8 Panel C). The experiment certifies Figure 8 (all three panels), L241 (lambda* = 11.4, bracketing levels at lambda = 11.2 and 11.4), and L311 (whiteness gap bound of 3 points, penalty at residual momentum 0.02).
