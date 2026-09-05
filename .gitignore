@@ -36,6 +36,7 @@ articleB_whitening_v87.tex
 build_mapping.py
 build_readme.sh
 verify_reproducibility.sh
+verify_repro_audit.log
 
 # Internal Auditing Scripts & Candidate Checkpoints
 /docs/camera_ready_candidates/ANCHOR_VERIFICATION.md

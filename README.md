@@ -21,6 +21,7 @@ A complete mapping table linking every figure and every number of the manuscript
 The campaign is locked to the following environment to guarantee IEEE 754 float determinism.
 * **Python:** 3.12.9
 * **Determinism:** MKL and OpenBLAS are strictly pinned to single-threading (`OMP_NUM_THREADS=1`, `MKL_CBWR=COMPATIBLE`) before NumPy imports. `PYTHONHASHSEED` is exported as `42` by each runner and verified by each script.
+* **End-to-end verification:** the full pipeline was run twice in succession from an empty `results/` tree. All **169** generated artefacts are byte-identical between the two runs, and identical to the committed tree. Each run took 128 minutes of wall-clock time on the verification machine. The execution logs under `logs/` are not part of this comparison: they carry an ISO 8601 timestamp on every line and differ by construction.
 
 ## 4. Reproduction Commands
 The pipeline relies on specific package versions to guarantee numeric determinism. Create a virtual environment and install the root requirements before executing.

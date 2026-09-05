@@ -1,26 +1,26 @@
-2026-09-04 18:38:30 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
-2026-09-04 18:38:30 | INFO | Python: 3.12.9
-2026-09-04 18:38:30 | INFO |   numpy: 1.26.4
-2026-09-04 18:38:30 | INFO |   pandas: 2.3.2
-2026-09-04 18:38:30 | INFO |   scipy: 1.16.2
-2026-09-04 18:38:30 | INFO |   matplotlib: 3.10.6
-2026-09-04 18:38:30 | INFO |   joblib: 1.4.2
-2026-09-04 18:38:30 | INFO | Executing 1000 streams per cell. Grids: 3 nu x 4 horizons. 1 cores.
-2026-09-04 18:41:30 | INFO | nu=5.0: Slope = -2.367e-03 95% CI[-7.736e-03, 3.003e-03]. Indistinguishable from zero -> H1 refuted, H2 not refuted.
-2026-09-04 18:41:30 | INFO | nu=6.0: Slope = -3.562e-03 95% CI[-8.756e-03, 1.632e-03]. Indistinguishable from zero -> H1 refuted, H2 not refuted.
-2026-09-04 18:41:30 | INFO | nu=7.0: Slope = -1.835e-03 95% CI[-6.276e-03, 2.606e-03]. Indistinguishable from zero -> H1 refuted, H2 not refuted.
-2026-09-04 18:41:30 | INFO | Negative control (raw): m=12 tests. P(at least one rejection | H0) = 0.460
-2026-09-04 18:41:30 | INFO | S4bis Substituted KS test (raw): KS_stat=0.2380, p-value=0.4374
-2026-09-04 18:41:30 | INFO | Witness control (nu=7): m=4 tests. P(at least one rejection | H0) = 0.185
-2026-09-04 18:41:30 | INFO | S4bis Substituted KS test (nu=7): KS_stat=0.3666, p-value=0.5480
-2026-09-04 18:41:30 | INFO | Completed execution in 3.0 minutes.
-2026-09-04 18:41:30 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
-2026-09-04 18:41:30 | INFO | ./
-2026-09-04 18:41:30 | INFO | ├── data/
-2026-09-04 18:41:30 | INFO | │   ├── R02c_streams.csv                    [9c8e24a6c0434e08d579cf1859abd0fdfa25ed923c243ea0eabeb5f4570c212c]
-2026-09-04 18:41:30 | INFO | │   └── R02c_rejection_vs_horizon.csv       [4d47c65ef4decf65474103842add8c5ebb8b081c143eaa876945a60dbfb55f21]
-2026-09-04 18:41:30 | INFO | ├── figures/
-2026-09-04 18:41:30 | INFO | │   └── figA02_overrejection_vs_horizon.png  [b90f95a77d3dd6ce0860b76d99b3134f2c40a6b204472f76d7a6cafbc9205a09]
-2026-09-04 18:41:30 | INFO | └── tables/
-2026-09-04 18:41:30 | INFO |     └── R02c_claims.tex                     [f708ff62ee90c41f7c18b1e7ccaff3f563af9ec0575794a293318e295e6a1498]
-2026-09-04 18:41:30 | INFO | =============================================================================
+2026-09-05 05:50:47 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-09-05 05:50:47 | INFO | Python: 3.12.9
+2026-09-05 05:50:47 | INFO |   numpy: 1.26.4
+2026-09-05 05:50:47 | INFO |   pandas: 2.3.2
+2026-09-05 05:50:47 | INFO |   scipy: 1.16.2
+2026-09-05 05:50:47 | INFO |   matplotlib: 3.10.6
+2026-09-05 05:50:47 | INFO |   joblib: 1.4.2
+2026-09-05 05:50:47 | INFO | Executing 1000 streams per cell. Grids: 3 nu x 4 horizons. 1 cores.
+2026-09-05 05:53:43 | INFO | nu=5.0: Slope = -2.367e-03 95% CI[-7.736e-03, 3.003e-03]. Indistinguishable from zero -> H1 refuted, H2 not refuted.
+2026-09-05 05:53:43 | INFO | nu=6.0: Slope = -3.562e-03 95% CI[-8.756e-03, 1.632e-03]. Indistinguishable from zero -> H1 refuted, H2 not refuted.
+2026-09-05 05:53:43 | INFO | nu=7.0: Slope = -1.835e-03 95% CI[-6.276e-03, 2.606e-03]. Indistinguishable from zero -> H1 refuted, H2 not refuted.
+2026-09-05 05:53:43 | INFO | Negative control (raw): m=12 tests. P(at least one rejection | H0) = 0.460
+2026-09-05 05:53:43 | INFO | S4bis Substituted KS test (raw): KS_stat=0.2380, p-value=0.4374
+2026-09-05 05:53:43 | INFO | Witness control (nu=7): m=4 tests. P(at least one rejection | H0) = 0.185
+2026-09-05 05:53:43 | INFO | S4bis Substituted KS test (nu=7): KS_stat=0.3666, p-value=0.5480
+2026-09-05 05:53:44 | INFO | Completed execution in 3.0 minutes.
+2026-09-05 05:53:44 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
+2026-09-05 05:53:44 | INFO | ./
+2026-09-05 05:53:44 | INFO | ├── data/
+2026-09-05 05:53:44 | INFO | │   ├── R02c_streams.csv                    [9c8e24a6c0434e08d579cf1859abd0fdfa25ed923c243ea0eabeb5f4570c212c]
+2026-09-05 05:53:44 | INFO | │   └── R02c_rejection_vs_horizon.csv       [4d47c65ef4decf65474103842add8c5ebb8b081c143eaa876945a60dbfb55f21]
+2026-09-05 05:53:44 | INFO | ├── figures/
+2026-09-05 05:53:44 | INFO | │   └── figA02_overrejection_vs_horizon.png  [b90f95a77d3dd6ce0860b76d99b3134f2c40a6b204472f76d7a6cafbc9205a09]
+2026-09-05 05:53:44 | INFO | └── tables/
+2026-09-05 05:53:44 | INFO |     └── R02c_claims.tex                     [f708ff62ee90c41f7c18b1e7ccaff3f563af9ec0575794a293318e295e6a1498]
+2026-09-05 05:53:44 | INFO | =============================================================================

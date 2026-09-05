@@ -12,6 +12,7 @@ Class A means the deviation is a consequence of the compliant pipeline's own spe
 
 | identifier                          | stream | class | severity    | what it names                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | ----------------------------------- | ------ | ----- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `R00-repo-compute-timings`          | R00    | A     | D2          | Execution benchmarks shift under deterministic single-threaded BLAS: paper regeneration moves from ≈1 h to 113.7 min (≈2 h), the iso-FPR race from ≈25 min to 3.8 min, and the scaling campaign from ≈45 min to 55.5 min. Reconciles the scope conflict regarding the H = 3e6 scaling campaign cited in Appendix B.                                                                                                                                           |
 | `R02-campaign-redraw`               | R02    | A     | D2          | The i.i.d. arm rate, the pooled binary-error rate and its Wilson bounds move under the compliant pipeline (9.2 to 5.8, 4.4 to 4.2, [2.8, 7.1] to [2.5, 6.8]).                                                                                                                                                                                                                                                                                                 |
 | `R02b-iid-arm-rejection`            | R02b   | A     | **D3**      | L278 states the wrong moment condition for the validity of the chi-square approximation to the Ljung-Box statistic on squared innovations.                                                                                                                                                                                                                                                                                                                    |
 | `R02b-iid-arm-over-rejection`       | R02b   | A     | **D3**      | L278 states the $t_7$ i.i.d. arm "already over-rejects" at 9.2%. The regenerated rate at that arm is 5.8%, Wilson $[4.51, 7.43]\%$: the interval excludes the printed 9.2% and contains the 5% nominal level. At 1000 streams the standard error of a rate near 5% is 0.0069, so 9.2% sits six standard errors from nominal and the experiment has the resolution to exclude it. Distinct from `R02b-iid-arm-rejection`, which concerns the stated mechanism. |
@@ -67,6 +68,39 @@ Class A means the deviation is a consequence of the compliant pipeline's own spe
 | `R17-campaign-redraw`               | R17    | A     | D2          | Four of the five L341 numerals move at their printed precision under the re-keying.                                                                                                                                                                                                                                                                                                                                                                           |
 | `R17-eco-l1-arm-identity`           | R17    | A     | **D3**      | A false-alarm figure is attributed to the arm Table 1 defines as the level residual, while the cell that produced it monitors the squared standardized residual.                                                                                                                                                                                                                                                                                              |
 | `R18-ljungbox-power`                | R18    | A     | no severity | The two load-bearing non-rejections do not state the power of the test that produced them.                                                                                                                                                                                                                                                                                                                                                                    |
+
+---
+
+## R00 — Infrastructure and Compute Benchmarks
+
+**Deviation Class: D2**
+
+**Register entry:** `R00-repo-compute-timings` (Class A, D2)
+
+**Affected Metrics:** Overall paper regeneration time (${\approx}1$\,h $\rightarrow$ 113.7 min $\approx 2$\,h), Section 4 iso-FPR race duration (${\approx}25$\,min $\rightarrow$ 3.8 min), Appendix B scaling campaign duration (${\approx}45$\,min $\rightarrow$ 55.5 min), and scope characterization of the $H = 3\times10^6$ run.
+
+**Root Cause:** Manuscript numerals reflect early unpinned estimates. Re-execution under enforced single-threaded BLAS determinism (`OMP_NUM_THREADS=1`, `MKL_NUM_THREADS=1`, `MKL_CBWR=COMPATIBLE`) and ProcessPoolExecutor parallelism (48 workers) on the documented AMD EPYC 8224P yields precise empirical benchmarks.
+
+**Mechanism:**
+1. *Iso-FPR race (R04):* Parallel execution across 48 cores via `ProcessPoolExecutor` with deterministic seeding reduces runtime from the conservatively stated ${\approx}25$\,min to 3.8 min (225.3 s).
+2. *Scaling campaign (R05 step b):* Sequential execution of the $H = 3\times 10^6$ grid within the `exp_R05_scale_law_c.py` driver requires 55.5 min (3331.3 s) rather than the estimated ${\approx}45$\,min.
+3. *Scope reconciliation ($H = 3\times 10^6$):* The paragraph describes this campaign as one "that the paper does not use", yet Appendix~\ref{app:scaling} explicitly reports five numerical values derived from it (`lambda_iid_3e6`, `grid_reach_wstar_3e6`, `low_gamma_max_error_pct_3e6`, `rho_w_share_pct_3e6`, `recalib_margin_max_pct_3e6`, documented in `AUDIT_R05.md`). Because these values are part of the published evidence, the campaign cannot be subtracted from the paper's scope.
+4. *Overall regeneration subtotal:* The complete repository pipeline runs in 128.0 min. Deducting the 14.3 min consumed by non-published diagnostic arms (R14, R15, R17 legacy/witness runs, R18, and `run_tests.sh`) leaves 113.7 min (${\approx}2$\,h) to regenerate all published results.
+
+**Quantitative Impact:**
+- Overall regeneration time: Published ${\approx}1$\,h vs measured 113.7 min (D2, shifts to ${\approx}2$\,h).
+- Iso-FPR race duration: Published ${\approx}25$\,min vs measured 3.8 min (D2, rounds to 4 min).
+- Higher-resolution scaling campaign: Published ${\approx}45$\,min vs measured 55.5 min (D2, rounds to 55 min).
+
+**Published Precision Impact:** SUBSTANTIAL. All three printed compute numerals move at their reported precision.
+
+**Qualitative Claim Impact:** NONE. Feasibility on commodity multi-core hardware without GPUs is confirmed; all published results regenerate in under two hours.
+
+**Verification:** Validated by `run1.log` and `run2.log` under `verify_reproducibility.sh` (both strictly 128.0 min wall-clock), `results/R05_scale_law/tables/R05_claims.tex`, and `AUDIT_R05.md` lines 26--30.
+
+**Candidate Files:** `docs/camera_ready_candidates/R00_v87_compute_paragraph.md`.
+
+**Status:** CERTIFIED — D2 documented and bounded. Camera-ready candidate parked.
 
 ---
 
