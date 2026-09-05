@@ -1,0 +1,68 @@
+2026-09-04 18:41:31 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-09-04 18:41:31 | INFO | Python: 3.12.9
+2026-09-04 18:41:31 | INFO |   numpy: 1.26.4
+2026-09-04 18:41:31 | INFO |   pandas: 2.3.2
+2026-09-04 18:41:31 | INFO |   scipy: 1.16.2
+2026-09-04 18:41:31 | INFO |   matplotlib: 3.10.6
+2026-09-04 18:41:31 | INFO | Specification: n_streams = 300, stream_length = 5000, lambda_iid = 65.0, delta_P = 0.5, alpha = 0.08
+2026-09-04 18:41:31 | INFO | Specification check (a): all five protocol constants match v87.
+2026-09-04 18:41:31 | INFO | Deterministic reduction: ProcessPoolExecutor with max_workers = 48, executor.map in submission order, chunksize = 10. No completion-order reduction, no worker-side logging. Outputs are invariant to the worker count because every task derives its own 128-bit seed.
+2026-09-04 18:41:31 | INFO | Certification rule fixed before measurement: v87 "close to 80% or above once Gamma > 20" -> mean FPR_raw over Gamma > 20 >= 0.76 (0.80 less 5% in relative terms)
+2026-09-04 18:41:31 | INFO | Certification rule fixed before measurement: v87 "residual plateau near 30%" -> mean FPR_sqrt over Gamma > 20 in [0.25, 0.35] (0.30 plus or minus 5 percentage points)
+2026-09-04 18:41:31 | INFO | Certification rule fixed before measurement: v87 "containing the FPR below 13%" -> mean FPR_recalib over the whole grid <= 0.13 (literal numeral, no operationalisation)
+2026-09-04 18:41:31 | INFO | Protocol 1A: StrictCUSUM false alarm rate under H_0.
+2026-09-04 18:41:36 | INFO | Protocol 1B: ADWIN-like false alarm rate under H_0.
+2026-09-04 18:41:45 | INFO | i.i.d. calibration arm: compute_gamma_exact(0, 0) = 1.0
+2026-09-04 18:41:45 | INFO | Protocol 2A: detection delay against Gamma (retained, not cited in v87).
+2026-09-04 18:41:52 | INFO | Protocol 2B: detection delay against drift width (retained, not cited in v87).
+2026-09-04 18:41:57 | INFO | Protocol 2C: speedup sensitivity (retained, not cited in v87).
+2026-09-04 18:41:58 | INFO | Protocol 2C reference arm: FPR_data = 0.0200, ADD_data = 846.33
+2026-09-04 18:42:10 | INFO | Cardinality check (b): both grid files carry 20 rows.
+2026-09-04 18:42:10 | INFO | Shared-realisation verdict: per-stream nesting violations, CUSUM = 0, ADWIN = 0 over 6000 and 6000 streams. Zero violations means each row's columns are one realisation read at several thresholds, so the column ordering below is a deterministic identity and not a hypothesis test.
+2026-09-04 18:42:10 | INFO | Consistency check (e): threshold ordering holds on all 20 rows of both files.
+2026-09-04 18:42:10 | INFO | Monotonicity check (e): 18 consecutive differences beyond Gamma = 6.0; mechanism-derived bound = -0.10997 (SE_diff = 0.03373, z_bonf = 3.261 at family-wise alpha = 0.01); most negative observed difference = +0.000000; Spearman rho = 0.9974 (p = 8.165e-21).
+2026-09-04 18:42:10 | INFO | Aggregate gate [mean FPR_raw over Gamma > 20]: 0.807083 over n = 4800 (16 grid points x 300 streams); SE_pooled = 0.00570, SE_crn = 0.02278; (+0.047083 above 0.76, +8.3 pooled SE, +2.1 CRN SE); verdict = PASS
+2026-09-04 18:42:10 | INFO | Aggregate gate [mean FPR_sqrt over Gamma > 20]: 0.297917 over n = 4800 (16 grid points x 300 streams); SE_pooled = 0.00660, SE_crn = 0.02640; (+0.047917 above 0.25, +7.3 pooled SE, +1.8 CRN SE) (+0.052083 below 0.35, +7.9 pooled SE, +2.0 CRN SE); verdict = PASS
+2026-09-04 18:42:10 | INFO | Aggregate gate [mean FPR_recalib over the whole grid]: 0.095500 over n = 6000 (20 grid points x 300 streams); SE_pooled = 0.00379, SE_crn = 0.01697; (+0.034500 below 0.13, +9.1 pooled SE, +2.0 CRN SE); verdict = PASS
+2026-09-04 18:42:10 | WARNING | Extremal criterion [min FPR_raw over Gamma > 20]: observed 0.743333 at Gamma = 22.7778 against threshold 0.76; probability of firing under H_0 at the observed aggregate rate 0.807083 is 0.255 for 16 independent grid points (upper bound under CRN) -- BREACHED, non-blocking
+2026-09-04 18:42:10 | INFO | Extremal criterion [max FPR_sqrt over Gamma > 20]: observed 0.310000 at Gamma = 75.5556 against threshold 0.35; probability of firing under H_0 at the observed aggregate rate 0.297917 is 0.301 for 16 independent grid points (upper bound under CRN) -- not breached
+2026-09-04 18:42:10 | INFO | Extremal criterion [max FPR_recalib over the whole grid]: observed 0.110000 at Gamma = 91.1111 against threshold 0.13; probability of firing under H_0 at the observed aggregate rate 0.095500 is 0.333 for 20 independent grid points (upper bound under CRN) -- not breached
+2026-09-04 18:42:10 | INFO | Certification check (f): the three aggregate gates hold.
+2026-09-04 18:42:10 | INFO | i.i.d. calibration at Gamma = 1: StrictCUSUM FPR = 0.020000 (6/300), Wilson 95% [0.009198, 0.042940], contains the 5% nominal level: False
+2026-09-04 18:42:10 | INFO | i.i.d. calibration at Gamma = 1: ADWIN FPR = 0.050000 (15/300), Wilson 95% [0.030532, 0.080847], contains the 5% nominal level: True
+2026-09-04 18:42:10 | INFO | Deviation classification against the submitted campaign, at the printing precision of v87:
+2026-09-04 18:42:10 | INFO | quantity                               |  published | regenerated | degree | source cell
+2026-09-04 18:42:10 | INFO | CUSUM FPR_raw max                      |   0.830000 |    0.833333 |     D2 | protocol_1a[FPR_raw] at Gamma = 106.6667
+2026-09-04 18:42:10 | INFO | CUSUM FPR_raw min over Gamma > 20      |   0.760000 |    0.743333 |     D2 | protocol_1a[FPR_raw] at Gamma = 28.2222
+2026-09-04 18:42:10 | INFO | CUSUM FPR_raw mean over Gamma > 20     |   0.811042 |    0.807083 |     D2 | protocol_1a[FPR_raw], 16-point mean
+2026-09-04 18:42:10 | INFO | CUSUM FPR_sqrt max                     |   0.330000 |    0.310000 |     D2 | protocol_1a[FPR_sqrt] at Gamma = 91.1111
+2026-09-04 18:42:10 | INFO | CUSUM FPR_sqrt mean over Gamma > 20    |   0.319583 |    0.297917 |     D2 | protocol_1a[FPR_sqrt], 16-point mean
+2026-09-04 18:42:10 | INFO | CUSUM FPR_gamma max                    |   0.016667 |    0.040000 |     D2 | protocol_1a[FPR_gamma] at Gamma = 1.1739
+2026-09-04 18:42:10 | INFO | CUSUM FPR_raw at lowest Gamma          |   0.026667 |    0.040000 |     D2 | protocol_1a[FPR_raw] at Gamma = 1.1739
+2026-09-04 18:42:10 | INFO | ADWIN FPR_raw max                      |   0.876667 |    0.870000 |     D2 | protocol_1b[FPR_raw] at Gamma = 184.4444
+2026-09-04 18:42:10 | INFO | ADWIN FPR_recalib max                  |   0.126667 |    0.110000 |     D2 | protocol_1b[FPR_recalib] at Gamma = 75.5556
+2026-09-04 18:42:10 | INFO | ADWIN FPR_recalib mean                 |   0.101833 |    0.095500 |     D2 | protocol_1b[FPR_recalib], 20-point mean
+2026-09-04 18:42:10 | INFO | ADWIN FPR_raw at lowest Gamma          |   0.053333 |    0.093333 |     D2 | protocol_1b[FPR_raw] at Gamma = 1.1739
+2026-09-04 18:42:11 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
+2026-09-04 18:42:11 | INFO | ./
+2026-09-04 18:42:11 | INFO | ├── data/
+2026-09-04 18:42:11 | INFO | │   ├── R03_fpr_cusum.csv                   [ef599446da928495185ea61dda060efbd4da0b586e87c9ee6711c5dcc7176d0e]
+2026-09-04 18:42:11 | INFO | │   ├── R03_fpr_adwin.csv                   [53a049f7a5b25da379212cfe48a5c32ef286827260eaea167e4ab5171dbb42d6]
+2026-09-04 18:42:11 | INFO | │   ├── R03_iid_calibration_check.csv       [54dabdc61097973f805e60edc0ed199f9ad7f2bdb82fa2af73087affde9bf004]
+2026-09-04 18:42:11 | INFO | │   ├── R03_add_vs_gamma.csv                [0c40f163f3a94b14a74ce863b603f14d4683ccde795f36b9a3ffe8b0bad5f2d3]
+2026-09-04 18:42:11 | INFO | │   ├── R03_add_vs_width.csv                [6509beeaa701c4e427c78e8f545b7405abcbc53b2bb8759106f1fd1cde50f51c]
+2026-09-04 18:42:11 | INFO | │   └── R03_sensitivity.csv                 [b66382ce3b6b82e7474a316ad732e19c2116f0ecfe200487059469a3de4cf68e]
+2026-09-04 18:42:11 | INFO | ├── figures/
+2026-09-04 18:42:11 | INFO | │   └── fig03_fpr_explosion.png             [6ec5f5ec7cc112455d2f2cf377065a75342966b770a01dfb5034c42af131ab6c]
+2026-09-04 18:42:11 | INFO | └── tables/
+2026-09-04 18:42:11 | INFO |     └── R03_claims.tex                      [283b6a387f2b0514d1123ac61261f37b3e32fa5d791b6b8354866b9db0919db1]
+2026-09-04 18:42:11 | INFO | =============================================================================
+2026-09-04 18:42:11 | INFO | SHA-256 R03_fpr_cusum.csv : ef599446da928495185ea61dda060efbd4da0b586e87c9ee6711c5dcc7176d0e
+2026-09-04 18:42:11 | INFO | SHA-256 R03_fpr_adwin.csv : 53a049f7a5b25da379212cfe48a5c32ef286827260eaea167e4ab5171dbb42d6
+2026-09-04 18:42:11 | INFO | SHA-256 R03_iid_calibration_check.csv : 54dabdc61097973f805e60edc0ed199f9ad7f2bdb82fa2af73087affde9bf004
+2026-09-04 18:42:11 | INFO | SHA-256 R03_add_vs_gamma.csv : 0c40f163f3a94b14a74ce863b603f14d4683ccde795f36b9a3ffe8b0bad5f2d3
+2026-09-04 18:42:11 | INFO | SHA-256 R03_add_vs_width.csv : 6509beeaa701c4e427c78e8f545b7405abcbc53b2bb8759106f1fd1cde50f51c
+2026-09-04 18:42:11 | INFO | SHA-256 R03_sensitivity.csv : b66382ce3b6b82e7474a316ad732e19c2116f0ecfe200487059469a3de4cf68e
+2026-09-04 18:42:11 | INFO | SHA-256 fig03_fpr_explosion.png : 6ec5f5ec7cc112455d2f2cf377065a75342966b770a01dfb5034c42af131ab6c
+2026-09-04 18:42:11 | INFO | SHA-256 R03_claims.tex : 283b6a387f2b0514d1123ac61261f37b3e32fa5d791b6b8354866b9db0919db1
+2026-09-04 18:42:11 | INFO | Execution completed in 39.0s with 48 workers.

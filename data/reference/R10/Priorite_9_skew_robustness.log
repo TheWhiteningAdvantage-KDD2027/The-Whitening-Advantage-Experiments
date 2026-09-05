@@ -1,0 +1,25 @@
+2026-07-27 09:02:50 | INFO | Requirements saved to /home/m53/The-Whitening-Advantage-Experiments-CHECK/requirements.txt
+2026-07-27 09:02:50 | INFO | Environment: numpy==1.26.4, pandas==2.3.2, scipy==1.16.2, statsmodels==0.14.5, matplotlib==3.10.6, river==0.23.0, joblib==1.4.2
+2026-07-27 09:02:50 | INFO | ======================================================================
+2026-07-27 09:02:50 | INFO |   Priorité 9 : Skewness Robustness & Whitening Deformation Test
+2026-07-27 09:02:50 | INFO | ======================================================================
+2026-07-27 09:02:50 | INFO | Verifying Skew-t moments pre-standardization...
+2026-07-27 09:02:51 | INFO | FS Standardisation passed. All z arrays have E[Z]=0, Var(Z)=1.
+2026-07-27 09:02:51 | INFO | Running grid with 4 configurations, 1000 seeds per config.
+2026-07-27 09:02:51 | INFO | Seed uniqueness intra-group verified successfully.
+2026-07-27 09:02:51 | INFO | Common Random Numbers (CRN) across groups verified.
+2026-07-27 09:02:51 | INFO | Theoretical random consumption verified: fs_skew_t_standardized consumes exactly 2 * N_STEPS draws per stream.
+2026-07-27 09:03:35 | INFO | --- Diagnostic Summaries ---
+2026-07-27 09:03:35 | INFO | 
+  xi  skewness        q
+1.00  0.002867 0.499682
+0.85 -0.477690 0.529572
+0.65 -1.097250 0.564269
+0.50 -1.442847 0.582300
+2026-07-27 09:03:35 | INFO | Figure saved: /home/m53/The-Whitening-Advantage-Experiments-CHECK/figures/Fig14_Skew_Robustness.png
+2026-07-27 09:03:35 | INFO | Running embedded programmatic certification...
+2026-07-27 09:03:35 | INFO | Embedded programmatic certification PASSED: All metrics match exact specifications.
+2026-07-27 09:03:35 | INFO | Independence metrics (lb_ebin_rate, lb_sign_rate) remain strictly at the nominal level (around 0.05), verifying the theoretical property that asymmetry preserves temporal independence.
+2026-07-27 09:03:35 | INFO | SHA-256 skew_robustness_diagnostics.csv: 7cd0d5ef1b7cf1209dc96db04b0d52a08328ebfb52d1d9a31bbeae54bcdd1817
+2026-07-27 09:03:35 | INFO | SHA-256 skew_robustness_fpr.csv: ee809813ac1cb63660e6aa153f886b178d99a27dbcf974f54ba264cbe7e3a0aa
+2026-07-27 09:03:35 | INFO | Skewness evaluation complete in 45.30 seconds.

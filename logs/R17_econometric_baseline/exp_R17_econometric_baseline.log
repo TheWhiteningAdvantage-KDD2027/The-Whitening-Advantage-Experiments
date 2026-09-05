@@ -1,0 +1,260 @@
+2026-09-04 20:22:24 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-09-04 20:22:24 | INFO | Python: 3.12.9
+2026-09-04 20:22:24 | INFO |   numpy: 1.26.4
+2026-09-04 20:22:24 | INFO |   pandas: 2.3.2
+2026-09-04 20:22:24 | INFO |   scipy: 1.16.2
+2026-09-04 20:22:24 | INFO |   statsmodels: 0.14.5
+2026-09-04 20:22:24 | INFO |   pytest: 9.0.3
+2026-09-04 20:22:24 | INFO | R17 prices what the parametric route costs when the warm-up is finite: the QMLE persistence at a 250-step window, the false-alarm rate it delivers, the warm-up length at which the level returns, and the sign pipeline's rate over the same axis. It feeds v87 L341 and renders no figure of the manuscript.
+2026-09-04 20:22:24 | INFO | ARM: --qmle-options specs. THE ARBITRATION OF THIS STREAM IS COMPLIANCE, NOT INVARIANCE. The delivered fit_garch_qmle calls minimize with no tol, no ftol, no eps and no output truncation, in contravention of SPECS 1.10; 1.10 is applied on the `specs` arm, the displacement is measured, and the `legacy` arm attributes it. Those displacements are pre-classified Class A / D2 and are not justified value by value -- but each is classified against v87's printing precision, and a falsified qualitative claim of L341 would be a D3.
+2026-09-04 20:22:24 | INFO | C1 -- DECLARED BEFORE THE REGENERATED VALUES ARE READ, per R17 prompt 2.2. \RSeventeenMedianPersistenceAtWarmupTwoFifty is THE MEDIAN OF THE PER-FIT SUM alpha_hat + beta_hat OVER ALL FITS, CONVERGED AND NOT, at (n_warmup = 250, gamma_lev = 0.00). L341 reads 'the estimated persistence collapses to a median alpha_hat + beta_hat', which is the median OF THE SUM, and pooling is what a practitioner obtains. Three companions are persisted beside it and NONE is published: the median of the sum over converged fits only; the sum of marginal medians pooled, which is the witness's own construction (0.047881 + 0.573349 = 0.621230 at that cell); and the sum of marginal medians over converged fits only. The witness cell carries share_nonconverged = 0.0, so pooling is vacuous THERE -- which is exactly why the rule is fixed for the seven cells where it is not.
+2026-09-04 20:22:24 | INFO | C1 -- WHAT THE DELIVERED CONVERGENCE FLAG MEASURES. It is `res.success and max(|a - 0.05|, |b - 0.90|) > 1e-6`: it detects an SLSQP failure or a return to the initialiser, and NOTHING ELSE. A corner solution at the optimiser's lower bound -- persistence about zero, no GARCH at all -- is recorded as converged. The witness exhibits it: at (250, 0.00) it carries share_nonconverged = 0.0 while its own alpha_hat_10 = 1.0000000042e-06 and beta_hat_10 = 1.0000000000e-06 sit ON the bound. The flag is carried verbatim and reported as it is; equals_initialiser, at_lower_bound and at_upper_bound are derived OUTSIDE fit_garch_qmle, per fit, into R17_warmup_fits.csv, so the primitive's ast identity is untouched.
+2026-09-04 20:22:24 | INFO | C8 source identity: 9 routines byte-identical to the files that own them (3311 characters compared) -- compute_gamma_exact, solve_beta_for_gamma, strict_cusum, _garch_nll, filter_sigma2 and wilson_ci against Priorite_6_econometric_baseline.py, and get_deterministic_seed, seed_sequence_for and rng_for against exp_R13_oracle_ceiling_a.py. Preamble S4.2 forbids hoisting any of them into experiments/common/: the same routine names exist elsewhere in this repository with different bodies, so mutualising them would move published values. Deterministic; trigger probability 0 unless a copy has drifted.
+2026-09-04 20:22:24 | INFO | C8 differential [fit_garch_qmle]: with the adapted node redacted in both trees, the two ast dumps are identical over 3924 characters. The single permitted difference is the `minimize(...)` call node alone, which becomes `qmle_minimize(...)`: SPECS 1.10 imposes tol=1e-8, ftol=1e-8, eps=1e-5 and a deterministic truncation of the returned solution. Every other statement, including the bound enforcement, the convergence flag and the fallback, is the witness's. Witness node(s): ["minimize(_garch_nll, init, args=(eps_warmup, var_emp), \n                       method='SLSQP', bounds=bounds, constraints=constraints)"]. This port's node(s): ["qmle_minimize(_garch_nll, init, args=(eps_warmup, var_emp),\n                            method='SLSQP', bounds=bounds, constraints=constraints)"].
+2026-09-04 20:22:24 | INFO | C8 differential [simulate_garch11]: with the adapted node redacted in both trees, the two ast dumps are identical over 3882 characters. The single permitted difference is the RNG construction: `rng = np.random.default_rng(seed)` becomes an injected generator, and the trailing `seed=42` argument becomes `loc_rng=None` (preamble S6, 128-bit re-keying). Witness node(s): ['seed', '42', 'rng = np.random.default_rng(seed)']. This port's node(s): ['loc_rng', 'None', 'rng = loc_rng'].
+2026-09-04 20:22:24 | INFO | C8 differential [simulate_gjr11]: with the adapted node redacted in both trees, the two ast dumps are identical over 4453 characters. The single permitted difference is the RNG construction, identically to simulate_garch11. Witness node(s): ['seed', '42', 'rng = np.random.default_rng(seed)']. This port's node(s): ['loc_rng', 'None', 'rng = loc_rng'].
+2026-09-04 20:22:24 | INFO | C8 witness source of fit_garch_qmle, SHA-256 b99bfd2b6abebe9aeac02638aaf5c915280371d0cb7d59dff59604112dd5ab24, S4.4 grep on the segment empty:
+def fit_garch_qmle(eps_warmup):
+    """
+    Fits GARCH(1,1) via Quasi-Maximum Likelihood Estimation (QMLE).
+    Strictly trained on in-sample data. Variance targeting applied.
+    """
+    var_emp = np.var(eps_warmup)
+    init = [0.05, 0.90]
+    bounds = [(1e-6, 0.5), (1e-6, 0.99)]
+    constraints = {'type': 'ineq', 'fun': lambda x: 0.999 - (x[0] + x[1])}
+    
+    try:
+        res = minimize(_garch_nll, init, args=(eps_warmup, var_emp), 
+                       method='SLSQP', bounds=bounds, constraints=constraints)
+        a, b = res.x if res.success else init
+        
+        # Enforce strict bounds natively to prevent divergent inference
+        if a + b >= 0.999 or a < 0 or b < 0:
+            a, b = init
+            converged = False
+        else:
+            converged = res.success and max(abs(a - 0.05), abs(b - 0.90)) > 1e-6
+            
+        return (var_emp * (1.0 - a - b), a, b), converged
+    except Exception:
+        return (var_emp * (1.0 - init[0] - init[1]), init[0], init[1]), False
+2026-09-04 20:22:24 | INFO | C8 witness source of simulate_garch11, SHA-256 ee862cd63880d2aeb48338e34f3e9e6df43e4df3d31321d7caa66bf21715a563, S4.4 grep on the segment empty:
+def simulate_garch11(n, omega, alpha, beta, nu=7.0, seed=42):
+    """Simulates a stationary GARCH(1,1) stream with standardized Student-t7 innovations."""
+    rng = np.random.default_rng(seed)
+    sigma2_unc = omega / (1 - alpha - beta)
+    eps = np.zeros(n)
+    sigma2 = np.zeros(n)
+    sigma2[0] = sigma2_unc
+    scale = np.sqrt((nu - 2) / nu)
+    z = rng.standard_t(df=nu, size=n) * scale
+    eps[0] = np.sqrt(sigma2[0]) * z[0]
+    for t in range(1, n):
+        sigma2[t] = omega + alpha * eps[t-1]**2 + beta * sigma2[t-1]
+        sigma2[t] = min(sigma2[t], 1e4 * sigma2_unc)
+        eps[t] = np.sqrt(sigma2[t]) * z[t]
+    return eps
+2026-09-04 20:22:24 | INFO | C8 witness source of simulate_gjr11, SHA-256 1b8e92be65fc27f16a379cc9a97dba39ceccc909c08ccc796640882a8319a208, S4.4 grep on the segment empty:
+def simulate_gjr11(n, omega, alpha, gamma_lev, beta, nu=7.0, seed=42):
+    """Simulates a stationary GJR-GARCH(1,1) stream with asymmetric leverage effect."""
+    rng = np.random.default_rng(seed)
+    # Stationarity condition: alpha + beta + gamma_lev/2 < 1
+    sigma2_unc = omega / (1 - alpha - beta - gamma_lev/2.0)
+    eps = np.zeros(n)
+    sigma2 = np.zeros(n)
+    sigma2[0] = sigma2_unc
+    scale = np.sqrt((nu - 2) / nu)
+    z = rng.standard_t(df=nu, size=n) * scale
+    eps[0] = np.sqrt(sigma2[0]) * z[0]
+    for t in range(1, n):
+        indicator = 1.0 if eps[t-1] < 0 else 0.0
+        sigma2[t] = omega + (alpha + gamma_lev * indicator) * eps[t-1]**2 + beta * sigma2[t-1]
+        sigma2[t] = min(sigma2[t], 1e4 * sigma2_unc)
+        eps[t] = np.sqrt(sigma2[t]) * z[t]
+    return eps
+2026-09-04 20:22:24 | INFO | C8 SUPERSEDED, pinned and NOT quoted: generate_figure -- SHA-256 4181106330ba417c18a9d4c8909e359c5f3c3efd4024dc3537d5d2203d802f47 -- R17 renders no figure of v87; the witness PNG is vendored and declared produced and not cited.
+2026-09-04 20:22:24 | INFO | C8 SUPERSEDED, pinned and NOT quoted: protocol_3a -- SHA-256 9da623c1bf6248fea1c19aff7ea9d6c86d19f7532daf33af7896f1ffd5ffe31c -- restructured: injected generators, the C3 penalty check, the C6 witness and the sign-stream digests.
+2026-09-04 20:22:24 | INFO | C8 SUPERSEDED, pinned and NOT quoted: protocol_3b -- SHA-256 c6a665cc5bec64ba939109f69ff305f51a506dec1deb3abf0781f1ead8bcba23 -- restructured: injected generators and the sign-stream digest at c = 0.
+2026-09-04 20:22:24 | INFO | C8 SUPERSEDED, pinned and NOT quoted: protocol_3c -- SHA-256 de51b6ab810fef8d527b2ae9e9fa82740e615635f024929d85606023c94196e2 -- restructured: injected generators, the forced n_streams = 1000 made explicit.
+2026-09-04 20:22:24 | INFO | C8 SUPERSEDED, pinned and NOT quoted: protocol_3d_warmup_sensitivity -- SHA-256 a2cd50f09edf724b2795c1abd50e13b5cdfb73381f25d7225c1bfa123231c61c -- restructured: per-fit diagnostics, both quantile treatments, the median of the sum, the paired bootstrap.
+2026-09-04 20:22:24 | INFO | C8: the witness's `__main__` block is superseded by main() of this file and is not a FunctionDef, so it carries no segment digest; what replaces it is the argument parser, the FAIR directory layout and the two option arms.
+2026-09-04 20:22:24 | INFO | C4 argument order: the witness signature is solve_beta_for_gamma(alpha, target_gamma); all 3 call sites of this file and all 2 of Priorite_6_econometric_baseline.py carry the identical argument expressions ("Name(id='alpha', ctx=Load())", "Name(id='gamma', ctx=Load())"). Deterministic; trigger probability 0. Cross-reference: `R04-gamma-grid-defect`, D3, where the transposition of these two arguments left the published Gamma grid constant.
+2026-09-04 20:22:24 | INFO | C3 [Gamma target   1.00]: beta = 0.0, simulated (alpha, beta) = (0.0, 0.0), compute_gamma_exact(a_sim, b_sim) = 1.0, |realized/target - 1| = 0.000e+00, beta < 0.919999: True.
+2026-09-04 20:22:24 | INFO | C3 [Gamma target   5.00]: beta = 0.8582264370343256, simulated (alpha, beta) = (0.08, 0.8582264370343256), compute_gamma_exact(a_sim, b_sim) = 4.999999999999991, |realized/target - 1| = 1.776e-15, beta < 0.919999: True.
+2026-09-04 20:22:24 | INFO | C3 [Gamma target  11.58]: beta = 0.8889517521997994, simulated (alpha, beta) = (0.08, 0.8889517521997994), compute_gamma_exact(a_sim, b_sim) = 11.58000000000005, |realized/target - 1| = 4.219e-15, beta < 0.919999: True.
+2026-09-04 20:22:24 | INFO | C3 [Gamma target  30.00]: beta = 0.9040143180471854, simulated (alpha, beta) = (0.08, 0.9040143180471854), compute_gamma_exact(a_sim, b_sim) = 30.000000000000323, |realized/target - 1| = 1.088e-14, beta < 0.919999: True.
+2026-09-04 20:22:24 | INFO | C3 [Gamma target  50.00]: beta = 0.9085808000511808, simulated (alpha, beta) = (0.08, 0.9085808000511808), compute_gamma_exact(a_sim, b_sim) = 49.999999999999396, |realized/target - 1| = 1.210e-14, beta < 0.919999: True.
+2026-09-04 20:22:24 | INFO | C3 [Gamma target  90.00]: beta = 0.9122144692891982, simulated (alpha, beta) = (0.08, 0.9122144692891982), compute_gamma_exact(a_sim, b_sim) = 89.99999999999862, |realized/target - 1| = 1.532e-14, beta < 0.919999: True.
+2026-09-04 20:22:24 | INFO | C3 [Gamma target 140.00]: beta = 0.9141758270445959, simulated (alpha, beta) = (0.08, 0.9141758270445959), compute_gamma_exact(a_sim, b_sim) = 139.99999999999986, |realized/target - 1| = 9.992e-16, beta < 0.919999: True.
+2026-09-04 20:22:24 | INFO | C3 [Gamma target 200.00]: beta = 0.9154110864448526, simulated (alpha, beta) = (0.08, 0.9154110864448526), compute_gamma_exact(a_sim, b_sim) = 199.99999999999488, |realized/target - 1| = 2.554e-14, beta < 0.919999: True.
+2026-09-04 20:22:24 | INFO | C3: the eight realized penalties match their targets to 2.554e-14 relative, and no beta saturates the bisection ceiling 0.919999. AT Gamma = 1.00 THE CHECK IS RUN ON (a_sim, b_sim) = (0.0, 0.0), the parameters actually simulated: at alpha = 0.08 the value Gamma = 1 is UNATTAINABLE inside the GARCH family -- compute_gamma_exact(0.08, 0.0) = 1.1739130434782608 -- and the delivered script reaches it by leaving the family, setting both coefficients to zero. This is the structure `R11-gamma-grid-floor` already registers; it is cross-referenced here and not duplicated.
+2026-09-04 20:22:24 | INFO | PROTOCOL 3A -- false-positive rate under H0, well-specified GARCH(1,1), four arms. Certifies CONTROLS ONLY: the FPR explosion of the Uncal arm belongs to fig:fpr_explosion, which R03 owns, and no macro of this file reads this table.
+2026-09-04 20:22:34 | INFO | 3A Gamma=   1.000 | Uncal 0.020 | Recalib 0.020 | Eco 0.020 | ML 0.055 | sign-stream SHA-256 d8c1aa9269a81761
+2026-09-04 20:22:34 | INFO | C6: at Gamma = 1.00 the two thresholds are the same float (65.0) and the Uncal and Recalib counts coincide at 4/200. It is this witness that makes the Uncal column interpretable. Exact identity; trigger probability 0.
+2026-09-04 20:22:46 | INFO | 3A Gamma=   5.000 | Uncal 0.515 | Recalib 0.005 | Eco 0.030 | ML 0.055 | sign-stream SHA-256 d8c1aa9269a81761
+2026-09-04 20:22:59 | INFO | 3A Gamma=  11.580 | Uncal 0.690 | Recalib 0.015 | Eco 0.025 | ML 0.055 | sign-stream SHA-256 d8c1aa9269a81761
+2026-09-04 20:23:14 | INFO | 3A Gamma=  30.000 | Uncal 0.735 | Recalib 0.010 | Eco 0.025 | ML 0.055 | sign-stream SHA-256 d8c1aa9269a81761
+2026-09-04 20:23:30 | INFO | 3A Gamma=  50.000 | Uncal 0.760 | Recalib 0.010 | Eco 0.025 | ML 0.055 | sign-stream SHA-256 d8c1aa9269a81761
+2026-09-04 20:23:45 | INFO | 3A Gamma=  90.000 | Uncal 0.775 | Recalib 0.015 | Eco 0.025 | ML 0.055 | sign-stream SHA-256 d8c1aa9269a81761
+2026-09-04 20:24:02 | INFO | 3A Gamma= 140.000 | Uncal 0.765 | Recalib 0.010 | Eco 0.025 | ML 0.055 | sign-stream SHA-256 d8c1aa9269a81761
+2026-09-04 20:24:18 | INFO | 3A Gamma= 200.000 | Uncal 0.770 | Recalib 0.010 | Eco 0.025 | ML 0.055 | sign-stream SHA-256 d8c1aa9269a81761
+2026-09-04 20:24:18 | INFO | C2 [3a, across the eight Gamma]: the monitored sign stream is bit-identical at all 8 grid points, SHA-256 d8c1aa9269a81761a32c3b2cbd4a8a975bfd0825cafa29374f64dc0ab821808e. Deterministic; trigger probability 0.
+2026-09-04 20:24:18 | INFO | PROTOCOL 3B -- average detection delay under an abrupt level shift, and the false-alarm rates at c = 0. Certifies CONTROLS ONLY: the delay race belongs to tab:isofpr_race, which R04 owns.
+2026-09-04 20:24:23 | INFO | 3B Gamma=   1.000 | c=0.0 | FPR_Recalib 0.030 | FPR_Eco_L2 0.030 | FPR_Eco_L1 0.130 | FPR_ML 0.080 | sign-stream SHA-256 55f370569ee07466
+2026-09-04 20:24:23 | INFO | 3B Gamma=   1.000 | c= 0.5 | ADD_Recalib  2085.400 | ADD_Eco_L2  2085.400 | ADD_Eco_L1   120.690 | ADD_ML    76.650
+2026-09-04 20:24:23 | INFO | 3B Gamma=   1.000 | c= 1.0 | ADD_Recalib  1157.790 | ADD_Eco_L2  1177.136 | ADD_Eco_L1    19.570 | ADD_ML    36.840
+2026-09-04 20:24:23 | INFO | 3B Gamma=   1.000 | c= 2.0 | ADD_Recalib    40.960 | ADD_Eco_L2    40.980 | ADD_Eco_L1     6.420 | ADD_ML    26.280
+2026-09-04 20:24:23 | INFO | 3B Gamma=   1.000 | c= 5.0 | ADD_Recalib     4.710 | ADD_Eco_L2     4.740 | ADD_Eco_L1     1.840 | ADD_ML    24.100
+2026-09-04 20:24:23 | INFO | 3B Gamma=   1.000 | c=10.0 | ADD_Recalib     0.910 | ADD_Eco_L2     0.900 | ADD_Eco_L1     0.700 | ADD_ML    24.000
+2026-09-04 20:24:29 | INFO | 3B Gamma=   5.000 | c=0.0 | FPR_Recalib 0.010 | FPR_Eco_L2 0.030 | FPR_Eco_L1 0.140 | FPR_ML 0.080 | sign-stream SHA-256 55f370569ee07466
+2026-09-04 20:24:29 | INFO | 3B Gamma=   5.000 | c= 0.5 | ADD_Recalib  4499.000 | ADD_Eco_L2  2085.400 | ADD_Eco_L1    92.090 | ADD_ML    75.640
+2026-09-04 20:24:29 | INFO | 3B Gamma=   5.000 | c= 1.0 | ADD_Recalib  2425.558 | ADD_Eco_L2   742.756 | ADD_Eco_L1    19.160 | ADD_ML    36.240
+2026-09-04 20:24:29 | INFO | 3B Gamma=   5.000 | c= 2.0 | ADD_Recalib   248.350 | ADD_Eco_L2    37.430 | ADD_Eco_L1     6.630 | ADD_ML    26.340
+2026-09-04 20:24:29 | INFO | 3B Gamma=   5.000 | c= 5.0 | ADD_Recalib    27.850 | ADD_Eco_L2     4.970 | ADD_Eco_L1     1.790 | ADD_ML    24.250
+2026-09-04 20:24:29 | INFO | 3B Gamma=   5.000 | c=10.0 | ADD_Recalib     6.390 | ADD_Eco_L2     0.730 | ADD_Eco_L1     0.500 | ADD_ML    24.000
+2026-09-04 20:24:36 | INFO | 3B Gamma=  11.580 | c=0.0 | FPR_Recalib 0.020 | FPR_Eco_L2 0.040 | FPR_Eco_L1 0.140 | FPR_ML 0.080 | sign-stream SHA-256 55f370569ee07466
+2026-09-04 20:24:36 | INFO | 3B Gamma=  11.580 | c= 0.5 | ADD_Recalib  2902.000 | ADD_Eco_L2  2209.500 | ADD_Eco_L1    81.000 | ADD_ML    75.010
+2026-09-04 20:24:36 | INFO | 3B Gamma=  11.580 | c= 1.0 | ADD_Recalib  3093.464 | ADD_Eco_L2   436.379 | ADD_Eco_L1    18.280 | ADD_ML    36.540
+2026-09-04 20:24:36 | INFO | 3B Gamma=  11.580 | c= 2.0 | ADD_Recalib   650.697 | ADD_Eco_L2    35.580 | ADD_Eco_L1     6.580 | ADD_ML    26.410
+2026-09-04 20:24:36 | INFO | 3B Gamma=  11.580 | c= 5.0 | ADD_Recalib    70.670 | ADD_Eco_L2     4.890 | ADD_Eco_L1     1.640 | ADD_ML    24.210
+2026-09-04 20:24:36 | INFO | 3B Gamma=  11.580 | c=10.0 | ADD_Recalib    16.560 | ADD_Eco_L2     0.630 | ADD_Eco_L1     0.430 | ADD_ML    24.000
+2026-09-04 20:24:44 | INFO | 3B Gamma=  30.000 | c=0.0 | FPR_Recalib 0.010 | FPR_Eco_L2 0.040 | FPR_Eco_L1 0.150 | FPR_ML 0.080 | sign-stream SHA-256 55f370569ee07466
+2026-09-04 20:24:44 | INFO | 3B Gamma=  30.000 | c= 0.5 | ADD_Recalib  1787.000 | ADD_Eco_L2  2209.500 | ADD_Eco_L1    72.610 | ADD_ML    72.460
+2026-09-04 20:24:44 | INFO | 3B Gamma=  30.000 | c= 1.0 | ADD_Recalib  3121.571 | ADD_Eco_L2   277.020 | ADD_Eco_L1    16.980 | ADD_ML    36.070
+2026-09-04 20:24:44 | INFO | 3B Gamma=  30.000 | c= 2.0 | ADD_Recalib  1348.069 | ADD_Eco_L2    32.730 | ADD_Eco_L1     6.300 | ADD_ML    26.410
+2026-09-04 20:24:44 | INFO | 3B Gamma=  30.000 | c= 5.0 | ADD_Recalib   204.970 | ADD_Eco_L2     4.780 | ADD_Eco_L1     1.550 | ADD_ML    24.210
+2026-09-04 20:24:44 | INFO | 3B Gamma=  30.000 | c=10.0 | ADD_Recalib    47.970 | ADD_Eco_L2     0.580 | ADD_Eco_L1     0.410 | ADD_ML    24.000
+2026-09-04 20:24:52 | INFO | 3B Gamma=  50.000 | c=0.0 | FPR_Recalib 0.010 | FPR_Eco_L2 0.040 | FPR_Eco_L1 0.160 | FPR_ML 0.080 | sign-stream SHA-256 55f370569ee07466
+2026-09-04 20:24:52 | INFO | 3B Gamma=  50.000 | c= 0.5 | ADD_Recalib  1793.000 | ADD_Eco_L2  2338.286 | ADD_Eco_L1    68.460 | ADD_ML    70.020
+2026-09-04 20:24:52 | INFO | 3B Gamma=  50.000 | c= 1.0 | ADD_Recalib  3379.400 | ADD_Eco_L2   203.740 | ADD_Eco_L1    16.200 | ADD_ML    35.330
+2026-09-04 20:24:52 | INFO | 3B Gamma=  50.000 | c= 2.0 | ADD_Recalib  2005.024 | ADD_Eco_L2    31.120 | ADD_Eco_L1     6.200 | ADD_ML    26.280
+2026-09-04 20:24:52 | INFO | 3B Gamma=  50.000 | c= 5.0 | ADD_Recalib   370.830 | ADD_Eco_L2     4.640 | ADD_Eco_L1     1.550 | ADD_ML    24.180
+2026-09-04 20:24:52 | INFO | 3B Gamma=  50.000 | c=10.0 | ADD_Recalib    85.240 | ADD_Eco_L2     0.610 | ADD_Eco_L1     0.380 | ADD_ML    24.000
+2026-09-04 20:25:01 | INFO | 3B Gamma=  90.000 | c=0.0 | FPR_Recalib 0.010 | FPR_Eco_L2 0.040 | FPR_Eco_L1 0.160 | FPR_ML 0.080 | sign-stream SHA-256 55f370569ee07466
+2026-09-04 20:25:01 | INFO | 3B Gamma=  90.000 | c= 0.5 | ADD_Recalib  1815.000 | ADD_Eco_L2  2533.667 | ADD_Eco_L1    62.190 | ADD_ML    69.400
+2026-09-04 20:25:01 | INFO | 3B Gamma=  90.000 | c= 1.0 | ADD_Recalib  3301.400 | ADD_Eco_L2   168.550 | ADD_Eco_L1    15.600 | ADD_ML    34.820
+2026-09-04 20:25:01 | INFO | 3B Gamma=  90.000 | c= 2.0 | ADD_Recalib  2731.029 | ADD_Eco_L2    29.410 | ADD_Eco_L1     6.040 | ADD_ML    26.140
+2026-09-04 20:25:01 | INFO | 3B Gamma=  90.000 | c= 5.0 | ADD_Recalib   639.969 | ADD_Eco_L2     4.470 | ADD_Eco_L1     1.460 | ADD_ML    24.210
+2026-09-04 20:25:01 | INFO | 3B Gamma=  90.000 | c=10.0 | ADD_Recalib   164.840 | ADD_Eco_L2     0.590 | ADD_Eco_L1     0.350 | ADD_ML    24.000
+2026-09-04 20:25:09 | INFO | 3B Gamma= 140.000 | c=0.0 | FPR_Recalib 0.010 | FPR_Eco_L2 0.040 | FPR_Eco_L1 0.150 | FPR_ML 0.080 | sign-stream SHA-256 55f370569ee07466
+2026-09-04 20:25:09 | INFO | 3B Gamma= 140.000 | c= 0.5 | ADD_Recalib  1852.000 | ADD_Eco_L2  2219.550 | ADD_Eco_L1    59.530 | ADD_ML    62.650
+2026-09-04 20:25:09 | INFO | 3B Gamma= 140.000 | c= 1.0 | ADD_Recalib  4050.000 | ADD_Eco_L2   145.820 | ADD_Eco_L1    14.990 | ADD_ML    34.320
+2026-09-04 20:25:09 | INFO | 3B Gamma= 140.000 | c= 2.0 | ADD_Recalib  3129.412 | ADD_Eco_L2    27.610 | ADD_Eco_L1     5.650 | ADD_ML    25.990
+2026-09-04 20:25:09 | INFO | 3B Gamma= 140.000 | c= 5.0 | ADD_Recalib   932.845 | ADD_Eco_L2     4.200 | ADD_Eco_L1     1.300 | ADD_ML    24.180
+2026-09-04 20:25:09 | INFO | 3B Gamma= 140.000 | c=10.0 | ADD_Recalib   265.480 | ADD_Eco_L2     0.600 | ADD_Eco_L1     0.310 | ADD_ML    24.000
+2026-09-04 20:25:18 | INFO | 3B Gamma= 200.000 | c=0.0 | FPR_Recalib 0.000 | FPR_Eco_L2 0.040 | FPR_Eco_L1 0.150 | FPR_ML 0.080 | sign-stream SHA-256 55f370569ee07466
+2026-09-04 20:25:18 | INFO | 3B Gamma= 200.000 | c= 0.5 | ADD_Recalib       nan | ADD_Eco_L2  1940.308 | ADD_Eco_L1    51.580 | ADD_ML    59.120
+2026-09-04 20:25:18 | INFO | 3B Gamma= 200.000 | c= 1.0 | ADD_Recalib  4687.000 | ADD_Eco_L2   127.380 | ADD_Eco_L1    14.100 | ADD_ML    33.630
+2026-09-04 20:25:18 | INFO | 3B Gamma= 200.000 | c= 2.0 | ADD_Recalib  3496.579 | ADD_Eco_L2    26.040 | ADD_Eco_L1     5.310 | ADD_ML    25.900
+2026-09-04 20:25:18 | INFO | 3B Gamma= 200.000 | c= 5.0 | ADD_Recalib  1120.755 | ADD_Eco_L2     4.000 | ADD_Eco_L1     1.220 | ADD_ML    24.180
+2026-09-04 20:25:18 | INFO | 3B Gamma= 200.000 | c=10.0 | ADD_Recalib   382.900 | ADD_Eco_L2     0.590 | ADD_Eco_L1     0.310 | ADD_ML    24.000
+2026-09-04 20:25:18 | INFO | C2 [3b at c = 0, across the eight Gamma]: the monitored sign stream is bit-identical at all 8 grid points, SHA-256 55f370569ee07466fdd4fc9a9125dcdf8159257849bb550f38a19e363b7aee0e. Deterministic; trigger probability 0.
+2026-09-04 20:25:18 | INFO | 3B SCOPE OF THAT DEGENERACY: it holds at c = 0 alone. For c > 0 the monitored stream is (eps + c * sigma_unc > 0), and sigma_unc carries Gamma through beta, so the shifted sign stream is NOT invariant along the grid and its ADD_ML column moves. The invariance of the FPR_ML column and the variation of the ADD_ML column are the same mechanism read at two shift magnitudes.
+2026-09-04 20:25:18 | INFO | PROTOCOL 3C -- structural misspecification, GJR data-generating process standardized by the SYMMETRIC population limit, 1000 streams. Certifies CONTROLS ONLY: L349's misspecification numerals belong to fig:leverage, which R12 owns and which runs 15 leverage points, 10 000 streams and a pseudo-Gaussian nu = 100 -- a different design from these four points, 1000 streams and Student-t7. No macro of this file reads this table.
+2026-09-04 20:25:50 | INFO | 3C GammaLev=0.00 | FPR_Eco 0.014 | FPR_ML 0.080 | LB_Eco 0.077 | LB_ML 0.050 | sign-stream SHA-256 e39812d4a4ebc40f
+2026-09-04 20:26:22 | INFO | 3C GammaLev=0.10 | FPR_Eco 0.017 | FPR_ML 0.080 | LB_Eco 0.075 | LB_ML 0.050 | sign-stream SHA-256 e39812d4a4ebc40f
+2026-09-04 20:26:53 | INFO | 3C GammaLev=0.20 | FPR_Eco 0.020 | FPR_ML 0.080 | LB_Eco 0.084 | LB_ML 0.050 | sign-stream SHA-256 e39812d4a4ebc40f
+2026-09-04 20:27:25 | INFO | 3C GammaLev=0.28 | FPR_Eco 0.021 | FPR_ML 0.080 | LB_Eco 0.103 | LB_ML 0.050 | sign-stream SHA-256 e39812d4a4ebc40f
+2026-09-04 20:27:25 | INFO | C2 [3c, across the four gamma_lev]: the monitored sign stream is bit-identical at all 4 grid points, SHA-256 e39812d4a4ebc40f4b4c7671d803e551de5e96fcbb3cd5856d2e3232fb7d2aea. Deterministic; trigger probability 0.
+2026-09-04 20:27:25 | INFO | PROTOCOL 3D -- warm-up sensitivity. THIS IS THE ONLY TABLE OF THIS STREAM THAT CERTIFIES A v87 VALUE: L341's persistence median, its 9.5% and 3.0% false-alarm rates, and its 3-8% sign envelope all live here, at 200 streams per cell.
+2026-09-04 20:27:31 | INFO | 3D g_lev=0.00 nw= 250 | FPR_Eco 0.105 [0.070, 0.155] | FPR_ML 0.100 [0.066, 0.149] | persistence median of the sum 0.625752 | sum of marginal medians 0.583094
+2026-09-04 20:27:31 | INFO | 3D C1 g_lev=0.00 nw= 250 | share_nonconverged 0.0000 (0/200) | share_equals_initialiser 0.0000 | share_at_lower_bound 0.2900 | share_at_upper_bound 0.0000
+2026-09-04 20:27:37 | INFO | 3D g_lev=0.00 nw= 500 | FPR_Eco 0.070 [0.042, 0.114] | FPR_ML 0.095 [0.062, 0.144] | persistence median of the sum 0.774814 | sum of marginal medians 0.754273
+2026-09-04 20:27:37 | INFO | 3D C1 g_lev=0.00 nw= 500 | share_nonconverged 0.0000 (0/200) | share_equals_initialiser 0.0000 | share_at_lower_bound 0.1800 | share_at_upper_bound 0.0000
+2026-09-04 20:27:45 | INFO | 3D g_lev=0.00 nw=1000 | FPR_Eco 0.035 [0.017, 0.070] | FPR_ML 0.110 [0.074, 0.161] | persistence median of the sum 0.840557 | sum of marginal medians 0.819636
+2026-09-04 20:27:45 | INFO | 3D C1 g_lev=0.00 nw=1000 | share_nonconverged 0.0000 (0/200) | share_equals_initialiser 0.0000 | share_at_lower_bound 0.0600 | share_at_upper_bound 0.0050
+2026-09-04 20:27:58 | INFO | 3D g_lev=0.00 nw=2000 | FPR_Eco 0.020 [0.008, 0.050] | FPR_ML 0.100 [0.066, 0.149] | persistence median of the sum 0.839223 | sum of marginal medians 0.840935
+2026-09-04 20:27:58 | INFO | 3D C1 g_lev=0.00 nw=2000 | share_nonconverged 0.0000 (0/200) | share_equals_initialiser 0.0000 | share_at_lower_bound 0.0100 | share_at_upper_bound 0.0000
+2026-09-04 20:28:02 | INFO | 3D g_lev=0.28 nw= 250 | FPR_Eco 0.100 [0.066, 0.149] | FPR_ML 0.100 [0.066, 0.149] | persistence median of the sum 0.960839 | sum of marginal medians 0.953259
+2026-09-04 20:28:02 | INFO | 3D C1 g_lev=0.28 nw= 250 | share_nonconverged 0.0150 (3/200) | share_equals_initialiser 0.0150 | share_at_lower_bound 0.0100 | share_at_upper_bound 0.0050
+2026-09-04 20:28:08 | INFO | 3D g_lev=0.28 nw= 500 | FPR_Eco 0.075 [0.046, 0.120] | FPR_ML 0.095 [0.062, 0.144] | persistence median of the sum 0.966450 | sum of marginal medians 0.961646
+2026-09-04 20:28:08 | INFO | 3D C1 g_lev=0.28 nw= 500 | share_nonconverged 0.0100 (2/200) | share_equals_initialiser 0.0100 | share_at_lower_bound 0.0050 | share_at_upper_bound 0.0000
+2026-09-04 20:28:16 | INFO | 3D g_lev=0.28 nw=1000 | FPR_Eco 0.040 [0.020, 0.077] | FPR_ML 0.110 [0.074, 0.161] | persistence median of the sum 0.971721 | sum of marginal medians 0.971301
+2026-09-04 20:28:16 | INFO | 3D C1 g_lev=0.28 nw=1000 | share_nonconverged 0.0050 (1/200) | share_equals_initialiser 0.0050 | share_at_lower_bound 0.0000 | share_at_upper_bound 0.0000
+2026-09-04 20:28:29 | INFO | 3D g_lev=0.28 nw=2000 | FPR_Eco 0.020 [0.008, 0.050] | FPR_ML 0.100 [0.066, 0.149] | persistence median of the sum 0.975791 | sum of marginal medians 0.973677
+2026-09-04 20:28:29 | INFO | 3D C1 g_lev=0.28 nw=2000 | share_nonconverged 0.0000 (0/200) | share_equals_initialiser 0.0000 | share_at_lower_bound 0.0000 | share_at_upper_bound 0.0000
+2026-09-04 20:28:29 | INFO | C2 [3d at n_warmup = 250, across the two gamma_lev]: the monitored sign stream is bit-identical at all 2 grid points, SHA-256 3b3d946d89d660391badba7c6e21080138697bd4f7d0bad6d05f51547d7eb78e. Deterministic; trigger probability 0.
+2026-09-04 20:28:29 | INFO | C2 [3d at n_warmup = 500, across the two gamma_lev]: the monitored sign stream is bit-identical at all 2 grid points, SHA-256 7b5809a92e49e13ec7ae75bb713595240abd103b7f6cbcf1f401fb1f0409b91f. Deterministic; trigger probability 0.
+2026-09-04 20:28:29 | INFO | C2 [3d at n_warmup = 1000, across the two gamma_lev]: the monitored sign stream is bit-identical at all 2 grid points, SHA-256 b2ef7a59e68ce3dd53c3aaf4b2eb07f47fa348f32e1db7525ec4fe610273cbe9. Deterministic; trigger probability 0.
+2026-09-04 20:28:29 | INFO | C2 [3d at n_warmup = 2000, across the two gamma_lev]: the monitored sign stream is bit-identical at all 2 grid points, SHA-256 4507c76ffa61c2434d5c43f59f3b25b84b0f5cf104adea1d54d26e67b21023d2. Deterministic; trigger probability 0.
+2026-09-04 20:28:29 | INFO | C2 -- WHAT THE `ML` ARM IS, ESTABLISHED BY ast AND NOT ASSUMED. It estimates NOTHING: it monitors (eps > 0) - 0.5 with the fixed dead band 0.1 and the fixed threshold 10.0, and it reads no fitted and no true parameter. IT IS NOT AN ORACLE-PARAMETER ARM. The ast walk establishes that both simulators assign the whole innovation vector z BEFORE their variance recursion ({'simulate_garch11': True, 'simulate_gjr11': True}); with sigma2[t] > 0 always, eps_t = sqrt(sigma2_t) * z_t gives sign(eps_t) = sign(z_t) EXACTLY, and z is a function of the key, of nu and of n alone.
+2026-09-04 20:28:29 | INFO | C2 -- THE TENSION BETWEEN THE THREE WITNESS TABLES, RESOLVED MECHANICALLY. The witness prints ML = 0.065 at all eight Gamma of 3a, FPR_ML = 0.04 at all eight Gamma of 3b, FPR_ML = 0.085 and LB_Reject_ML = 0.055 at all four gamma_lev of 3c, and yet FPR_ML VARIES over the warm-up axis of 3d (0.075, 0.030, 0.055, 0.080). The witness key is the reason and not the arm: 3a keys on s*77, 3b on s*77+99 and 3c on s*42+888 with n = 7000 FIXED, so one draw serves the whole grid and the constant column is ONE MEASUREMENT PRINTED EIGHT (or four) TIMES; 3d keys on s*101 + nw, which MOVES with the warm-up. The witness exhibits the identity directly: its FPR_ML is equal at the two gamma_lev for every n_warmup -- 0.075/0.075, 0.030/0.030, 0.055/0.055, 0.080/0.080.
+2026-09-04 20:28:29 | INFO | C2 -- WHAT THE MIGRATION CHANGES, AND WHAT IT DOES NOT. Under the mandated key carrying role and index alone, the same degeneracy holds for the same reason and is now ASSERTED by SHA-256 rather than observed: 3a 1 distinct digest over 8 points, 3b at c = 0 1 over 8, 3c 1 over 4, and 3d 4 distinct digests over 8 cells -- one per warm-up length, since the key no longer carries nw but the vector LENGTH does. The warm-up axis therefore still carries four genuine draws, which is the axis L341 makes its claim about; the gamma_lev axis carries one.
+2026-09-04 20:28:29 | INFO | C2: the regenerated FPR_ML is equal at the two gamma_lev for every warm-up length, [(250, 0.1), (500, 0.095), (1000, 0.11), (2000, 0.1)], which is the arithmetic consequence of the asserted stream identity.
+2026-09-04 20:28:29 | INFO | SIGN ARM -- L341 reports 'measured FPR 3--8% across all warm-up lengths'. THE EFFECTIVE COUNT, DECLARED: the envelope is a min-max over the FOUR readings the warm-up axis carries, one per warm-up length, each measured on 200 streams. The table shows EIGHT cells, but the gamma_lev axis is a bit-identical copy asserted by SHA-256 above, so pooling the eight as independent readings would carry a Kish design effect of exactly 2.0 and advertise twice the information the design holds. The four readings are [0.1, 0.095, 0.11, 0.1], which take 3 distinct values; two warm-up lengths landing on the same rate is a coincidence of a count over 200 streams and not a second degeneracy.
+2026-09-04 20:28:29 | INFO | SIGN ARM -- WHY THE FOUR ARE NOT INDEPENDENT EITHER. The key ('R17', '3d', s) carries no warm-up length, so stream s draws ONE innovation vector and the four cells read the windows z[nw : nw + 5000] of it. The pairwise overlap fractions are {(250, 500): 0.95, (250, 1000): 0.85, (250, 2000): 0.65, (500, 1000): 0.9, (500, 2000): 0.7, (1000, 2000): 0.8}. That is the dependence the paired stream bootstrap below prices; a nominal binomial interval would not.
+2026-09-04 20:28:29 | INFO | SIGN ARM -- FAMILY-WISE ARITHMETIC, LOGGED BEFORE THE RESULT IS READ (S4bis, first rule). Reading four 95% cell intervals as a simultaneous statement would trigger with probability 1 - 0.95^4 = 0.1855 under its own null, which is why the extrema below are DESCRIPTIVE and gate nothing, and why the invariance is tested by one slope rather than by four intervals.
+2026-09-04 20:28:29 | INFO | SIGN ARM -- WLS of the rate on log(n_warmup), weights 1/[p(1-p)/n] from the binomial mechanism at n = 200: slope 0.0021037529986339164 per natural log unit of warm-up, 95% paired-bootstrap interval [-0.01529432408925942, 0.01945446250398922], bootstrap two-sided p-value for the null of zero slope 0.8440 over 2000 replicates. Over the whole grid the slope moves the rate by +0.00437 between n_warmup = 250 and 2000.
+2026-09-04 20:28:29 | INFO | SIGN ARM -- four-cell homogeneity chi-square: statistic 0.2609934923333162 on 3 degrees of freedom, nominal p = 0.9671894552581409. STATED AND NOT ASSUMED AWAY: the four cells are read on the SAME 200 streams over overlapping windows, so the independence a chi-square assumes does not hold and this p-value is descriptive. The paired bootstrap interval on the slope is the honest reading.
+2026-09-04 20:28:29 | INFO | SIGN ARM -- the published envelope: min 0.095 with 95% paired bootstrap [0.055, 0.13], max 0.11 with [0.075, 0.155]. A min and a max over a grid are extremum statistics with no stable sampling distribution, so they carry their own bootstrap law and GATE NOTHING (S4bis, fourth corollary). The tight 10-11% regenerated envelope is an ARTEFACT OF PAIRING: because n_warmup is excluded from the seed, the four cells share their innovation vector. Independent samples would span ~5 points.
+2026-09-04 20:28:29 | INFO | C5 -- monotone restoration of FPR_Eco in n_warmup, at each gamma_lev. FAMILY-WISE ARITHMETIC LOGGED BEFORE THE RESULT IS READ: 6 consecutive-step comparisons, so reading 'no step inverts by more than two paired standard errors' as a simultaneous statement would trigger with probability 1 - (1 - 0.0455)^6 = 0.2438 under a null of exact equality at every step. Nothing halts on it; inversions are characterised.
+2026-09-04 20:28:29 | INFO | deff [FPR_Eco, gamma_lev 0.0, 250 -> 500]: 1.0 by construction -- the pairing is WITHIN stream s and the 200 stream keys are distinct 128-bit condensates, so the paired differences are i.i.d. across s. Mean difference -0.035.
+2026-09-04 20:28:29 | INFO | C5 [gamma_lev 0.00, n_warmup 250 -> 500]: FPR_Eco 0.105 -> 0.07, paired difference -0.035000, paired standard error 0.016439, ratio -2.129 -- decreasing.
+2026-09-04 20:28:29 | INFO | deff [FPR_Eco, gamma_lev 0.0, 500 -> 1000]: 1.0 by construction -- the pairing is WITHIN stream s and the 200 stream keys are distinct 128-bit condensates, so the paired differences are i.i.d. across s. Mean difference -0.035.
+2026-09-04 20:28:29 | INFO | C5 [gamma_lev 0.00, n_warmup 500 -> 1000]: FPR_Eco 0.07 -> 0.035, paired difference -0.035000, paired standard error 0.014832, ratio -2.360 -- decreasing.
+2026-09-04 20:28:29 | INFO | deff [FPR_Eco, gamma_lev 0.0, 1000 -> 2000]: 1.0 by construction -- the pairing is WITHIN stream s and the 200 stream keys are distinct 128-bit condensates, so the paired differences are i.i.d. across s. Mean difference -0.015.
+2026-09-04 20:28:29 | INFO | C5 [gamma_lev 0.00, n_warmup 1000 -> 2000]: FPR_Eco 0.035 -> 0.02, paired difference -0.015000, paired standard error 0.013219, ratio -1.135 -- decreasing.
+2026-09-04 20:28:29 | INFO | deff [FPR_Eco, gamma_lev 0.28, 250 -> 500]: 1.0 by construction -- the pairing is WITHIN stream s and the 200 stream keys are distinct 128-bit condensates, so the paired differences are i.i.d. across s. Mean difference -0.025.
+2026-09-04 20:28:29 | INFO | C5 [gamma_lev 0.28, n_warmup 250 -> 500]: FPR_Eco 0.1 -> 0.075, paired difference -0.025000, paired standard error 0.016530, ratio -1.512 -- decreasing.
+2026-09-04 20:28:29 | INFO | deff [FPR_Eco, gamma_lev 0.28, 500 -> 1000]: 1.0 by construction -- the pairing is WITHIN stream s and the 200 stream keys are distinct 128-bit condensates, so the paired differences are i.i.d. across s. Mean difference -0.035.
+2026-09-04 20:28:29 | INFO | C5 [gamma_lev 0.28, n_warmup 500 -> 1000]: FPR_Eco 0.075 -> 0.04, paired difference -0.035000, paired standard error 0.016439, ratio -2.129 -- decreasing.
+2026-09-04 20:28:29 | INFO | deff [FPR_Eco, gamma_lev 0.28, 1000 -> 2000]: 1.0 by construction -- the pairing is WITHIN stream s and the 200 stream keys are distinct 128-bit condensates, so the paired differences are i.i.d. across s. Mean difference -0.02.
+2026-09-04 20:28:29 | INFO | C5 [gamma_lev 0.28, n_warmup 1000 -> 2000]: FPR_Eco 0.04 -> 0.02, paired difference -0.020000, paired standard error 0.012196, ratio -1.640 -- decreasing.
+2026-09-04 20:28:29 | INFO | C5: no step inverts beyond two paired standard errors on either gamma_lev.
+2026-09-04 20:28:29 | INFO | R04 COHERENCE -- read from results/R04_isofpr_race/data with float_precision='round_trip' on both sides. THE R04 SIDE IS ALREADY CONTESTED: `R04b-efficiency-crossing` and `R04b-oracle-ratio-offset` are registered D3, so this comparison is written against R04's REGENERATED values and not against L253's printed 4.9 / 4.6 / 0.3.
+2026-09-04 20:28:29 | INFO | R04 [Gamma 1.0]: Eco_L1 lambda* 18.06738818359375 at FPR 0.048; Oracle_Eco lambda* 17.579107421875 at FPR 0.05; the estimated arm needs 1.0278 times the oracle's threshold to hold the same level.
+2026-09-04 20:28:29 | INFO | R04 [Gamma 11.58]: Eco_L1 lambda* 19.53223046875 at FPR 0.053; Oracle_Eco lambda* 17.823247802734375 at FPR 0.049; the estimated arm needs 1.0959 times the oracle's threshold to hold the same level.
+2026-09-04 20:28:29 | INFO | R04 [Gamma 50.0]: Eco_L1 lambda* 21.241213134765626 at FPR 0.0495; Oracle_Eco lambda* 17.579107421875 at FPR 0.051; the estimated arm needs 1.2083 times the oracle's threshold to hold the same level.
+2026-09-04 20:28:29 | INFO | R04 [Gamma 200.0]: Eco_L1 lambda* 20.997072753906252 at FPR 0.0515; Oracle_Eco lambda* 17.823247802734375 at FPR 0.0495; the estimated arm needs 1.1781 times the oracle's threshold to hold the same level.
+2026-09-04 20:28:29 | INFO | R04 relative efficiency, estimated against oracle at each nu: [(3.0, 0.331177, 0.516876), (4.0, 0.622199, 0.889146), (4.5, 0.694563, 1.008102), (5.0, 0.788887, 1.129179), (7.0, 0.985825, 1.288775), (30.0, 1.200608, 1.51119)]. The oracle arm is faster than the estimated arm at every nu of R04's grid, which is the same direction R17 measures on the warm-up axis: the shorter the warm-up, the further the parametric arm sits from its own oracle.
+2026-09-04 20:28:29 | INFO | QMLE OPTION DELTA, priced on the SAME 200 warm-ups of the cell (n_warmup = 250, gamma_lev = 0.0) under both option sets in this single execution, so the macro is a PAIRED measurement and not a difference between two runs a reader must assemble: median of the sum under SPECS 1.10 0.6257515, under the delivered call 0.6258931244318199, delta -0.0001416244318198645. Mean absolute per-fit displacement 3.568607921829222e-05, largest 0.0010875129984761478 over 200 fits that moved at all.
+2026-09-04 20:28:29 | INFO | THE THREE-TERM DECOMPOSITION OF THE GAP AGAINST v87's 0.62, computed rather than asserted. (i) DEFINITION: at this cell the witness's own construction, the sum of marginal medians, is 0.583094 while the median of the sum is 0.6257515; the definitional term is 0.042657500000000015. (ii) OPTIMISER OPTIONS: -0.0001416244318198645, measured above at a common draw. (iii) THE 128-BIT REDRAW: whatever remains of 0.0057515000000000205 once (i) and (ii) are removed. The three are named terms and not one unexplained residual.
+2026-09-04 20:28:29 | INFO | R17_fpr_baseline.csv: 8 rows, 5 columns.
+2026-09-04 20:28:29 | INFO | R17_add_baseline.csv: 40 rows, 10 columns.
+2026-09-04 20:28:29 | INFO | R17_fpr_arms.csv: 8 rows, 13 columns.
+2026-09-04 20:28:29 | INFO | R17_misspecification.csv: 4 rows, 5 columns.
+2026-09-04 20:28:29 | INFO | R17_warmup_sensitivity.csv: 8 rows, 30 columns.
+2026-09-04 20:28:29 | INFO | R17_warmup_fits.csv: 1600 rows, 13 columns.
+2026-09-04 20:28:29 | INFO | ARTEFACT PARTITION. R17_warmup_sensitivity.csv is the ONLY table that certifies a v87 value (L341). R17_fpr_baseline.csv, R17_add_baseline.csv, R17_fpr_arms.csv, R17_misspecification.csv and R17_warmup_fits.csv certify CONTROLS ONLY. No figure is written under results/: the witness PNG Fig10_Econometric_Baseline.png is vendored under data/reference/R17/ and declared PRODUCED AND NOT CITED, since grep -c on the frozen manuscript returns 0.
+2026-09-04 20:28:29 | INFO | C1: the eight cells of R17_warmup_sensitivity.csv re-derive identically from the 1600 rows of R17_warmup_fits.csv -- both the non-convergence share and the published pooled median of the sum.
+2026-09-04 20:28:29 | INFO | Emitted 12 macros to R17_claims.tex, cardinal prefix \RSeventeen per preamble S6. Every value is computed from an object in memory.
+2026-09-04 20:28:29 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
+2026-09-04 20:28:29 | INFO | ./
+2026-09-04 20:28:29 | INFO | ├── data/
+2026-09-04 20:28:29 | INFO | │   ├── R17_fpr_baseline.csv                [c266a3411c102e6fbc753f2ff26a9e6665e7e3609ed509ffd9f1a25d3bc487f1]
+2026-09-04 20:28:29 | INFO | │   ├── R17_add_baseline.csv                [27907f6ada17ea6414670ed25fd85f7ea01b20d6fc0a5afdc1bed2a2705e8185]
+2026-09-04 20:28:29 | INFO | │   ├── R17_fpr_arms.csv                    [931f1494165d361b35690dc3fba99a19157e6c755aca09255324f033eadf1580]
+2026-09-04 20:28:29 | INFO | │   ├── R17_misspecification.csv            [30de1e905a4e48bc87fccd23538188283ad3e6a3e7d4db31ab9329f32197538d]
+2026-09-04 20:28:29 | INFO | │   ├── R17_warmup_sensitivity.csv          [6deaf22dec59581e1a02ae35f5f4632efe30b0831bbe6be7d44d1843e12c7657]
+2026-09-04 20:28:29 | INFO | │   └── R17_warmup_fits.csv                 [6fa2a782c3cf8a97bd1fdec9886f2277196ce1ae380ce70f02f52f3c54dd5ff0]
+2026-09-04 20:28:29 | INFO | └── tables/
+2026-09-04 20:28:29 | INFO |     └── R17_claims.tex                      [6642dd0bd4b17dfcc2ede57af699d6f571bc856f9ffcb0fff60f8aa1bf2090d5]
+2026-09-04 20:28:29 | INFO | =============================================================================
+2026-09-04 20:28:29 | INFO | Witness protocol_3a_fpr_baseline_v2.csv: 8 rows, SHA-256 80449ab8d45c38f35ee8baaf3a214d1351aa7c9a78e5f3bbe72962acb8089819.
+2026-09-04 20:28:29 | INFO | Witness protocol_3b_add_baseline_v2.csv: 40 rows, SHA-256 3240067c1ca55ff7d5c53642ccb58a943e21a384b9e7ef614cd77a636567a740.
+2026-09-04 20:28:29 | INFO | Witness protocol_3b_fpr_arms.csv: 8 rows, SHA-256 927bbec1d314ae7b83de72f63ec7267f0eb2f460a6f4d12dcffcba545e301b7b.
+2026-09-04 20:28:29 | INFO | Witness protocol_3c_misspec_v2.csv: 4 rows, SHA-256 4fd3004f214689e7a74a9ec9d1f8db1f6d70ecd799b939d86d041031638c8da8.
+2026-09-04 20:28:29 | INFO | Witness protocol_3d_warmup_sensitivity.csv: 8 rows, SHA-256 4aa3baf17951a23051ae33b5356aa9ee6286161d32a340ef4e27fc71d4d14e74.
+2026-09-04 20:28:29 | INFO | S3 [L341 persistence median at n_warmup = 250, median of the sum]: v87 prints 0.62 at 2 decimals; witness 0.6212305590182374; regenerated 0.6257515 -> rounds to 0.63. Class D2 or worse -- the qualitative claim is examined separately.
+2026-09-04 20:28:29 | INFO | S3 [L341 FPR_Eco at n_warmup = 250, percent]: v87 prints 9.5 at 1 decimals; witness 9.5; regenerated 10.5 -> rounds to 10.5. Class D2 or worse -- the qualitative claim is examined separately.
+2026-09-04 20:28:29 | INFO | S3 [L341 FPR_Eco at n_warmup = 500, percent]: v87 prints 3.0 at 1 decimals; witness 3.0; regenerated 7.000000000000001 -> rounds to 7.0. Class D2 or worse -- the qualitative claim is examined separately.
+2026-09-04 20:28:29 | INFO | S3 [L341 sign FPR envelope minimum, percent]: v87 prints 3.0 at 0 decimals; witness 3.0; regenerated 9.5 -> rounds to 10.0. Class D2 or worse -- the qualitative claim is examined separately.
+2026-09-04 20:28:29 | INFO | S3 [L341 sign FPR envelope maximum, percent]: v87 prints 8.0 at 0 decimals; witness 8.0; regenerated 11.0 -> rounds to 11.0. Class D2 or worse -- the qualitative claim is examined separately.
+2026-09-04 20:28:29 | INFO | S3 [L341 true persistence, by design]: v87 prints 0.85 at 2 decimals; witness 0.8500000000000001; regenerated 0.8500000000000001 -> rounds to 0.85. Class D0.
+2026-09-04 20:28:29 | INFO | S3 [non-convergence maximum]: v87 prints no convergence share anywhere; the R17 prompt section 4 quotes 0.5% from the witness. Witness maximum 0.5%, regenerated 1.5%. A prompt is not the manuscript, so this carries no D-class.
+2026-09-04 20:28:29 | INFO | S3 -- a moved numeral and a falsified claim are different thresholds and are evaluated separately. L341 makes THREE qualitative claims this stream can falsify: (a) the QMLE persistence at a 250-step window collapses well below the true 0.85; (b) the false-alarm rate at that window is materially above the level it holds from n = 500 onward, and the level IS restored from n = 500; (c) the sign pipeline is warm-up-independent in practice. Each is tested on its own terms below.
+2026-09-04 20:28:29 | INFO | S3 D3 TEST (a): the regenerated pooled median of the sum at n_warmup = 250 is 0.6257515 against the true 0.8500000000000001. It collapses below the truth: True.
+2026-09-04 20:28:29 | INFO | S3 D3 TEST (b): FPR_Eco 0.105 at n_warmup = 250 against 0.07 at 500, so the rate falls with the warm-up: True. The Wilson interval of the n = 500 cell is [0.04215178292291873, 0.11405578216683726] and contains the nominal 0.05: True. AT gamma_lev = 0.28 the same two cells read 0.1 and 0.075 with the n = 500 interval [0.045974507057252416, 0.12004459797332034]; L341 states the restoration WITHOUT conditioning on gamma_lev, and both columns are reported.
+2026-09-04 20:28:29 | INFO | S3 D3 TEST (c): 'the sign pipeline is warm-up-independent in practice'. The WLS slope of the rate on log(n_warmup) is 0.0021037529986339164 with 95% paired-bootstrap interval [-0.01529432408925942, 0.01945446250398922]; the interval covers zero: True. A min-max envelope is not a test of that claim and is not used as one.
+2026-09-04 20:28:29 | INFO | WHAT THIS STREAM DOES NOT CERTIFY, RESTATED AT THE END OF THE RUN. L349's misspecification numerals (5.1 -> 24.6%, 3.2 -> 20.6%, 4.6-5.4%, 7.6-8.4%) come from fig:leverage, which R12 owns at 15 leverage points, 10 000 streams and pseudo-Gaussian nu = 100; protocol 3c runs four points, 1000 streams and Student-t7, and its regenerated column is [0.077, 0.075, 0.084, 0.103] against the witness's [0.068, 0.079, 0.09, 0.122]. The FPR explosion of protocol 3a belongs to fig:fpr_explosion (R03) and the delay race of protocol 3b to tab:isofpr_race (R04). Four of the five delivered CSVs certify nothing v87 prints.
+2026-09-04 20:28:29 | INFO | C5 SUMMARY: 0 step(s) of FPR_Eco invert beyond two paired standard errors. No gate is built on FPR_ML, which is non-monotone in the witness itself (0.075, 0.030, 0.055, 0.080) and whose four values are, by the identity asserted above, four draws of the same estimator at four overlapping windows.
+2026-09-04 20:28:29 | INFO | SHA-256 R17_fpr_baseline.csv                         : c266a3411c102e6fbc753f2ff26a9e6665e7e3609ed509ffd9f1a25d3bc487f1
+2026-09-04 20:28:29 | INFO | SHA-256 R17_add_baseline.csv                         : 27907f6ada17ea6414670ed25fd85f7ea01b20d6fc0a5afdc1bed2a2705e8185
+2026-09-04 20:28:29 | INFO | SHA-256 R17_fpr_arms.csv                             : 931f1494165d361b35690dc3fba99a19157e6c755aca09255324f033eadf1580
+2026-09-04 20:28:29 | INFO | SHA-256 R17_misspecification.csv                     : 30de1e905a4e48bc87fccd23538188283ad3e6a3e7d4db31ab9329f32197538d
+2026-09-04 20:28:29 | INFO | SHA-256 R17_warmup_sensitivity.csv                   : 6deaf22dec59581e1a02ae35f5f4632efe30b0831bbe6be7d44d1843e12c7657
+2026-09-04 20:28:29 | INFO | SHA-256 R17_warmup_fits.csv                          : 6fa2a782c3cf8a97bd1fdec9886f2277196ce1ae380ce70f02f52f3c54dd5ff0
+2026-09-04 20:28:29 | INFO | SHA-256 R17_claims.tex                               : 6642dd0bd4b17dfcc2ede57af699d6f571bc856f9ffcb0fff60f8aa1bf2090d5
+2026-09-04 20:28:29 | INFO | C9 -- REPRODUCIBILITY. The prompt's C9 asks for two executions at DIFFERENT WORKER COUNTS. This script is serial: it creates no process pool, no thread pool and no worker, and its primitives are Python loops under an ast identity constraint. The clause has no referent here and is declared NON-APPLICABLE with that reason; what is performed instead is two consecutive executions of each arm with SHA-256 compared on every output, per preamble S2.
+2026-09-04 20:28:29 | INFO | Execution completed in 365.2s (SPECS 1.10 default arm).

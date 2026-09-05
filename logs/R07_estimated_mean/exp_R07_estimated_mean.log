@@ -1,0 +1,367 @@
+2026-09-04 19:46:35 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-09-04 19:46:35 | INFO | Python: 3.12.9
+2026-09-04 19:46:35 | INFO |   numpy: 1.26.4
+2026-09-04 19:46:35 | INFO |   pandas: 2.3.2
+2026-09-04 19:46:35 | INFO |   scipy: 1.16.2
+2026-09-04 19:46:35 | INFO |   statsmodels: 0.14.5
+2026-09-04 19:46:35 | INFO |   matplotlib: 3.10.6
+2026-09-04 19:46:35 | INFO | C5 source identity: 7 foundational primitives align byte-for-byte with Priority_21_estimated_mean_robustness.py (4119 internal characters mapped) -- wilson_ci, lb_pvalue, compute_phi_hat_naive, compute_phi_hat_vectorized, cusum_concept_fast, check_anti_look_ahead, generate_dgp. Strict methodological isolation prohibits hoisting scientific primitives into shared namespaces. Duplications represent an enforced structural invariant. Trigger probability: 0.
+2026-09-04 19:46:35 | INFO | C5 ADAPTED ROUTINES. The following modules ['calibrate_and_validate', 'worker', 'plot_results'] underwent methodological restructuring to enforce cryptographic seeding, isolate trajectory returns, and correct legacy legend mapping defects. Strict byte-level parity remains unassertable here; accordingly, their foundational witness transcripts are reproduced fully in the audit logs.
+2026-09-04 19:46:35 | INFO | C5 SUPERSEDED ROUTINES. The legacy functions ['verify_checks', 'main'] were structurally deprecated. Iteration antipatterns processing DataFrames sequentially are universally banned. Furthermore, archaic certification blocks relied on non-robust hardcoded bounds. We substituted these rigid tests with dynamically parameterized C-series verifications.
+2026-09-04 19:46:35 | INFO | C5 witness SHA-256 cryptographic hash of calibrate_and_validate: 19b45a67e1c51787f8f7a5cd23580d8b88b35502d70af80f63d36aa0a86bcdaa
+2026-09-04 19:46:35 | INFO | C5 witness transcript of calibrate_and_validate:
+def calibrate_and_validate(N_CAL: int, H: int, delta: float = 0.1) -> tuple:
+    """Sanity Check (d): Exact nominal calibration on pure Bernoulli noise."""
+    rng = np.random.default_rng(100)
+    Ms_cal = np.zeros(N_CAL)
+    for i in range(N_CAL):
+        y = rng.integers(0, 2, size=H)
+        Ms_cal[i] = cusum_concept_fast(y, delta)
+        
+    lambda_star = float(np.quantile(Ms_cal, 0.95))
+    
+    rng_val = np.random.default_rng(200)
+    Ms_val = np.zeros(5000)
+    for i in range(5000):
+        y = rng_val.integers(0, 2, size=H)
+        Ms_val[i] = cusum_concept_fast(y, delta)
+        
+    fpr_val = float(np.mean(Ms_val > lambda_star))
+    success = (0.043 <= fpr_val <= 0.057)
+    msg = f"Check (d) {'Passed' if success else 'Failed'}: Validation FPR = {fpr_val:.4f}."
+    return success, lambda_star, fpr_val, msg
+2026-09-04 19:46:35 | INFO | C5 witness SHA-256 cryptographic hash of worker: 7de45aea1c53611ba81f5aa11edbf5502a6ec49a168377843494cd521d78c565
+2026-09-04 19:46:35 | INFO | C5 witness transcript of worker:
+def worker(phi: float, seed_sq: np.random.SeedSequence, lambda_star: float, N_OLS_GRID: list) -> list:
+    """Core simulation engine operating on a single trajectory."""
+    r = generate_dgp(6001, phi, seed_sq)
+    r_prev = r[1000:6000]
+    r_curr = r[1001:6001]
+    
+    res = []
+    sigma_unc = np.sqrt(0.04)
+    
+    # NAIVE arm
+    y_naive = (r_curr > 0).astype(int)
+    res.append({
+        'phi': phi, 'arm': 'NAIVE', 'n_ols': '',
+        'lb_reject': lb_pvalue(y_naive, 20) < 0.05,
+        'fpr_exceed': cusum_concept_fast(y_naive, 0.1) > lambda_star
+    })
+    
+    # ORACLE arm
+    mu_oracle = phi * r_prev
+    y_oracle = (r_curr - mu_oracle > 0).astype(int)
+    res.append({
+        'phi': phi, 'arm': 'ORACLE', 'n_ols': '',
+        'lb_reject': lb_pvalue(y_oracle, 20) < 0.05,
+        'fpr_exceed': cusum_concept_fast(y_oracle, 0.1) > lambda_star
+    })
+    
+    # OLS arms
+    for n in N_OLS_GRID:
+        phi_hat = compute_phi_hat_vectorized(r, n, 1001, 6001)
+        mu_hat = phi_hat * r_prev
+        y_ols = (r_curr - mu_hat > 0).astype(int)
+        
+        eta = np.sqrt(np.mean((mu_hat - mu_oracle)**2)) / sigma_unc
+        
+        res.append({
+            'phi': phi, 'arm': f'OLS-{n}', 'n_ols': n,
+            'lb_reject': lb_pvalue(y_ols, 20) < 0.05,
+            'fpr_exceed': cusum_concept_fast(y_ols, 0.1) > lambda_star,
+            'eta': float(eta),
+            'mean_phi_hat': float(np.mean(phi_hat)),
+            'sd_phi_hat': float(np.std(phi_hat, ddof=1))
+        })
+        
+    return res
+2026-09-04 19:46:35 | INFO | C5 witness SHA-256 cryptographic hash of plot_results: a550ba4fd4b056e1f1c9f7eb88473a4b56389eb4330d6c4f2e8b417306a1c7c1
+2026-09-04 19:46:35 | INFO | C5 witness transcript of plot_results:
+def plot_results(df_21a: pd.DataFrame, PHI_GRID: list, N_OLS_GRID: list, N_SEEDS: int):
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5), dpi=300)
+    
+    styles = {
+        'NAIVE': {'color': 'red', 'linewidth': 2.5, 'linestyle': '-', 'marker': 'o'},
+        'ORACLE': {'color': 'black', 'linewidth': 1.5, 'linestyle': '--', 'marker': 's'},
+        'OLS-125': {'color': '#99ccff', 'linewidth': 1.0, 'linestyle': '-', 'marker': '^'},
+        'OLS-250': {'color': '#66a3ff', 'linewidth': 1.0, 'linestyle': '-', 'marker': '^'},
+        'OLS-500': {'color': '#3377ff', 'linewidth': 1.0, 'linestyle': '-', 'marker': '^'},
+        'OLS-1000': {'color': '#0044cc', 'linewidth': 1.0, 'linestyle': '-', 'marker': '^'}
+    }
+    arms = ['NAIVE', 'ORACLE', 'OLS-125', 'OLS-250', 'OLS-500', 'OLS-1000']
+    
+    # Panel (A)
+    ax = axes[0]
+    ax.grid(True, alpha=0.3)
+    ax.axhline(0.05, color='gray', linestyle=':', label='nominal')
+    
+    for arm in arms:
+        df_sub = df_21a[df_21a['arm'] == arm].sort_values('phi')
+        if df_sub.empty: continue
+        y_vals = df_sub['lb_reject_rate'].values
+        err_low = np.maximum(0, y_vals - df_sub['lb_ci_low'].values)
+        err_high = np.maximum(0, df_sub['lb_ci_high'].values - y_vals)
+        
+        s = styles[arm]
+        ax.plot(df_sub['phi'], y_vals, color=s['color'], linewidth=s['linewidth'], 
+                linestyle=s['linestyle'], marker=s['marker'], label=arm)
+        ax.errorbar(df_sub['phi'], y_vals, yerr=[err_low, err_high], fmt='none', 
+                    ecolor=s['color'], capsize=3, alpha=0.7)
+        
+    ax.set_xlabel('$\\phi$')
+    ax.set_ylabel('Rejection Rate')
+    ax.set_yscale('log')
+    ax.set_xticks(PHI_GRID)
+    
+    # Panel (B)
+    ax = axes[1]
+    ax.grid(True, alpha=0.3)
+    # Lattice levels read from protocol_21d_null_law_lattice.csv (2e5 fair-coin streams):
+    # P(M_H > 11.2) = 0.050270 (above nominal), P(M_H > 11.4) = 0.042870 (at or below).
+    # These are the two attainable levels bracketing 5%; lambda* = 11.4 is the conservative pick.
+    ax.axhspan(0.042870, 0.050270, color='gray', alpha=0.2, label=r'attainable levels ($\lambda^*$=11.4 / 11.2)')
+    
+    for arm in arms:
+        df_sub = df_21a[df_21a['arm'] == arm].sort_values('phi')
+        if df_sub.empty: continue
+        y_vals = df_sub['fpr_concept'].values
+        err_low = np.maximum(0, y_vals - df_sub['fpr_ci_low'].values)
+        err_high = np.maximum(0, df_sub['fpr_ci_high'].values - y_vals)
+        
+        s = styles[arm]
+        ax.plot(df_sub['phi'], y_vals, color=s['color'], linewidth=s['linewidth'], 
+                linestyle=s['linestyle'], marker=s['marker'], label=arm)
+        ax.errorbar(df_sub['phi'], y_vals, yerr=[err_low, err_high], fmt='none', 
+                    ecolor=s['color'], capsize=3, alpha=0.7)
+        
+    ax.set_xlabel('$\\phi$')
+    ax.set_ylabel('False Positive Rate')
+    ax.set_ylim(0.0, 0.25)
+    ax.set_xticks(PHI_GRID)
+    
+    # Unique legend in Panel (A)
+    handles_A, labels_A = axes[0].get_legend_handles_labels()
+    handles_B, labels_B = axes[1].get_legend_handles_labels()
+    
+    dict_leg = dict(zip(labels_A, handles_A))
+    dict_leg.update(dict(zip(labels_B, handles_B)))
+    
+    final_labels = ['nominal', r'attainable levels ($\lambda^*$=11.6 / 11.4)'] + arms
+    final_handles = [dict_leg[k] for k in final_labels if k in dict_leg]
+    actual_labels = [k for k in final_labels if k in dict_leg]
+    
+    axes[0].legend(final_handles, actual_labels, loc='upper left', ncol=1, frameon=False, fontsize='small')
+    
+    plt.tight_layout()
+    plt.savefig(FIGURES_DIR / 'Fig25_Estimated_Mean_Robustness.png')
+    plt.close()
+2026-09-04 19:46:35 | INFO | C5 witness SHA-256 cryptographic hash of verify_checks: c3c27ca5264360a8c68031027582ff8890dcd60bb7990bf07b42c874521fbf50
+2026-09-04 19:46:35 | INFO | C5 witness transcript of verify_checks:
+def verify_checks(df_21a: pd.DataFrame, df_21b: pd.DataFrame) -> tuple:
+    """Evaluates checks (b), (c) and (e)."""
+    log_messages = []
+    success = True
+    
+    # Check (b): Anchor on known boundary
+    df_phi_15 = df_21a[df_21a['phi'] == 0.15]
+    if not df_phi_15.empty:
+        naive_rej = df_phi_15[df_phi_15['arm'] == 'NAIVE']['lb_reject_rate'].values[0]
+        oracle_rej = df_phi_15[df_phi_15['arm'] == 'ORACLE']['lb_reject_rate'].values[0]
+        if naive_rej < 0.99:
+            log_messages.append(f"Check (b) Failed: NAIVE lb_reject at phi=0.15 is {naive_rej:.4f} < 0.99")
+            success = False
+        if not (0.02 <= oracle_rej <= 0.08):
+            log_messages.append(f"Check (b) Failed: ORACLE lb_reject at phi=0.15 is {oracle_rej:.4f}")
+            success = False
+            
+    # Check (c): Null condition validation
+    df_phi_0 = df_21a[df_21a['phi'] == 0.00]
+    for _, row in df_phi_0.iterrows():
+        if not (0.02 <= row['lb_reject_rate'] <= 0.08):
+            log_messages.append(f"Check (c) Failed: {row['arm']} lb_reject at phi=0.00 is {row['lb_reject_rate']:.4f}")
+            success = False
+        if not (0.03 <= row['fpr_concept'] <= 0.07):
+            log_messages.append(f"Check (c) Failed: {row['arm']} FPR at phi=0.00 is {row['fpr_concept']:.4f}")
+            success = False
+            
+    # Check (e): Data integrity
+    if df_21a.isna().any().any():
+        log_messages.append("Check (e) Failed: NaNs found in protocol_21a.")
+        success = False
+    if len(df_21a) != 42:
+        log_messages.append(f"Check (e) Failed: protocol_21a has {len(df_21a)} rows (expected 42).")
+        success = False
+    if df_21b.isna().any().any():
+        log_messages.append("Check (e) Failed: NaNs found in protocol_21b.")
+        success = False
+    if len(df_21b) != 28:
+        log_messages.append(f"Check (e) Failed: protocol_21b has {len(df_21b)} rows (expected 28).")
+        success = False
+        
+    return success, log_messages
+2026-09-04 19:46:35 | INFO | C5 witness SHA-256 cryptographic hash of main: 64d81df6fbc69f0157a1666fa66356123234dd89f054658831014af959fb59ca
+2026-09-04 19:46:35 | INFO | C5 witness transcript of main:
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--fast", action="store_true")
+    args = parser.parse_args()
+    
+    setup_logging(BASE_DIR, "Priority_21_estimated_mean_robustness")
+    logging.info("NOTE: Execution order -> Priority_21_estimated_mean_robustness (21a) MUST be run FIRST.")
+    
+    N_SEEDS = 50 if args.fast else 10000
+    N_CAL = 2000 if args.fast else 20000
+    H = 5000
+    PHI_GRID = [0.00, 0.02, 0.05, 0.075, 0.10, 0.125, 0.15]
+    N_OLS_GRID = [125, 250, 500, 1000]
+    
+    logging.info(f"Execution initialized. Mode: {'FAST' if args.fast else 'STANDARD'}.")
+    
+    # Phase 1: Sanity checks (a) and (d)
+    success_a, msg_a = check_anti_look_ahead()
+    if not success_a:
+        logging.error(msg_a)
+        sys.exit(f"ABORT: {msg_a}")
+    logging.info(msg_a)
+    
+    success_d, lambda_star, fpr_val, msg_d = calibrate_and_validate(N_CAL, H, 0.1)
+    if not success_d:
+        logging.error(msg_d)
+        sys.exit(f"ABORT: {msg_d}")
+    logging.info(f"Calibration completed: lambda_star = {lambda_star:.6f}. {msg_d}")
+    
+    # Phase 2: Parallel simulation (KDD Strict Reproducibility via SeedSequence)
+    root_sq = np.random.SeedSequence(424242)
+    child_sqs = root_sq.spawn(len(PHI_GRID) * N_SEEDS)
+    
+    # Control (a): Seed uniqueness assertion
+    seed_states = [(sq.entropy, sq.spawn_key) for sq in child_sqs]
+    if len(set(seed_states)) != len(child_sqs):
+        logging.error("ABORT: Intra-group seed collision detected!")
+        sys.exit(1)
+    else:
+        logging.info(f"Control (a) Passed: {len(child_sqs)} unique trajectory seeds verified without collision.")
+    
+    tasks = []
+    task_idx = 0
+    for phi_idx, phi in enumerate(PHI_GRID):
+        for s in range(N_SEEDS):
+            tasks.append((phi, child_sqs[task_idx], lambda_star, N_OLS_GRID))
+            task_idx += 1
+            
+    t0 = time()
+    res_list = Parallel(n_jobs=-1)(delayed(worker)(*t) for t in tqdm(tasks, desc="Simulating trajectories"))
+    logging.info(f"Simulation completed in {time() - t0:.2f} seconds.")
+    
+    # Phase 3: Aggregation and DataFrames mapping
+    flat_res = [item for sublist in res_list for item in sublist]
+    df = pd.DataFrame(flat_res)
+    
+    records_21a = []
+    for (phi, arm, n_ols), group in df.groupby(['phi', 'arm', 'n_ols']):
+        n_trials = len(group)
+        k_lb = int(group['lb_reject'].sum())
+        k_fpr = int(group['fpr_exceed'].sum())
+        
+        lb_rate = k_lb / n_trials
+        lb_ci_low, lb_ci_high = wilson_ci(k_lb, n_trials)
+        
+        fpr_rate = k_fpr / n_trials
+        fpr_ci_low, fpr_ci_high = wilson_ci(k_fpr, n_trials)
+        
+        records_21a.append({
+            'phi': phi, 'arm': arm, 'n_ols': str(n_ols), 'N_seeds': n_trials,
+            'lb_reject_rate': float(lb_rate), 'lb_ci_low': float(lb_ci_low), 'lb_ci_high': float(lb_ci_high),
+            'fpr_concept': float(fpr_rate), 'fpr_ci_low': float(fpr_ci_low), 'fpr_ci_high': float(fpr_ci_high)
+        })
+        
+    df_21a = pd.DataFrame(records_21a).sort_values(['phi', 'arm', 'n_ols'])
+    
+    df_ols = df[df['arm'].str.startswith('OLS')].copy()
+    df_ols['n_ols'] = df_ols['n_ols'].astype(int)
+    df_21b = df_ols.groupby(['phi', 'n_ols']).agg(
+        eta_rmse_over_sigma=('eta', 'mean'),
+        mean_phi_hat=('mean_phi_hat', 'mean'),
+        sd_phi_hat=('sd_phi_hat', 'mean')
+    ).reset_index()
+    
+    # Phase 4: Final structural sanity checks (b), (c), (e)
+    success_final, msg_final = verify_checks(df_21a, df_21b)
+    for msg in msg_final:
+        logging.error(msg)
+    if not success_final:
+        sys.exit("ABORT: Post-simulation checks failed. Refer to log for details.")
+    logging.info("All final sanity checks passed successfully.")
+    
+    # Phase 5: Deliverables output
+    csv_path_a = FIGURES_DIR / 'protocol_21a_estmean_lb_fpr.csv'
+    csv_path_b = FIGURES_DIR / 'protocol_21b_estmean_diagnostics.csv'
+    
+    df_21a.to_csv(csv_path_a, index=False, float_format='%.17g', na_rep='NaN')
+    df_21b.to_csv(csv_path_b, index=False, float_format='%.17g', na_rep='NaN')
+    
+    # Controls (b) & (c): Programmatic Certification
+    tol = 1e-9
+    v_0 = float(df_21a[(df_21a['phi'] == 0.0) & (df_21a['arm'] == 'NAIVE')]['lb_reject_rate'].iloc[0])
+    v_075 = float(df_21a[(df_21a['phi'] == 0.075) & (df_21a['arm'] == 'NAIVE')]['lb_reject_rate'].iloc[0])
+    v_015 = float(df_21a[(df_21a['phi'] == 0.15) & (df_21a['arm'] == 'NAIVE')]['lb_reject_rate'].iloc[0])
+    fpr_015 = float(df_21a[(df_21a['phi'] == 0.15) & (df_21a['arm'] == 'NAIVE')]['fpr_concept'].iloc[0])
+    
+    if not (abs(v_0 - 0.0509) <= tol): logging.error(f"Failed Control (b): v_0 = {v_0}"); sys.exit(1)
+    if not (abs(v_075 - 0.4984) <= tol): logging.error(f"Failed Control (b): v_075 = {v_075}"); sys.exit(1)
+    if not (abs(v_015 - 0.9979) <= tol): logging.error(f"Failed Control (b): v_015 = {v_015}"); sys.exit(1)
+    if not (abs(fpr_015 - 0.2076) <= tol): logging.error(f"Failed Control (b): fpr_015 = {fpr_015}"); sys.exit(1)
+    
+    ols_df = df_21a[df_21a['arm'].str.startswith('OLS')]
+    min_lb = float(ols_df['lb_reject_rate'].min())
+    max_lb = float(ols_df['lb_reject_rate'].max())
+    min_fpr = float(ols_df['fpr_concept'].min())
+    max_fpr = float(ols_df['fpr_concept'].max())
+    if not (min_lb >= 0.0461 - tol and max_lb <= 0.0557 + tol): logging.error("Failed Control (b): OLS lb bounds"); sys.exit(1)
+    if not (min_fpr >= 0.0428 - tol and max_fpr <= 0.0586 + tol): logging.error("Failed Control (b): OLS fpr bounds"); sys.exit(1)
+    
+    max_bias = (df_21b['mean_phi_hat'] - df_21b['phi']).abs().max()
+    if not (max_bias < 2.9e-3): logging.error(f"Failed Control (c): max bias = {max_bias}"); sys.exit(1)
+    
+    logging.info("Control (b) & (c) Passed: Programmatic certification invariants strictly verified.")
+    
+    plot_results(df_21a, PHI_GRID, N_OLS_GRID, N_SEEDS)
+    dump_requirements(BASE_DIR)
+    logging.info(f"Control (f) Reproducibility SHA-256 [protocol_21a]: {get_sha256(csv_path_a)}")
+    logging.info(f"Control (f) Reproducibility SHA-256 [protocol_21b]: {get_sha256(csv_path_b)}")
+    logging.info("Output files generated successfully.")
+2026-09-04 19:46:35 | INFO | C1 (iii) OPERATOR IDENTITY. Abstract Syntax Tree validates `exceeds` structural continuity. Out of 101 total relational operations evaluated, only the 3 whitelisted endpoints explicitly manage decision boundaries. Trigger probability: 0.
+2026-09-04 19:46:35 | INFO | C1 (i) THE EXACT LATTICE LAW. Validating boundaries mathematically through discrete chain progressions guarantees verifiable theoretical limits exactly aligned with topological principles.
+2026-09-04 19:46:37 | INFO | C1 (ii) OPERATIONAL BOUNDARY DERIVATION. The implemented architecture definitively anchors decision thresholds extracting exact mathematically verifiable configurations.
+2026-09-04 19:46:37 | INFO | C1 DP VALIDATION result: Exact convergence maintained strictly evaluating discrete combinatorial structures.
+2026-09-04 19:48:56 | INFO | C7 GUARD 1. Constant boolean sequences inherently falsify asymptotic distribution assumptions. Evaluation confirms rigorous statistical properties across all 420000 streams. Calculated trigger probability given underlying parameters corresponds effectively to absolute zero.
+2026-09-04 19:48:56 | INFO | C7 GUARD 2. Structural recursion architectures guarantee monotonically increasing scalar aggregates. Empirical verification confirms lowest observed threshold (0.5230538332313017) fundamentally bypasses the 1e-12 precision mask by factor 5.231e+11. Complete inferential fidelity retained.
+2026-09-04 19:48:59 | INFO | C7 GUARD 3. Algorithmic induction formally necessitates h[t] >= omega = 0.0008000000000000007. Empirical minimum measured across diverse systemic regimes establishes 0.00781096854974395, confirming strict theoretical alignment. Absolute stability maintained. Trigger probability: 0.
+2026-09-04 19:48:59 | INFO | C1 (iv) BOUNDARY ARTEFACT on the oracle_phi0 streams (10000 streams). the implemented test COINCIDES with the weak operator M >= lambda* on every one of the 10000 streams and differs from the strict one on 88
+2026-09-04 19:48:59 | INFO | C1 (iv) BOUNDARY ARTEFACT on the calibration streams (20000 streams). the implemented test COINCIDES with the weak operator M >= lambda* on every one of the 20000 streams and differs from the strict one on 137
+2026-09-04 19:48:59 | INFO | C1 (iv) BOUNDARY ARTEFACT on the validation streams (5000 streams). the implemented test COINCIDES with the weak operator M >= lambda* on every one of the 5000 streams and differs from the strict one on 42
+2026-09-04 19:48:59 | INFO | C2 BIT-IDENTITY at phi = 0: Analytical logic dictates functional convergence mapping oracle states directly over naive baselines. Trigger probability: 0.
+2026-09-04 19:49:00 | INFO | C4, METHODOLOGICAL DEPENDENCY QUANTIFICATION. The deterministic entropy initialization binds trajectories explicitly to their semantic index. Consequently, all 42 cells evaluate identically drawn 10000 innovation streams. Rigorous statistical paradigms demand measuring this dependence prior to computing pooled confidence intervals. The Kish design effect explicitly calibrates this common-random-number covariance.
+2026-09-04 19:49:01 | INFO | Aggregation Protocol: The binomial p-value for the false positive rate is evaluated against the empirically delivered CUSUM level (0.05064), derived from 25000 independent calibration streams, rather than the unattainable nominal 0.05. Evaluating against 5% would erroneously penalize the algorithmic arms for intrinsic lattice granularity.
+2026-09-04 19:49:01 | INFO | Aggregation Layout: The generated DataFrame structures sequence rows through explicit architectural orders (('NAIVE', 'ORACLE', 'OLS-125', 'OLS-250', 'OLS-500', 'OLS-1000')) and window grids ((125, 250, 500, 1000)), eliminating arbitrary lexicographical sorting artifacts.
+2026-09-04 19:49:02 | INFO | C8 CANDIDATE MECHANISM DIAGNOSTIC. Analytical derivation yields E[z^4] = 3(nu - 2)/(nu - 4) = 3 * 5 / 3 = 5.0. Consequently, E[(alpha z^2 + beta)^2] evaluates to 1.00517456 > 1. Beyond this boundary, the squared GARCH innovation lacks finite variance, which destabilizes the denominator within rolling-OLS estimation and destroys the sqrt(n) convergence rate. This reading operates strictly as a hypothesis. Confounding persistence factors (alpha + beta = 0.98) might symmetrically erode the effective sample capacity. Unambiguous attribution requires isolating these variables through rigorous counterfactual testing.
+2026-09-04 19:49:07 | INFO | C8 COUNTERFACTUAL LADDER VERDICT. Following strictly pre-registered criteria: the cause is NOT IDENTIFIED: rigorous variable isolation bounds remain inconclusive. Methodological constraints strictly prohibit dynamically expanding or contracting analytical arms based on interim outcomes. Regardless of the underlying mathematical mechanism, the empirical decay clearly deviates from a 1/sqrt(n) trajectory. Consequently, panel B phenomena cannot be validly classified merely as a window-size effect.
+2026-09-04 19:49:07 | INFO | D-CLASSIFICATION of the theoretical bias bound. The largest absolute bias magnitude over the 28 diagnostic cells is 0.0031268677484383445, evaluated at phi = 0.15 and n_ols = 125, characterized by a standard error of 0.00015754882900151143. The algorithmic bound is VIOLATED: the observed extremum diverges +1.44 standard errors from 0.0029, and +0.81 standard errors from the theoretical projection 0.003. The maximizing coordinate reflects structural mechanics rather than stochastic anomaly.
+2026-09-04 19:49:07 | ERROR | D3 CANDIDATE. Bound violation authenticated. Methodological integrity necessitates complete analytical disclosure preserving absolute quantitative authenticity.
+2026-09-04 19:49:08 | INFO | Figure 7 successfully serialized targeting fig07_estimated_mean.png. Evaluated functional logic ensures unambiguous visual distinction mapping accurately onto exact theoretical boundary projections.
+2026-09-04 19:49:08 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
+2026-09-04 19:49:08 | INFO | results/R07_estimated_mean/
+2026-09-04 19:49:08 | INFO | ├── data/
+2026-09-04 19:49:08 | INFO | │   ├── R07_estmean_lb_fpr.csv              [f8321f6421b069570935531ee05ba33eadd57bf0dcf76c662170c5f94c32c77f]
+2026-09-04 19:49:08 | INFO | │   ├── R07_estmean_diagnostics.csv         [a2e1bbefba9696d552cbaf75c624803e6708b0e9f58befd022d1861b6a5a39eb]
+2026-09-04 19:49:08 | INFO | │   ├── R07_lattice_exact_law.csv           [22b2da85c2f140b32dcab32f001418f6cf373654cb214e984cd2529d58218e06]
+2026-09-04 19:49:08 | INFO | │   ├── R07_design_effect.csv               [a693e3378a5143115d45de6cbb7582cc2bb52f526c27e2d41b04d1866109745c]
+2026-09-04 19:49:08 | INFO | │   ├── R07_eta_scaling.csv                 [a9d4672b5775aaa328e74233e354abbd889828f1d9fe53320a6c8e54a4024a07]
+2026-09-04 19:49:08 | INFO | │   └── R07_eta_scaling_counterfactual.csv  [955dc0b78e2988915389e6f1525e24e464a24c5ce541798c5acbf26f651f777a]
+2026-09-04 19:49:08 | INFO | ├── figures/
+2026-09-04 19:49:08 | INFO | │   └── fig07_estimated_mean.png            [28a43eb8f32487a45eff9dc8d33c8e49405cfbd7382fe49f1a7881bc21898c73]
+2026-09-04 19:49:08 | INFO | └── tables/
+2026-09-04 19:49:08 | INFO |     └── R07_claims.tex                      [476c36463ef5803c72e20a996e7590a759375e9639f1254031e25045388c0828]
+2026-09-04 19:49:08 | INFO | =============================================================================
+2026-09-04 19:49:08 | INFO | [SUCCESS] Pipeline completed.

@@ -1,0 +1,598 @@
+2026-09-04 20:19:58 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-09-04 20:19:58 | INFO | Python: 3.12.9
+2026-09-04 20:19:58 | INFO |   numpy: 1.26.4
+2026-09-04 20:19:58 | INFO |   pandas: 2.3.2
+2026-09-04 20:19:58 | INFO |   scipy: 1.16.2
+2026-09-04 20:19:58 | INFO |   statsmodels: 0.14.5
+2026-09-04 20:19:58 | INFO |   matplotlib: 3.10.6
+2026-09-04 20:19:58 | INFO |   pytest: 9.0.3
+2026-09-04 20:19:58 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
+2026-09-04 20:19:58 | INFO | experiments/R13_oracle_ceiling/
+2026-09-04 20:19:58 | INFO | =============================================================================
+2026-09-04 20:19:58 | INFO | R13 (a) measures the empirical oracle detectability frontier of v87 Figure 14 and the numerals of L331: a 3-day detection of the 2020 crash at a 1.3% phase false-alarm probability under likelihood-ratio increments, 16 days under the standardized-mean CUSUM, a path divergence 10.6 times the unconditional budget, and the three census verdicts at the matched operating point.
+2026-09-04 20:19:58 | INFO | DETECTOR LABELS. The R13 prompt's notation section glosses D1/D2 as 'likelihood-ratio and standardized-mean'. The delivered increments and v87's Figure 14 caption fix the opposite assignment -- D1 is the standardized-mean CUSUM and carries the dead-band grid, D2 is the Gaussian likelihood-ratio increment at delta = 0 -- and preamble S1 makes the manuscript the specification. The delivered labels are kept for witness comparability and the family is carried explicitly in a `detector_family` column.
+2026-09-04 20:19:58 | INFO | Worker processes requested: 4.
+2026-09-04 20:19:58 | INFO | C7 source identity: 6 primitives byte-identical to the files that own them (2645 characters compared) -- wilson_ci, compute_oracle_v2_v3 and check_monotonicity against Priorite_19_oracle_ceiling_parallel.py, and _garch_nll, fit_garch_qmle and compute_gamma_exact against exp_R01_real_world_backtest.py. S4.2 forbids hoisting any of them into experiments/common/, so the duplication is deliberate. Deterministic; trigger probability 0 unless a copy has drifted.
+2026-09-04 20:19:58 | INFO | C7 ADAPTED ROUTINES. ['run_qmle_recovery', 'run_detector_recovery', 'process_episode'] each take an injected generator where Priorite_19_oracle_ceiling_parallel.py builds one from a bare integer seed, so byte identity is not assertable on them and the witness source of each is quoted in full below instead. This is the treatment exp_R11_multi_detector.py gives simulate_garch11. The witness segments total 20884 characters.
+2026-09-04 20:19:58 | INFO | C7 witness SHA-256 of run_qmle_recovery: 14c0662cdde4b710c1370db2f18ec011cf492e6a61ee29f73355189ba55590b0
+2026-09-04 20:19:58 | INFO | C7 witness source of run_qmle_recovery:
+def run_qmle_recovery():
+    def simulate_garch11(n, omega, alpha, beta, nu=7.0, seed=42):
+        loc_rng = np.random.default_rng(seed)
+        sigma2_unc = omega / (1 - alpha - beta)
+        eps = np.zeros(n)
+        sigma2 = np.zeros(n)
+        sigma2[0] = sigma2_unc
+        scale = np.sqrt((nu - 2) / nu)
+        z = loc_rng.standard_t(df=nu, size=n) * scale
+        eps[0] = np.sqrt(sigma2[0]) * z[0]
+        for t in range(1, n):
+            sigma2[t] = omega + alpha * eps[t-1]**2 + beta * sigma2[t-1]
+            sigma2[t] = min(sigma2[t], 1e4 * sigma2_unc)
+            eps[t] = np.sqrt(sigma2[t]) * z[t]
+        return eps
+
+    targets = [(0.05, 0.90), (0.08, 0.90), (0.10, 0.85), (0.05, 0.94)]
+    sigmas = [0.1, 0.0093]
+    passes = 0
+    
+    for a, b in targets:
+        for sig in sigmas:
+            omega = (sig**2) * (1 - a - b)
+            for seed in range(11):
+                eps = simulate_garch11(5000, omega, a, b, seed=seed)
+                res = fit_garch_qmle(eps)
+                w_hat, a_hat, b_hat = res[0] if isinstance(res[0], tuple) else res
+                if abs(a_hat - a) < 0.03 and abs(b_hat - b) < 0.05:
+                    passes += 1
+    
+    if passes == 88:
+        logging.info("QMLE RECOVERY: PASSED")
+        return True
+    else:
+        logging.error("QMLE RECOVERY: FAILED")
+        sys.exit(1)
+2026-09-04 20:19:58 | INFO | C7 witness SHA-256 of run_detector_recovery: 8e726d8b8e7cd3fa7249a8ea9761b7e82d59f8314fd14666176e17c9b4f5b12e
+2026-09-04 20:19:58 | INFO | C7 witness source of run_detector_recovery:
+def run_detector_recovery():
+    # MANDATORY SIGN VERIFICATION:
+    # under H_1, E[z_t] = (mu_1 - mu_0)/sigma_t, so
+    # E[x_t] = sign(mu_1-mu_0) * (mu_1-mu_0)/sigma_t = |mu_1-mu_0|/sigma_t > 0.
+    # The drift of x_t is POSITIVE in both market directions (bear AND bull),
+    # which is the necessary condition for a 0-reflected CUSUM to take off.
+    
+    H_tot, H_inj = 4000, 2000
+    N_H0, N_H1 = 5000, 500
+    
+    Z_H0 = rng.standard_normal((N_H0, H_tot))
+    
+    # Strict coupling of H1 noise to guarantee Monte Carlo symmetry
+    Z_base = rng.standard_normal((N_H1, H_tot))
+    
+    Z_H1_bear = Z_base.copy()
+    Z_H1_bear[:, H_inj:] -= 0.5
+    
+    Z_H1_bull = Z_base.copy()
+    Z_H1_bull[:, H_inj:] += 0.5
+    
+    Z_H1_null = Z_base.copy()
+    
+    detectors_ctrl = [('D1', 0.00), ('D1', 0.25), ('D2', np.nan), ('D3', np.nan)]
+    lambda_grid_ctrl = np.geomspace(1e-3, 200, 200)
+    
+    records = []
+    pass_all = True
+    
+    for det, delta in detectors_ctrl:
+        if det == 'D1' or det == 'D2':
+            is_D1 = (det == 'D1')
+            dv = delta if is_D1 else 0.0
+            
+            def calibrate(Z_batch, mu_1):
+                sign_d = np.sign(mu_1) if mu_1 != 0 else 1
+                X = sign_d * Z_batch if is_D1 else mu_1 * (Z_batch - mu_1/2)
+                S_arr = np.zeros(Z_batch.shape[0])
+                M_arr_post = np.zeros(Z_batch.shape[0])
+                for t in range(H_tot):
+                    S_arr = np.maximum(0, S_arr + X[:, t] - dv)
+                    if t >= H_inj:
+                        M_arr_post = np.maximum(M_arr_post, S_arr)
+                return M_arr_post
+                
+            # Calibrate lambda on H0 post-injection window
+            # to absorb the stationary regime and validate the degenerate case (r_null)
+            M_H0_bull = calibrate(Z_H0, mu_1=0.5)
+            fprs = np.array([(M_H0_bull > l).mean() for l in lambda_grid_ctrl])
+            idx_star = np.where(fprs <= 0.05)[0]
+            lam_star = lambda_grid_ctrl[idx_star[0]] if len(idx_star)>0 else np.nan
+            fpr_val = fprs[idx_star[0]] if len(idx_star)>0 else np.nan
+            
+            def eval_power(Z_batch, mu_1):
+                sign_d = np.sign(mu_1) if mu_1 != 0 else 1
+                X = sign_d * Z_batch if is_D1 else mu_1 * (Z_batch - mu_1/2)
+                S_arr = np.zeros(Z_batch.shape[0])
+                first_alarm = np.full(Z_batch.shape[0], np.nan)
+                for t in range(H_tot):
+                    S_arr = np.maximum(0, S_arr + X[:, t] - dv)
+                    if t >= H_inj:
+                        crossed = (S_arr > lam_star) & np.isnan(first_alarm)
+                        first_alarm[crossed] = (t + 1) - H_inj
+                return first_alarm
+                
+            tau_bear = eval_power(Z_H1_bear, mu_1=-0.5)
+            tau_bull = eval_power(Z_H1_bull, mu_1=0.5)
+            tau_null = eval_power(Z_H1_null, mu_1=0.5)
+            
+            r_bear = (~np.isnan(tau_bear)).mean()
+            r_bull = (~np.isnan(tau_bull)).mean()
+            r_null = (~np.isnan(tau_null)).mean()
+            
+        elif det == 'D3':
+            lam_star = 1.6449
+            fpr_val = 0.05
+            def eval_D3(Z_batch, mu_1):
+                sign_d = np.sign(mu_1) if mu_1 != 0 else 1
+                first_alarm = np.full(Z_batch.shape[0], np.nan)
+                S_num = np.zeros(Z_batch.shape[0])
+                for t in range(1, H_inj+1):
+                    # Strict Clairvoyant test: starts at onset time
+                    S_num += Z_batch[:, H_inj + t - 1]
+                    Zn = sign_d * S_num / np.sqrt(t)
+                    crossed = (Zn > lam_star) & np.isnan(first_alarm)
+                    first_alarm[crossed] = t
+                Zn_final = sign_d * S_num / np.sqrt(H_inj)
+                return first_alarm, Zn_final
+                
+            tau_bear, _ = eval_D3(Z_H1_bear, mu_1=-0.5)
+            tau_bull, _ = eval_D3(Z_H1_bull, mu_1=0.5)
+            _, Zn_final_null = eval_D3(Z_H1_null, mu_1=0.5)
+            
+            r_bear = (~np.isnan(tau_bear)).mean()
+            r_bull = (~np.isnan(tau_bull)).mean()
+            r_null = (Zn_final_null > 1.6449).mean()
+            
+        c_pwr = (r_bear >= 0.95) and (r_bull >= 0.95)
+        c_sym = abs(r_bear - r_bull) <= 0.03
+        if r_bear >= 0.5 and r_bull >= 0.5:
+            rtio = np.nanmedian(tau_bear) / np.nanmedian(tau_bull)
+            c_sym = c_sym and (0.7 <= rtio <= 1.4)
+        c_deg = 0.02 <= r_null <= 0.10
+        
+        c_pass = c_pwr and c_sym and c_deg
+        if not c_pass: pass_all = False
+        
+        conds = [
+            ('H1_bear_ctrl', r_bear, tau_bear, N_H1),
+            ('H1_bull_ctrl', r_bull, tau_bull, N_H1),
+            ('H1_null_drift_ctrl', r_null, tau_null if det != 'D3' else np.full(N_H1, np.nan), N_H1),
+            ('H0_ctrl', fpr_val, np.full(N_H0, np.nan), N_H0)
+        ]
+        
+        for c_name, c_rate, c_tau, c_n in conds:
+            c_low, c_high = wilson_ci(c_rate, c_n)
+            records.append({
+                'detector': det, 'delta': delta, 'delta_opt_ctrl': 0.25,
+                'condition': c_name, 'lambda_star_ctrl': lam_star, 'FPR_H_ctrl': fpr_val,
+                'detection_rate': c_rate, 'ci_low': c_low, 'ci_high': c_high,
+                'median_delay': np.nanmedian(c_tau), 'n_replicates': c_n,
+                'power_requirement_met': c_pwr, 'symmetry_requirement_met': c_sym,
+                'degenerate_requirement_met': c_deg, 'detector_recovery_pass': c_pass
+            })
+
+    pd.DataFrame(records).to_csv(FIGURES_DIR / 'protocol_19e_detector_recovery.csv', index=False)
+    
+    if pass_all:
+        logging.info("DETECTOR RECOVERY: PASSED")
+    else:
+        logging.error("DETECTOR RECOVERY: FAILED")
+        sys.exit(1)
+2026-09-04 20:19:58 | INFO | C7 witness SHA-256 of process_episode: 09a468d8a9c06a2815e25447f9f7b5201d17ba631f413160d1f94cf1bdaa89f6
+2026-09-04 20:19:58 | INFO | C7 witness source of process_episode:
+def process_episode(ep, df_census, df_tick, seed_seq):
+    worker_logs = []
+    # Legacy seed isolation per worker for legacy SciPy/Statsmodels functions
+    legacy_seed = int(seed_seq.generate_state(1)[0]) & 0xFFFFFFFF
+    np.random.seed(legacy_seed)
+    import random
+    random.seed(legacy_seed)
+    
+    out_19a, out_19b, out_19c, out_19d = [], [], [], []
+    # Instantiation of an independent and deterministic RNG via SeedSequence
+    loc_rng = np.random.default_rng(seed_seq)
+    
+    row = df_census[(df_census['ticker'] == ep['ticker']) & (df_census['phase_id'] == ep['phase_id'])]
+    if row.empty:
+        raise RuntimeError(f"Episode {ep['id']} unresolved in CSV.")
+        
+    c_row = row.iloc[0]
+    st_date, en_date = c_row['start_date'], c_row['end_date']
+    T_csv, sr_csv = c_row['T_days'], c_row['sharpe']
+    # Original census values, preserved for audit columns *_csv
+    # (T_csv/sr_csv might be replaced below by P3 sequential convention).
+    T_census_orig, sr_census_orig = c_row['T_days'], c_row['sharpe']
+    add_csv, det_csv = c_row['ADD_min_days'], c_row['detectable_flag']
+    
+    idx_onset = df_tick.index.get_loc(st_date)
+    idx_end = df_tick.index.get_loc(en_date)
+    
+    # R6(a & b) INCOMMENSURABILITY CONFLICT RESOLUTION (EPISTEMOLOGICAL OVERRIDE)
+    T_recomp = idx_end - idx_onset
+    
+    r_ph_strict = df_tick['log_ret'].iloc[idx_onset+1 : idx_end+1]
+    sr_recomp = (r_ph_strict.mean() / r_ph_strict.std(ddof=1)) * np.sqrt(252)
+    
+    if T_recomp != T_csv or abs(sr_recomp - sr_csv) > 1e-3:
+        worker_logs.append(("WARNING", f"[{ep['id']}] P16/P3 INCOMMENSURABILITY: T_days {T_csv}->{T_recomp}, Sharpe {sr_csv:.4f}->{sr_recomp:.4f}. SEQUENTIAL OVERRIDE."))
+        # Overwriting CSV constants biased by strictly post-onset reality
+        T_csv = T_recomp
+        sr_csv = sr_recomp
+        
+    ref_start_idx = max(0, idx_onset - 1000)
+    n_ref = idx_onset - ref_start_idx
+    if n_ref < 500:
+        raise RuntimeError(f"[{ep['id']}] n_ref={n_ref} < 500")
+        
+    surv_end_idx = min(idx_onset + 3 * T_csv, idx_onset + 750, len(df_tick) - 1)
+    r_win = df_tick['log_ret'].iloc[ref_start_idx : surv_end_idx+1].values
+    eps_win = r_win - np.mean(r_win)
+    
+    res_qmle = fit_garch_qmle(eps_win)
+    w_hat, a_hat, b_hat = res_qmle[0] if isinstance(res_qmle[0], tuple) else res_qmle
+    
+    sig2_V1 = np.zeros(len(eps_win))
+    sig2_V1[0] = np.var(eps_win)
+    for t in range(1, len(eps_win)):
+        sig2_V1[t] = w_hat + a_hat * eps_win[t-1]**2 + b_hat * sig2_V1[t-1]
+    sig_V1 = np.sqrt(sig2_V1)
+    
+    idx_rel_onset = idx_onset - ref_start_idx
+    idx_rel_end = surv_end_idx - ref_start_idx
+    
+    sig_V2, n_eff_V2 = compute_oracle_v2_v3(r_win, idx_rel_onset+1, idx_rel_end, False)
+    if n_eff_V2 < 8:
+        raise RuntimeError(f"[{ep['id']}] V2 n_eff < 8")
+        
+    sig_V3, _ = compute_oracle_v2_v3(r_win, idx_rel_onset+1, idx_rel_end, True)
+    
+    oracles_map = {
+        'V1': {'sig': sig_V1, 'contam': False, 'w': w_hat, 'a': a_hat, 'b': b_hat},
+        'V2': {'sig': sig_V2, 'contam': False, 'w': np.nan, 'a': np.nan, 'b': np.nan},
+        'V3': {'sig': sig_V3, 'contam': True, 'w': np.nan, 'a': np.nan, 'b': np.nan}
+    }
+    
+    for o_name, o_data in oracles_map.items():
+        sig_arr = o_data['sig']
+        sig_surv_chk = sig_arr[idx_rel_onset+1 : idx_rel_end+1]
+        if np.any(sig_surv_chk <= 0) or np.any(np.isnan(sig_surv_chk)):
+            raise RuntimeError(f"[{ep['id']}] {o_name}: sigma_t <= 0 detected.")
+            
+        r_ref = r_win[:idx_rel_onset]
+        sig_ref = sig_arr[:idx_rel_onset]
+        mu_0 = np.mean(r_ref)
+        z_ref = (r_ref - mu_0) / sig_ref
+        
+        p_lb = acorr_ljungbox(z_ref, lags=[20], return_df=True)['lb_pvalue'].iloc[0]
+        p_lb2 = acorr_ljungbox(z_ref**2, lags=[20], return_df=True)['lb_pvalue'].iloc[0]
+        m_z, s_z, k_z = np.mean(z_ref), np.std(z_ref, ddof=1), stats.kurtosis(z_ref, fisher=False)
+        
+        is_cert = (p_lb2 >= 0.01) and (0.8 <= s_z <= 1.25)
+        if not is_cert:
+            worker_logs.append(("WARNING", f"[{ep['id']}] {o_name} not certified."))
+            
+        idx_rel_phase_end = idx_end - ref_start_idx
+        r_ph = r_win[idx_rel_onset+1 : idx_rel_phase_end+1]
+        sig_ph = sig_arr[idx_rel_onset+1 : idx_rel_phase_end+1]
+        mu_1 = np.mean(r_ph)
+        
+        D_std = np.mean((mu_1 - mu_0) / sig_ph)
+        d_opt = abs(D_std) / 2
+        
+        KL_p = np.sum(((mu_1 - mu_0)**2) / (2 * sig_ph**2))
+        KL_c = T_csv * (sr_csv**2) / 504
+        
+        r_sv = r_win[idx_rel_onset+1:]
+        sig_sv = sig_arr[idx_rel_onset+1:]
+        H_ep = int(T_csv)
+        
+        out_19c.append({
+            'episode_id': ep['id'], 'ticker': ep['ticker'], 'phase_id': ep['phase_id'], 'role': ep['role'],
+            'sigma_oracle': o_name, 'oracle_contaminated': o_data['contam'],
+            'ref_start': df_tick.index[ref_start_idx].strftime('%Y-%m-%d'), 'ref_end': df_tick.index[idx_onset-1].strftime('%Y-%m-%d'),
+            'n_ref': n_ref, 'p_lb_z': p_lb, 'p_lb_z2': p_lb2, 'mean_z_ref': m_z, 'std_z_ref': s_z, 'kurt_z_ref': k_z,
+            'oracle_certified': is_cert, 'omega': o_data['w'], 'alpha': o_data['a'], 'beta': o_data['b'],
+            'persistence': o_data['a'] + o_data['b'], 'gamma_exact': compute_gamma_exact(o_data['a'], o_data['b']) if o_name=='V1' else np.nan,
+            'qmle_recovery_pass': True, 'mu_0': mu_0, 'mu_1': mu_1, 'Delta_std': D_std, 'delta_opt': d_opt,
+            'sigma_bar_ref': np.mean(sig_ref), 'sigma_bar_phase': np.mean(sig_ph), 'vol_ratio': np.mean(sig_ph)/np.mean(sig_ref),
+            'sum_inv_sigma2_phase': np.sum(1 / sig_ph**2), 'KL_path': KL_p, 'KL_corollary': KL_c, 'jensen_ratio': KL_p/KL_c,
+            'SR_daily_realized': np.mean(r_ph)/np.std(r_ph, ddof=1), 'sharpe_csv': sr_census_orig, 'sharpe_recomputed': sr_recomp,
+            'T_days_csv': T_census_orig, 'T_days_recomputed': T_recomp
+        })
+        
+        # D3 Clairvoyant Floor
+        S_n_num = np.cumsum((r_sv - mu_0) / sig_sv**2)
+        S_n_den = np.sqrt(np.cumsum(1 / sig_sv**2))
+        Zn_real = np.sign(mu_1 - mu_0) * S_n_num / S_n_den
+        i_cross = np.where(Zn_real >= 1.6449)[0]
+        n_star_real = i_cross[0] + 1 if len(i_cross) > 0 else np.nan
+        
+        Zn_anal = abs(mu_1 - mu_0) * S_n_den
+        ia_cross = np.where(Zn_anal >= 1.6449)[0]
+        n_star_anal = ia_cross[0] + 1 if len(ia_cross) > 0 else np.nan
+        
+        out_19d.append({
+            'episode_id': ep['id'], 'ticker': ep['ticker'], 'phase_id': ep['phase_id'], 'role': ep['role'],
+            'sigma_oracle': o_name, 'n_star_realized': n_star_real, 'n_star_analytic': n_star_anal,
+            'anticonservative': True, 'T_days_phase': T_csv, 'ADD_min_census': add_csv
+        })
+        
+        # Null-B logic
+        z_nrm = (z_ref - np.mean(z_ref)) / np.std(z_ref, ddof=1)
+        sig_H = sig_sv[:H_ep]
+        Z_star = loc_rng.choice(z_nrm, size=(N_BOOT_FPR, H_ep))
+        r_nb = mu_0 + sig_H * Z_star
+        
+        base_grid = np.geomspace(1e-3, 200, 200)
+        
+        # GARCH Isolation (CRN & Acceleration): 1 unique ARL computation instead of 11 redundancies
+        if o_name == 'V1':
+            ra_arl = np.zeros((N_BOOT_ARL, H_ARL))
+            sa_arl = np.zeros((N_BOOT_ARL, H_ARL))
+            bs = 500
+            for b in range(N_BOOT_ARL // bs):
+                Za = loc_rng.choice(z_nrm, size=(bs, H_ARL + 500))
+                ea = np.zeros((bs, H_ARL + 500))
+                sa2 = np.zeros((bs, H_ARL + 500))
+                sa2[:, 0] = o_data['w'] / (1 - o_data['a'] - o_data['b'])
+                for t in range(1, H_ARL + 500):
+                    sa2[:, t] = o_data['w'] + o_data['a'] * ea[:, t-1]**2 + o_data['b'] * sa2[:, t-1]
+                    ea[:, t] = np.sqrt(sa2[:, t]) * Za[:, t]
+                sa_arl[b*bs:(b+1)*bs, :] = np.sqrt(sa2[:, 500:])
+                ra_arl[b*bs:(b+1)*bs, :] = mu_0 + ea[:, 500:]
+        
+        for d_id in ['D1', 'D2']:
+            deltas = [0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, d_opt] if d_id == 'D1' else [np.nan]
+            
+            for d_val in deltas:
+                if d_id == 'D1':
+                    X_nb = np.sign(mu_1 - mu_0) * (r_nb - mu_0) / sig_H
+                    X_real = np.sign(mu_1 - mu_0) * (r_sv - mu_0) / sig_sv
+                    dv = d_val
+                else:
+                    X_nb = (mu_1 - mu_0) * (r_nb - (mu_0 + mu_1)/2) / (sig_H**2)
+                    X_real = (mu_1 - mu_0) * (r_sv - (mu_0 + mu_1)/2) / (sig_sv**2)
+                    dv = 0.0
+                    
+                S_nb = np.zeros(N_BOOT_FPR)
+                M_nb = np.zeros(N_BOOT_FPR)
+                for t in range(H_ep):
+                    S_nb = np.maximum(0, S_nb + X_nb[:, t] - dv)
+                    M_nb = np.maximum(M_nb, S_nb)
+                    
+                S_real = 0.0
+                M_real = np.zeros(len(r_sv))
+                for t in range(len(r_sv)):
+                    S_real = max(0, S_real + X_real[t] - dv)
+                    M_real[t] = S_real
+                    
+                max_M = np.max(M_nb)
+                grid = np.geomspace(1e-3, max_M * 1.1, 200) if max_M > 200 else base_grid
+                
+                fpr_vals = np.array([(M_nb > l).mean() for l in grid])
+                
+                arl_vals = np.full(200, np.nan)
+                arl_cens = np.full(200, False)
+                arl_frac = np.zeros(200)
+                arl_avail = False
+                
+                if o_name == 'V1':
+                    arl_avail = True
+                    tau_arl = np.full((N_BOOT_ARL, 200), H_ARL)
+                    
+                    if d_id == 'D1':
+                        Xa = np.sign(mu_1 - mu_0) * (ra_arl - mu_0) / sa_arl
+                    else:
+                        Xa = (mu_1 - mu_0) * (ra_arl - (mu_0 + mu_1)/2) / (sa_arl**2)
+                        
+                    Sa = np.zeros(N_BOOT_ARL)
+                    for t in range(H_ARL):
+                        Sa = np.maximum(0, Sa + Xa[:, t] - dv)
+                        # CPU Vectorization via Broadcasting
+                        mask = (Sa[:, None] > grid) & (tau_arl == H_ARL)
+                        tau_arl[mask] = t + 1
+                                
+                    arl_raw = np.mean(tau_arl, axis=0)
+                    arl_frac = np.mean(tau_arl == H_ARL, axis=0)
+                    arl_cens = arl_frac > 0.05
+                    arl_vals = arl_raw.copy()
+                    arl_vals[arl_cens] = np.nan
+                    
+                check_monotonicity(fpr_vals, arl_vals, d_id)
+                
+                tau_grid = np.full(200, np.nan)
+                date_grid = []
+                for i, l in enumerate(grid):
+                    idx_c = np.where(M_real > l)[0]
+                    if len(idx_c) > 0:
+                        tau_grid[i] = idx_c[0] + 1
+                        date_grid.append(df_tick.index[idx_onset + 1 + idx_c[0]].strftime('%Y-%m-%d'))
+                    else:
+                        date_grid.append(np.nan)
+                        
+                for i in range(200):
+                    cl, ch = wilson_ci(fpr_vals[i], N_BOOT_FPR)
+                    out_19a.append({
+                        'episode_id': ep['id'], 'ticker': ep['ticker'], 'phase_id': ep['phase_id'],
+                        'sigma_oracle': o_name, 'oracle_contaminated': o_data['contam'], 'detector': d_id,
+                        'delta': d_val, 'lambda': grid[i], 'FPR_H': fpr_vals[i], 'FPR_H_ci_low': cl, 'FPR_H_ci_high': ch,
+                        'ARL0': arl_vals[i], 'arl0_available': arl_avail, 'arl0_right_censored': arl_cens[i],
+                        'arl0_censored_frac': arl_frac[i], 'tau_realized_days': tau_grid[i], 'alarm_date': date_grid[i],
+                        'T_days_phase': T_csv
+                    })
+                    
+                # OP Extraction
+                i_op1 = np.where(fpr_vals <= 0.05)[0]
+                i_op2 = np.where(arl_vals >= 20)[0] if arl_avail else []
+                i_op2b = np.where(arl_vals >= 252)[0] if arl_avail else []
+                i_op3 = np.where(tau_grid <= T_csv)[0]
+                
+                ops = [
+                    ('OP1_isoFPR5_H', i_op1[0] if len(i_op1)>0 else -1),
+                    ('OP2_ARL0_20', i_op2[0] if len(i_op2)>0 else -1),
+                    ('OP2b_ARL0_252', i_op2b[0] if len(i_op2b)>0 else -1),
+                    ('OP3_breakeven', i_op3[-1] if len(i_op3)>0 else -1)
+                ]
+                
+                bk_ex = len(i_op3) > 0
+                for op_name, op_idx in ops:
+                    at = op_idx != -1
+                    out_19b.append({
+                        'episode_id': ep['id'], 'ticker': ep['ticker'], 'phase_id': ep['phase_id'], 'role': ep['role'],
+                        'sigma_oracle': o_name, 'oracle_contaminated': o_data['contam'], 'oracle_certified': is_cert,
+                        'detector': d_id, 'delta': d_val, 'operating_point': op_name,
+                        'lambda_star': grid[op_idx] if at else np.nan, 'FPR_H': fpr_vals[op_idx] if at else np.nan,
+                        'ARL0': arl_vals[op_idx] if at else np.nan, 'tau_realized_days': tau_grid[op_idx] if at else np.nan,
+                        'alarm_date': date_grid[op_idx] if at else np.nan, 'T_days_phase': T_csv,
+                        'alarm_within_T': (tau_grid[op_idx] <= T_csv) if at and not np.isnan(tau_grid[op_idx]) else False,
+                        'ADD_min_census': add_csv, 'detectable_flag_census': det_csv, 'op_attainable': at, 'breakeven_exists': bk_ex
+                    })
+    return out_19a, out_19b, out_19c, out_19d, worker_logs
+2026-09-04 20:19:58 | INFO | QMLE recovery: 4 (alpha, beta) targets x 2 unconditional scales x 11 replicates = 88 cells, 5000 observations each, standardized Student-t(7) innovations.
+2026-09-04 20:19:58 | INFO | S4bis, BEFORE the result is read: the redesigned gate is a family of m = 2 equivalence tests, one per parameter, at a per-test level of 0.001. Its family-wise trigger probability under the null 'the mean margin is zero' is bounded by 1 - (1 - 0.001)^2 = 0.19990%. The delivered gate 'all 88 per-cell comparisons hold' has no computable trigger probability at all, which is why it is replaced rather than kept alongside.
+2026-09-04 20:19:58 | INFO | Convergence caveat, stated before the fits are read: fit_garch_qmle declares `converged = res.success and max(|a - 0.05|, |b - 0.90|) > 1e-6`, so a fit that lands exactly on the (0.05, 0.90) initialiser is reported NON-converged. Two of the eight parameter cells target (0.05, 0.90) and (0.05, 0.94), where a genuine solution can sit within 1e-6 of the initialiser. Every non-converged cell is logged individually below and stops the run: shipping the initialiser as a fit is the degraded path preamble S4.3 forbids.
+2026-09-04 20:20:09 | INFO | QMLE recovery: all 88 cells converged; no fit was replaced by the (0.05, 0.90) initialiser.
+2026-09-04 20:20:09 | INFO | QMLE recovery, DESCRIPTIVE: 86 of 88 cells satisfy the delivered per-cell tolerances |alpha_hat - alpha| < 0.03 and |beta_hat - beta| < 0.05, i.e. 0.9773 Wilson 95% [0.9209, 0.9937]. This count GATES NOTHING; it is the delivered statistic, reported so that the redesign can be compared against it.
+2026-09-04 20:20:09 | INFO | QMLE recovery DESIGN EFFECT [alpha], measured BEFORE the gate is read: 8 configurations share 11 innovation streams; mean pairwise correlation of the per-replicate margins rho_bar = 0.9611; Kish design effect 1 + (m - 1) * rho_bar = 7.7275; the 88 cells therefore carry n_eff = 11.39 independent readings. A naive SE over 88 cells would understate the dispersion of the mean by a factor 2.780.
+2026-09-04 20:20:09 | INFO | QMLE recovery GATE [alpha]: mean margin +0.001289, Monte-Carlo standard error 0.003130 on n_eff = 11.39 independent readings, |mean| + 3.0902 * SE = 0.010963 against the delivered tolerance 0.03. Requirement met: True.
+2026-09-04 20:20:09 | INFO | QMLE recovery BIAS, descriptive only: t = +0.4119 on 10.39 effective degrees of freedom, two-sided p = 0.6888 under the null that the estimator recovers alpha in the mean. This is NOT the gate, and at the deff-corrected variance it does not reject at the 0.001 level this stream's families use. The reason the gate is an equivalence statement is a design reason and not this measurement: a finite-sample bias of the quasi-likelihood estimator is a property of the estimator, not a port error, so a gate on its absence has a null that is false by construction -- the empty-ringing control S4bis describes.
+2026-09-04 20:20:09 | INFO | QMLE recovery DESIGN EFFECT [beta], measured BEFORE the gate is read: 8 configurations share 11 innovation streams; mean pairwise correlation of the per-replicate margins rho_bar = 0.8957; Kish design effect 1 + (m - 1) * rho_bar = 7.2697; the 88 cells therefore carry n_eff = 12.11 independent readings. A naive SE over 88 cells would understate the dispersion of the mean by a factor 2.696.
+2026-09-04 20:20:09 | INFO | QMLE recovery GATE [beta]: mean margin -0.004787, Monte-Carlo standard error 0.003815 on n_eff = 12.11 independent readings, |mean| + 3.0902 * SE = 0.016575 against the delivered tolerance 0.05. Requirement met: True.
+2026-09-04 20:20:09 | INFO | QMLE recovery BIAS, descriptive only: t = -1.2549 on 11.11 effective degrees of freedom, two-sided p = 0.2353 under the null that the estimator recovers beta in the mean. This is NOT the gate, and at the deff-corrected variance it does not reject at the 0.001 level this stream's families use. The reason the gate is an equivalence statement is a design reason and not this measurement: a finite-sample bias of the quasi-likelihood estimator is a property of the estimator, not a port error, so a gate on its absence has a null that is false by construction -- the empty-ringing control S4bis describes.
+2026-09-04 20:20:09 | INFO | QMLE recovery gate: both equivalence statements hold. The oracle GARCH fit is admissible as a measurement instrument at this sample size.
+2026-09-04 20:20:09 | INFO | Detector recovery: 5000 H0 streams and 500 H1 streams of 4000 steps, drift injected at step 2000, shift +/-0.5 standard deviations. Under H1, E[x_t] = |mu_1 - mu_0| / sigma_t > 0 in BOTH market directions, which is the condition a zero-reflected CUSUM needs to take off; the bear and bull arms exist to measure that the sign convention delivers it.
+2026-09-04 20:20:09 | INFO | S4bis, BEFORE the result is read: the redesigned gate is a family of m = 12 equivalence tests -- three requirements on each of four detectors -- at a per-condition level of 0.001, so its family-wise trigger probability under a requirement met exactly at its boundary is bounded by 1 - (1 - 0.001)^12 = 1.19342%, below the 5% ceiling S4bis fixes. The level is derived from that ceiling and from nothing else: 1 - (1 - 0.005)^12 = 5.83772% would exceed it.
+2026-09-04 20:20:10 | INFO | Detector recovery [D1, delta = 0.0]: lambda* = 147.176438 at FPR_H = 0.0412; detection rate bear 1.0000 (upper 1.0000), bull 1.0000 (upper 1.0000), degenerate 0.0340 (interval [0.0164, 0.0690]), median-delay ratio 0.9620, bear/bull gap 0.0000 +/- 0.0000. Delivered point verdicts: power True, symmetry True, degenerate True. Interval-resolved failures: power False, symmetry False, degenerate False.
+2026-09-04 20:20:10 | INFO | Detector recovery [D1, delta = 0.25]: lambda* = 16.175510 at FPR_H = 0.0384; detection rate bear 1.0000 (upper 1.0000), bull 1.0000 (upper 1.0000), degenerate 0.0320 (interval [0.0151, 0.0664]), median-delay ratio 1.0392, bear/bull gap 0.0000 +/- 0.0000. Delivered point verdicts: power True, symmetry True, degenerate True. Interval-resolved failures: power False, symmetry False, degenerate False.
+2026-09-04 20:20:10 | INFO | Detector recovery [D2, delta = nan]: lambda* = 8.238274 at FPR_H = 0.0326; detection rate bear 1.0000 (upper 1.0000), bull 1.0000 (upper 1.0000), degenerate 0.0280 (interval [0.0126, 0.0611]), median-delay ratio 1.0189, bear/bull gap 0.0000 +/- 0.0000. Delivered point verdicts: power True, symmetry True, degenerate True. Interval-resolved failures: power False, symmetry False, degenerate False.
+2026-09-04 20:20:10 | INFO | Detector recovery [D3, delta = nan]: lambda* = 1.644900 at FPR_H = 0.0500; detection rate bear 1.0000 (upper 1.0000), bull 1.0000 (upper 1.0000), degenerate 0.0540 (interval [0.0303, 0.0944]), median-delay ratio 1.0000, bear/bull gap 0.0000 +/- 0.0000. Delivered point verdicts: power True, symmetry True, degenerate True. Interval-resolved failures: power False, symmetry False, degenerate False.
+2026-09-04 20:20:10 | INFO | Detector recovery, DESCRIPTIVE: the delivered point-estimate conjunction fails on 0 of 4 detectors. That count GATES NOTHING.
+2026-09-04 20:20:10 | INFO | Detector recovery gate: none of the 12 conditions is resolved as violated. The two CUSUM increments and the clairvoyant score recover a known drift in both market directions and hold their level on the degenerate arm.
+2026-09-04 20:20:10 | INFO | Episode E1 [TARGET] = COVID-19 crash, 2020: SPY phase 22, 2020-02-19 -> 2020-03-23, T_days = 23, ADD_min_census = 42.07506613243134, detectable_flag_census = False.
+2026-09-04 20:20:10 | INFO | Episode E2 [POSITIVE CONTROL A] = 2009 recovery: SPY phase 15, 2009-03-09 -> 2010-04-23, T_days = 284, ADD_min_census = 227.28012075441202, detectable_flag_census = True.
+2026-09-04 20:20:10 | INFO | Episode E3 [POSITIVE CONTROL B] = 2019 advance: SPY phase 21, 2018-12-24 -> 2020-02-19, T_days = 289, ADD_min_census = 223.04011300388913, detectable_flag_census = True.
+2026-09-04 20:20:10 | INFO | Episode E4 [NEGATIVE CONTROL] = 2011 correction: SPY phase 18, 2011-04-29 -> 2011-10-03, T_days = 108, ADD_min_census = 462.2937606776731, detectable_flag_census = False.
+2026-09-04 20:20:10 | INFO | [SPY] Ingestion OK | 6414 trading days | 2000-01-04 to 2025-07-07
+2026-09-04 20:20:10 | INFO | Seeding: one 128-bit SeedSequence per episode, keyed on the episode identifier alone through an md5 condensate of the key. The campaign's output is therefore independent of the worker count, which is the second reproducibility axis of control C8. The delivered `np.random.seed(legacy_seed)` and `random.seed(legacy_seed)` pins are NOT reproduced: the only third-party consumers inside a worker are acorr_ljungbox, which evaluates a closed-form chi-square tail, and SLSQP, which is deterministic from its initialiser -- neither draws a random number, so the pins had no call site.
+2026-09-04 20:21:08 | INFO | C6 [E1]: census T_days = 23 == recomputed 23; census sharpe = -5.99037987487635 == recomputed -5.990379874876351 to within 1e-3 (difference -8.882e-16). ADD_min_census = 42.07506613243134, detectable_flag_census = False. The delivered SEQUENTIAL OVERRIDE branch would have fired here and rewritten the census values in place; it does not fire.
+2026-09-04 20:21:08 | INFO | [E1] oracle GARCH(1,1) QMLE on 1070 centered returns: omega = 4.1649471932219516e-06, alpha = 0.273725, beta = 0.696358, persistence = 0.970083, gamma_exact = 45.35500709733116; converged = True.
+2026-09-04 20:21:08 | INFO | C4 [E1] the ARL0 null is NOT frozen: it regenerates 5000 GARCH paths of 5000 steps from (omega, alpha, beta) = (4.1649471932219516e-06, 0.273725, 0.696358) after a 500-step burn-in, and it is the null that SELECTS lambda at OP2b_ARL0_252. The frozen path of the Figure 14 caption is the FPR_H null alone.
+2026-09-04 20:21:08 | INFO | C4 [E1] V1 D1 cancellation: max |X_nb - sign(Delta) * Z*| = 8.882e-16 over 460000 entries. The frozen path cancels ALGEBRAICALLY on the standardized-mean arm and binds only on the likelihood-ratio arm, where sigma_t enters squared and does not.
+2026-09-04 20:21:08 | INFO | C4 [E1] V2 D1 cancellation: max |X_nb - sign(Delta) * Z*| = 8.882e-16 over 460000 entries. The frozen path cancels ALGEBRAICALLY on the standardized-mean arm and binds only on the likelihood-ratio arm, where sigma_t enters squared and does not.
+2026-09-04 20:21:08 | WARNING | [E1] V3 not certified: p_lb_z2 = 0.0001931745653362718 (requires >= 0.01), std_z_ref = 0.9748275398852556 (requires [0.8, 1.25]).
+2026-09-04 20:21:08 | INFO | C4 [E1] V3 D1 cancellation: max |X_nb - sign(Delta) * Z*| = 4.441e-16 over 460000 entries. The frozen path cancels ALGEBRAICALLY on the standardized-mean arm and binds only on the likelihood-ratio arm, where sigma_t enters squared and does not.
+2026-09-04 20:21:09 | INFO | C6 [E2]: census T_days = 284 == recomputed 284; census sharpe = 2.577425029051642 == recomputed 2.5774250290516423 to within 1e-3 (difference +4.441e-16). ADD_min_census = 227.28012075441202, detectable_flag_census = True. The delivered SEQUENTIAL OVERRIDE branch would have fired here and rewritten the census values in place; it does not fire.
+2026-09-04 20:21:09 | INFO | [E2] oracle GARCH(1,1) QMLE on 1751 centered returns: omega = 1.6235772021107164e-06, alpha = 0.101796, beta = 0.890089, persistence = 0.991885, gamma_exact = 111.78329803047265; converged = True.
+2026-09-04 20:21:09 | INFO | C4 [E2] the ARL0 null is NOT frozen: it regenerates 5000 GARCH paths of 5000 steps from (omega, alpha, beta) = (1.6235772021107164e-06, 0.101796, 0.890089) after a 500-step burn-in, and it is the null that SELECTS lambda at OP2b_ARL0_252. The frozen path of the Figure 14 caption is the FPR_H null alone.
+2026-09-04 20:21:09 | INFO | C4 [E2] V1 D1 cancellation: max |X_nb - sign(Delta) * Z*| = 8.882e-16 over 5680000 entries. The frozen path cancels ALGEBRAICALLY on the standardized-mean arm and binds only on the likelihood-ratio arm, where sigma_t enters squared and does not.
+2026-09-04 20:21:09 | WARNING | [E2] V2 not certified: p_lb_z2 = 0.006155945667286848 (requires >= 0.01), std_z_ref = 1.0555860824573449 (requires [0.8, 1.25]).
+2026-09-04 20:21:09 | INFO | C4 [E2] V2 D1 cancellation: max |X_nb - sign(Delta) * Z*| = 8.882e-16 over 5680000 entries. The frozen path cancels ALGEBRAICALLY on the standardized-mean arm and binds only on the likelihood-ratio arm, where sigma_t enters squared and does not.
+2026-09-04 20:21:09 | WARNING | [E2] V3 not certified: p_lb_z2 = 0.0008677284701815778 (requires >= 0.01), std_z_ref = 0.9887277916788672 (requires [0.8, 1.25]).
+2026-09-04 20:21:09 | INFO | C4 [E2] V3 D1 cancellation: max |X_nb - sign(Delta) * Z*| = 4.441e-16 over 5680000 entries. The frozen path cancels ALGEBRAICALLY on the standardized-mean arm and binds only on the likelihood-ratio arm, where sigma_t enters squared and does not.
+2026-09-04 20:21:09 | INFO | C6 [E3]: census T_days = 289 == recomputed 289; census sharpe = 2.60180820588281 == recomputed 2.6018082058828105 to within 1e-3 (difference +4.441e-16). ADD_min_census = 223.04011300388913, detectable_flag_census = True. The delivered SEQUENTIAL OVERRIDE branch would have fired here and rewritten the census values in place; it does not fire.
+2026-09-04 20:21:09 | INFO | [E3] oracle GARCH(1,1) QMLE on 1751 centered returns: omega = 4.830531360672635e-06, alpha = 0.241961, beta = 0.7185, persistence = 0.960461, gamma_exact = 28.877495077560116; converged = True.
+2026-09-04 20:21:09 | INFO | C4 [E3] the ARL0 null is NOT frozen: it regenerates 5000 GARCH paths of 5000 steps from (omega, alpha, beta) = (4.830531360672635e-06, 0.241961, 0.7185) after a 500-step burn-in, and it is the null that SELECTS lambda at OP2b_ARL0_252. The frozen path of the Figure 14 caption is the FPR_H null alone.
+2026-09-04 20:21:09 | INFO | C4 [E3] V1 D1 cancellation: max |X_nb - sign(Delta) * Z*| = 8.882e-16 over 5780000 entries. The frozen path cancels ALGEBRAICALLY on the standardized-mean arm and binds only on the likelihood-ratio arm, where sigma_t enters squared and does not.
+2026-09-04 20:21:09 | WARNING | [E3] V2 not certified: p_lb_z2 = 0.0021757532110252185 (requires >= 0.01), std_z_ref = 1.0610766027929048 (requires [0.8, 1.25]).
+2026-09-04 20:21:09 | INFO | C4 [E3] V2 D1 cancellation: max |X_nb - sign(Delta) * Z*| = 8.882e-16 over 5780000 entries. The frozen path cancels ALGEBRAICALLY on the standardized-mean arm and binds only on the likelihood-ratio arm, where sigma_t enters squared and does not.
+2026-09-04 20:21:09 | WARNING | [E3] V3 not certified: p_lb_z2 = 4.6893151046415045e-06 (requires >= 0.01), std_z_ref = 0.9824184823625828 (requires [0.8, 1.25]).
+2026-09-04 20:21:09 | INFO | C4 [E3] V3 D1 cancellation: max |X_nb - sign(Delta) * Z*| = 4.441e-16 over 5780000 entries. The frozen path cancels ALGEBRAICALLY on the standardized-mean arm and binds only on the likelihood-ratio arm, where sigma_t enters squared and does not.
+2026-09-04 20:21:09 | INFO | C6 [E4]: census T_days = 108 == recomputed 108; census sharpe = -1.8072063807399914 == recomputed -1.8072063807399916 to within 1e-3 (difference -2.220e-16). ADD_min_census = 462.2937606776731, detectable_flag_census = False. The delivered SEQUENTIAL OVERRIDE branch would have fired here and rewritten the census values in place; it does not fire.
+2026-09-04 20:21:09 | INFO | [E4] oracle GARCH(1,1) QMLE on 1325 centered returns: omega = 2.7881169729120916e-06, alpha = 0.109116, beta = 0.879943, persistence = 0.989059, gamma_exact = 77.82885033520874; converged = True.
+2026-09-04 20:21:09 | INFO | C4 [E4] the ARL0 null is NOT frozen: it regenerates 5000 GARCH paths of 5000 steps from (omega, alpha, beta) = (2.7881169729120916e-06, 0.109116, 0.879943) after a 500-step burn-in, and it is the null that SELECTS lambda at OP2b_ARL0_252. The frozen path of the Figure 14 caption is the FPR_H null alone.
+2026-09-04 20:21:09 | INFO | C4 [E4] V1 D1 cancellation: max |X_nb - sign(Delta) * Z*| = 4.441e-16 over 2160000 entries. The frozen path cancels ALGEBRAICALLY on the standardized-mean arm and binds only on the likelihood-ratio arm, where sigma_t enters squared and does not.
+2026-09-04 20:21:09 | WARNING | [E4] V2 not certified: p_lb_z2 = 0.0008445133594689343 (requires >= 0.01), std_z_ref = 1.047278061932586 (requires [0.8, 1.25]).
+2026-09-04 20:21:09 | INFO | C4 [E4] V2 D1 cancellation: max |X_nb - sign(Delta) * Z*| = 4.441e-16 over 2160000 entries. The frozen path cancels ALGEBRAICALLY on the standardized-mean arm and binds only on the likelihood-ratio arm, where sigma_t enters squared and does not.
+2026-09-04 20:21:09 | WARNING | [E4] V3 not certified: p_lb_z2 = 0.00026794321037878224 (requires >= 0.01), std_z_ref = 0.9840726938118013 (requires [0.8, 1.25]).
+2026-09-04 20:21:09 | INFO | C4 [E4] V3 D1 cancellation: max |X_nb - sign(Delta) * Z*| = 4.441e-16 over 2160000 entries. The frozen path cancels ALGEBRAICALLY on the standardized-mean arm and binds only on the likelihood-ratio arm, where sigma_t enters squared and does not.
+2026-09-04 20:21:09 | INFO | C1 -- one published pair, one row. v87 L331 prints '3 trading days ... phase false-alarm probability 1.3%' as two quantities of ONE operating point. If the pair needed two rows it would be a conflation and a D3. Deterministic; trigger probability 0 if the manuscript and the campaign agree.
+2026-09-04 20:21:09 | INFO | C1 [covid_lr] ONE ROW: episode_id = E1, detector = D2 (likelihood_ratio), delta = nan, sigma_oracle = V1, operating_point = OP2b_ARL0_252 -> tau_realized_days = 3.0, FPR_H = 0.01105. lambda* = 8.238273918829101, ARL0 = 293.1022, arl0_censored_frac = 0.0, oracle_certified = True, oracle_contaminated = False. v87: "detects it in 3 trading days (likelihood-ratio increments, phase false-alarm probability 1.3%)".
+2026-09-04 20:21:09 | INFO | C1 [covid_lr] THRESHOLD NEIGHBOURHOOD on the 200-point grid, indices 145-149 of 200, selected index 147:
+2026-09-04 20:21:09 | INFO | C1 [covid_lr]   idx 145: lambda = 7.287180796209435, FPR_H = 0.01485, ARL0 = 226.0884, arl0_censored_frac = 0.0, tau = 3.0
+2026-09-04 20:21:09 | INFO | C1 [covid_lr]   idx 146: lambda = 7.748147617024632, FPR_H = 0.0114, ARL0 = 250.2844, arl0_censored_frac = 0.0, tau = 3.0
+2026-09-04 20:21:09 | INFO | C1 [covid_lr]   idx 147: lambda = 8.238273918829101, FPR_H = 0.01105, ARL0 = 293.1022, arl0_censored_frac = 0.0, tau = 3.0 <== selected
+2026-09-04 20:21:09 | INFO | C1 [covid_lr]   idx 148: lambda = 8.759404249414942, FPR_H = 0.00945, ARL0 = 321.3612, arl0_censored_frac = 0.0, tau = 3.0
+2026-09-04 20:21:09 | INFO | C1 [covid_lr]   idx 149: lambda = 9.313499837545299, FPR_H = 0.00895, ARL0 = 350.9762, arl0_censored_frac = 0.0, tau = 4.0
+2026-09-04 20:21:09 | INFO | C1 [covid_std_mean] ONE ROW: episode_id = E1, detector = D1 (standardized_mean), delta = 0.0, sigma_oracle = V1, operating_point = OP2b_ARL0_252 -> tau_realized_days = 16.0. lambda* = 15.213167424961057, ARL0 = 275.4664, arl0_censored_frac = 0.0, oracle_certified = True, oracle_contaminated = False. v87: "to 16 days (standardized-mean CUSUM)".
+2026-09-04 20:21:09 | INFO | C1 [covid_std_mean] THRESHOLD NEIGHBOURHOOD on the 200-point grid, indices 155-159 of 200, selected index 157:
+2026-09-04 20:21:09 | INFO | C1 [covid_std_mean]   idx 155: lambda = 13.456836055829003, FPR_H = 0.01055, ARL0 = 221.7694, arl0_censored_frac = 0.0, tau = 13.0
+2026-09-04 20:21:09 | INFO | C1 [covid_std_mean]   idx 156: lambda = 14.30807813536043, FPR_H = 0.0067, ARL0 = 248.192, arl0_censored_frac = 0.0, tau = 16.0
+2026-09-04 20:21:09 | INFO | C1 [covid_std_mean]   idx 157: lambda = 15.213167424961057, FPR_H = 0.00405, ARL0 = 275.4664, arl0_censored_frac = 0.0, tau = 16.0 <== selected
+2026-09-04 20:21:09 | INFO | C1 [covid_std_mean]   idx 158: lambda = 16.175510149607252, FPR_H = 0.00255, ARL0 = 308.3572, arl0_censored_frac = 0.0, tau = 16.0
+2026-09-04 20:21:09 | INFO | C1 [covid_std_mean]   idx 159: lambda = 17.19872800260837, FPR_H = 0.0015, ARL0 = 343.6858, arl0_censored_frac = 0.0, tau = 22.0
+2026-09-04 20:21:09 | INFO | C1 [jensen] ONE ROW: episode_id = E1, sigma_oracle = V1, jensen_ratio = 10.644703353357015 (KL_path = 17.431693853715583 over KL_corollary = 1.637593202465164), oracle_certified = True. v87: "the path divergence is 10.6x the unconditional budget". The other two oracles of the same episode give V2 = 1.5505379400771193 (certified True), V3 = 1.5833080903223522 (certified False): the published ratio is SPECIFIC to one oracle of three.
+2026-09-04 20:21:09 | INFO | Threshold grid origin: 0 (episode, oracle, detector) cells took the data-dependent branch `geomspace(1e-3, 1.1 * max(M_nb), 200)` because their bootstrap maximum exceeded 200.0; the remaining cells used the static grid. A redraw can move the grid itself on a rescaled cell, which is why the branch is persisted per row in `lambda_grid_rescaled` rather than inferred.
+2026-09-04 20:21:09 | INFO | C2 -- certification, MEASURED AND NOT GATED. Of the 528 operating-point rows, 220 carry oracle_certified and 176 carry oracle_contaminated. The admissibility check is `p_lb_z2 >= 0.01 and 0.8 <= std_z_ref <= 1.25` on the standardized reference window, evaluated per (episode, oracle).
+2026-09-04 20:21:09 | INFO | C2 [E1 / V1]: p_lb_z = 0.8488556321607454, p_lb_z2 = 0.6148232428606168, std_z_ref = 0.973817234522002, kurt_z_ref = 7.190181115678935 -> oracle_certified = True, oracle_contaminated = False.
+2026-09-04 20:21:09 | INFO | C2 [E1 / V2]: p_lb_z = 0.6824090204519939, p_lb_z2 = 0.03122887684521455, std_z_ref = 1.0610742271824882, kurt_z_ref = 5.434421397886456 -> oracle_certified = True, oracle_contaminated = False.
+2026-09-04 20:21:09 | INFO | C2 [E1 / V3]: p_lb_z = 0.6567427887148254, p_lb_z2 = 0.0001931745653362718, std_z_ref = 0.9748275398852556, kurt_z_ref = 3.493844756305047 -> oracle_certified = False, oracle_contaminated = True.
+2026-09-04 20:21:09 | INFO | C2 [E2 / V1]: p_lb_z = 0.07005627129976011, p_lb_z2 = 0.7779532266771618, std_z_ref = 0.9907128300765053, kurt_z_ref = 5.313602240381925 -> oracle_certified = True, oracle_contaminated = False.
+2026-09-04 20:21:09 | INFO | C2 [E2 / V2]: p_lb_z = 0.14972384470350078, p_lb_z2 = 0.006155945667286848, std_z_ref = 1.0555860824573449, kurt_z_ref = 4.0761229978125595 -> oracle_certified = False, oracle_contaminated = False.
+2026-09-04 20:21:09 | INFO | C2 [E2 / V3]: p_lb_z = 0.14132336957489652, p_lb_z2 = 0.0008677284701815778, std_z_ref = 0.9887277916788672, kurt_z_ref = 3.129887757056559 -> oracle_certified = False, oracle_contaminated = True.
+2026-09-04 20:21:09 | INFO | C2 [E3 / V1]: p_lb_z = 0.2433669039599416, p_lb_z2 = 0.6454558099475922, std_z_ref = 0.9650972563644399, kurt_z_ref = 6.316956197457868 -> oracle_certified = True, oracle_contaminated = False.
+2026-09-04 20:21:09 | INFO | C2 [E3 / V2]: p_lb_z = 0.2867331002623972, p_lb_z2 = 0.0021757532110252185, std_z_ref = 1.0610766027929048, kurt_z_ref = 5.051862397655387 -> oracle_certified = False, oracle_contaminated = False.
+2026-09-04 20:21:09 | INFO | C2 [E3 / V3]: p_lb_z = 0.26398325993624944, p_lb_z2 = 4.6893151046415045e-06, std_z_ref = 0.9824184823625828, kurt_z_ref = 3.3254569863049963 -> oracle_certified = False, oracle_contaminated = True.
+2026-09-04 20:21:09 | INFO | C2 [E4 / V1]: p_lb_z = 0.3488074684398925, p_lb_z2 = 0.08873929236271993, std_z_ref = 1.001966871141332, kurt_z_ref = 3.6498963378161817 -> oracle_certified = True, oracle_contaminated = False.
+2026-09-04 20:21:09 | INFO | C2 [E4 / V2]: p_lb_z = 0.5679553979995468, p_lb_z2 = 0.0008445133594689343, std_z_ref = 1.047278061932586, kurt_z_ref = 3.7378607071634207 -> oracle_certified = False, oracle_contaminated = False.
+2026-09-04 20:21:09 | INFO | C2 [E4 / V3]: p_lb_z = 0.5946584591616075, p_lb_z2 = 0.00026794321037878224, std_z_ref = 0.9840726938118013, kurt_z_ref = 3.0956329861964282 -> oracle_certified = False, oracle_contaminated = True.
+2026-09-04 20:21:09 | INFO | C2 [covid_lr] the row feeding it: E1 / V1 -- oracle_certified = True, oracle_contaminated = False.
+2026-09-04 20:21:09 | INFO | C2 [covid_std_mean] the row feeding it: E1 / V1 -- oracle_certified = True, oracle_contaminated = False.
+2026-09-04 20:21:09 | INFO | C2 [jensen] the row feeding it: E1 / V1 -- oracle_certified = True, oracle_contaminated = False.
+2026-09-04 20:21:09 | INFO | C2 the centered-realized clause of L331 -- 'a look-ahead centered realized volatility, pricing the crash into sigma_t contemporaneously, yields no alarm at iso-FPR'. On V2: oracle_certified = True (p_lb_z2 = 0.03122887684521455), and 0 of 10 standardized-mean settings alarm within T at OP1_isoFPR5_H. V3 is the contaminated oracle the clause describes and its own admissibility check fails; V2 is the certified leave-one-out oracle, so the clause survives on certified evidence. Both are reported.
+2026-09-04 20:21:09 | INFO | C2 the centered-realized clause of L331 -- 'a look-ahead centered realized volatility, pricing the crash into sigma_t contemporaneously, yields no alarm at iso-FPR'. On V3: oracle_certified = False (p_lb_z2 = 0.0001931745653362718), and 0 of 10 standardized-mean settings alarm within T at OP1_isoFPR5_H. V3 is the contaminated oracle the clause describes and its own admissibility check fails; V2 is the certified leave-one-out oracle, so the clause survives on certified evidence. Both are reported.
+2026-09-04 20:21:09 | INFO | C3 -- an ARL0 mean over right-censored replicates is biased DOWNWARD and must never be published without its censored fraction. The delivered legacy protocol carries no such column; this port adds `arl0_censored_frac` to the operating-point CSV. Structural assertion, deterministic; trigger probability 0.
+2026-09-04 20:21:09 | INFO | C3 [R13_oracle_frontier]: 6750 rows of 26400 carry a finite ARL0, every one of them with its arl0_censored_frac. Distribution of that fraction over the surviving rows: min 0.0, median 0.0, max 0.0496.
+2026-09-04 20:21:09 | INFO | C3 [R13_oracle_operating_points]: 136 rows of 528 carry a finite ARL0, every one of them with its arl0_censored_frac. Distribution of that fraction over the surviving rows: min 0.0, median 0.0, max 0.041.
+2026-09-04 20:21:09 | INFO | C3: 2050 frontier rows are right-censored beyond 5% of replicates and have their ARL0 suppressed to NaN rather than published low.
+2026-09-04 20:21:09 | INFO | C4 -- the bootstrap null freezes the volatility path. The SHA-256 of the sigma_t vector multiplying the resampled innovations under H0 is compared, over [0, H_ep), with the digest of the sigma_t vector dividing the observed returns under H1. The comparison is asserted inside every worker and stops the episode on any difference. Deterministic; trigger probability 0.
+2026-09-04 20:21:09 | INFO | C4 [E1 / V1] sigma_path_sha256 = 09d9aa0e0f1d131a22ece3c197627194880fb9debc537b1fef0857d8e85b4095 over 23 trading days, identical under H0 and H1.
+2026-09-04 20:21:09 | INFO | C4 [E1 / V2] sigma_path_sha256 = 312421670ec9229d66db06e41ff704fb62a7b44662edba44f38bea86e1867ba8 over 23 trading days, identical under H0 and H1.
+2026-09-04 20:21:09 | INFO | C4 [E1 / V3] sigma_path_sha256 = d125e610479ae0fc847e033d2b2db05cbf1963e52994a349d3664bf1d16e666f over 23 trading days, identical under H0 and H1.
+2026-09-04 20:21:09 | INFO | C4 [E2 / V1] sigma_path_sha256 = 7af74c52e096c11228f71c357499d6f481d3b7cbb83060d1a39b9208defbd33b over 284 trading days, identical under H0 and H1.
+2026-09-04 20:21:09 | INFO | C4 [E2 / V2] sigma_path_sha256 = dacd6f4dc334a4cbaf9e57db70127331791888fe9176552cb829a0bb4bc97cac over 284 trading days, identical under H0 and H1.
+2026-09-04 20:21:09 | INFO | C4 [E2 / V3] sigma_path_sha256 = 493476ecbf345de27b9857c2985224997d72ef17f3db2db9d88935a9d1c4765e over 284 trading days, identical under H0 and H1.
+2026-09-04 20:21:09 | INFO | C4 [E3 / V1] sigma_path_sha256 = 4cd2053179bc70a84cd4700f67d74b6e5a708a5f8b895fbf473647e9e0eb0542 over 289 trading days, identical under H0 and H1.
+2026-09-04 20:21:09 | INFO | C4 [E3 / V2] sigma_path_sha256 = 68cd82cea8cf2e61f21cd8da4b89716f428833eccd84a6f4e8d7a8760f3a27ba over 289 trading days, identical under H0 and H1.
+2026-09-04 20:21:09 | INFO | C4 [E3 / V3] sigma_path_sha256 = af06ce8b168c6406e39f5bf5b2b931971d3bdec72e4618312170ee13febc3a89 over 289 trading days, identical under H0 and H1.
+2026-09-04 20:21:09 | INFO | C4 [E4 / V1] sigma_path_sha256 = 6941cf4d820129c25795271f5275db66325a24f03f0750d7fdbf56bab401e07e over 108 trading days, identical under H0 and H1.
+2026-09-04 20:21:09 | INFO | C4 [E4 / V2] sigma_path_sha256 = 3fa6178b62e46339fbf7da5adfcc12b8c799700f901825fa702f8aaba8b7a280 over 108 trading days, identical under H0 and H1.
+2026-09-04 20:21:09 | INFO | C4 [E4 / V3] sigma_path_sha256 = f90688e4f0c3bb13cd09a9213c837e8ff83eb750bfc0b7bfbe2389e959a58f0b over 108 trading days, identical under H0 and H1.
+2026-09-04 20:21:09 | INFO | C4 SCOPE, first limit: on the standardized-mean arm the frozen path CANCELS. X_nb = sign(Delta) * (mu_0 + sigma_t Z* - mu_0) / sigma_t reduces algebraically to sign(Delta) * Z*, so FPR_H on D1 does not depend on the frozen path at all; the freeze binds only on the likelihood-ratio arm, where sigma_t enters squared. The residual measured per episode above is float64 rounding, not a dependence.
+2026-09-04 20:21:09 | INFO | C4 SCOPE, second limit: the ARL0 null is NOT frozen. It regenerates GARCH paths from the fitted (omega, alpha, beta), and it is the null that SELECTS lambda at OP2b_ARL0_252 -- the operating point behind every numeral of L331. 'A bootstrap null freezing the same volatility path' is exact for the FPR_H axis of Figure 14 and describes neither the threshold selection nor the standardized-mean arm.
+2026-09-04 20:21:09 | INFO | C5 -- v87's Figure 14 caption states 'the 2011 correction is not detected at either setting', naming delta = 0 and delta_opt on the standardized-mean CUSUM. E4's delta_opt on V1 is 0.07973820362382887. The two named settings are asserted; every other dead band of the same operating point is characterised, never adjusted.
+2026-09-04 20:21:09 | INFO | C5 [caption setting] E4 / D1 / delta = 0.0 / V1 / OP1_isoFPR5_H: FPR_H = 0.04015, lambda* = 23.37157803183398, tau = nan, T = 108, verdict = no_alarm.
+2026-09-04 20:21:09 | INFO | C5 [caption setting] E4 / D1 / delta = 0.07973820362382887 / V1 / OP1_isoFPR5_H: FPR_H = 0.0465, lambda* = 17.19872800260837, tau = nan, T = 108, verdict = no_alarm.
+2026-09-04 20:21:09 | INFO | C5: neither setting the caption names alarms within T at OP1_isoFPR5_H. The caption holds as written.
+2026-09-04 20:21:09 | INFO | C5 CHARACTERISATION, not an adjustment. 4 further dead bands INSIDE the same iso-FPR operating point do alarm on the 2011 correction: delta = 0.25 at FPR_H = 0.04325 gives tau = 69.0 of T = 108; delta = 0.3 at FPR_H = 0.0448 gives tau = 69.0 of T = 108; delta = 0.4 at FPR_H = 0.0435 gives tau = 69.0 of T = 108; delta = 0.5 at FPR_H = 0.0352 gives tau = 69.0 of T = 108. The Figure 14 caption is exact BECAUSE it names its two settings; the L331 sentence 'no alarm on the 2011 correction at the matched operating point' does not name them, and is true only of the two the caption specifies.
+2026-09-04 20:21:09 | INFO | C5 the other operating point, for completeness: at OP2b_ARL0_252, 10 of 10 dead bands alarm within T, at FPR_H 0.2307, 0.26535, 0.27425, 0.3045, 0.2988, 0.3103, 0.3366, 0.2927, 0.3359, 0.27675. Those are NOT iso-FPR points and are not the matched operating point; writing the 69-day alarm at OP2b_ARL0_252 would be refuted by one filter on the CSV this stream ships.
+2026-09-04 20:21:09 | INFO | C5 census verdicts at OP1_isoFPR5_H on V1, standardized-mean CUSUM. E1 [TARGET]: delta = 0 gives FPR_H = 0.04405, tau = 6.0 of T = 23 -> detected_within_T; delta_opt = 0.4285355425525495 gives FPR_H = 0.0331, tau = 4.0 -> detected_within_T.
+2026-09-04 20:21:09 | INFO | C5 census verdicts at OP1_isoFPR5_H on V1, standardized-mean CUSUM. E2 [POSITIVE CONTROL A]: delta = 0 gives FPR_H = 0.03525, tau = 210.0 of T = 284 -> detected_within_T; delta_opt = 0.11780271207474304 gives FPR_H = 0.0372, tau = 485.0 -> alarm_beyond_T.
+2026-09-04 20:21:09 | INFO | C5 census verdicts at OP1_isoFPR5_H on V1, standardized-mean CUSUM. E3 [POSITIVE CONTROL B]: delta = 0 gives FPR_H = 0.03605, tau = 423.0 of T = 289 -> alarm_beyond_T; delta_opt = 0.07742696831671235 gives FPR_H = 0.0421, tau = nan -> no_alarm.
+2026-09-04 20:21:09 | INFO | C5 census verdicts at OP1_isoFPR5_H on V1, standardized-mean CUSUM. E4 [NEGATIVE CONTROL]: delta = 0 gives FPR_H = 0.04015, tau = nan of T = 108 -> no_alarm; delta_opt = 0.07973820362382887 gives FPR_H = 0.0465, tau = nan -> no_alarm.
+2026-09-04 20:21:09 | INFO | C6 -- ADD_min_census, T_days_phase and detectable_flag_census against results/R16_regime_census/data/R16_regime_census.csv, read with float_precision='round_trip' on both sides. Divergence means the census moved between the two campaigns and stops the run. Deterministic; trigger probability 0. AUDIT_R16.md section 5 fixes the mapping ADD_min_days -> ADD_min_census and detectable_flag -> detectable_flag_census; it is not re-guessed here.
+2026-09-04 20:21:09 | INFO | C6 [E1] SPY phase 22 2020-02-19 -> 2020-03-23: ADD_min_census = 42.07506613243134 against census 42.07506613243134, T_days_phase = 23 against census 23, detectable_flag_census = False against census False. Identical.
+2026-09-04 20:21:09 | INFO | C6 [E2] SPY phase 15 2009-03-09 -> 2010-04-23: ADD_min_census = 227.28012075441202 against census 227.28012075441202, T_days_phase = 284 against census 284, detectable_flag_census = True against census True. Identical.
+2026-09-04 20:21:09 | INFO | C6 [E3] SPY phase 21 2018-12-24 -> 2020-02-19: ADD_min_census = 223.04011300388913 against census 223.04011300388913, T_days_phase = 289 against census 289, detectable_flag_census = True against census True. Identical.
+2026-09-04 20:21:09 | INFO | C6 [E4] SPY phase 18 2011-04-29 -> 2011-10-03: ADD_min_census = 462.2937606776731 against census 462.2937606776731, T_days_phase = 108 against census 108, detectable_flag_census = False against census False. Identical.
+2026-09-04 20:21:09 | INFO | C6 RESTATEMENT, required. AUDIT_R16.md records a D3 on the DESCRIPTION of the dating that produced this census, not on its values, which reproduce the submitted campaign bit for bit. R13 inherits no numerical displacement from R16, and no text of this stream repeats v87's 'Pagan--Sossounov dating of the four streams' phrasing.
+2026-09-04 20:21:10 | INFO | R13_oracle_frontier.csv: 26400 rows, 20 columns.
+2026-09-04 20:21:10 | INFO | R13_oracle_operating_points.csv: 528 rows, 25 columns.
+2026-09-04 20:21:10 | INFO | R13_oracle_diagnostics.csv: 12 rows, 39 columns.
+2026-09-04 20:21:10 | INFO | R13_clairvoyant_floor.csv: 12 rows, 10 columns.
+2026-09-04 20:21:10 | INFO | R13_detector_recovery.csv: 16 rows, 27 columns.
+2026-09-04 20:21:10 | INFO | R13_qmle_recovery.csv: 88 rows, 17 columns.
+2026-09-04 20:21:10 | INFO | SHA-256 R13_oracle_frontier.csv              : 4fbf6b7d1786a3afc400961dc214573fb7fc7c561c08df97f4c72cc3ad72230d
+2026-09-04 20:21:10 | INFO | SHA-256 R13_oracle_operating_points.csv      : c6b90ea9ad55b8d33b5966561021b1b9cf893bedefe2dc726a6bfb2481eff546
+2026-09-04 20:21:10 | INFO | SHA-256 R13_oracle_diagnostics.csv           : 380b5fadf0e383c18fc6351089ea8c56dde9a7fe7b1e8f16edce8e4de8320861
+2026-09-04 20:21:10 | INFO | SHA-256 R13_clairvoyant_floor.csv            : 8539d7002750fe4e940114040b5239e2cf7c171e803cfb013507a0356b3993db
+2026-09-04 20:21:10 | INFO | SHA-256 R13_detector_recovery.csv            : 44765f6dd83e96d432bf4f296e1c61300d79db14262bce21fa46e54437d2e6c5
+2026-09-04 20:21:10 | INFO | SHA-256 R13_qmle_recovery.csv                : 058b583a8c7ceb54dd2512bc05fa26900ad1cba7398016bcae49c804ef28d897
+2026-09-04 20:21:10 | INFO | Execution completed in 71.3s with 4 workers. Control C8's second axis is a rerun at a different worker count: the campaign is keyed per episode and must produce byte-identical CSVs.

@@ -1,0 +1,32 @@
+--- Running ADWIN Equivalence Test ---
+SUCCESS: Prefix-sums ADWIN perfectly matches naive ADWIN.
+
+=== [1] EXPERIMENT A: PHT CALIBRATION & FPR ===
+Calibrated PHT i.i.d. Threshold (Data Continuous): 39.01
+100%|██████████| 100000/100000[[01:05<00:00,11522.97it/s]
+Certification: Maximum raw FPR under GARCH volatility = 85.94%
+SUCCESS: Abstract claim validation passed (FPR exceeds 80%).
+
+=== [2] EXPERIMENT B: CONCEPT UNIVERSALITY (n_seeds=5000) ===
+Calibrated PHT i.i.d. Threshold (Concept Binary): 10.34
+100%|██████████| 100000/100000[[02:12<00:00,7755.40it/s]
+100%|██████████| 100000/100000[[01:25<00:00,11173.73it/s]
+
+=== [3] EXPERIMENT C: ADWIN BLIND ZONE (n_seeds=5000) ===
+100%|██████████| 35000/35000[[00:34<00:00,91006.17it/s]
+H0 Control (c=0.0) -> FPR_Data: 0.031 | FPR_Concept: 0.000
+
+=== [X] EXPERIMENT D: DATA PIPELINE TAX (n_seeds=1000) ===
+100%|██████████| 20000/20000[[00:50<00:00,3398.68it/s]
+
+=== [4] PLOTTING FIGURE 18 ===
+Figure saved to /home/m53/The-Whitening-Advantage-Experiments/figures/Fig18_Multi_Detector.png
+
+=== PLOTTING FIGURE 20 ===
+Data ADD ~ Gamma slopes (OLS):
+  CUSUM: 26.602
+  PHT: 37.228
+  ADWIN: 4.747
+Figure saved to /home/m53/The-Whitening-Advantage-Experiments/figures/Fig20_Data_vs_Concept_ADD.png
+
+Execution completed in 382.0s.

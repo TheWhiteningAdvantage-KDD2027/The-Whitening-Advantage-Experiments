@@ -1,0 +1,19 @@
+2026-07-27 07:23:17 | INFO | NOTE: Execution order -> Priorite_21b_adverse_bias_and_null_law (21b) MUST be run SECOND (relies on 21a).
+2026-07-27 07:23:17 | INFO | Execution initialized. Mode: STANDARD.
+2026-07-27 07:23:17 | INFO | Computing lambda_star using exact P5 sequential routine (N_CAL=20000)...
+2026-07-27 07:23:30 | INFO | lambda_star = 11.400000 computed in 12.85s.
+2026-07-27 07:23:30 | INFO | Starting Module A: Falsification in Adverse Direction.
+2026-07-27 07:23:50 | INFO | Module A simulation completed in 20.00s.
+2026-07-27 07:23:50 | INFO | Check (a) Passed: Strict non-regression equality verified for b=0.00.
+2026-07-27 07:23:50 | INFO | Starting Module B: Null Law Lattice Certification. Dedicated root seed logged: 555555
+2026-07-27 07:23:52 | INFO | Control (a) Passed: Strict uniqueness across Mod A and Mod B seeds proven.
+2026-07-27 07:23:57 | INFO | Module B simulation completed in 6.98s.
+2026-07-27 07:23:57 | INFO | Check (b) Passed: Minimal lattice step verified as 0.200000.
+2026-07-27 07:23:57 | INFO | Found bracket points: above=11.2, below=11.4
+2026-07-27 07:23:57 | INFO | Check (c) Passed: Anchoring probabilities within bounds. 11.2: 0.050270, 11.4: 0.042870.
+2026-07-27 07:23:57 | INFO | Check (d) Passed: Data integrity and dimensions verified.
+2026-07-27 07:23:57 | INFO | Control (d) & (e) Passed: Programmatic certification invariants strictly verified.
+2026-07-27 07:23:57 | INFO | requirements.txt dynamically generated.
+2026-07-27 07:23:57 | INFO | Control (f) Reproducibility SHA-256 [protocol_21c]: eb2d706f7ed3864590d766a014aeaa5113a75a0cc38d6b68d4f890c9fb47d897
+2026-07-27 07:23:57 | INFO | Control (f) Reproducibility SHA-256 [protocol_21d]: 19570985b8fe8b4ebcacfbb04c886e9441eb6da4c492e52d9c1efb854b395892
+2026-07-27 07:23:57 | INFO | All tasks completed successfully. Outputs saved.

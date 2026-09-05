@@ -1,0 +1,10 @@
+2026-07-27 00:22:16 | INFO | QMLE RECOVERY: PASSED
+2026-07-27 00:22:17 | INFO | DETECTOR RECOVERY: PASSED
+2026-07-27 00:23:23 | WARNING | [E1] V3 not certified.
+2026-07-27 00:23:23 | WARNING | [E2] V2 not certified.
+2026-07-27 00:23:23 | WARNING | [E2] V3 not certified.
+2026-07-27 00:23:23 | WARNING | [E3] V2 not certified.
+2026-07-27 00:23:23 | WARNING | [E3] V3 not certified.
+2026-07-27 00:23:23 | WARNING | [E4] V2 not certified.
+2026-07-27 00:23:23 | WARNING | [E4] V3 not certified.
+2026-07-27 00:23:23 | INFO | [COMPLETED] Generator 19x successfully executed in PARALLEL mode without structural failure.

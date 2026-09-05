@@ -1,0 +1,54 @@
+2026-07-27 04:18:20 | INFO | Verifying runtime environment requirements...
+2026-07-27 04:18:20 | INFO | Found numpy version 1.26.4
+2026-07-27 04:18:20 | INFO | Found pandas version 2.3.2
+2026-07-27 04:18:20 | INFO | Found scipy version 1.16.2
+2026-07-27 04:18:20 | INFO | Found statsmodels version 0.14.5
+2026-07-27 04:18:20 | INFO | Found matplotlib version 3.10.6
+2026-07-27 04:18:20 | INFO | Found tqdm version 4.67.1
+2026-07-27 04:18:20 | INFO | Environment requirements locked and saved to requirements.txt.
+2026-07-27 04:18:20 | INFO | --- EXPERIMENT A: Misspecification (Econometric Filter) ---
+2026-07-27 04:18:20 | INFO | Seed certification Experiment A: 150000 unique seeds verified.
+2026-07-27 04:21:12 | INFO | Aggregated statistics for Experiment A:
+ gamma_lev  fpr_data  fpr_concept  lb_data_pct  lb_concept_pct
+      0.00      3.24         8.25         5.13            4.63
+      0.02      3.79         7.90         5.71            5.06
+      0.04      4.18         7.95         4.99            4.73
+      0.06      5.06         7.94         5.26            5.11
+      0.08      6.06         8.32         5.85            4.85
+      0.10      7.59         8.28         6.23            5.26
+      0.12      8.87         7.63         6.50            5.07
+      0.14     10.37         7.98         7.91            5.13
+      0.16     12.29         7.75         8.45            5.30
+      0.18     13.82         7.88         9.96            5.11
+      0.20     14.42         7.84        12.01            5.37
+      0.22     17.32         7.82        13.62            5.08
+      0.24     17.60         7.89        16.51            5.18
+      0.26     19.34         8.37        20.96            4.95
+      0.28     20.64         7.81        24.60            5.44
+2026-07-27 04:21:13 | INFO | -> Saved: /home/m53/The-Whitening-Advantage-Experiments-CHECK/figures/Fig15_Robustness_Leverage.png
+2026-07-27 04:21:13 | INFO | Empirical Certification (b): Invariance of Experiment A validated.
+2026-07-27 04:21:13 | INFO | Empirical Certification (c): Concept arm bounds validated.
+2026-07-27 04:21:13 | INFO | --- EXPERIMENT B: Moment Singularity (c=1.0) ---
+2026-07-27 04:21:13 | INFO | Seed certification Experiment B: within-nu uniqueness verified (1000 distinct seeds for each of 16 nu values).
+2026-07-27 04:21:13 | INFO | Cross-nu common random numbers: 11080 distinct seeds span 16000 tasks (4920 shared across nu values). Point estimates per nu remain unbiased over 1000 independent replicates; only the sampling covariance BETWEEN nu grid points is reduced, which is a variance-reduction design for the monotone sweep and is reported here, not corrected.
+2026-07-27 04:21:26 | INFO | Aggregated statistics for Experiment B:
+   nu  det_rate_data    ADD_Data  det_rate_concept  ADD_Concept
+10.00          0.830 1767.134940               1.0       38.278
+ 9.00          0.766 1899.960836               1.0       37.549
+ 8.00          0.700 2005.660000               1.0       37.390
+ 7.50          0.664 2116.942771               1.0       37.501
+ 7.00          0.607 2202.754530               1.0       36.903
+ 6.50          0.571 2180.735552               1.0       36.421
+ 6.00          0.508 2419.261811               1.0       36.386
+ 5.50          0.489         NaN               1.0       35.857
+ 5.00          0.382         NaN               1.0       35.191
+ 4.75          0.398         NaN               1.0       35.028
+ 4.50          0.375         NaN               1.0       34.368
+ 4.25          0.350         NaN               1.0       34.321
+ 4.20          0.348         NaN               1.0       34.032
+ 4.10          0.347         NaN               1.0       33.999
+ 4.05          0.372         NaN               1.0       34.212
+ 4.01          0.349         NaN               1.0       33.961
+2026-07-27 04:21:26 | INFO | -> Saved: /home/m53/The-Whitening-Advantage-Experiments-CHECK/figures/Fig16_Robustness_FatTails.png
+2026-07-27 04:21:26 | INFO | Empirical Certification (d): Detection rates bounded as expected.
+2026-07-27 04:21:26 | INFO | Execution completed in 185.7s.

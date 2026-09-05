@@ -1,0 +1,63 @@
+[2026-07-25 14:16:05] INFO: Execution mode: FULL (REAL DATA)
+[2026-07-25 14:16:05] INFO: Loaded real panel: 97 tickers x 5154 days.
+[2026-07-25 14:16:05] INFO: Control (b) Whiteness K=1: p-value=9.8412e-01
+[2026-07-25 14:16:05] INFO: Control (e) Consistency K=1: K_eff_meas/K_eff_ana = 1.0000
+[2026-07-25 14:16:05] INFO: Control (a) Non-anticipativity K=1: max recentring diff = 0.00e+00
+[2026-07-25 14:16:05] INFO: Control (g) Bounds K=1: max|P_t|=0.5000, NaNs=False
+[2026-07-25 14:16:15] INFO: Control (c) ISO-FPR K=1: FPR_naive=0.1115, FPR_boot=0.0490
+[2026-07-25 14:16:15] INFO: Control (b) Whiteness K=5: p-value=1.9465e-01
+[2026-07-25 14:16:15] INFO: Control (e) Consistency K=5: K_eff_meas/K_eff_ana = 1.0000
+[2026-07-25 14:16:15] INFO: Control (a) Non-anticipativity K=5: max recentring diff = 0.00e+00
+[2026-07-25 14:16:15] INFO: Control (g) Bounds K=5: max|P_t|=0.5000, NaNs=False
+[2026-07-25 14:16:23] INFO: Control (c) ISO-FPR K=5: FPR_naive=0.5710, FPR_boot=0.0540
+[2026-07-25 14:16:24] INFO: Control (b) Whiteness K=10: p-value=1.4686e-01
+[2026-07-25 14:16:24] INFO: Control (e) Consistency K=10: K_eff_meas/K_eff_ana = 1.0015
+[2026-07-25 14:16:24] INFO: Control (a) Non-anticipativity K=10: max recentring diff = 0.00e+00
+[2026-07-25 14:16:24] INFO: Control (g) Bounds K=10: max|P_t|=0.5000, NaNs=False
+[2026-07-25 14:16:33] INFO: Control (c) ISO-FPR K=10: FPR_naive=0.6000, FPR_boot=0.0635
+[2026-07-25 14:16:33] WARNING: Control (b) Whiteness K=20: p-value=4.2705e-03 < 0.05. Temporal whiteness degraded on real data (expected).
+[2026-07-25 14:16:33] INFO: Control (e) Consistency K=20: K_eff_meas/K_eff_ana = 1.0008
+[2026-07-25 14:16:33] INFO: Control (a) Non-anticipativity K=20: max recentring diff = 0.00e+00
+[2026-07-25 14:16:33] INFO: Control (g) Bounds K=20: max|P_t|=0.5000, NaNs=False
+[2026-07-25 14:16:43] INFO: Control (c) ISO-FPR K=20: FPR_naive=0.9060, FPR_boot=0.0615
+[2026-07-25 14:16:43] WARNING: Control (b) Whiteness K=30: p-value=2.6398e-04 < 0.05. Temporal whiteness degraded on real data (expected).
+[2026-07-25 14:16:43] INFO: Control (e) Consistency K=30: K_eff_meas/K_eff_ana = 1.0007
+[2026-07-25 14:16:43] INFO: Control (a) Non-anticipativity K=30: max recentring diff = 0.00e+00
+[2026-07-25 14:16:43] INFO: Control (g) Bounds K=30: max|P_t|=0.5000, NaNs=False
+[2026-07-25 14:16:53] INFO: Control (c) ISO-FPR K=30: FPR_naive=0.9710, FPR_boot=0.0475
+[2026-07-25 14:16:53] WARNING: Control (b) Whiteness K=40: p-value=1.0865e-04 < 0.05. Temporal whiteness degraded on real data (expected).
+[2026-07-25 14:16:53] INFO: Control (e) Consistency K=40: K_eff_meas/K_eff_ana = 1.0010
+[2026-07-25 14:16:53] INFO: Control (a) Non-anticipativity K=40: max recentring diff = 0.00e+00
+[2026-07-25 14:16:53] INFO: Control (g) Bounds K=40: max|P_t|=0.5000, NaNs=False
+[2026-07-25 14:17:04] INFO: Control (c) ISO-FPR K=40: FPR_naive=0.9975, FPR_boot=0.0555
+[2026-07-25 14:17:04] WARNING: Control (b) Whiteness K=50: p-value=3.7368e-04 < 0.05. Temporal whiteness degraded on real data (expected).
+[2026-07-25 14:17:04] INFO: Control (e) Consistency K=50: K_eff_meas/K_eff_ana = 1.0002
+[2026-07-25 14:17:04] INFO: Control (a) Non-anticipativity K=50: max recentring diff = 0.00e+00
+[2026-07-25 14:17:04] INFO: Control (g) Bounds K=50: max|P_t|=0.5000, NaNs=False
+[2026-07-25 14:17:15] INFO: Control (c) ISO-FPR K=50: FPR_naive=0.9865, FPR_boot=0.0525
+[2026-07-25 14:17:15] WARNING: Control (b) Whiteness K=60: p-value=2.6181e-04 < 0.05. Temporal whiteness degraded on real data (expected).
+[2026-07-25 14:17:15] INFO: Control (e) Consistency K=60: K_eff_meas/K_eff_ana = 1.0008
+[2026-07-25 14:17:15] INFO: Control (a) Non-anticipativity K=60: max recentring diff = 0.00e+00
+[2026-07-25 14:17:15] INFO: Control (g) Bounds K=60: max|P_t|=0.5000, NaNs=False
+[2026-07-25 14:17:27] INFO: Control (c) ISO-FPR K=60: FPR_naive=1.0000, FPR_boot=0.0490
+[2026-07-25 14:17:27] WARNING: Control (b) Whiteness K=75: p-value=1.9857e-04 < 0.05. Temporal whiteness degraded on real data (expected).
+[2026-07-25 14:17:27] INFO: Control (e) Consistency K=75: K_eff_meas/K_eff_ana = 1.0008
+[2026-07-25 14:17:27] INFO: Control (a) Non-anticipativity K=75: max recentring diff = 0.00e+00
+[2026-07-25 14:17:27] INFO: Control (g) Bounds K=75: max|P_t|=0.5000, NaNs=False
+[2026-07-25 14:17:36] INFO: Control (c) ISO-FPR K=75: FPR_naive=1.0000, FPR_boot=0.0525
+[2026-07-25 14:17:36] WARNING: Control (b) Whiteness K=97: p-value=1.9778e-04 < 0.05. Temporal whiteness degraded on real data (expected).
+[2026-07-25 14:17:36] INFO: Control (e) Consistency K=97: K_eff_meas/K_eff_ana = 1.0010
+[2026-07-25 14:17:36] INFO: Control (a) Non-anticipativity K=97: max recentring diff = 0.00e+00
+[2026-07-25 14:17:36] INFO: Control (g) Bounds K=97: max|P_t|=0.5000, NaNs=False
+[2026-07-25 14:17:48] INFO: Control (c) ISO-FPR K=97: FPR_naive=1.0000, FPR_boot=0.0495
+[2026-07-25 14:18:14] INFO: --- COVID 2020 Natural Experiment ---
+[2026-07-25 14:18:14] INFO: COVID K=1: Delay Naive = -1, Delay Boot = -1
+[2026-07-25 14:18:14] INFO: COVID K=5: Delay Naive = 655, Delay Boot = -1
+[2026-07-25 14:18:14] INFO: COVID K=10: Delay Naive = -1, Delay Boot = -1
+[2026-07-25 14:18:14] INFO: COVID K=20: Delay Naive = 291, Delay Boot = -1
+[2026-07-25 14:18:14] INFO: COVID K=30: Delay Naive = 562, Delay Boot = -1
+[2026-07-25 14:18:14] INFO: COVID K=40: Delay Naive = 398, Delay Boot = -1
+[2026-07-25 14:18:14] INFO: COVID K=50: Delay Naive = 505, Delay Boot = -1
+[2026-07-25 14:18:14] INFO: COVID K=60: Delay Naive = 489, Delay Boot = -1
+[2026-07-25 14:18:14] INFO: COVID K=75: Delay Naive = 21, Delay Boot = -1
+[2026-07-25 14:18:14] INFO: COVID K=97: Delay Naive = 15, Delay Boot = -1

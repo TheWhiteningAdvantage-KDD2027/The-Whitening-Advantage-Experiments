@@ -1,0 +1,44 @@
+# Execution Environments and Bytecode Artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Integrated Development Environments
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Jupyter Notebook Runtime Checkpoints
+.ipynb_checkpoints/
+
+# Transient Reproduction Sandboxes
+.repro_*/
+
+# Ephemeral Execution Logs
+/logs/*.log
+logs/all_tests.log
+logs/double_run_*.log
+logs/gate_docs*.log
+logs/verify_gate4_*.log
+logs/verify_repro*.log
+restore_all_docs.log
+
+# Proprietary License Enforcement: FirstRate Data
+data/firstrate_etf/*.txt
+!data/firstrate_etf/.gitkeep
+
+# Manuscript and Internal Tooling (Excluded from Reviewer Package)
+articleB_whitening_v87.tex
+build_mapping.py
+build_readme.sh
+verify_reproducibility.sh
+
+# Internal Auditing Scripts & Candidate Checkpoints
+/docs/camera_ready_candidates/ANCHOR_VERIFICATION.md
+/docs/camera_ready_candidates/RECONCILIATION.md
+/experiments/common/verify_camera_ready.py
+/experiments/common/verify_refactoring.py
