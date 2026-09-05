@@ -1,42 +1,42 @@
-2026-09-04 18:50:47 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
-2026-09-04 18:50:47 | INFO | Python: 3.12.9
-2026-09-04 18:50:47 | INFO |   numpy: 1.26.4
-2026-09-04 18:50:47 | INFO |   pandas: 2.3.2
-2026-09-04 18:50:47 | INFO |   scipy: 1.16.2
-2026-09-04 18:50:47 | INFO | Budget 3e6: cap 3000000 steps, grid reach 400 W0 on 17 points, penalties [2.0, 4.0, 8.0, 11.58, 20.0].
-2026-09-04 18:50:47 | INFO | Deterministic reduction: ProcessPoolExecutor with max_workers = 48, executor.map in submission order; as_completed is not used (SPECS 1.5).
-2026-09-04 18:51:00 | INFO | [horizon] common monitoring horizon H = 3000000 (fixed point), lambda_iid_H = 282.5363
-2026-09-04 18:51:00 | INFO | [horizon] the cap of 3000000 bound: the fixed point wanted 5424696 steps to reach the SAFETY target of 8x the deterministic prediction at the widest ramp. SAFETY is a design target this budget does NOT reach; the realised margin is 4.42x. Censoring is measured directly per cell and is the quantity that decides admissibility.
-2026-09-04 18:52:08 | INFO | [Gamma= 2.000] beta=0.732861 v_max=5.1233 lambda*_Data=   653.001 (lambda*/Gamma= 326.500, +15.56% on the x Gamma rule) w*_predicted=   1004.6 w_delta_applied=   1160.9 w in [85, 226029] n_w=17
-2026-09-04 19:01:57 | INFO | [Gamma= 2.000] ramp exponent 0.780 on w >= w_delta_applied (n=11) against 0.780 on w >= w*_predicted (n=11); v87 app:scaling prints the former. DetRate_Data in [1.0000, 1.0000], censoring max 0.0000, Concept hold-out FPR 0.0850 vs detection [0.0525, 0.0525]
-2026-09-04 19:03:04 | INFO | [Gamma= 4.000] beta=0.843292 v_max=5.3385 lambda*_Data=  1310.301 (lambda*/Gamma= 327.575, +15.94% on the x Gamma rule) w*_predicted=   2009.1 w_delta_applied=   2329.4 w in [170, 452058] n_w=17
-2026-09-04 19:12:54 | INFO | [Gamma= 4.000] ramp exponent 0.779 on w >= w_delta_applied (n=11) against 0.779 on w >= w*_predicted (n=11); v87 app:scaling prints the former. DetRate_Data in [1.0000, 1.0000], censoring max 0.0000, Concept hold-out FPR 0.0850 vs detection [0.0525, 0.0525]
-2026-09-04 19:14:02 | INFO | [Gamma= 8.000] beta=0.878726 v_max=5.6483 lambda*_Data=  3032.361 (lambda*/Gamma= 379.045, +34.16% on the x Gamma rule) w*_predicted=   4018.3 w_delta_applied=   5390.9 w in [339, 904116] n_w=17
-2026-09-04 19:23:52 | INFO | [Gamma= 8.000] ramp exponent 0.766 on w >= w_delta_applied (n=11) against 0.766 on w >= w*_predicted (n=11); v87 app:scaling prints the former. DetRate_Data in [1.0000, 1.0000], censoring max 0.0000, Concept hold-out FPR 0.0850 vs detection [0.0525, 0.0525]
-2026-09-04 19:24:59 | INFO | [Gamma=11.580] beta=0.888952 v_max=5.8563 lambda*_Data=  5054.315 (lambda*/Gamma= 436.469, +54.48% on the x Gamma rule) w*_predicted=   5816.5 w_delta_applied=   8985.4 w in [491, 1308708] n_w=17
-2026-09-04 19:34:49 | INFO | [Gamma=11.580] ramp exponent 0.718 on w >= w_delta_applied (n=11) against 0.718 on w >= w*_predicted (n=11); v87 app:scaling prints the former. DetRate_Data in [1.0000, 1.0000], censoring max 0.0000, Concept hold-out FPR 0.0850 vs detection [0.0525, 0.0525]
-2026-09-04 19:35:57 | INFO | [Gamma=20.000] beta=0.898968 v_max=6.2189 lambda*_Data= 11100.055 (lambda*/Gamma= 555.003, +96.44% on the x Gamma rule) w*_predicted=  10045.7 w_delta_applied=  19733.4 w in [848, 2260290] n_w=17
-2026-09-04 19:45:48 | INFO | [Gamma=20.000] ramp exponent 0.751 on w >= w_delta_applied (n=10) against 0.733 on w >= w*_predicted (n=11); v87 app:scaling prints the former. DetRate_Data in [0.9975, 0.9975], censoring max 0.0025, Concept hold-out FPR 0.0850 vs detection [0.0525, 0.0525]
-2026-09-04 19:45:56 | INFO | [ladder] lambda_iid by horizon, from one nested set of trajectories:
-2026-09-04 19:45:56 | INFO | [ladder]   H =     77000  lambda_iid = 111.0251
-2026-09-04 19:45:56 | INFO | [ladder]   H =    200000  lambda_iid = 128.6319
-2026-09-04 19:45:56 | INFO | [ladder]   H =   3000000  lambda_iid = 282.5363
-2026-09-04 19:45:56 | INFO | [ladder] log-log slope over the three horizons: 0.2628. This is a descriptive slope through three perfectly dependent measurements -- the same 400 trajectories read at three prefixes -- so it carries no standard error and none is emitted. Siegmund's ARL_0 formula would give a growth in log H, whose Cramer condition squared innovations do not satisfy.
-2026-09-04 19:45:56 | INFO | [control b] mon_len constant at 3000000 across the 5 penalties.
-2026-09-04 19:45:56 | INFO | [control b] realised null levels [0.025, 0.035, 0.035, 0.04, 0.0475] ([10, 14, 14, 16, 19] alarms of 400); chi-square homogeneity 3.07 on 4 dof, p = 0.546.
-2026-09-04 19:45:56 | INFO | [control b] pooled realised level 0.0365, Wilson [0.0291, 0.0456], against the 0.05 v87 states for every Data arm. Target OUTSIDE the interval.
-2026-09-04 19:45:56 | INFO | [control h] 5 simultaneous cells at a 0.05 level: the probability of at least one rejection under the null of correct calibration is 1 - (1 - 0.05)^5 = 0.226. Above 5%, so no per-cell binary gate is used; the levels are tested as a distribution instead.
-2026-09-04 19:45:56 | INFO | [control h] per-cell two-sided binomial p-values [0.0208, 0.2054, 0.2054, 0.4218, 0.9089]; Kolmogorov-Smirnov against Uniform(0,1): D = 0.3946, p = 0.3235. Descriptive, retained in the CSV, and not an acceptance criterion.
-2026-09-04 19:45:56 | INFO | [control f] budget 3e6: lambda*(Gamma)/Gamma = [326.5, 327.6, 379.0, 436.5, 555.0] against lambda_iid_H = 282.54; departure from the lambda_iid x Gamma rule +15.6% to +96.4%.
-2026-09-04 19:45:56 | INFO | [control c] Concept hold-out FPR 0.0850, detection under the ramp in [0.0525, 0.0525] across all 85 cells. The sign stream does not see the pathology, so this equality is an identity of the design; the positive control of step a is what shows the instrument responsive.
-2026-09-04 19:45:56 | INFO | [diagnostic] literal lambda_C = 10.0 at H = 3000000: hold-out FPR 1.0000, detection under the ramp in [1.0000, 1.0000]. A threshold fixed at 10 is far below the running maximum of a CUSUM over this horizon, so the arm saturates; that is the price of the v87 numeral at this budget.
-2026-09-04 19:45:56 | INFO | Wrote results/R05_scale_law/data/R05_ramp_multigamma_3e6.csv (85 rows)
-2026-09-04 19:45:56 | INFO | Wrote results/R05_scale_law/data/R05_lambda_iid_horizon.csv (3 rows)
-2026-09-04 19:45:56 | INFO | [ladder] cross-check at H = 3000000: ladder 282.536302 against campaign 282.536302, absolute gap 0. Both read the same 'iid' seed block over the same prefix, so the gap must be zero.
-2026-09-04 19:45:56 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
-2026-09-04 19:45:56 | INFO | results/R05_scale_law/data/
-2026-09-04 19:45:56 | INFO | └── /
-2026-09-04 19:45:56 | INFO |     ├── R05_ramp_multigamma_3e6.csv         [15d770b8d43b5e33b18b50729c1aa28f993f1e2e2a8d598554fa777f16a2b72a]
-2026-09-04 19:45:56 | INFO |     └── R05_lambda_iid_horizon.csv          [91812bd9de76bebf07fa8ce6779754087cb5db143873442cc945daa5a74f37e1]
-2026-09-04 19:45:56 | INFO | =============================================================================
-2026-09-04 19:45:56 | INFO | Step b (3e6) elapsed: 3309.1 s
+2026-09-05 06:03:04 | INFO | PYTHONHASHSEED correctly pinned to 42 before interpreter start.
+2026-09-05 06:03:04 | INFO | Python: 3.12.9
+2026-09-05 06:03:04 | INFO |   numpy: 1.26.4
+2026-09-05 06:03:04 | INFO |   pandas: 2.3.2
+2026-09-05 06:03:04 | INFO |   scipy: 1.16.2
+2026-09-05 06:03:04 | INFO | Budget 3e6: cap 3000000 steps, grid reach 400 W0 on 17 points, penalties [2.0, 4.0, 8.0, 11.58, 20.0].
+2026-09-05 06:03:04 | INFO | Deterministic reduction: ProcessPoolExecutor with max_workers = 48, executor.map in submission order; as_completed is not used (SPECS 1.5).
+2026-09-05 06:03:16 | INFO | [horizon] common monitoring horizon H = 3000000 (fixed point), lambda_iid_H = 282.5363
+2026-09-05 06:03:16 | INFO | [horizon] the cap of 3000000 bound: the fixed point wanted 5424696 steps to reach the SAFETY target of 8x the deterministic prediction at the widest ramp. SAFETY is a design target this budget does NOT reach; the realised margin is 4.42x. Censoring is measured directly per cell and is the quantity that decides admissibility.
+2026-09-05 06:04:25 | INFO | [Gamma= 2.000] beta=0.732861 v_max=5.1233 lambda*_Data=   653.001 (lambda*/Gamma= 326.500, +15.56% on the x Gamma rule) w*_predicted=   1004.6 w_delta_applied=   1160.9 w in [85, 226029] n_w=17
+2026-09-05 06:14:18 | INFO | [Gamma= 2.000] ramp exponent 0.780 on w >= w_delta_applied (n=11) against 0.780 on w >= w*_predicted (n=11); v87 app:scaling prints the former. DetRate_Data in [1.0000, 1.0000], censoring max 0.0000, Concept hold-out FPR 0.0850 vs detection [0.0525, 0.0525]
+2026-09-05 06:15:26 | INFO | [Gamma= 4.000] beta=0.843292 v_max=5.3385 lambda*_Data=  1310.301 (lambda*/Gamma= 327.575, +15.94% on the x Gamma rule) w*_predicted=   2009.1 w_delta_applied=   2329.4 w in [170, 452058] n_w=17
+2026-09-05 06:25:18 | INFO | [Gamma= 4.000] ramp exponent 0.779 on w >= w_delta_applied (n=11) against 0.779 on w >= w*_predicted (n=11); v87 app:scaling prints the former. DetRate_Data in [1.0000, 1.0000], censoring max 0.0000, Concept hold-out FPR 0.0850 vs detection [0.0525, 0.0525]
+2026-09-05 06:26:26 | INFO | [Gamma= 8.000] beta=0.878726 v_max=5.6483 lambda*_Data=  3032.361 (lambda*/Gamma= 379.045, +34.16% on the x Gamma rule) w*_predicted=   4018.3 w_delta_applied=   5390.9 w in [339, 904116] n_w=17
+2026-09-05 06:36:20 | INFO | [Gamma= 8.000] ramp exponent 0.766 on w >= w_delta_applied (n=11) against 0.766 on w >= w*_predicted (n=11); v87 app:scaling prints the former. DetRate_Data in [1.0000, 1.0000], censoring max 0.0000, Concept hold-out FPR 0.0850 vs detection [0.0525, 0.0525]
+2026-09-05 06:37:28 | INFO | [Gamma=11.580] beta=0.888952 v_max=5.8563 lambda*_Data=  5054.315 (lambda*/Gamma= 436.469, +54.48% on the x Gamma rule) w*_predicted=   5816.5 w_delta_applied=   8985.4 w in [491, 1308708] n_w=17
+2026-09-05 06:47:23 | INFO | [Gamma=11.580] ramp exponent 0.718 on w >= w_delta_applied (n=11) against 0.718 on w >= w*_predicted (n=11); v87 app:scaling prints the former. DetRate_Data in [1.0000, 1.0000], censoring max 0.0000, Concept hold-out FPR 0.0850 vs detection [0.0525, 0.0525]
+2026-09-05 06:48:31 | INFO | [Gamma=20.000] beta=0.898968 v_max=6.2189 lambda*_Data= 11100.055 (lambda*/Gamma= 555.003, +96.44% on the x Gamma rule) w*_predicted=  10045.7 w_delta_applied=  19733.4 w in [848, 2260290] n_w=17
+2026-09-05 06:58:26 | INFO | [Gamma=20.000] ramp exponent 0.751 on w >= w_delta_applied (n=10) against 0.733 on w >= w*_predicted (n=11); v87 app:scaling prints the former. DetRate_Data in [0.9975, 0.9975], censoring max 0.0025, Concept hold-out FPR 0.0850 vs detection [0.0525, 0.0525]
+2026-09-05 06:58:35 | INFO | [ladder] lambda_iid by horizon, from one nested set of trajectories:
+2026-09-05 06:58:35 | INFO | [ladder]   H =     77000  lambda_iid = 111.0251
+2026-09-05 06:58:35 | INFO | [ladder]   H =    200000  lambda_iid = 128.6319
+2026-09-05 06:58:35 | INFO | [ladder]   H =   3000000  lambda_iid = 282.5363
+2026-09-05 06:58:35 | INFO | [ladder] log-log slope over the three horizons: 0.2628. This is a descriptive slope through three perfectly dependent measurements -- the same 400 trajectories read at three prefixes -- so it carries no standard error and none is emitted. Siegmund's ARL_0 formula would give a growth in log H, whose Cramer condition squared innovations do not satisfy.
+2026-09-05 06:58:35 | INFO | [control b] mon_len constant at 3000000 across the 5 penalties.
+2026-09-05 06:58:35 | INFO | [control b] realised null levels [0.025, 0.035, 0.035, 0.04, 0.0475] ([10, 14, 14, 16, 19] alarms of 400); chi-square homogeneity 3.07 on 4 dof, p = 0.546.
+2026-09-05 06:58:35 | INFO | [control b] pooled realised level 0.0365, Wilson [0.0291, 0.0456], against the 0.05 v87 states for every Data arm. Target OUTSIDE the interval.
+2026-09-05 06:58:35 | INFO | [control h] 5 simultaneous cells at a 0.05 level: the probability of at least one rejection under the null of correct calibration is 1 - (1 - 0.05)^5 = 0.226. Above 5%, so no per-cell binary gate is used; the levels are tested as a distribution instead.
+2026-09-05 06:58:35 | INFO | [control h] per-cell two-sided binomial p-values [0.0208, 0.2054, 0.2054, 0.4218, 0.9089]; Kolmogorov-Smirnov against Uniform(0,1): D = 0.3946, p = 0.3235. Descriptive, retained in the CSV, and not an acceptance criterion.
+2026-09-05 06:58:35 | INFO | [control f] budget 3e6: lambda*(Gamma)/Gamma = [326.5, 327.6, 379.0, 436.5, 555.0] against lambda_iid_H = 282.54; departure from the lambda_iid x Gamma rule +15.6% to +96.4%.
+2026-09-05 06:58:35 | INFO | [control c] Concept hold-out FPR 0.0850, detection under the ramp in [0.0525, 0.0525] across all 85 cells. The sign stream does not see the pathology, so this equality is an identity of the design; the positive control of step a is what shows the instrument responsive.
+2026-09-05 06:58:35 | INFO | [diagnostic] literal lambda_C = 10.0 at H = 3000000: hold-out FPR 1.0000, detection under the ramp in [1.0000, 1.0000]. A threshold fixed at 10 is far below the running maximum of a CUSUM over this horizon, so the arm saturates; that is the price of the v87 numeral at this budget.
+2026-09-05 06:58:35 | INFO | Wrote results/R05_scale_law/data/R05_ramp_multigamma_3e6.csv (85 rows)
+2026-09-05 06:58:35 | INFO | Wrote results/R05_scale_law/data/R05_lambda_iid_horizon.csv (3 rows)
+2026-09-05 06:58:35 | INFO | [ladder] cross-check at H = 3000000: ladder 282.536302 against campaign 282.536302, absolute gap 0. Both read the same 'iid' seed block over the same prefix, so the gap must be zero.
+2026-09-05 06:58:35 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
+2026-09-05 06:58:35 | INFO | results/R05_scale_law/data/
+2026-09-05 06:58:35 | INFO | └── /
+2026-09-05 06:58:35 | INFO |     ├── R05_ramp_multigamma_3e6.csv         [15d770b8d43b5e33b18b50729c1aa28f993f1e2e2a8d598554fa777f16a2b72a]
+2026-09-05 06:58:35 | INFO |     └── R05_lambda_iid_horizon.csv          [91812bd9de76bebf07fa8ce6779754087cb5db143873442cc945daa5a74f37e1]
+2026-09-05 06:58:35 | INFO | =============================================================================
+2026-09-05 06:58:35 | INFO | Step b (3e6) elapsed: 3331.3 s

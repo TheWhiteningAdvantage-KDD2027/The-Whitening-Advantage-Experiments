@@ -1,25 +1,25 @@
-2026-09-04 18:36:41 | INFO | Python: 3.12.9
-2026-09-04 18:36:41 | INFO |   numpy: 1.26.4
-2026-09-04 18:36:41 | INFO |   pandas: 2.3.2
-2026-09-04 18:36:41 | INFO |   scipy: 1.16.2
-2026-09-04 18:36:41 | INFO |   river: 0.23.0
-2026-09-04 18:36:41 | INFO |   matplotlib: 3.10.6
-2026-09-04 18:36:41 | INFO |   joblib: 1.4.2
-2026-09-04 18:36:41 | INFO | =================================================================
-2026-09-04 18:36:41 | INFO |   R02 : Fig1 - Ljung-Box Multi-ETF
-2026-09-04 18:36:41 | INFO |   River version: 0.23.0
-2026-09-04 18:36:41 | INFO | =================================================================
-2026-09-04 18:36:41 | INFO | Executing 360 independent stream simulations on 1 cores...
-2026-09-04 18:38:18 | INFO | Total degenerate Ljung-Box calculations: 0
-2026-09-04 18:38:19 | INFO | Running empirical certification...
-2026-09-04 18:38:19 | INFO | Empirical certification passed successfully.
-2026-09-04 18:38:19 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
-2026-09-04 18:38:19 | INFO | results/R02_whitening_ljungbox/
-2026-09-04 18:38:19 | INFO | ├── data/
-2026-09-04 18:38:19 | INFO | │   ├── R02_ljungbox_360streams.csv         [4c9eb8b339d5f0a98168eb73362660ccff41a3bca05de576a2afce2956418204]
-2026-09-04 18:38:19 | INFO | │   └── R02_independence_diagnostics.csv    [5ca6496f5099e65f835eed5c626873ea447ae831b8c1af54319cfaf67d7fdbb1]
-2026-09-04 18:38:19 | INFO | ├── figures/
-2026-09-04 18:38:19 | INFO | │   └── fig01_ljungbox_whiteness.png        [90734624b5343f7ffccd06645a72666b5ad3c7508b8170809589c1cc4a508c5b]
-2026-09-04 18:38:19 | INFO | └── tables/
-2026-09-04 18:38:19 | INFO |     └── R02_claims.tex                      [c1f1d58c57f5352883025cab6b1bceaabc6dec4d1c5b79d0a7ef5ec363c2dcb8]
-2026-09-04 18:38:19 | INFO | =============================================================================
+2026-09-05 05:48:58 | INFO | Python: 3.12.9
+2026-09-05 05:48:58 | INFO |   numpy: 1.26.4
+2026-09-05 05:48:58 | INFO |   pandas: 2.3.2
+2026-09-05 05:48:58 | INFO |   scipy: 1.16.2
+2026-09-05 05:48:58 | INFO |   river: 0.23.0
+2026-09-05 05:48:58 | INFO |   matplotlib: 3.10.6
+2026-09-05 05:48:58 | INFO |   joblib: 1.4.2
+2026-09-05 05:48:58 | INFO | =================================================================
+2026-09-05 05:48:58 | INFO |   R02 : Fig1 - Ljung-Box Multi-ETF
+2026-09-05 05:48:58 | INFO |   River version: 0.23.0
+2026-09-05 05:48:58 | INFO | =================================================================
+2026-09-05 05:48:58 | INFO | Executing 360 independent stream simulations on 1 cores...
+2026-09-05 05:50:35 | INFO | Total degenerate Ljung-Box calculations: 0
+2026-09-05 05:50:35 | INFO | Running empirical certification...
+2026-09-05 05:50:35 | INFO | Empirical certification passed successfully.
+2026-09-05 05:50:35 | INFO | ======================== ARTIFACT INTEGRITY MANIFEST ========================
+2026-09-05 05:50:35 | INFO | results/R02_whitening_ljungbox/
+2026-09-05 05:50:35 | INFO | ├── data/
+2026-09-05 05:50:35 | INFO | │   ├── R02_ljungbox_360streams.csv         [4c9eb8b339d5f0a98168eb73362660ccff41a3bca05de576a2afce2956418204]
+2026-09-05 05:50:35 | INFO | │   └── R02_independence_diagnostics.csv    [5ca6496f5099e65f835eed5c626873ea447ae831b8c1af54319cfaf67d7fdbb1]
+2026-09-05 05:50:35 | INFO | ├── figures/
+2026-09-05 05:50:35 | INFO | │   └── fig01_ljungbox_whiteness.png        [90734624b5343f7ffccd06645a72666b5ad3c7508b8170809589c1cc4a508c5b]
+2026-09-05 05:50:35 | INFO | └── tables/
+2026-09-05 05:50:35 | INFO |     └── R02_claims.tex                      [c1f1d58c57f5352883025cab6b1bceaabc6dec4d1c5b79d0a7ef5ec363c2dcb8]
+2026-09-05 05:50:35 | INFO | =============================================================================
